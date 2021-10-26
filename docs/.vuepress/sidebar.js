@@ -1,23 +1,43 @@
-module.exports = {
-    '/js/Deploy/': [
+const front = {
+    '/front/base/': [
         '',
-        'kg_platform',
-        'hot_card_platform'
     ],
-    '/js/Development/': [
+    '/front/algorithm/': [
         '',
-        'app_components',
-        'atom',
-        'san',
-        'talos'
     ],
-    '/js/Introduction/': [
+    '/front/interview/': [
+        '',
+    ],
+    '/front/css/': [
+        '',
+    ],
+    '/front/node/': [
+        '',
+    ],
+    '/front/vue/': [
+        '',
+    ],
+    '/front/react/': [
+        '',
+    ]
+}
+
+const skill = {
+    '/skill/git/': [
+        '',
+    ],
+    '/skill/linux/': [
+        '',
+    ],
+    '/skill/introduction/': [
         '',
         'ability',
         'plugin_dev',
         'traps'
-    ],
-    '': [
-        '/js/Deploy/',
     ]
+}
+
+module.exports = {
+    ...front,
+    ...skill
 }
