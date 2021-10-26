@@ -26,5 +26,13 @@
   },
   "author": "coderHdy",
   "license": "ISC",
-  "description": "前端西瓜皮儿~"
+  "description": "前端西瓜皮儿~",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coderHDY/myblog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coderHDY/myblog/issues"
+  },
+  "homepage": "https://github.com/coderHDY/myblog#readme"
 }

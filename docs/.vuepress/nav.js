@@ -1,27 +1,57 @@
+const front = {
+    text: '前端基础',
+    ariaLabel: 'front base',
+    items: [
+        {
+            text: 'js基础',
+            link: '/front/base/'
+        },
+        {
+            text: 'js算法',
+            link: '/front/algorithm/'
+        },
+        {
+            text: '前端面试题',
+            link: '/front/interview/'
+        },
+        {
+            text: 'CSS相关',
+            link: '/front/css/'
+        },
+        {
+            text: 'node',
+            link: '/front/node/'
+        },
+        {
+            text: 'vue',
+            link: '/front/vue/'
+        },
+        {
+            text: 'react',
+            link: '/front/react/'
+        },
+    ]
+};
+
+const skill = {
+    text: '必备技能',
+    ariaLabel: 'soft enginer necessary',
+    items: [
+        {
+            text: 'git',
+            link: '/skill/git/'
+        },
+        {
+            text: 'linux',
+            link: '/skill/linux/'
+        },
+        {
+            text: '文档编写方法',
+            link: '/skill/introduction/'
+        },
+    ]
+}
 module.exports = [
-    {
-        text: '配置能力',
-        link: '/js/Deploy/'
-    },
-    {
-        text: '开发接入能力',
-        link: '/js/Development/'
-    },
-    {
-        text: '相关链接',
-        ariaLabel: 'other links',
-        items: [{
-                text: '文档开发指南',
-                link: '/js/Introduction/'
-            },
-            {
-                text: '瞻星平台',
-                link: 'http://localhost:8080/Use/'
-            },
-            {
-                text: 'Vuepress官网',
-                link: 'https://v2.vuepress.vuejs.org/zh/'
-            }
-        ]
-    }
+    front,
+    skill
 ]
