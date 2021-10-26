@@ -1,0 +1,30 @@
+{
+  "name": "vpress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "@vue/component-compiler-utils": "^3.2.2",
+    "@vuepress/shared-utils": "^1.8.2",
+    "async-validator": "^1.11.5",
+    "element-ui": "^2.15.6",
+    "markdown-it": "^8.4.2",
+    "markdown-it-container": "^2.0.0",
+    "vue-template-compiler": "^2.6.14",
+    "vuepress": "^1.8.2"
+  },
+  "devDependencies": {
+    "@vuepress/plugin-active-header-links": "^1.8.2",
+    "@vuepress/plugin-back-to-top": "^1.8.2",
+    "@vuepress/plugin-nprogress": "^1.8.2"
+  },
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "author": "coderHdy",
+  "license": "ISC",
+  "description": "前端西瓜皮儿~"
+}
