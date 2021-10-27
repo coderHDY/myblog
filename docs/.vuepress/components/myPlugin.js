@@ -5,11 +5,11 @@ const { getAttributes } = require('./util')
 const components = [
   'step',
   'steps',
-  'el-tabs',
-  'el-tab-pane',
   'demo',
   'el-button',
-  'el-slider'
+  'el-slider',
+  'tabs',
+  'tab'
 ]
 
 module.exports = function tabsPlugin(md, options = {}) {
