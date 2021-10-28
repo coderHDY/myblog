@@ -34,3 +34,44 @@ git checkout -b master
 # 放弃当前所做的更改（未放进缓存区的）
 git checkout .
 ```
+
+## 命令设置别名
+* 可以给一个很长的命令设置别名
+```shell
+git config --global alias.show-graph 'log --graph --abbrev-commit --pretty=oneline'
+```
+
+## git tag
+* 给一个重要的commit版本打上tag标识，更好地认出找出该版本如：V1.0
+```shell
+# 列出已有tag
+git tag
+git tag -l
+git tag --list
+
+# 当前版本打标签
+git tag v1.0
+git tag -a v1.1 -m "my version 1.4"
+
+# 指定版本打标签
+git tag -a v1.2 9fceb02
+
+# 查看标签
+git show v1.0
+
+# 删除标签
+git tag -d v1.0
+```
+
+## .gitignore
+* git提交时忽略文件
+* 可以识别正则表达式
+```shell
+# 忽略一整个目录
+node_modules/
+# 忽略某一类文件
+*.sh
+
+# 模式取反(某个子目录这个文件不想被忽略)
+!*.sh
+```

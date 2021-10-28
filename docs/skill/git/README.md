@@ -18,6 +18,7 @@ git config --global user.name 'huangdeyu'
 git config --global user.email 'huangdeyu2020@163.com'
 
 # 查看配置
+git config -l
 git config --list
 git config --global --list
 git config --local --list
@@ -106,6 +107,25 @@ git log
 # 精简版
 git reflog
 ```
+
+## git show
+* 显示版本 diff 信息
+```shell
+# 显示最近一次commit的详细信息
+git show
+# 显示当前版本与指定版本的diff
+git show 4022c4c
+# 展示最近的commit信息
+git show-branch --more=10
+```
+
+## git diff
+* 比较两个版本之间的差异
+> 较新的版本要放到后面
+```shell
+git diff 4022c4c HEAD
+```
+
 ## git push
 * 当前仓库的**HEAD指针**指向的版本推到远程仓库
 ```shell
@@ -121,4 +141,14 @@ git push --force origin master
 
 # 删除远程分支
 git push origin --delete master
+```
+
+## git rm
+* 版本仓库中删除某个文件
+```shell
+# 删除某个文件
+# rm 代表删除并暂存这个变更，commit提交版本
+git rm docs/skill/linux/README.md
+# 删除某个文件夹
+git rm -r docs/skill/linux/
 ```
