@@ -4,9 +4,9 @@
 
 首先文档支持所有的markdown语法，包括各级标题、音视频解析、段落、列表、区块、代码、连接、表格，以及一些高级的编写技巧。
 
-:::: el-tabs type=border-card
+:::: tabs
 
-::: el-tab-pane label=标题
+::: tab label=标题
 ``` md
 # 一级标题
 
@@ -17,7 +17,7 @@
 ###### 六级标题
 :::
 
-::: el-tab-pane label=多媒体
+::: tab label=多媒体
 
 ```md
 视频：
@@ -43,7 +43,7 @@
     <source type="video/mp4" src="./assets/storybook.mp4">
 </video>
 
-图片：
+图片：  
 ![图片描述](http:////www.baidu.com/img/flexible/logo/pc/result.png)
 
 <img src="http:////www.baidu.com/img/flexible/logo/pc/result.png" style="height: 50px;">
@@ -54,7 +54,7 @@
 </audio>
 :::
 
-::: el-tab-pane label=段落
+::: tab label=段落
 ``` md
 末尾无空格回车不换行
 不换行
@@ -90,7 +90,7 @@ ___粗斜体文本___
 <u>下划线</u>
 :::
 
-::: el-tab-pane label=列表
+::: tab label=列表
 ``` md
 * 第一项
 * 第二项
@@ -124,7 +124,7 @@ ___粗斜体文本___
     - 第二项嵌套的第二个元素
 :::
 
-::: el-tab-pane label=区块
+::: tab label=区块
 ``` md
 > 最外层
 > > 第一层嵌套
@@ -135,27 +135,24 @@ ___粗斜体文本___
 > > > 第二层嵌套
 :::
 
-::: el-tab-pane label=代码
-``` md
-$``` js
-  防止编译，去掉$符号
-  code
-$```
-```
+::: tab label=代码
+<img src='./assets/code.png'>
 
-```js
+```js {2}
+code
+code
 code
 ```
 :::
 
-::: el-tab-pane label=链接
+::: tab label=链接
 ``` md
 [百度一下](https://www.baidu.com)
 ```
 [百度一下](https://www.baidu.com)
 :::
 
-::: el-tab-pane label=表格
+::: tab label=表格
 ``` md
 |  表头   | 表头  |
 |  ----  | ----  |
@@ -169,42 +166,6 @@ code
 :::
 
 ::::
-
-## 插件使用
-1. 插件调用使用::: 插件名,且需要有闭合标签
-```md
-::: tip
-:::
-```
-
-2. 插件attribute传参放在插件名后
-```md
-::: el-tab-pane label=组件概览
-:::
-```
-3. 插件内容放在两个token(:::)里面
-```md
-::: tip
-这是一个tip
-:::
-```
-
-4. 插件调用时，除非插件本身带嵌套语法，**尽量不要嵌套不同插件**，否则容易产生语法错误
-```md
-自带嵌套语法的插件：
-
-:::: el-tabs type=border-card
-
-::: el-tab-pane label=组件概览
-这是tabA 展示的页面
-:::
-
-::: el-tab-pane label=详细介绍
-这是tabB 展示的页面
-:::
-
-::::
-```
 
 ## 新建页面
 
@@ -217,9 +178,12 @@ code
 :::
 
 ::: step id=1
-* 找到 **.vuepress/config.js** 文件下的 **sidebar** 配置
-* 目录列表每个项对应根目录一个文件夹，内置的目录配置为对应的.md文件和目录文件夹的**相对路径**
+* 找到 **.vuepress/config.js** 文件下的 **themeConfig.locales.sidebar** 配置
+* 目录列表每个项对应一个navbar配置的项，内置的目录配置为对应的.md文件和目录文件夹的**相对路径**
 * 配置上新建文件所在路径
+> 注：新建nav项时，目录下必须包含一个README.md，sidebar目录下必须包含一个 ''，点击nav时路径才能匹配正确。  
+> [更多注意事项](./traps.html#新建文件目录问题)
+
 <img src="./assets/edit_path.png" style="height: 400px;">
 :::
 
@@ -238,6 +202,55 @@ code
 <img src="./assets/demo.png" style="width: 700px;">
 :::
 
+::::
+
+## 插件使用
+1. 插件调用使用::: 插件名,且需要有闭合标签
+```md
+::: tip
+:::
+```
+
+2. 插件attribute传参放在插件名后
+```md
+::: tab label=组件概览
+:::
+```
+3. 插件内容放在两个token(:::)里面
+```md
+::: tip
+这是一个tip
+:::
+```
+::: tip
+这是一个tip
+:::
+
+4. 插件调用时，除非插件本身带嵌套语法，**尽量不要嵌套不同插件**，否则容易产生语法错误
+```md
+自带嵌套语法的插件：
+
+:::: tabs
+
+::: tab label=组件概览
+这是tabA 展示的页面
+:::
+
+::: tab label=详细介绍
+这是tabB 展示的页面
+:::
+
+::::
+```
+
+:::: tabs
+::: tab label=组件概览
+这是tabA 展示的页面
+:::
+
+::: tab label=详细介绍
+这是tabB 展示的页面
+:::
 ::::
 
 ## 已支持插件
@@ -275,28 +288,28 @@ code
 这是一个详情块，在 IE / Edge 中不生效
 :::
 
-### el-tabs
+### tabs
 ```md
-:::: el-tabs type=border-card
+:::: tabs
 
-::: el-tab-pane label=组件概览
+::: tab label=组件概览
 这是tabA 展示的页面
 :::
 
-::: el-tab-pane label=详细介绍
+::: tab label=详细介绍
 这是tabB 展示的页面
 :::
 
 ::::
 ```
 
-:::: el-tabs type=border-card
+:::: tabs
 
-::: el-tab-pane label=组件概览
+::: tab label=组件概览
 这是tabA 展示的页面
 :::
 
-::: el-tab-pane label=详细介绍
+::: tab label=详细介绍
 这是tabB 展示的页面
 :::
 
