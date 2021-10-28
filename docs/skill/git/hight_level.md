@@ -23,8 +23,13 @@ git branch -d dev
 # 强制删除分支
 git branch -D dev
 
+<<<<<<< HEAD
 # 看树形历史
 show-branch
+=======
+# 查看树形分支历史
+git show-branch
+>>>>>>> dev
 ```
 
 ## git checkout
