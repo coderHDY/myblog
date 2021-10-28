@@ -22,6 +22,9 @@ git branch -m oldName newName
 git branch -d dev
 # 强制删除分支
 git branch -D dev
+
+# 看树形历史
+show-branch
 ```
 
 ## git checkout
