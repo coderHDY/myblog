@@ -23,15 +23,21 @@ git branch -d dev
 # 强制删除分支
 git branch -D dev
 
-<<<<<<< HEAD
-# 看树形历史
-show-branch
-=======
 # 查看树形分支历史
 git show-branch
->>>>>>> dev
 ```
-
+# git merge
+::: tip 冲突
+* a是b拉出来的一个分支，也就是说a是基于b分支在进行开发，a的commit不影响到b。
+* b分支自己也在开发，b的commit也不影响到a
+* 有一天a分支的任务完成了，需要融入回b分支，就要用到 git merge
+* 可是有一个文件的一个位置，a分支也commit了修改，b分支也commit了修改，那么这次合并应该以谁的版本为准呢？
+* 这就产生了**冲突**
+::: 
+```shell
+# 把dev分支合并到本分支来
+git merge dev
+```
 ## git checkout
 * 切换分支
 ```shell
