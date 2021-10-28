@@ -25,8 +25,6 @@ const front = {
 const skill = {
     '/skill/git/': [
         '',
-        'hight_level',
-        'git_thinking',
     ],
     '/skill/linux/': [
         '',

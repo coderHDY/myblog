@@ -18,6 +18,10 @@ git branch dev
 git checkout -b dev
 # 分支重命名
 git branch -m oldName newName
+# 删除分支
+git branch -d dev
+# 强制删除分支
+git branch -D dev
 ```
 
 ## git checkout
@@ -27,4 +31,6 @@ git branch -m oldName newName
 git checkout master
 # 创建并切换
 git checkout -b master
+# 放弃当前所做的更改（未放进缓存区的）
+git checkout .
 ```
