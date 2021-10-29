@@ -99,10 +99,32 @@ git tag -d v1.0
 :::
 ::: tip --hard
 * HEAD指针和暂存库和编写代码区全部指向指定版本
-> 注：暂存库和编写库会丢失
+* 且目标版本之后的版本都不要了
+> 注：暂存库和编写库和后面的版本历史会丢失  
+> 本例中，AAA版本会丢失
 
 ![](./assets/hard.png)
 :::
+```shell
+# 删除编码区修改(所有区指向当前版本库版本)
+git reset --hard HEAD
+# 回退一个版本
+git reset --soft HEAD^
+# 回退两个版本
+git reset --soft HEAD^^
+# 回退三个版本
+git reset --soft HEAD~3
+# 回退到指定版本
+git reset --soft db3e38b
+```
+
+* 推送的版本比远程仓库旧，会提示错误
+```shell
+# 回退到某一个版本且删除放弃后面的版本
+git reset --hard db3e38b
+# 强制推送到远程仓库
+git push -f
+```
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式
