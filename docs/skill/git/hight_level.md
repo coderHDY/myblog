@@ -141,6 +141,39 @@ git push -f
 git revert -n 150c676
 git commit -m 'revert掉了历史的错误提交'
 ```
+
+## git rebase
+::: tip 变基
+* 小A开发到一半，派生出了小B分支
+* 小B开发的同时，小A也在开发
+* 小B总是想基于小A最新的东西开发，就需要**变基**
+![变基](./assets/rebase.png)
+:::
+```shell
+# 如果在master分支，将最新的 master 放到 dev 所有 commit 版本的前面，并且切到dev分支
+git rebase master dev
+# 如果已经在 dev 分支了
+git rebase master
+# 将远程代码库的放在本地的所有 commit 的前面
+git pull --rebase
+```
+::: tip 冲突
+* 小A 和 小B 的历史版本中改了同一个位置
+* 那么合并过程中应该以谁的版本为准呢？这就是**冲突**
+* 虽然把小A 的最新版本放到了小B的"基准"上，按理来说就是小B基于小A改了，那么以小B的为准？
+* 但是小B的历史版本已经记录在案，没有办法更改了，所以你只能重新做一个冲突修复的版本放到最前面。
+* 这就是**解决冲突**
+:::
+```shell
+# 发起变基
+git rebase master dev
+# 发现冲突，显示冲突文件 -> 手动解决冲突，决定留哪个版本
+# 决定好了放到暂存区
+git add .
+# 继续变基
+git rebase --continue
+### 如果还有冲突版本会继续要求手动修复，直至没有冲突，生成最新变基版本。
+```
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式
@@ -153,4 +186,3 @@ node_modules/
 # 模式取反(某个子目录这个文件不想被忽略)
 !*.sh
 ```
-master也想冲突了，你要rebase
