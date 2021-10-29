@@ -18,13 +18,21 @@ git branch dev
 git checkout -b dev
 # 分支重命名
 git branch -m oldName newName
-# 删除分支
-git branch -d dev
-# 强制删除分支
-git branch -D dev
-
 # 查看树形分支历史
 git show-branch
+# 删除分支
+git branch -d dev
+```
+* 如果想要删除的分支有commit未合并到当前分支，那么会报错，因为你尝试删除一个可能有一定贡献的分支，解决方式：
+1. merge留存该分支的贡献，再删除
+```shell
+git merge dev
+git branch -d dev
+```
+2.  如果确定直接删除：
+```shell
+# 强制删除分支
+git branch -D dev
 ```
 # git merge
 ::: tip 冲突
@@ -77,6 +85,24 @@ git show v1.0
 git tag -d v1.0
 ```
 
+## git reset
+* git reset 有三个方式
+::: tip --soft
+* HEAD指针指向指定的版本
+![](./assets/soft.png)
+:::
+::: tip --mixed
+* HEAD指针和暂存库指向指定的版本
+> 注：暂存库会丢失
+
+![](./assets/mixed.png)
+:::
+::: tip --hard
+* HEAD指针和暂存库和编写代码区全部指向指定版本
+> 注：暂存库和编写库会丢失
+
+![](./assets/hard.png)
+:::
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式
