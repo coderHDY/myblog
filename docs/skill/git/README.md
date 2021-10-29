@@ -39,6 +39,7 @@ cat ~/.ssh/id_rsa.pub
 ssh-keygen-t rsa -C huangdeyu2020@163.com
 # 编辑 config 对应配置文件，映射每个主机对应的配置和 ss-key 位置
 vim ~/.ssh/config
+
 Host gitee.com
 User huangdeyu
 IdentityFile ~/.ssh/id_rsa.huangdeyu
