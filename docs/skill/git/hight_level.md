@@ -153,3 +153,4 @@ node_modules/
 # 模式取反(某个子目录这个文件不想被忽略)
 !*.sh
 ```
+master也想冲突了，你要rebase
