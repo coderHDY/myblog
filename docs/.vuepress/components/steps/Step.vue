@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="active === this.key">
+    <div v-show="active === this.id">
       <slot></slot>
     </div>
   </div>
@@ -9,21 +9,23 @@
 <script>
 export default {
   name: "step",   // 必须项，enhanceAppFiles.js 注册全局组件用
+  data() {
+    return {
+      id: {
+        type: Number,
+        default: 0
+      }
+    };
+  },
   props: {
-    id: {
-        type: String,
-        default: "0"
-    },
     active: {
       type: Number,
       default: 0,
     },
   },
-  computed: {
-      key() {
-          return parseInt(this.id);
-      }
-  }
+  mounted() {
+    this.id = this.$parent.$children.findIndex((item) => item === this);
+  },
 };
 </script>
 

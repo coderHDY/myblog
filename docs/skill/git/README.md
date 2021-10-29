@@ -95,6 +95,15 @@ git add .
 git commit -m 'some change'
 ```
 
+## git status
+* 查看当前的状态
+    1. 有修改未暂存
+    2. 有暂存未提交
+    3. 有提交未放到远程仓库
+```shell
+git status
+```
+
 ## git log
 * 打印本地的所有版本信息
 * 可以看到当前的HEAD指针指向的哪个版本
@@ -115,7 +124,7 @@ git reflog
 git show
 # 显示当前版本与指定版本的diff
 git show 4022c4c
-# 展示最近的commit信息
+# 展示最近十次的commit信息
 git show-branch --more=10
 ```
 
@@ -123,6 +132,12 @@ git show-branch --more=10
 * 比较两个版本之间的差异
 > 较新的版本要放到后面
 ```shell
+# 与当前HEAD 版本比较
+git diff
+
+# 与上个HEAD版本比较
+git diff HEAD^ HEAD
+# 与指定版本diff
 git diff 4022c4c HEAD
 ```
 

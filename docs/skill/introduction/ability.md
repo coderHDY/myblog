@@ -171,23 +171,22 @@ code
 
 :::: steps
 
-::: step id=0
+::: step
 * 在对应功能的文件夹内新建.md 文件
 
 <img src="./assets/mkdir.png" style="height: 400px;">
 :::
 
-::: step id=1
+::: step
 * 找到 **.vuepress/config.js** 文件下的 **themeConfig.locales.sidebar** 配置
 * 目录列表每个项对应一个navbar配置的项，内置的目录配置为对应的.md文件和目录文件夹的**相对路径**
 * 配置上新建文件所在路径
 > 注：新建nav项时，目录下必须包含一个README.md，sidebar目录下必须包含一个 ''，点击nav时路径才能匹配正确。  
-> [更多注意事项](./traps.html#新建文件目录问题)
 
 <img src="./assets/edit_path.png" style="height: 400px;">
 :::
 
-::: step id=2
+::: step
 * 编写新建的.md文件
 ```js
 // Home/demo/demo.md
@@ -197,7 +196,7 @@ code
 ```
 :::
 
-::: step id=3
+::: step
 * 根目录下执行**npm run docs:dev**查看效果
 <img src="./assets/demo.png" style="width: 700px;">
 :::
@@ -323,22 +322,22 @@ code
 ```md
 :::: steps
 
-::: step id=0
+::: step
 第一步  
 第一步
 :::
 
-::: step id=1
+::: step
 第二步  
 第二步
 :::
 
-::: step id=2
+::: step
 第三步  
 第三步
 :::
 
-::: step id=3
+::: step
 第四步  
 第四步
 :::
@@ -348,28 +347,24 @@ code
 
 :::: steps
 
-::: step id=0
+::: step
 第一步  
 第一步
 :::
 
-::: step id=1
+::: step
 第二个步  
 第二个步
 :::
 
-::: step id=2
+::: step
 第三步  
 第三步
 :::
 
-::: step id=3
+::: step
 第四步  
 第四步
 :::
 
 ::::
-
-::: tip 提示:
-id为必传项，从0开始
-:::
