@@ -125,6 +125,9 @@ git reset --hard db3e38b
 # 强制推送到远程仓库
 git push -f
 ```
+
+## git revert 
+
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式
