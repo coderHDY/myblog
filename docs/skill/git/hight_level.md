@@ -1,5 +1,5 @@
 # git 高级
-* 最详细的文档请查看[权威英文文档](https://www.git-scm.com/docs)
+
 ## git branch
 * 查看、创建**分支**
 ::: tip 分支
@@ -57,12 +57,6 @@ git checkout -b master
 git checkout .
 ```
 
-## 命令设置别名
-* 可以给一个很长的命令设置别名
-```shell
-git config --global alias.show-graph 'log --graph --abbrev-commit --pretty=oneline'
-```
-
 ## git tag
 * 给一个重要的commit版本打上tag标识，更好地认出找出该版本如：V1.0
 ```shell
@@ -85,6 +79,41 @@ git show v1.0
 git tag -d v1.0
 ```
 
+## git stash
+* 缓存修改
+::: tip 缓存区
+* 我在开发A功能，B功能突然出现BUG了
+* 我不可能把没有开发完的A功能提交了吧，所以需要一个分支
+* 那么问题来了，我去分支了，当前A功能开发到一半的代码怎么办？(编码区和暂存区)
+* 如果我直接切，会有这个报错
+![切分支报错](./assets/huancun.png)
+* 这就需要把他**缓存**起来，等以后再拿出来
+![stash](./assets/stash.png)
+:::
+* 常用指令
+```shell
+# 当前暂存区和编码区推入缓存
+git stash
+# 取出上个缓存
+git stash pop
+# 查看缓存列表及编号
+git stash list
+# 清空缓存列表
+git stash clear
+```
+* 一些不常用的高级用法
+```shell
+# 推入缓存并取个名字
+git stash save 'A修改暂存'
+# 查看编号1的缓存修改的文件
+git stash show stash@{1}
+# 查看编号1的缓存的详细修改
+git stash show -p stash@{1}
+# 回复到指定缓存，(不删除)
+git stash apply stash@{0}
+# 删除指定缓存
+git stash drop stash@{1}
+```
 ## git reset
 * git reset 有三个方式
 ::: tip --soft
@@ -174,6 +203,22 @@ git add .
 git rebase --continue
 ### 如果还有冲突版本会继续要求手动修复，直至没有冲突，生成最新变基版本。
 ```
+
+## code review
+::: tip code review
+* 小A开发了一个软件，所有人都在用
+* 小B用的过程中发现了一个BUG
+* 小B想让小A修改错误：
+* 于是小B把小A的源代码**fork**到自己的仓库，并且自己做了BUG修复
+* 小B再给小A发起pull request/merge request 申请合入小A的代码库，让大家都用正确的代码
+![pull request](./assets/pullrequest.png)
+:::
+## 命令设置别名
+* 可以给一个很长的命令设置别名
+```shell
+git config --global alias.show-graph 'log --graph --abbrev-commit --pretty=oneline'
+```
+
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式

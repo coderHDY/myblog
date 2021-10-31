@@ -1,4 +1,14 @@
 # git 基础
+* 最详细的文档请查看[权威英文文档](https://www.git-scm.com/docs)
+::: tip 仓库版本
+![版本概念](./assets/thinking.png)
+:::
+::: tip HEAD指针
+* 本地仓库有很多版本
+* 而要对比暂存区和当前版本的区别时，就需要指定是**相对于哪一个版本**
+* 所以有HEAD指针，指向当前版本
+![HEAD指针](./assets/HEAD.png)
+:::
 
 ## git init
 
@@ -7,11 +17,21 @@
 git init
 ```
 ## git config
+::: tip 配置文件
+```shell
+# 查看本地配置文件
+cat .git/config
+```
+:::
+
 * 配置本地仓库信息
 ```shell
 # 本地仓库配置
 git config use.name 'coderWhy'
 git config use.email 'huangdeyu2020@163.com'
+
+git config --local use.email 'huangdeyu2020@163.com'
+git config --local use.name 'coderWhy'
 
 # 全局仓库配置
 git config --global user.name 'huangdeyu'
