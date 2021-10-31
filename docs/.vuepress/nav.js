@@ -7,6 +7,10 @@ const front = {
             link: '/front/base/'
         },
         {
+            text: 'js手写底层',
+            link: '/front/sourcecode/'
+        },
+        {
             text: 'js算法',
             link: '/front/algorithm/'
         },
