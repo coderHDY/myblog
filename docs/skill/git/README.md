@@ -18,9 +18,16 @@ git init
 ```
 ## git config
 ::: tip 配置文件
+* 配置文件查找顺序：本地 -> 全局 -> 系统
 ```shell
 # 查看本地配置文件
 cat .git/config
+
+# 查看全局配置
+cat ~/.gitconfig
+
+# 查看系统配置(需要有root权限，基本不用)
+cat /etc/.gitconfig
 ```
 :::
 
