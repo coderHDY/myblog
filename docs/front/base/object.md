@@ -35,7 +35,7 @@
 1. new出来的对象能够通过_ _ _proto_ _ _ 属性找到function的 prototype 对象
 2. prototype对象里又有一个constructor函数
 3. constructor函数有一个name属性，能够拿到函数名
-4. constructor还有一个_ _ _proto_ _ _ 属性，又指回它的原型对象（循环指向）
+4. constructor还有一个prototype属性，又指回它的原型对象（循环指向）
 :::: tabs
 ::: tab label=示意图
 ![](./assets/prototype.png)
