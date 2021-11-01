@@ -10,7 +10,8 @@ module.exports = {
         logo: 'https://vuepress.vuejs.org/logo.png',
         sidebarDepth: 2,
         nav: require('./nav'),
-        sidebar: require('./sidebar')
+        sidebar: require('./sidebar'),
+        lastUpdated: 'Last Updated',
     },
     plugins: [
         '@vuepress/back-to-top',
