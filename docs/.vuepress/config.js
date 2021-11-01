@@ -11,7 +11,7 @@ module.exports = {
         sidebarDepth: 2,
         nav: require('./nav'),
         sidebar: require('./sidebar'),
-        lastUpdated: 'Last Updated',
+        lastUpdated: '上次更新',
     },
     plugins: [
         '@vuepress/back-to-top',
