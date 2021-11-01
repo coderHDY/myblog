@@ -12,7 +12,8 @@
 7. symbol
 :::
 * 注：typeof 会把 null 和 object 和 Array类型都判断为 **object**，所以 [深浅拷贝](../sourcecode/#深浅拷贝)函数需要再次判断类型
-## ===
+
+## 全等===
 * 原生的 '==' 符号有一些缺陷，所以引入了全等 '==='
 ::: tip == 和 === 区别
 1. boolean、string、number **==会自动转换类型**再判断，不是精准比较
