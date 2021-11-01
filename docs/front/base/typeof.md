@@ -25,4 +25,4 @@ NaN === NaN // false
 ::: 
 
 ## instanceof
-* instanceof 本质上是从原型链上面去找对象
+* instanceof 本质上是从[原型链](./object.html#原型链)上面去找对象
