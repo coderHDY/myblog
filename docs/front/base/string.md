@@ -1,5 +1,38 @@
 # String
 
+## 模板字符串
+* 特性：
+1. 可换行
+2. 可替换
+3. [手写模板字符串](../sourcecode/template.html)
+:::: tabs
+::: tab label=可换行
+```js
+console.log(`  一二
+三四
+五六`)
+/**
+ *   一二
+ * 三四
+ * 五六
+ */
+```
+:::
+::: tab label=可替换
+```js
+const obj = {
+    name: '西瓜皮儿',
+    age: 18,
+    books: [
+        'JS红宝书',
+        'JS蝴蝶书'
+    ]
+}
+console.log(`我的名字是${obj.name}, 我去年${obj.age - 1}岁，我爱读${obj.books.map(item => '《' + item + '》')}`)
+// 我的名字是西瓜皮儿, 我去年17岁，我爱读《JS红宝书》,《JS蝴蝶书》
+```
+:::
+::::
 ## 常用方法
 * 方法总结：
 1. indexOf => number  || lastindexOf => number
@@ -24,8 +57,8 @@
 
 ### indexOf
 ::: tip indexOf
-* 调用：str1.indexOf(str2)
-* 入参：String[, start]
+* 调用：str1.indexOf(str2[, start])
+* 入参：String[, Number]
 * 返回：str2在str1的下标，没有返回-1，**可选定开始位置**
 :::
 ```js
@@ -59,8 +92,8 @@ console.log(str1.lastIndexOf(str2, 5)); // 3
 ```
 ### includes
 ::: tip includes
-* 调用：str1.includes(str2)
-* 入参：String[, start]
+* 调用：str1.includes(str2[, start])
+* 入参：String[, Number]
 * 返回：bool，str1是否包含str2，**可选定开始位置**
 :::
 ```js
@@ -199,10 +232,12 @@ console.log('1'.padEnd(10)); // '1         '
 :::
 ```js
 let a = 'hello world!';
+let reg1 = /l/;
+let reg2 = /l/g;
 
 console.log(a.replace('l', 'L')); // heLlo world!
 
-console.log(a.replace(/l/, (matchs, index, input) => {
+console.log(a.replace(reg1, (matchs, index, input) => {
     /**
      * matchs: l
      * index: 2
@@ -211,6 +246,17 @@ console.log(a.replace(/l/, (matchs, index, input) => {
     return 'L'
 })); // heLlo world!
 
+// 全部替换
+console.log(a.replace(reg2, (matchs, index, input) => {
+    /**
+     * matchs: l
+     * index: 2
+     * input: hello world!
+     */
+    return 'L'
+})); // heLLo worLd!
+
+// 有分组
 // 有match项，function传参就会相应的增加
 console.log(a.replace(/l(.*?)w/, (matchs, match, index, input) => {
     /**
@@ -263,9 +309,18 @@ console.log(a.replace(/l(.*?)w/g, (matchs, match, index, input) => {
 ```js
 console.log('hello'.charAt(3)); // l
 ```
+### charCodeAt
+::: tip charCodeAt
+* 调用：str.charCodeAt(index)
+* 入参：Number
+* 返回：Number
+:::
+```js
+console.log('hello'.charCodeAt(3)); // 108
+```
 ### slice
 ::: tip slice
-* 调用：str.slice(start, end)
+* 调用：str.slice(from, to)
 * 入参：Number, Number
 * 返回：切割掉的字符串
 * tip: slice 可以传负的索引
