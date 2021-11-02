@@ -30,7 +30,8 @@ const front = {
         '',
     ],
     '/front/sourcecode/': [
-        ''
+        '',
+        'template'
     ],
     '/front/interview/': [
         '',
