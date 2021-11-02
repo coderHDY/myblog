@@ -53,6 +53,10 @@ const skill = {
             text: '文档编写方法',
             link: '/skill/introduction/'
         },
+        {
+            text: '小技巧',
+            link: '/skill/smalltips/'
+        },
     ]
 }
 module.exports = [

@@ -39,6 +39,7 @@ class People extends Animal{}
 
 const p1 = new People();
 
+// 继承后的实例对象能通过instanceof找到祖先类
 console.log(p1 instanceof People); // true
 console.log(p1 instanceof Animal); // true
 console.log(p1 instanceof Object); // true
@@ -48,9 +49,10 @@ console.log(p1 instanceof Object); // true
 ```js
 class Animal {}
 
-class People {}
+// class People extends Animal{}
 
 // 继承的本质
+class People {}
 People.prototype.__proto__ = Animal.prototype;
 
 const p1 = new People();
@@ -61,9 +63,10 @@ console.log(p1 instanceof Object); // true
 ```
 :::
 ::: tab label=instanceof的本质
+* 本对象递归查找__proto__属性是否有目标类的prototype
 ```js
 function instanceOf(objA, fnB) {
-    const prototype = fnB.prototype; // 另一个对象的__proto__递归能找到他就算是true
+    const prototype = fnB.prototype;
 
     let __proto__ = objA.__proto__;
     while (true) {
@@ -99,3 +102,69 @@ console.log(instanceOf(p1, Object)); // true
 ```
 :::
 ::::
+### 阻止函数式调用
+* 根据instanceof的特性，和[new关键字的特性](./object.html#原型链)，可以推导出**阻止类的函数式调用的方法**
+::: tip 阻止类的函数式调用
+* 一般我们定义一个class就是一个function，只是阻止了函数直接直接调用
+```js
+class A {}
+function B() {}
+
+let a = new A();
+let b = new B();
+
+A(); // Error
+B(); // 正确运行，但是不期望这么做，因为本身目的是让它作为一个类
+```
+* 那么一个function怎样只允许他new调用呢？
+```js
+function B() {
+
+    // 注：! 优先级比 instanceof 高，所以要加括号
+    if (!(this instanceof B)) {
+        throw Error('只能用new关键字调用');
+    }
+}
+
+B(); // 抛出Error
+```
+:::
+
+## Object.is
+### 与===/==的区别
+```js
+Object.is(NaN, NaN); // true
+NaN === NaN; // false
+NaN == NaN; // false
+
+Object.is(+0, -0); // false
++0 == -0; // true
++0 === -0; // true
+
+```
+
+## 判断数组
+### Array.isArray
+```js
+let i = [1, 2, 4];
+console.log(Array.isArray(i)); // true
+```
+### prototype
+```js
+console.log(i instanceof Array); //true
+```
+
+### __proto__
+```js
+console.log(i.__proto__ === Array.prototype); // true
+```
+
+### constructor
+```js
+console.log(i.__proto__.constructor === Array); // true
+```
+
+### toString
+```js
+console.log(Object.prototype.toString.call(i).indexOf('Array') !== -1); // true
+```

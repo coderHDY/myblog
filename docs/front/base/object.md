@@ -4,11 +4,12 @@
 ### 原理
 1. 每个function上都有一个prototype属性，指向一个对象，叫做**原型对象**
 2. 原型对象上又有一个constructor属性能够找到构造他的function
-    * constructor 是用 new 关键字调用时才会调用，主要做四件事：
+    * constructor 是用 **new 关键字调用**时才会调用，主要做四件事：
         > 1. 生成一个新的对象 {}
         > 2. 给这个对象添加一个属性 _ _ _proto_ _ _  = function的prototype;
         > 3. function 的this绑定到这个对象上去执行
         > 4. **返回新生对象（所以新对象就有一个_ _ _proto_ _ _属性指向了这个function的prototype），就能说他的原型链上能找到这个function的原型对象**
+        > * 因此可以用[instanceof判断是否是new调用](./typeof.html#阻止函数式调用)
 ```html
 <head>
     <title>Document</title>
