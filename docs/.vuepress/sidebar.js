@@ -63,6 +63,10 @@ const skill = {
         'ability',
         'plugin_dev',
         'traps'
+    ],
+    '/skill/smalltips/': [
+        '',
+        'atom'
     ]
 }
 
