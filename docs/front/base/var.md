@@ -201,8 +201,8 @@ let a = 1; // 报错，说明已存在这个变量
 ::: tab label=class
 * class 其实就是function的一个封装，声明的也是一个变量
 ```js
-class A{}
-let a = 1; // 报错
+class A {}
+let A = 1; // 报错
 ```
 :::
 ::: tab label=import

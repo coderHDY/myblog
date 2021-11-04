@@ -42,15 +42,7 @@ console.log(b.name) // 李四
 ```
 :::
 ::::
-
-## 思路
-* 所以要让对象也能实现赋值以后互不影响，就需要**深拷贝函数**
-* 主要思路：
-    1. typeof 判断赋值类型，是是值类型就直接赋值，不是值类型就进一步判断再赋值
-    2. typeof 判断是引用类型的有 function、object，function是函数可以不处理，所以只要处理object
-    2. typeof 判断 object 可能是[Function, Array, null],需要区别处理
-    3. 可能会有对象嵌套或嵌套数组，所以需要递归处理
-
+## 目标
 ::: tip 目标
 ```js
 let a = {
@@ -70,7 +62,15 @@ console.log(b.name); // 张三
 console.log(b.books[1]) // js蝴蝶书
 ```
 :::
-## 实现
+## 思路一
+* 所以要让对象也能实现赋值以后互不影响，就需要**深拷贝函数**
+* 主要思路：
+    1. typeof 判断赋值类型，是是值类型就直接赋值，不是值类型就进一步判断再赋值
+    2. typeof 判断是引用类型的有 function、object，function是函数可以不处理，所以只要处理object
+    2. typeof 判断 object 可能是[Function, Array, null],需要区别处理
+    3. 可能会有对象嵌套或嵌套数组，所以需要递归处理
+
+### 实现
 ```js
 function deepClone(obj) {
     if (typeof obj === 'object' && obj !== null) {
@@ -92,5 +92,14 @@ function deepClone(obj) {
 
     // 本身就是值拷贝
     return obj;
+}
+```
+
+## 思路二
+* 利用JSON.的两个语法，直接深层的取出值，将其完全转化成字符串，再转化回来
+### 实现
+```js
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 ```

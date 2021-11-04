@@ -84,7 +84,7 @@
 3. Function._ _ _proto_ _ _ 指向的也是 Function.prototype
 4. 而Function.prototype是一个对象，根据原则1，它的_ _ _proto_ _ _ 指向的也是Object.prototype,所以原型链顶端就会出现循环指向的问题。
 ---
-![原型链顶端](./assets/prototypechain.png)
+![原型链顶端](./assets/functionprototype.png)
 :::: tabs
 :::tab label=代码
 ```html
