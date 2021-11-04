@@ -249,8 +249,8 @@ console.log(a.replace(reg1, (matchs, index, input) => {
 // 全部替换
 console.log(a.replace(reg2, (matchs, index, input) => {
     /**
-     * matchs: l
-     * index: 2
+     * matchs: l  l  l
+     * index:  2  3  9  
      * input: hello world!
      */
     return 'L'
