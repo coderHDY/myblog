@@ -63,7 +63,7 @@ cat ~/.ssh/id_rsa.pub
 * 一台电脑配置多个git对应仓库
 ```shell
 # 生成 ssh-key 放置到另一个路径下，以 .pub 结尾，如: ~/.ssh/id_rsa_github.pub
-ssh-keygen-t rsa -C huangdeyu2020@163.com
+ssh-keygen -t rsa -C huangdeyu2020@163.com
 # 编辑 config 对应配置文件，映射每个主机对应的配置和 ss-key 位置
 vim ~/.ssh/config
 
