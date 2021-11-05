@@ -55,7 +55,7 @@ git config --local --list
 * 绑定远程仓库需要使用 SSH key
 ```shell
 # 用我的邮箱生成 ssh-key (中间可以配置存放路径)
-ssh-keygen-t rsa -C huangdeyu2020@163.com
+ssh-keygen -t rsa -C huangdeyu2020@163.com
 # mac下查看生成的key (自己的路径)
 cat ~/.ssh/id_rsa.pub
 ```
