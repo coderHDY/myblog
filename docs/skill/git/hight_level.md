@@ -219,6 +219,11 @@ git rebase --continue
 git config --global alias.show-graph 'log --graph --abbrev-commit --pretty=oneline'
 ```
 
+## .gitconfig
+* 查找当前目录的git环境配置来源
+```shell
+git config --list --show-origin
+```
 ## .gitignore
 * git提交时忽略文件
 * 可以识别正则表达式

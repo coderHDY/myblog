@@ -177,6 +177,11 @@ sudo kill -9 进程号
 ```shell
 /usr/local/nginx/sbin/nginx
 ```
+
+3. 重载nginx配置
+```shell
+service nginx reload
+```
 :::
 ::: tab label=关闭后台进程
 1. 查找后台任务进程号
