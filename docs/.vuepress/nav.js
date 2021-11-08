@@ -50,6 +50,10 @@ const skill = {
             link: '/skill/linux/'
         },
         {
+            text: 'shell',
+            link: '/skill/shell/'
+        },
+        {
             text: '文档编写方法',
             link: '/skill/introduction/'
         },

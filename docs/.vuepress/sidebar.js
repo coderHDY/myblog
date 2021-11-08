@@ -77,7 +77,25 @@ const skill = {
     ],
     '/skill/linux/': [
         '',
+        'install'
     ],
+    '/skill/shell/': [
+        {
+            title: '基础命令',
+            collapsable: false,
+            children: [
+                '',
+            ]
+        },
+        {
+            title: '辅助工具',
+            collapsable: false,
+            children: [
+                'pm2',
+            ]
+        },
+    ],
+    
     '/skill/introduction/': [
         '',
         'ability',
