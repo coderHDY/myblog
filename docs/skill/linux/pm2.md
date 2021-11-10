@@ -3,7 +3,8 @@
 ## 工具介绍
 * 可后台运行进程，类似于nohup，但比nohup好用
 * 如果进程意外挂掉，pm2会自己重启它，保证进程的持续性
-
+* 可以设置开机启动，让后台脚本持续运行
+* 适合用来保护服务器进程不挂掉
 ### 安装
 ```shell
 npm install pm2 -g 
@@ -57,7 +58,7 @@ pm2 logs
 ```shell
 # 监听方式启动
 # deploy.sh里面有 npm run dev
-pm2 start deploy.sh
+pm2 start deploy.sh --watch
 
 # 寻找8080端口号对应的进程：2222
 lsof -i:8080
@@ -87,12 +88,16 @@ pm2 logs
 ```shell
 # 查看进程产生的日志
 pm2 logs
+pm2 log 0
 
 # 查看所有的服务
 pm2 list
 
 # 查看程序占用情况
 pm2 monit
+
+# 进程改名
+pm2 restart 0 --name blog
 ```
 ### 关闭服务
 ```shell
@@ -167,5 +172,5 @@ pm2 show name
 
 ```shell
 # & 代表后台持续运行
-nohup deploy.sh &
+nohup bash deploy.sh &
 ```
