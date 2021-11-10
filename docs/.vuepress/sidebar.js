@@ -76,15 +76,13 @@ const skill = {
         'git_thinking',
     ],
     '/skill/linux/': [
-        '',
-        'install'
-    ],
-    '/skill/shell/': [
         {
             title: '基础命令',
             collapsable: false,
             children: [
                 '',
+                'base',
+                'bugs'
             ]
         },
         {
@@ -92,6 +90,16 @@ const skill = {
             collapsable: false,
             children: [
                 'pm2',
+                'git',
+            ]
+        },
+    ],
+    '/skill/shell/': [
+        {
+            title: '基础命令',
+            collapsable: false,
+            children: [
+                '',
             ]
         },
     ],

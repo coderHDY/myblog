@@ -4,6 +4,7 @@
 1. var有变量提升
 2. var的变量提升只是提升声明，还是要等执行到对应行才赋值
 3. var不会创建块级作用域
+4. **var声明的全局变量会挂载到window上去**
 :::: tabs
 ::: tab label=1
 * 变量提升
@@ -35,6 +36,17 @@ if (true) {
 }
 
 console.log(a); // 2 说明if 的块级作用域没有包住a
+```
+:::
+::: tab label=4
+* var的变量声明会挂载到window上面去
+```js
+const name1 = '张三';
+var name2 = '李四';
+
+// 浏览器环境
+console.log(window.name1); // undefined
+console.log(window.name2); // 李四
 ```
 :::
 ::: tab label=经典问题

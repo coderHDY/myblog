@@ -1,5 +1,6 @@
 module.exports = {
     title: '西瓜皮儿的blog',
+    port: 8070,
     head: [
         ['link', {
             rel: 'icon',
