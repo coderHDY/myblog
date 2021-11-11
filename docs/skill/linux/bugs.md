@@ -11,6 +11,10 @@ sudo chown -R $USER /home/work/yunying-docs
 ```
 :::
 ::: tab label=文件设置
+```shell
+# root权限下
+visudo
+```
 ```txt
 # 目录：/etc/sudoers
 Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin
@@ -25,6 +29,7 @@ work    ALL=NOPASSWD:ALL
 ```shell
 sudo chmod -R a+rw /usr/local/nginx 
 ```
+:::
 ::::
 
 

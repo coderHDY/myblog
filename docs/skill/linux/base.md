@@ -22,3 +22,24 @@ lsof -i:8000
 ```shell
 kill -9 23222
 ```
+
+## 角色管理
+* 新建角色
+> 需要在root角色下
+```shell
+useradd A
+
+passwd A
+
+# 分配管理员权限
+visudo
+```
+* 切换角色
+```shell
+su A
+```
+
+* 删除角色
+```shell
+userdel A -r
+```
