@@ -8,7 +8,7 @@ bind/call/apply区别：
 * call和apply区别：传参不同，call将参数分开：fn.call(obj, ...args)
 :::
 ::: tip bind
-* 作用：讲一个函数绑定this，返回新的函数
+* 作用：将一个函数绑定this，返回新的函数
 * 调用：fn2 = fn1.bind(obj[, ...args])
 * 入参：Object[, any]
 * 返回：Function
