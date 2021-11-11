@@ -3,19 +3,25 @@
 ## 安装
 * 更多安装版本[官网](https://github.com/git/git/releases/tag/v2.17.2)
 ```shell
-wget https://github.com/git/git/archive/refs/tags/v2.17.2.tar.gz
+wget https://github.com/git/git/archive/refs/tags/v2.33.0.tar.gz
 
-tar -zxvf v2.17.2
+tar -zxvf v2.33.0.tar.gz
 
-cd git-2.17.2
+cd git-2.33.0
+
+yum install autoconf automake libtool
 
 make configure
 
 ./configure --prefix=/home/work
 
+yum install zlib-devel
+
 make
 
 make install
+
+git --version
 ```
 
 ## 免密pull
