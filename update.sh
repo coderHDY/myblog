@@ -11,6 +11,6 @@ do
 
     echo "完成更新:" `date +%H:%M:%S` >> log.txt
 
-    sleepTime=`expr 6 \* 1 \* 10`
+    sleepTime=`expr 60 \* 60 \* 24`
     sleep ${sleepTime}
 done
