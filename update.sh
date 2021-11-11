@@ -1,7 +1,7 @@
 while true
 do
     git pull
-    npm i
+    # npm i
     npm run build
 
     mv dist dist_old
