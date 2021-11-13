@@ -104,7 +104,22 @@ const skill = {
             ]
         },
     ],
-    
+    '/skill/internet/': [
+        {
+            title: '网络基础',
+            collapsable: false,
+            children: [
+                '',
+            ]
+        },
+        {
+            title: '小知识点',
+            collapsable: false,
+            children: [
+                'reqhead',
+            ]
+        },
+    ],
     '/skill/introduction/': [
         '',
         'ability',
