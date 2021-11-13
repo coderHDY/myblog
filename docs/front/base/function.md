@@ -36,7 +36,6 @@ fn2(web); // hdy js红宝书 MDN
 ::: tab label=手写原生bind
 * 核心思想：箭头函数的this是外层的this，外层function的this是调用者的this，调用者就是需要被绑定的函数
 ```js
-
 Function.prototype.newBind = function (obj, ...args1) {
     const _self = this;
 
@@ -155,7 +154,7 @@ function fn() {
 
 var age = 10
 
-fn(); // node环境: undefined  10
+fn(); // node环境: undefined  浏览器环境：10
 fn.call(obj); // 18
 ```
 ## apply
