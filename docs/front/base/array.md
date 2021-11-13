@@ -84,8 +84,314 @@ console.log(new Array(1, 2, 3)); // [1, 2, 3]
 console.log(Array.of(3)); // [3]
 console.log(new Array(3)); // [undefined, undefined, undefined]
 ```
+## 增删改查
+### pop
+::: tip pop
+* 作用：数组取出最后一项（改变原数组）
+* 调用：arr.pop()
+* 返回：删除的项
+:::
+```js
+const arr = [1, 2, 3];
+console.log(arr.pop()); // 3
+console.log(arr); // [1, 2]
+```
+### push
+::: tip push
+* 作用：数组末尾添加项
+* 调用：arr.push(item[, item...])
+* 传入：any[, any]
+* 返回：any
+* tip：返回的是添加后数组的最后一项
+:::
+```js
+const arr = [1, 2, 3, 4];
+console.log(arr.push(5, 6, 7)); // 7
+console.log(arr); // [1, 2, 3, 4, 5, 6, 7]
+```
+### shift
+::: tip shift
+* 作用：删除数组第一个元素
+* 调用：arr.shift()
+* 返回：any
+:::
+```js
+const arr = [1, 2, 3, 4];
+console.log(arr.shift()); // 1
+console.log(arr); // [2, 3, 4]
+console.log([].shift()); // undefined
+```
+### unshift
+::: tip unshift
+* 作用：向数组头添加项
+* 调用：arr.unshift(item[, item...])
+* 入参：any[, any...]
+* 返回：any
+* tip：插入的顺序就是入参顺序，返回的是第一个参数
+:::
+:::: tabs
+::: tab label=使用
+```js
+const arr = [1, 2, 3];
+console.log(arr.unshift(5, 6)); // 5
+console.log(arr); // [5, 6, 1, 2, 3]
+```
+:::
+::: tab label=手写
+> 期望：
+```js
+const arr = [1, 2, 3];
+console.log(arr.myUnshift(5, 6)); // 5
+console.log(arr); // [5, 6, 1, 2, 3]
+```
+```js
+Array.prototype.myUnshift = function(...args) {
+    const arr = [...args, ...this];
+    for(let [index, value] of arr.entries()) {
 
-## 原型方法
+        // 注：this不能单独作为左赋值，this = xxx; 所以只能逐个改属性
+        this[index] = value;
+    }
+    return args[0];
+}
+```
+:::
+::::
+### splice
+::: tip splice
+* 作用：删除、插入数组
+* 调用：arr.splice(from[, delNum, newItem...])
+* 入参：Number[, Number, any...]
+* 返回：array
+* tip：返回的是**删除的数组**
+* tip：支持负值索引
+:::
+:::: tabs
+::: tab label=普通用法
+```js
+const arr = [1, 10, 1000];
+
+// 插入
+console.log(arr.splice(2, 0, 100)); // []
+console.log(arr); // [1, 10, 100, 1000]
+
+// 删除
+console.log(arr.splice(1, 2)); // [10, 100]
+console.log(arr); // [1， 1000]
+```
+:::
+::: tab label=负值索引
+```js
+const arr = [1, 2, 3];
+
+console.log(arr.splice(-2, 1, 100)); // [2]
+console.log(arr); // [1, 100, 3]
+```
+:::
+::::
+### includes
+::: tip includes
+* 作用：检查数组中是否包含指定的项，**可以指定开始查找的位置**
+* 调用：arr.includes(item[, start])
+* 入参：any[, Number]
+* 返回：boolean
+:::
+```js
+const arr = [1, 2, 3, 4];
+console.log(arr.includes(2)); // true
+console.log(arr.includes(2, 2)); // false
+```
+* 起始长度大于数组长度，直接返回false
+```js
+const arr = [1, 1, 1, 1];
+console.log(arr.includes(1, 4)); // false
+```
+### every
+::: tip every
+* 作用：查看数组是否**所有项**都满足条件
+* 调用：arr.every((item, index, arr) => boolean, obj)
+* 入参：Function[, Object]
+* 返回：Boolean
+* tip：要使用this就**不能使用箭头函数**
+:::
+::::tabs
+::: tab label=不带thisArg
+```js
+const arr = [4, 4, 5, 6];
+console.log(arr.every((item, index, arr) => {
+    return item < 10;
+})) // true
+```
+:::
+::: tab label=带thisArg
+```js
+const arr = [14, 15, 16, 19];
+const obj = {
+    name: 'hdy',
+    age: 18
+}
+console.log(arr.every(function(item, index, arr){ 
+    return item < this.age
+}, obj)) // false
+```
+:::
+::::
+### some
+::: tip some
+* 作用：判断数组中是否有符合的项
+* 调用：arr.some((item, index, arr) => bool, thisArg)
+* 入参：Function[, obj]
+* 返回：Boolean
+:::
+```js
+const arr = [1, 10, 100, 1000];
+
+console.log(arr.some(item => item > 1000)); // false
+console.log(arr.some(item => item > 100)); // true
+```
+
+
+### find
+::: tip find
+* 作用：找到数组中**第一个**满足条件的项
+* 调用：arr.find((item, index, arr) => bool, thisArg)
+* 入参：Function[, Object]
+* 返回：any(数组中满足条件的项)
+* tip：使用thisArg就不能使用箭头函数
+:::
+:::: tabs
+::: tab label=不带this
+```js
+const arr = [1, 10, 100, 'coderHdy'];
+
+console.log(arr.find(item => typeof item !== 'number')); // 'coderHdy'
+```
+:::
+::: tab label=带this
+```js
+const arr = [
+    {
+        name: '张三',
+        age: 18
+    },
+    {
+        name: '李四',
+        age: 19
+    },
+    {
+        name: '小尤',
+        age: 32
+    }
+];
+const obj = {
+    name: 'coderHdy',
+    age: 21
+}
+
+console.log(arr.find(function(item) {
+    return item.age > this.age;
+}, obj)
+.name); // '小尤'
+```
+:::
+::::
+### findIndex
+::: tip findIndex
+* 作用：找到符合条件的第一项的下标
+* 调用：arr.findIndex((item, index, arr) => bool, thisArg)
+* 入参：Function[, Object]
+* 返回：Number
+* tip：使用thisArg就不能使用箭头函数
+:::
+:::: tabs
+::: tab label=不带thisArg
+```js
+const arr = [1, 2, 3, 'coderHdy'];
+
+console.log(arr.findIndex(item => typeof item !== 'number')); // 3
+```
+:::
+
+::: tab label=带thisArg
+```js
+const arr = [
+    {
+        name: '张三',
+        age: 18
+    },
+    {
+        name: '李四',
+        age: 19
+    },
+    {
+        name: '小尤',
+        age: 32
+    }
+];
+const obj = {
+    name: 'coderHdy',
+    age: 21
+}
+
+console.log(arr.findIndex(function(item) {
+    return item.age > this.age;
+}, obj)); // 2
+```
+:::
+::::
+
+### indexOf
+::: tip indexOf
+* 作用：找到指定元素的下标，不存在则返回 -1
+* 调用：arr.indexOf(item[, start])
+* 入参：any[, Number]
+* 返回：Number
+:::
+:::: tabs
+::: tab label=普通用法
+``` js
+const arr = ['小黄', '小张', '小李' , '小秋', '小张'];
+console.log(arr.indexOf('小张')); // 1
+console.log(arr.indexOf('小张', 2)); // 4
+```
+:::
+::: tab label=收集下标
+> 期望：
+```js
+const arr = ['小张', '小黄', '小李', '小黄'];
+console.log(findAllIndex(arr, '小黄')); // [1, 3]
+```
+```js
+function findAllIndex(arr, str) {
+    const ans = [];
+    let cIndex = arr.indexOf(str);
+    while (cIndex > -1) {
+        ans.push(cIndex);
+        cIndex = arr.indexOf(str, cIndex + 1);
+    }
+    return ans;
+}
+```
+:::
+::::
+### lastIndexOf
+::: tip lastIndexOf
+* 作用：反向查找指定元素的下标，**可以指定末尾开始的下标**
+* 调用：arr.lastIndexOf(item[, from])
+* 入参：any[, Number]
+* 返回：Number
+* tip：from支持负值，可以从后数
+:::
+```js
+const arr = ['小张', '小张', '小李', '小张'];
+
+console.log(arr.lastIndexOf('小张')); // 3
+console.log(arr.lastIndexOf('小张', 2)); // 1
+console.log(arr.lastIndexOf('小张', 0)); // 0
+console.log(arr.lastIndexOf('小张', -2)); // 1
+
+```
+
 ### at
 ::: tip 支持的环境
 * 新方法，支持的环境较新
@@ -103,7 +409,7 @@ console.log(new Array(3)); // [undefined, undefined, undefined]
 ```js
 const arr = [1, 2, 3];
 
-console.log(arr.at(-1));
+console.log(arr.at(-1)); // 3
 ```
 :::
 
@@ -125,6 +431,7 @@ console.log(at(arr, -2)); // 2
 :::
 ::::
 
+## 操作数组
 ### concat
 ::: tip concat
 * 作用：拼接数组，**自动打平一层入参**，不改变原数组
@@ -193,73 +500,6 @@ const arr2 = [1, 2, 3, 4, 5];
 console.log(arr.copyWithin(1, 3, 5)) // [1, 4, 5, 4, 5]
 console.log(arr2.copyWithin(2, 1, 3)) // [1, 2, 2, 3, 5]
 ```
-
-### entries
-::: tip entries
-* 作用：将数组以**迭代器**的形式返回
-* 调用：arr.entries()
-* 返回：数组的迭代器
-:::
-```js
-const arr = [1, 2, 3, 4];
-let arrEts = arr.entries();
-
-console.log(arrEts.next()); // { value: [ 0, 1 ], done: false }
-```
-* 可以用作**for..of**循环
-```js
-const arr = [1, 2, 3, 4];
-let arrEts = arr.entries();
-
-for( let [index, value] of arrEts) {
-    console.log(value); // 1 2 3 4
-}
-```
-
-### every
-::: tip every
-* 作用：查看数组是否**所有项**都满足条件
-* 调用：arr.every((item, index, arr) => boolean, obj)
-* 入参：Function[, Object]
-* 返回：Boolean
-* tip：要使用this就**不能使用箭头函数**
-:::
-::::tabs
-::: tab label=不带thisArg
-```js
-const arr = [4, 4, 5, 6];
-console.log(arr.every((item, index, arr) => {
-    return item < 10;
-})) // true
-```
-:::
-::: tab label=带thisArg
-```js
-const arr = [14, 15, 16, 19];
-const obj = {
-    name: 'hdy',
-    age: 18
-}
-console.log(arr.every(function(item, index, arr){ 
-    return item < this.age
-}, obj)) // false
-```
-:::
-::::
-### some
-::: tip some
-* 作用：判断数组中是否有符合的项
-* 调用：arr.some((item, index, arr) => bool, thisArg)
-* 入参：Function[, obj]
-* 返回：Boolean
-:::
-```js
-const arr = [1, 10, 100, 1000];
-
-console.log(arr.some(item => item > 1000)); // false
-console.log(arr.some(item => item > 100)); // true
-```
-
 ### fill
 ::: tip fill
 * 作用：将数组填充，**改变原数组**
@@ -274,6 +514,162 @@ console.log(arr.fill(6, 2, 4)); // [1, 2, 6, 6, 5]
 console.log(arr.fill(6)); // [6, 6, 6, 6, 6]
 console.log(arr); // [6, 6, 6, 6, 6]
 ```
+### join
+::: tip join
+* 作用：将数组加入指定的分隔符转化成字符串
+* 调用：arr.join(str)
+* 入参：String
+* 返回：String
+* tip：入参不传默认是逗号
+:::
+```js
+const arr = [1, '本书', true];
+console.log(arr.join()); // 1,本书,true
+console.log(arr.join('')); // 1本书true
+```
+::: warning split
+* 作用：将字符串反向转回数组
+[详情](./string.html#split)
+:::
+```js
+const str = '1,本书,true';
+console.log(str.split(',')); // ['1', '本书', 'true']
+```
+
+### reverse
+::: tip reverse
+* 作用：反转数组，**改变原数组**
+* 调用：arr.reverse()
+* 返回：原数组引用
+:::
+```js
+const arr = [1, 2, 3, 4, 5];
+console.log(arr.reverse()); // [5, 4, 3, 2, 1]
+console.log(arr); // [5, 4, 3, 2, 1]
+```
+### sort
+::: tip sort
+* 作用：排列数组，**改变原数组**
+* 调用：arr.sort((a, b) => Number)
+* 入参：conpareFn
+* 返回：原数组引用
+:::
+::: warning conpareFn
+* 形式：(a, b) => Number
+* **返回值 > 0：a在前面**
+* 返回值 < 0：a在后面
+:::
+:::: tabs
+::: tab label=使用
+```js
+const arr = [1000, 10, 100, 1];
+console.log(arr.sort((a, b) => {
+    if (a > b) {
+        return 1; // a大的时候希望他在后面
+    } else {
+        return -1;
+    }
+})); // [1, 10, 100, 1000]
+console.log(arr); // // [1, 10, 100, 1000]
+
+// 精简版
+
+console.log(arr.sort((a, b) => a - b)); // [1, 10, 100, 1000]
+```
+:::
+::: tab label=名称牌序
+* 字符的比较会比较ascll码值
+```js
+console.log('a' > 'b'); // false
+console.log('ba' > 'bb'); // false
+```
+> 期望：
+```js
+const names = ['Delta', 'alpha', 'CHARLIE', 'bravo'];
+console.log(sortIt(names)); // [ 'alpha', 'bravo', 'CHARLIE', 'Delta' ]
+```
+```js
+function sortIt(names) {
+    const lower = names.map((name, index) => ({index, name:name.toLowerCase()}));
+    lower.sort((a, b) => {
+        return +(a.name > b.name) || +(a.name === b.name) - 1;
+
+        // if (a.name > b.name) {
+        //     return 1;
+        // } else if(a.name === b.name) {
+        //     return 0;
+        // } else {
+        //     return -1;
+        // }
+    })
+    const ans = lower.map((item) => names[item.index]);
+    return ans;
+}
+```
+::::
+### flat
+::: tip flat
+* 作用：打平多维数组,**不改变原数组**
+* 调用：arr.flat(deepth)
+* 入参：Number(可选，默认是1)
+* 返回：Array
+:::
+:::: tabs
+::: tab label=使用
+```js
+const arr = [1, 2, [10, 20, [100, 200]]];
+
+console.log(arr.flat()); // [1, 2, 10, 20, [100, 200]]
+console.log(arr); // [1, 2, [10, 20, [100, 200]]]
+console.log(arr.flat(2)); // [1, 2, 10, 20, 100, 200]
+```
+:::
+::: tab label=手写原理
+```js
+function flat(arr, deepth = 1) {
+
+    // reduce返回新数组，concat自带一层打平
+    return arr.reduce((pre, item) => 
+        pre.concat(Array.isArray(item) && deepth > 1 ? flat(item, deepth - 1) : item)
+    , []);
+}
+
+const arr = [1, 2, [10, 20, [100, 200, [1000, 2000]]]];
+
+console.log(flat(arr)); // [ 1, 2, 10, 20, [ 100, 200, [ 1000, 2000 ] ] ]
+console.log(arr); // [ 1, 2, [ 10, 20, [ 100, 200, [1000, 2000] ] ] ]
+console.log(flat(arr, 2)); // [ 1, 2, 10, 20, 100, 200, [ 1000, 2000 ] ]
+```
+:::
+::: tab label=手写无限打平
+```js
+function deepFlat(arr) {
+    return arr.reduce((pre, item) => 
+        pre.concat(Array.isArray(item) ? deepFlat(item) : item)
+    , [])
+}
+
+const arr = [1, 2, [10, 20, [100, 200, [1000, 2000]]]];
+
+console.log(deepFlat(arr)); // [ 1, 2, 10, 20, 100, 200, 1000, 2000 ]
+
+```
+:::
+::::
+
+### toString
+::: tip toString
+* 作用：将数组转化成字符串，以逗号分隔，不改变原数组
+* 调用：arr.toString()
+* 返回：String
+:::
+```js
+const arr = [1, 2, true, '黄']
+console.log(arr.toString()); // 1,2,true,黄
+console.log(arr); // [1, 2, true, '黄']
+```
+
+## 高级方法
 
 ### filter
 ::: tip filter
@@ -344,6 +740,115 @@ console.log(arr2);  // [10, 100]
 :::
 ::::
 
+### forEach
+::: tip forEach
+* 作用：**以迭代器的形式**遍历数组
+* 调用：arr.forEach((item, index, arr) => {}, thisArg)
+* 入参：function[, obj]
+* 返回：undefined
+* tip：forEach无法中断，且遍历项不会中途改变遍历的项
+:::
+:::: tabs
+::: tab label=普通使用
+```js
+const arr = ['name', 'age', 'book', 'work'];
+const obj = {
+    name: 'hdy',
+    age: 18,
+    book: '红宝书',
+    work: '前端工程师'
+}
+
+arr.forEach(function(item) {
+    console.log(this[item])
+}, obj);
+// hdy 18 红宝书 前端工程师
+```
+:::
+::: tab label=无法中断
+```js
+const arr = [1, 10, 100, 1000];
+arr.forEach(item => {
+    console.log(item);
+    // if (item > 9) break;  // 报错
+    if (item > 99) return;   // 无法中断
+});  // 1 10 100 1000
+```
+* 可以中断的方法
+```js
+// for...of for...in  for...  every   some  find findIndex 
+const arr = [1, 10, 100, 1000];
+arr.some(item => {
+    console.log(item);
+    return item > 9;
+}); // 1 10
+```
+:::
+::: tab label=遍历次数固定
+```js
+const arr = [1, 10, 100, 1000];
+arr.forEach((item, index, arr) => {
+    console.log(item);
+    if (item > 9) {
+        arr.splice(index, 0, 99);
+    }
+}) // 1 99 99 99  还是只遍历四次
+console.log(arr); // [1, 99, 99, 99, 10, 100, 1000]
+```
+:::
+::::
+### map
+::: tip map
+* 作用：将数组执行一个处理函数，**返回新的数组**
+* 调用：arr.map((item, index, arr) => newItem, thisArg)
+* 入参：function[, obj]
+* 返回：Array
+:::
+:::: tabs
+::: tab label=常规调用
+```js
+const arr1 = [1, 2, 3, 4];
+const arr2 = arr1.map((item, index) => item * index);
+
+console.log(arr1); // [1, 2, 3, 4]
+console.log(arr2); // [0, 2, 6, 12]
+```
+::: 
+::: tab label=带thisArg
+```js
+const obj = {
+    name: 'hdy'
+}
+const arr1 = [18, 19, 20];
+const arr2 = arr1.map(function (item) {
+    const obj = JSON.parse(JSON.stringify(this));
+    obj.age = item;
+    return obj;
+}, obj);
+
+console.log(arr2); // [{name: 'hdy', age: 18}, {name: 'hdy', age: 19}, {name: 'hdy', age: 20}]
+```
+:::
+::: tab label=作用字符串
+```js
+const map = Array.prototype.map;
+const str = '我是coderHdy';
+const arr = map.call(str, item => item.charCodeAt(0));
+
+console.log(arr); // [25105, 26159,  99, 111,   100, 101, 114, 72, 100, 121]
+```
+:::
+::: tab label=经典问题
+```js
+const arr = ['1', '2', '2', '2'];
+console.log(arr.map(parseInt)); // [1, NaN, NaN, 2]
+```
+> parseInt其实接收两个参数：parseInt(str, type);
+> 来决定是几进制
+> 而map给回调函数传三个参数，第二个是index，index变成了进制，所以导致转换错误
+> 二进制里面2就是非法的。
+:::
+::::
 ### reduce
 :::tip reduce
 * 作用：遍历数组，获得一个迭代出来的结果
@@ -572,346 +1077,11 @@ const arr = [1, 2, 3, 4];
 console.log(arr.reduce((pre, item, index, arr) => pre + item, '')); // 1234
 console.log(arr.reduceRight((pre, item, index, arr) => pre + item, '')); // 4321
 ```
-### forEach
-::: tip forEach
-* 作用：**以迭代器的形式**遍历数组
-* 调用：arr.forEach((item, index, arr) => {}, thisArg)
-* 入参：function[, obj]
-* 返回：undefined
-* tip：forEach无法中断，且遍历项不会中途改变遍历的项
-:::
-:::: tabs
-::: tab label=普通使用
-```js
-const arr = ['name', 'age', 'book', 'work'];
-const obj = {
-    name: 'hdy',
-    age: 18,
-    book: '红宝书',
-    work: '前端工程师'
-}
 
-arr.forEach(function(item) {
-    console.log(this[item])
-}, obj);
-// hdy 18 红宝书 前端工程师
-```
-:::
-::: tab label=无法中断
-```js
-const arr = [1, 10, 100, 1000];
-arr.forEach(item => {
-    console.log(item);
-    // if (item > 9) break;  // 报错
-    if (item > 99) return;   // 无法中断
-});  // 1 10 100 1000
-```
-* 可以中断的方法
-```js
-// for...of for...in  for...  every   some  find findIndex 
-const arr = [1, 10, 100, 1000];
-arr.some(item => {
-    console.log(item);
-    return item > 9;
-}); // 1 10
-```
-:::
-::: tab label=遍历次数固定
-```js
-const arr = [1, 10, 100, 1000];
-arr.forEach((item, index, arr) => {
-    console.log(item);
-    if (item > 9) {
-        arr.splice(index, 0, 99);
-    }
-}) // 1 99 99 99  还是只遍历四次
-console.log(arr); // [1, 99, 99, 99, 10, 100, 1000]
-```
-:::
-::::
-### map
-::: tip map
-* 作用：将数组执行一个处理函数，**返回新的数组**
-* 调用：arr.map((item, index, arr) => newItem, thisArg)
-* 入参：function[, obj]
-* 返回：Array
-:::
-:::: tabs
-::: tab label=常规调用
-```js
-const arr1 = [1, 2, 3, 4];
-const arr2 = arr1.map((item, index) => item * index);
-
-console.log(arr1); // [1, 2, 3, 4]
-console.log(arr2); // [0, 2, 6, 12]
-```
-::: 
-::: tab label=带thisArg
-```js
-const obj = {
-    name: 'hdy'
-}
-const arr1 = [18, 19, 20];
-const arr2 = arr1.map(function (item) {
-    const obj = JSON.parse(JSON.stringify(this));
-    obj.age = item;
-    return obj;
-}, obj);
-
-console.log(arr2); // [{name: 'hdy', age: 18}, {name: 'hdy', age: 19}, {name: 'hdy', age: 20}]
-```
-:::
-::: tab label=作用字符串
-```js
-const map = Array.prototype.map;
-const str = '我是coderHdy';
-const arr = map.call(str, item => item.charCodeAt(0));
-
-console.log(arr); // [25105, 26159,  99, 111,   100, 101, 114, 72, 100, 121]
-```
-:::
-::: tab label=经典问题
-```js
-const arr = ['1', '2', '2', '2'];
-console.log(arr.map(parseInt)); // [1, NaN, NaN, 2]
-```
-> parseInt其实接收两个参数：parseInt(str, type);
-> 来决定是几进制
-> 而map给回调函数传三个参数，第二个是index，index变成了进制，所以导致转换错误
-> 二进制里面2就是非法的。
-:::
-::::
-### find
-::: tip find
-* 作用：找到数组中**第一个**满足条件的项
-* 调用：arr.find((item, index, arr) => bool, thisArg)
-* 入参：Function[, Object]
-* 返回：any(数组中满足条件的项)
-* tip：使用thisArg就不能使用箭头函数
-:::
-:::: tabs
-::: tab label=不带this
-```js
-const arr = [1, 10, 100, 'coderHdy'];
-
-console.log(arr.find(item => typeof item !== 'number')); // 'coderHdy'
-```
-:::
-::: tab label=带this
-```js
-const arr = [
-    {
-        name: '张三',
-        age: 18
-    },
-    {
-        name: '李四',
-        age: 19
-    },
-    {
-        name: '小尤',
-        age: 32
-    }
-];
-const obj = {
-    name: 'coderHdy',
-    age: 21
-}
-
-console.log(arr.find(function(item) {
-    return item.age > this.age;
-}, obj)
-.name); // '小尤'
-```
-:::
-::::
-### findIndex
-::: tip findIndex
-* 作用：找到符合条件的第一项的下标
-* 调用：arr.findIndex((item, index, arr) => bool, thisArg)
-* 入参：Function[, Object]
-* 返回：Number
-* tip：使用thisArg就不能使用箭头函数
-:::
-:::: tabs
-::: tab label=不带thisArg
-```js
-const arr = [1, 2, 3, 'coderHdy'];
-
-console.log(arr.findIndex(item => typeof item !== 'number')); // 3
-```
-:::
-
-::: tab label=带thisArg
-```js
-const arr = [
-    {
-        name: '张三',
-        age: 18
-    },
-    {
-        name: '李四',
-        age: 19
-    },
-    {
-        name: '小尤',
-        age: 32
-    }
-];
-const obj = {
-    name: 'coderHdy',
-    age: 21
-}
-
-console.log(arr.findIndex(function(item) {
-    return item.age > this.age;
-}, obj)); // 2
-```
-:::
-::::
-
-### flat
-::: tip flat
-* 作用：打平多维数组,**不改变原数组**
-* 调用：arr.flat(deepth)
-* 入参：Number(可选，默认是1)
-* 返回：Array
-:::
-:::: tabs
-::: tab label=使用
-```js
-const arr = [1, 2, [10, 20, [100, 200]]];
-
-console.log(arr.flat()); // [1, 2, 10, 20, [100, 200]]
-console.log(arr); // [1, 2, [10, 20, [100, 200]]]
-console.log(arr.flat(2)); // [1, 2, 10, 20, 100, 200]
-```
-:::
-::: tab label=手写原理
-```js
-function flat(arr, deepth = 1) {
-
-    // reduce返回新数组，concat自带一层打平
-    return arr.reduce((pre, item) => 
-        pre.concat(Array.isArray(item) && deepth > 1 ? flat(item, deepth - 1) : item)
-    , []);
-}
-
-const arr = [1, 2, [10, 20, [100, 200, [1000, 2000]]]];
-
-console.log(flat(arr)); // [ 1, 2, 10, 20, [ 100, 200, [ 1000, 2000 ] ] ]
-console.log(arr); // [ 1, 2, [ 10, 20, [ 100, 200, [1000, 2000] ] ] ]
-console.log(flat(arr, 2)); // [ 1, 2, 10, 20, 100, 200, [ 1000, 2000 ] ]
-```
-:::
-::: tab label=手写无限打平
-```js
-function deepFlat(arr) {
-    return arr.reduce((pre, item) => 
-        pre.concat(Array.isArray(item) ? deepFlat(item) : item)
-    , [])
-}
-
-const arr = [1, 2, [10, 20, [100, 200, [1000, 2000]]]];
-
-console.log(deepFlat(arr)); // [ 1, 2, 10, 20, 100, 200, 1000, 2000 ]
-
-```
-:::
-::::
-
-### includes
-::: tip includes
-* 作用：检查数组中是否包含指定的项，**可以指定开始查找的位置**
-* 调用：arr.includes(item[, start])
-* 入参：any[, Number]
-* 返回：boolean
-:::
-```js
-const arr = [1, 2, 3, 4];
-console.log(arr.includes(2)); // true
-console.log(arr.includes(2, 2)); // false
-```
-* 起始长度大于数组长度，直接返回false
-```js
-const arr = [1, 1, 1, 1];
-console.log(arr.includes(1, 4)); // false
-```
-### indexOf
-::: tip indexOf
-* 作用：找到指定元素的下标，不存在则返回 -1
-* 调用：arr.indexOf(item[, start])
-* 入参：any[, Number]
-* 返回：Number
-:::
-:::: tabs
-::: tab label=普通用法
-``` js
-const arr = ['小黄', '小张', '小李' , '小秋', '小张'];
-console.log(arr.indexOf('小张')); // 1
-console.log(arr.indexOf('小张', 2)); // 4
-```
-:::
-::: tab label=收集下标
-> 期望：
-```js
-const arr = ['小张', '小黄', '小李', '小黄'];
-console.log(findAllIndex(arr, '小黄')); // [1, 3]
-```
-```js
-function findAllIndex(arr, str) {
-    const ans = [];
-    let cIndex = arr.indexOf(str);
-    while (cIndex > -1) {
-        ans.push(cIndex);
-        cIndex = arr.indexOf(str, cIndex + 1);
-    }
-    return ans;
-}
-```
-:::
-::::
-### lastIndexOf
-::: tip lastIndexOf
-* 作用：反向查找指定元素的下标，**可以指定末尾开始的下标**
-* 调用：arr.lastIndexOf(item[, from])
-* 入参：any[, Number]
-* 返回：Number
-* tip：from支持负值，可以从后数
-:::
-```js
-const arr = ['小张', '小张', '小李', '小张'];
-
-console.log(arr.lastIndexOf('小张')); // 3
-console.log(arr.lastIndexOf('小张', 2)); // 1
-console.log(arr.lastIndexOf('小张', 0)); // 0
-console.log(arr.lastIndexOf('小张', -2)); // 1
-
-```
-### join
-::: tip join
-* 作用：将数组加入指定的分隔符转化成字符串
-* 调用：arr.join(str)
-* 入参：String
-* 返回：String
-* tip：入参不传默认是逗号
-:::
-```js
-const arr = [1, '本书', true];
-console.log(arr.join()); // 1,本书,true
-console.log(arr.join('')); // 1本书true
-```
-::: warning split
-* 作用：将字符串反向转回数组
-[详情](./string.html#split)
-:::
-```js
-const str = '1,本书,true';
-console.log(str.split(',')); // ['1', '本书', 'true']
-```
+## 迭代器
 ### keys
 ::: tip keys
-* 作用：拿到所有项的键值
+* 作用：拿到所有项的键值（迭代器的形式）
 * 调用：arr.keys()
 * 返回：Iterator
 * tip：**和Object.keys(arr) 有区别**
@@ -924,147 +1094,49 @@ console.log([...arr.keys()]); // [0, 1, 2, 3]
 // Object.keys(arr)会忽略掉没有值的keys
 console.log(Object.keys(arr)); // ['0', '1', '3']
 ```
-### pop
-::: tip pop
-* 作用：数组取出最后一项（改变原数组）
-* 调用：arr.pop()
-* 返回：删除的项
-:::
-```js
-const arr = [1, 2, 3];
-console.log(arr.pop()); // 3
-console.log(arr); // [1, 2]
-```
-### push
-::: tip push
-* 作用：数组末尾添加项
-* 调用：arr.push(item[, item...])
-* 传入：any[, any]
-* 返回：any
-* tip：返回的是添加后数组的最后一项
+### entries
+::: tip entries
+* 作用：将数组以**迭代器**的形式返回
+* 调用：arr.entries()
+* 返回：数组的迭代器
 :::
 ```js
 const arr = [1, 2, 3, 4];
-console.log(arr.push(5, 6, 7)); // 7
-console.log(arr); // [1, 2, 3, 4, 5, 6, 7]
+let arrEts = arr.entries();
+
+console.log(arrEts.next()); // { value: [ 0, 1 ], done: false }
 ```
-### shift
-::: tip shift
-* 作用：删除数组第一个元素
-* 调用：arr.shift()
-* 返回：any
-:::
+* 可以用作**for..of**循环
 ```js
 const arr = [1, 2, 3, 4];
-console.log(arr.shift()); // 1
-console.log(arr); // [2, 3, 4]
-console.log([].shift()); // undefined
-```
-### unshift
-::: tip unshift
-* 作用：向数组头添加项
-* 调用：arr.unshift(item[, item...])
-* 入参：any[, any...]
-* 返回：any
-* tip：插入的顺序就是入参顺序，返回的是第一个参数
-:::
-:::: tabs
-::: tab label=使用
-```js
-const arr = [1, 2, 3];
-console.log(arr.unshift(5, 6)); // 5
-console.log(arr); // [5, 6, 1, 2, 3]
-```
-:::
-::: tab label=手写
-> 期望：
-```js
-const arr = [1, 2, 3];
-console.log(arr.myUnshift(5, 6)); // 5
-console.log(arr); // [5, 6, 1, 2, 3]
-```
-```js
-Array.prototype.myUnshift = function(...args) {
-    const arr = [...args, ...this];
-    for(let [index, value] of arr.entries()) {
+let arrEts = arr.entries();
 
-        // 注：this不能单独作为左赋值，this = xxx; 所以只能逐个改属性
-        this[index] = value;
-    }
-    return args[0];
+for( let [index, value] of arrEts) {
+    console.log(value); // 1 2 3 4
 }
 ```
+### values
+::: tip values
+* 作用：拿到所有的值，**以迭代器方式返回**
+* 调用：arr.values()
+* 返回：Iterator
 :::
-::::
+```js
+const arr = [1, 10, 100, 1000];
+console.log(arr.values().next().value); // 1
+```
+### Symbol.iterator
+::: tip Symbol.iterator
+* 作用：将数组返回成一个迭代器
+* 调用：arr[Symbol.iterator]()
+* 返回：Iterator
+* tip：默认情况下，实际效果和values() 一样
+:::
+```js
+const arr = [1, 10, 100];
+const arrItt = arr[Symbol.iterator]();
+const values = arr.values();
 
-### reverse
-::: tip reverse
-* 作用：反转数组，**改变原数组**
-* 调用：arr.reverse()
-* 返回：原数组引用
-:::
-```js
-const arr = [1, 2, 3, 4, 5];
-console.log(arr.reverse()); // [5, 4, 3, 2, 1]
-console.log(arr); // [5, 4, 3, 2, 1]
+console.log(arrItt.next().value); // 1
+console.log(values.next().value); // 1
 ```
-### sort
-::: tip sort
-* 作用：排列数组，**改变原数组**
-* 调用：arr.sort((a, b) => Number)
-* 入参：conpareFn
-* 返回：原数组引用
-:::
-::: warning conpareFn
-* 形式：(a, b) => Number
-* **返回值 > 0：a在前面**
-* 返回值 < 0：a在后面
-:::
-:::: tabs
-::: tab label=使用
-```js
-const arr = [1000, 10, 100, 1];
-console.log(arr.sort((a, b) => {
-    if (a > b) {
-        return 1; // a大的时候希望他在后面
-    } else {
-        return -1;
-    }
-})); // [1, 10, 100, 1000]
-console.log(arr); // // [1, 10, 100, 1000]
-
-// 精简版
-
-console.log(arr.sort((a, b) => a - b)); // [1, 10, 100, 1000]
-```
-:::
-::: tab label=名称牌序
-* 字符的比较会比较ascll码值
-```js
-console.log('a' > 'b'); // false
-console.log('ba' > 'bb'); // false
-```
-> 期望：
-```js
-const names = ['Delta', 'alpha', 'CHARLIE', 'bravo'];
-console.log(sortIt(names)); // [ 'alpha', 'bravo', 'CHARLIE', 'Delta' ]
-```
-```js
-function sortIt(names) {
-    const lower = names.map((name, index) => ({index, name:name.toLowerCase()}));
-    lower.sort((a, b) => {
-        return +(a.name > b.name) || +(a.name === b.name) - 1;
-
-        // if (a.name > b.name) {
-        //     return 1;
-        // } else if(a.name === b.name) {
-        //     return 0;
-        // } else {
-        //     return -1;
-        // }
-    })
-    const ans = lower.map((item) => names[item.index]);
-    return ans;
-}
-```
-::::
