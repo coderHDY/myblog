@@ -1,10 +1,11 @@
 # String
 
 ## 模板字符串
-* 特性：
+::: tip 特性
 1. 可换行
 2. 可替换
 3. [手写模板字符串](../sourcecode/template.html)
+:::
 :::: tabs
 ::: tab label=可换行
 ```js
@@ -33,28 +34,24 @@ console.log(`我的名字是${obj.name}, 我去年${obj.age - 1}岁，我爱读$
 ```
 :::
 ::::
-## 常用方法
-* 方法总结：
-1. indexOf => number  || lastindexOf => number
-2. includes => bool
-3. concat => string   ->连接(可以直接用 + )
-4. parseInt => number
-5. match => [arg, index, string, gtoups]  ->匹配一个
-6. matchAll =>iterator  ->匹配所有
-7. padStart(maXLength, string) => formatString  ->首部格式化输出
-8. padEnd  ->尾部格式化输出:
-9. replace(reg, string | (findString, matchIndex, allString) => replaceString)  ->替换
-    * 多重匹配正则替换：replace(/\$\{(.+?)\}/, (matchs[, ...matches], index, string) =>{})
-    * 单匹配正则替换：repace(/a/g, (matchOnlyOne, index, string) =>{})
+## 查找
+### includes
+::: tip includes
+* 调用：str1.includes(str2[, start])
+* 入参：String[, Number]
+* 返回：bool，str1是否包含str2，**可选定开始位置**
+:::
+```js
+let str1 = 'hello world！';
+let str2 = 'l';
+let str3 = 'z';
 
-10. charAt(number) => string  ->查看指定位置char
-11. trim()  ->去空格
-12. 切割：
-    * slice(start, end) => 不修改原字符串
-    * split(splitSymbol, limit) => Array
-    * substring(from, to) =>  不修改原字符串
-    * substr(from, length) => 不修改原字符串
+console.log(str1.includes(str2)); // true
+console.log(str1.includes(str3)); // false
 
+console.log(str1.includes(str2, 9)); // true
+console.log(str1.includes(str2, 10)); // false
+```
 ### indexOf
 ::: tip indexOf
 * 调用：str1.indexOf(str2[, start])
@@ -89,54 +86,6 @@ console.log(str1.lastIndexOf(str3)); // -1
 
 console.log(str1.lastIndexOf(str2, 3)); // 3
 console.log(str1.lastIndexOf(str2, 5)); // 3
-```
-### includes
-::: tip includes
-* 调用：str1.includes(str2[, start])
-* 入参：String[, Number]
-* 返回：bool，str1是否包含str2，**可选定开始位置**
-:::
-```js
-let str1 = 'hello world！';
-let str2 = 'l';
-let str3 = 'z';
-
-console.log(str1.includes(str2)); // true
-console.log(str1.includes(str3)); // false
-
-console.log(str1.includes(str2, 9)); // true
-console.log(str1.includes(str2, 10)); // false
-```
-### concat
-::: tip concat
-* 调用：str1.concat(str2)
-* 入参：String [, String...]
-* 返回：新的字符串，**不改变原字符串**
-* tip:工作中基本用 + 代替
-:::
-```js
-let str1 = 'hello';
-let str2 = ' world!';
-
-console.log(str1.concat(str2)); // hello world!
-console.log(str1.concat(str2, str2, str1)); // hello world! world!hello
-console.log(str1); // hello
-
-console.log(str1 + str2); // hello world!
-```
-### parseInt
-::: tip parseInt
-* 调用：parseInt(str)
-* 入参：String
-* 返回：number
-* tip：如果不能转化成数字的会被变成NaN
-:::
-```js
-let a = '1';
-let b = '不是数字';
-
-console.log(parseInt(a)); // 1
-console.log(parseInt(b)); // NaN
 ```
 ### match
 ::: tip match
@@ -186,6 +135,57 @@ console.log(Array.from(a.matchAll(b)));
  * ]
  */
 ```
+### charAt
+::: tip charAt
+* 调用：str.charAt(index)
+* 入参：Number
+* 返回：String
+:::
+```js
+console.log('hello'.charAt(3)); // l
+```
+### charCodeAt
+::: tip charCodeAt
+* 调用：str.charCodeAt(index)
+* 入参：Number
+* 返回：Number
+:::
+```js
+console.log('hello'.charCodeAt(3)); // 108
+```
+
+## 更改
+### concat
+::: tip concat
+* 调用：str1.concat(str2)
+* 入参：String [, String...]
+* 返回：新的字符串，**不改变原字符串**
+* tip:工作中基本用 + 代替
+:::
+```js
+let str1 = 'hello';
+let str2 = ' world!';
+
+console.log(str1.concat(str2)); // hello world!
+console.log(str1.concat(str2, str2, str1)); // hello world! world!hello
+console.log(str1); // hello
+
+console.log(str1 + str2); // hello world!
+```
+### parseInt
+::: tip parseInt
+* 调用：parseInt(str)
+* 入参：String
+* 返回：number
+* tip：如果不能转化成数字的会被变成NaN
+:::
+```js
+let a = '1';
+let b = '不是数字';
+
+console.log(parseInt(a)); // 1
+console.log(parseInt(b)); // NaN
+```
 ### padStart
 ::: tip padStart
 * 调用：str1.padStart(maxLength, str2)
@@ -223,53 +223,69 @@ console.log('1'.padEnd(10)); // '1         '
 ```
 ### replace
 ::: tip replace
-* 调用：str1.replace(reg, str)
+* 作用：替换（一个或全部）指定字符串
+* 调用：str1.replace(reg, str2)
 * 入参1：String | RegExp 
 * 入参2：String | (matchs[, match...], input) => {}
-* 返回：String，替换了**第一个匹配项**
+* 返回：String
 * tip：不修改原str1
-* tip：第一个参数是正则的时候，第二个参数可以是函数，函数入参取决于正则有没有分组
+* tip：第一个参数是正则的时候，第二个参数可以是函数，**函数入参取决于正则有没有分组**
 :::
+:::: tabs
+::: tab label=字符串
+```js
+let a = 'hello world!';
+
+console.log(a.replace('l', 'L')); // heLlo world!
+```
+:::
+::: tab label=非全局正则
 ```js
 let a = 'hello world!';
 let reg1 = /l/;
-let reg2 = /l/g;
-
-console.log(a.replace('l', 'L')); // heLlo world!
 
 console.log(a.replace(reg1, (matchs, index, input) => {
-    /**
-     * matchs: l
-     * index: 2
-     * input: hello world!
-     */
+    console.log(matchs); // l
+    console.log(index);  // 2
+    console.log(input);  // hello world!
     return 'L'
 })); // heLlo world!
+```
+:::
+::: tab label=全局正则无分组
+```js
+let a = 'hello world!';
+let reg2 = /l/g;
 
 // 全部替换
 console.log(a.replace(reg2, (matchs, index, input) => {
-    /**
-     * matchs: l  l  l
-     * index:  2  3  9  
-     * input: hello world!
-     */
+
+    // 匹配中了三次
+    console.log(matchs); // l             // l             // l
+    console.log(index);  // 2             // 3             // 9
+    console.log(input);  // hello world!  // hello world!  // hello world!
     return 'L'
 })); // heLLo worLd!
 
-// 有分组
-// 有match项，function传参就会相应的增加
-console.log(a.replace(/l(.*?)w/, (matchs, match, index, input) => {
-    /**
-     * matchs: llo w
-     * match: 'lo '
-     * index: 2
-     * input: hello world!
-     */
+```
+:::
+::: tab label=正则有分组
+* 经典算法题：[手写模板字符串](../sourcecode/template.html)
+```js
+let a = 'hello world!';
+let reg3 = /l(.*?)w/;
 
+// 有分组
+// 有match分组项，function传参就会相应的增加
+console.log(a.replace(reg3, (matchs, match, index, input) => {
+    console.log(matchs); // llo w
+    console.log(match); // 'lo '
+    console.log(index); // 2
+    console.log(input); // hello world!
     return 'L'
 })); // heLord?
 ```
-
+::::
 ### replaceAll
 ::: danger
 * 新特性，很多环境还不支持，可在浏览器控制台实验
@@ -300,24 +316,8 @@ console.log(a.replace(/l(.*?)w/g, (matchs, match, index, input) => {
     return 'L'
 })); // heLord?
 ```
-### charAt
-::: tip charAt
-* 调用：str.charAt(index)
-* 入参：Number
-* 返回：String
-:::
-```js
-console.log('hello'.charAt(3)); // l
-```
-### charCodeAt
-::: tip charCodeAt
-* 调用：str.charCodeAt(index)
-* 入参：Number
-* 返回：Number
-:::
-```js
-console.log('hello'.charCodeAt(3)); // 108
-```
+
+## 切割
 ### slice
 ::: tip slice
 * 调用：str.slice(from, to)
