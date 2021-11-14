@@ -35,23 +35,6 @@ console.log(`我的名字是${obj.name}, 我去年${obj.age - 1}岁，我爱读$
 :::
 ::::
 ## 查找
-### includes
-::: tip includes
-* 调用：str1.includes(str2[, start])
-* 入参：String[, Number]
-* 返回：bool，str1是否包含str2，**可选定开始位置**
-:::
-```js
-let str1 = 'hello world！';
-let str2 = 'l';
-let str3 = 'z';
-
-console.log(str1.includes(str2)); // true
-console.log(str1.includes(str3)); // false
-
-console.log(str1.includes(str2, 9)); // true
-console.log(str1.includes(str2, 10)); // false
-```
 ### indexOf
 ::: tip indexOf
 * 调用：str1.indexOf(str2[, start])
@@ -71,8 +54,8 @@ console.log(str1.indexOf(str2, 4)); // 9
 ```
 ### lastIndexOf
 ::: tip lastIndexOf
-* 调用：str1.lastIndexOf(str2)
-* 入参：String[, fromIndex]
+* 调用：str1.lastIndexOf(str2[, fromIndex])
+* 入参：String[, Number]
 * 返回：str2在str1的最后一次出现的下标，没有返回-1，**可选定末端开始位置**
 * tip: 如果fromIndex < 0 ，那么 fromIndex = 0
 :::
@@ -153,7 +136,101 @@ console.log('hello'.charAt(3)); // l
 ```js
 console.log('hello'.charCodeAt(3)); // 108
 ```
+### at
+::: tip at
+* 作用：支持负值下标查找元素
+* 调用：str.at(index)
+* tip：较新属性，支持环境要求高
 
+| 环境  | 版本 |
+| ---  | ---  |
+| node |16.6.0|
+|chrome|  92  |
+:::
+```js
+const str = 'abc';
+console.log(str.at(-1)); // c
+```
+### search
+::: tip search
+* 作用：查找字符串的**第一个**匹配项
+* 调用：str.search(reg)
+* 传参：RegExp
+* 返回：Number
+* tip：如果没找到会返回-1
+:::
+```js
+var str = "hey JudE";
+var re = /[A-Z]/g;
+var re2 = /[.]/g;
+
+console.log(str.search(re)); // 4
+console.log(str.search(re2)); // -1
+```
+
+## 判断
+### includes
+::: tip includes
+* 调用：str1.includes(str2[, start])
+* 入参：String[, Number]
+* 返回：bool，str1是否包含str2，**可选定开始位置**
+:::
+```js
+let str1 = 'hello world！';
+let str2 = 'l';
+let str3 = 'z';
+
+console.log(str1.includes(str2)); // true
+console.log(str1.includes(str3)); // false
+
+console.log(str1.includes(str2, 9)); // true
+console.log(str1.includes(str2, 10)); // false
+```
+### endsWith
+::: tip endsWith
+* 作用：判断字符串是否以指定字符串结尾
+* 调用：str1.endsWith(str2[, searchIndex])
+* 入参：String[, Number]
+* 返回：Boolean
+* 最后一个参数是作为第一个字符末尾的index
+:::
+```js
+const str = 'hello world!';
+console.log(str.endsWith('hello')); // false
+console.log(str.endsWith('hello', 5)); // true
+```
+
+### strarsWith
+::: tip startsWith
+* 作用：判断字符串是否以指定的字符串开头
+* 调用：str.startsWith(str2[, fromIndex])
+* 入参：String[, Number]
+* 返回：Boolean
+:::
+:::: tabs
+::: tab label=使用
+```js
+const str = 'hello hdy!';
+console.log(str.startsWith('hdy')); // false
+console.log(str.startsWith('hdy', 6)); // true
+```
+:::
+::: tab label=手写原生
+> 期望：
+```js
+const str = 'hello hdy!';
+console.log(str.myStartsWith('hdy', 6)); // true
+```
+```js
+String.prototype.myStartsWith = function (str, from = 0) {
+    const len = str.length;
+    const startsStr = this.substr(from, len);
+    console.log(startsStr);
+    return str === startsStr;
+}
+```
+:::
+::::
 ## 更改
 ### concat
 ::: tip concat
@@ -316,12 +393,56 @@ console.log(a.replace(/l(.*?)w/g, (matchs, match, index, input) => {
     return 'L'
 })); // heLord?
 ```
+### repeat
+::: tip repeat
+* 作用：字符串重复
+* 调用：str.repeat(num)
+* 入参：Number
+* 返回：String
+:::
+```js
+const str1 = 'abc';
+console.log(str1.repeat(2)); // abcabc
+console.log(str1); // abc
+```
+### trim
+::: tip trim
+* 作用：去掉头尾空格
+* 调用：str.trim()
+* 返回：String
+:::
+```js
+const str = '   A B C  '
+console.log(str.trim()); // 'A B C'
+```
+### trimStart
+::: tip trimStart
+* 作用：去掉头空格
+* 调用：str.trimStart()
+* 返回：String
+* 别名：trimLeft
+:::
+```js
+const str = '  A B C  ';
+console.log(str.trimStart()); // 'A B C  '
+```
+### trimEnd
+::: tip trimEnd
+* 作用：去掉尾空格
+* 调用：str.trimEnd()
+* 返回：String
+* 别名：trimRight
+:::
+```js
+const str = '  A B C  ';
+console.log(str.trimEnd()); // '  A B C'
+```
 
 ## 切割
 ### slice
 ::: tip slice
-* 调用：str.slice(from, to)
-* 入参：Number, Number
+* 调用：str.slice(from[, to])
+* 入参：Number[, Number]
 * 返回：切割掉的字符串
 * tip: slice 可以传负的索引
 * tip: **不修改原字符串**
@@ -365,16 +486,35 @@ console.log(a.slice(-4, -2)); // 'el'
 ### split
 ::: tip split
 * 调用：str.split(str2[, len])
-* 入参：String, Number
+* 入参：String | Iterator[, Number]
 * 返回：Array，用str2分割出来的数组，可限制要几个
 * tip：第二个参数是限制了数组的长度
+* tip：第一个参数可以是正则
 :::
+::::tabs
+::: tab label=常规使用
 ```js
 let a = 'hello';
 
 console.log(a.split('l')); // ['he', '', 'o']
 console.log(a.split('l', 2)); // ['he', '']
 ```
+:::
+::: tab label=去空格
+```js
+const str = 'hello world !';
+console.log(str.split(' ').join('')); // helloworld!
+```
+:::
+::: tab label=用正则
+```js
+const str = 'hello world !';
+const reg = /[\e]/;
+
+console.log(str.split(reg)); // ['h', 'llo world !']
+```
+:::
+::::
 ### substr
 ::: tip substr
 * 调用：str.substr(from[, length])
@@ -387,4 +527,79 @@ let a = 'hello';
 console.log(a.substr(1, 2)); // el
 console.log(a.substr(2)); // llo
 console.log(a); // hello
+```
+
+## 其他
+### Symbol.iterator
+::: tip Symbol.iterator
+* 作用：用字符串转生成可迭代对象
+* 调用：str[Symbol.iterator]()
+* 返回：Iterator
+:::
+```js
+const str = 'abc';
+console.log(str[Symbol.iterator]().next().value); // a
+console.log(str); // abc
+```
+### fromCharCode
+::: warning 静态方法
+* 作用：将utf-16编码转回字符串
+* 调用：String.fromCharCode(code)
+* 入参：Number
+* 返回：String
+* tip：处理的最大编码为FFFF(16进制)，要更完善的要用**fromCodePoint**
+:::
+```js
+const str = 'abc';
+const codeArr = str.split('').map(item => {
+    let code = item.charCodeAt(0);
+    return code - 32;
+})
+
+console.log(codeArr); // [65, 66, 67]
+console.log(String.fromCharCode(...codeArr)); // ABC
+```
+### fromCodePoint
+::: tip fromCodePoint
+* 作用：支持更大的编码转化成字符串
+* 调用：String.charCodePoint(code)
+* 入参：Number
+* 返回：String
+* tip：ES6语法
+:::
+```js
+const str = 'abc';
+const codeArr = str.split('').map(item => {
+    let code = item.charCodeAt(0);
+    return code - 32;
+})
+
+// 对比
+console.log(String.fromCharCode(9731, 9733, 9842, 0x2F804)); // ☃★♲
+console.log(String.fromCodePoint(9731, 9733, 9842, 0x2F804)); // ☃★♲你
+```
+
+### toLowerCase
+::: tip toLowerCase
+* 作用：将字符串全部转换成小写
+* 调用：str.toLowerCase()
+* 返回：String
+:::
+```js
+const str = 'AbCD';
+
+console.log(str.toLowerCase()); // abcd
+console.log(str); // AbCD
+```
+### toUpperCase
+::: tip toUpperCase
+* 作用：将字符串全部转换成大写
+* 调用：str.toUpperCase()
+* 返回：String
+:::
+```js
+const str = 'AbCD';
+
+console.log(str.toUpperCase()); // ABCD
+console.log(str); // AbCD
 ```

@@ -238,18 +238,45 @@ console.log(arr.every(function(item, index, arr){
 ::::
 ### some
 ::: tip some
-* 作用：判断数组中是否有符合的项
+* 作用：判断数组中是否有符合要求的项
 * 调用：arr.some((item, index, arr) => bool, thisArg)
 * 入参：Function[, obj]
 * 返回：Boolean
 :::
+:::: tabs
+::: tab label=不带thisArg
 ```js
 const arr = [1, 10, 100, 1000];
 
 console.log(arr.some(item => item > 1000)); // false
 console.log(arr.some(item => item > 100)); // true
 ```
+:::
+::: tab label=带thisArg
+```js
+const me = {
+    name: 'coderhdy',
+    age: 18
+}
+const others = [
+    {
+        name: '小黄',
+        age:15
+    },
+    {
+        name: '小张',
+        age:16
+    },
+    {
+        name: '小李',
+        age:13
+    },
+]
 
+console.log(others.some(function(item) {item.age > this.age}, me));
+```
+:::
+::::
 
 ### find
 ::: tip find
@@ -491,7 +518,7 @@ console.log(concat(arr, 6, 6, 6, arr2)); // [1, 2, 3, 6, 6, 6, 4, 5, 6]
 * 调用：arr.copyWithin(index, start, end);
 * 入参：Number, Number, Number
 * 返回：改变后的**原数组**
-* tip：替换的长度根据
+* tip：替换的长度根据(end - start)决定
 :::
 ```js
 const arr = [1, 2, 3, 4, 5];
@@ -1037,7 +1064,7 @@ class Chain {
     }
 }
 ```
-* 异步代码
+* 异步代码(有bug)
 ```js
 class Chain {
     fns = [];
@@ -1058,6 +1085,44 @@ class Chain {
     wait(time) {
         const fn = () => new Promise(resolve => setTimeout(() => resolve(), time));
         this.fns.push(fn);
+        return this;
+    }
+}
+```
+:::
+::: tab label=连环log改良版
+> 原BUG：事件轮询只能查一轮
+```js
+const chain = new Chain();
+chain.log(1) // 打印1
+    .wait(2) // 暂停2秒
+    .log(2)  // 打印2
+    .wait(3) // 暂停3秒
+    .log(3)  // 打印3
+
+// 第二轮事件轮询加进去的任务就不生效
+setTimeout(() => chain.wait(3).log(3), 1000);
+
+console.log('同步代码'); // 先走
+```
+```js
+class Chain {
+    cThen = Promise.resolve();
+
+    log(i) {
+        const fn = () => new Promise(resolve => {
+            console.log(i);
+            resolve();
+        });
+
+        this.cThen = this.cThen.then(fn);
+        return this;
+    }
+
+    wait(time) {
+        const fn = () => new Promise(resolve => setTimeout(() => resolve(), time * 1000));
+
+        this.cThen = this.cThen.then(fn);
         return this;
     }
 }
