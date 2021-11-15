@@ -8,6 +8,9 @@ const server = http.createServer((request, response) => {
     const reqUrl = path.join(__dirname, "./dist", reqPath);
 
     const responseFile = fs.readFileSync(reqUrl);
+    if (reqPath.endsWith('.js')) {
+        console.log(reqPath);
+    }
     response.end(responseFile);
 });
 
@@ -18,5 +21,5 @@ server.listen(port, (error) => {
 });
 
 function getRealPath(reqUrl) {
-    return reqUrl.startsWith('/assets') || reqUrl.endsWith('.html') ? reqUrl : path.join(reqUrl, "index.html");
+    return reqUrl.startsWith('/assets') || reqUrl.endsWith('.html') || reqUrl.endsWith('.js') ? reqUrl : path.join(reqUrl, "index.html");
 }
