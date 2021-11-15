@@ -533,7 +533,7 @@ console.log(a); // hello
 ### Symbol.iterator
 ::: tip Symbol.iterator
 * 作用：用字符串转生成可迭代对象
-* 调用：str[Symbol.iterator]()
+* 调用：str[ Symbol.iterator ] ()
 * 返回：Iterator
 :::
 ```js

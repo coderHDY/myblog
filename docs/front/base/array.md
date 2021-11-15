@@ -1193,7 +1193,7 @@ console.log(arr.values().next().value); // 1
 ### Symbol.iterator
 ::: tip Symbol.iterator
 * 作用：将数组返回成一个迭代器
-* 调用：arr[Symbol.iterator]()
+* 调用：arr[ Symbol.iterator ] ()
 * 返回：Iterator
 * tip：默认情况下，实际效果和values() 一样
 :::
