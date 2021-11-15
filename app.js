@@ -8,9 +8,6 @@ const server = http.createServer((request, response) => {
     const reqUrl = path.join(__dirname, "./dist", reqPath);
 
     const responseFile = fs.readFileSync(reqUrl);
-    if (reqPath.endsWith('.js')) {
-        console.log(reqPath);
-    }
     response.end(responseFile);
 });
 
