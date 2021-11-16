@@ -18,5 +18,5 @@ server.listen(port, (error) => {
 });
 
 function getRealPath(reqUrl) {
-    return reqUrl.startsWith('/assets') || reqUrl.endsWith('.html') || reqUrl.endsWith('.js') ? reqUrl : path.join(reqUrl, "index.html");
+    return reqUrl.startsWith('/assets') || reqUrl.endsWith('.html') ? reqUrl : path.join(reqUrl, "index.html");
 }

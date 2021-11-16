@@ -111,3 +111,13 @@ nginx: [alert] could not open error log file: open() "/usr/local/nginx/logs/erro
 ```
 * 原因：打开这两个文件要有root权限
 * 解决：用管理员身份删除这两个文件,然后[杀死nginx进程](./#nginx服务器问题)，再开
+
+## 服务器下npm run build失败
+* 停止在95%，
+```txt
+emitting (95%) CopyPlugin 
+```
+* 解决
+```shell
+npm install -g npm
+```
