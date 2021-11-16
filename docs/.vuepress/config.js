@@ -18,10 +18,4 @@ module.exports = {
         '@vuepress/back-to-top',
         require('./components/index.js')
     ],
-    chainWebpack: (config, isServer) => {
-        if (process.env.NODE_ENV === 'production') {
-            config.output.filename('js/[name].js').end();
-            config.output.chunkFilename('js/[name].js').end();
-        }
-    }
 }
