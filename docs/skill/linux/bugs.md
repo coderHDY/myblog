@@ -117,7 +117,8 @@ nginx: [alert] could not open error log file: open() "/usr/local/nginx/logs/erro
 ```txt
 emitting (95%) CopyPlugin 
 ```
-* 解决
+* 解决1
 ```shell
 npm install -g npm
 ```
+* 解决2:webpack有output: {path：XXX},需要特殊处理
