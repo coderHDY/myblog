@@ -9,7 +9,7 @@ do
 
     rm -rf ./dist_old
 
-    echo "完成更新:" `date +%H:%M:%S` >> log.txt
+    echo "完成更新:" `date +"%Y-%m-%d %H:%M:%S"` >> log.txt
 
     sleepTime=`expr 60 \* 60 \* 24`
     sleep ${sleepTime}
