@@ -50,7 +50,7 @@ const front = {
     ],
     '/front/sourcecode/': [
         '',
-        'template'
+        'dom'
     ],
     '/front/interview/': [
         '',
