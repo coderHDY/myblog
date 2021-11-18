@@ -149,6 +149,109 @@ Object instanceof Object; // true
 Object.__proto__ === Function.prototype;  // true
 Object instanceof Function; // true
 ```
-
 ::: 
+::::
+
+## 其他属性
+### length
+* 值为1
+### constructor
+* 原型对象上的属性，指向构造函数
+* 每个对象都能够通过[原型链](./object.html#原型链)找到构造函数的原型对象，然后原型对象上就有对应的constructor属性，所以每个对象都能拿到自己的构造函数
+## 静态方法
+### assign
+::: tip assign
+* 作用：将多个对象的属性集成到第一个对象上,**返回第一个对象的引用**
+* 使用：Object.assign(obj1, obj2[, obj3...])
+* 入参：Object, Object[, Object]
+* 返回：Object
+* tip：浅拷贝
+* tip：相同属性以后来的为准
+* tip：不支持es5就没有的Symbols
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj1 = {
+    name: '张三',
+    book: '红宝书'
+}
+const obj2 = {
+    name: '李四',
+    age: 19
+}
+
+const ans = Object.assign(obj1, obj2);
+console.log(ans === obj1); // true
+console.log(obj1); // { name: '李四', book: '红宝书', age: 19}
+console.log(obj2); // { name: '李四', age: 19 }
+```
+:::
+::: tab label=浅拷贝
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    books: ['红宝书']
+}
+
+Object.assign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: 'hdy', books: ['你不知道的JS'] }
+```
+:::
+::: tab label=手写
+* 期望：
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    name: '李四',
+    books: ['红宝书']
+}
+
+Object.myAssign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: '李四', books: ['你不知道的JS'] }
+```
+```js
+Object.prototype.myAssign = (obj1, ...objs) => {
+    objs.forEach(item =>
+        Object.entries(item).forEach(([key, value]) => 
+            obj1[key] = value));
+
+    return obj1;
+}
+```
+:::
+::: tab label=深拷贝实现
+* 期望：
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    name: '李四',
+    books: ['红宝书']
+}
+
+Object.myDeepAssign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: '李四', books: ['红宝书'] }
+```
+```js
+Object.prototype.myDeepAssign = (obj1, ...objs) => {
+    let newObj = Object.assign({}, ...objs);
+
+    // 断连接
+    newObj = JSON.parse(JSON.stringify(newObj));
+
+    for (let [key, value] of Object.entries(newObj)) {
+        obj1[key] = value;
+    }
+    return obj1;
+}
+```
 ::::
