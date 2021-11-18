@@ -4,7 +4,7 @@
 ::: tip 特性
 1. 可换行
 2. 可替换
-3. [手写模板字符串](../sourcecode/template.html)
+3. [手写模板字符串](../sourcecode/#模板字符串)
 :::
 :::: tabs
 ::: tab label=可换行
