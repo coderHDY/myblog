@@ -158,6 +158,18 @@ Object instanceof Function; // true
 ### constructor
 * 原型对象上的属性，指向构造函数
 * 每个对象都能够通过[原型链](./object.html#原型链)找到构造函数的原型对象，然后原型对象上就有对应的constructor属性，所以每个对象都能拿到自己的构造函数
+```js
+class A {}
+const a = new A();
+
+console.log(a.constructor); // A
+```
+```js
+function B() {}
+const b = new B();
+
+console.log(b.constructor); // B
+```
 ## 静态方法
 ### assign
 ::: tip assign
