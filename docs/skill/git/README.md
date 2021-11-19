@@ -195,3 +195,4 @@ git rm docs/skill/linux/README.md
 # 删除某个文件夹
 git rm -r docs/skill/linux/
 ```
+## 合并commit
