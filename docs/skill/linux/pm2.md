@@ -174,3 +174,5 @@ pm2 show name
 # & 代表后台持续运行
 nohup bash deploy.sh &
 ```
+### 配置文件
+[官方文档](https://pm2.keymetrics.io/docs/usage/application-declaration/)

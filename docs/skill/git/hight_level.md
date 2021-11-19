@@ -203,7 +203,32 @@ git add .
 git rebase --continue
 ### 如果还有冲突版本会继续要求手动修复，直至没有冲突，生成最新变基版本。
 ```
+## 更新fork仓库
+:::tip 
+* 小A有一个远程仓库，小B很喜欢，fork了过来
+* 小B本地仓库关联的自己fork过来的远程仓库
+* 过了一段时间，发现小A仓库更新了，小B怎么最快地更新呢?
+![](./assets/forkwenti.png)
+:::
+* 方案1.增加小A远程仓库（如果有权限clone小A的仓库的话）
+```shell
+git remote add upstream xxx.xiaoA.com
 
+# 取最新的小A代码
+git pull upstream master
+
+# 推给自己的仓库
+git push origin master
+```
+
+* 方案2.暴力更新
+```shell
+# 删除自己的远程仓库
+# 重新fork仓库
+
+# 更新本地仓库
+git pull
+```
 ## code review
 ::: tip code review
 * 小A开发了一个软件，所有人都在用
