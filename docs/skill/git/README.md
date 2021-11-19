@@ -196,3 +196,24 @@ git rm docs/skill/linux/README.md
 git rm -r docs/skill/linux/
 ```
 ## 合并commit
+::: tip 合并commit
+* 本地多个commit合并成一个进行提交
+:::
+* 需求，合并BC版本：ABC -> AD
+```shell
+# 找到需要变基的版本（A）
+git reflog
+
+# 变基成A
+git rebase -i HashA
+
+# 进入编辑模式
+# 第一个pick是最终提交的版本
+# 下面的所有pick全部改成squash，合并到最上面的提交版本
+git log
+# 合并成功
+```
+* 合并过程中撤销
+```shell
+git rebase --abort
+```
