@@ -217,3 +217,17 @@ git log
 ```shell
 git rebase --abort
 ```
+::: tip 更简单的方法
+* 使用git reset --soft版本指向合并前版本（A）
+* 再提交一次，即可覆盖所有中途版本
+:::
+```shell
+# 找到合并前版本号
+git reflog
+
+# HEAD指针移动
+git reset --soft hashA
+
+# 再提交一次
+git commit -m '合并所有提交'
+```
