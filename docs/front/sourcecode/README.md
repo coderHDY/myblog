@@ -1,10 +1,9 @@
 # JS原生
 ## 深浅拷贝
-### 介绍
-* js不同类型的变量存储方式是不一样的，分别为 **值类型** 和 **引用类型**
-* 所以在赋值的时候，let a = b;根据b的不同值类型，会有不同的拷贝效果。
 :::: tabs
 ::: tab label=值类型
+* js不同类型的变量存储方式是不一样的，分别为 **值类型** 和 **引用类型**
+* 所以在赋值的时候，let a = b;根据b的不同值类型，会有不同的拷贝效果。
 * 值类型有:
     1. String
     2. Number
@@ -42,9 +41,7 @@ a. name = '李四';
 console.log(b.name) // 李四
 ```
 :::
-::::
-### 目标
-::: tip 目标
+::: tab label=目标
 ```js
 let a = {
     name: '张三',
@@ -63,7 +60,7 @@ console.log(b.name); // 张三
 console.log(b.books[1]) // js蝴蝶书
 ```
 :::
-### 思路一
+::: tab label=思路一
 * 所以要让对象也能实现赋值以后互不影响，就需要**深拷贝函数**
 * 主要思路：
     1. typeof 判断赋值类型，是是值类型就直接赋值，不是值类型就进一步判断再赋值
@@ -71,7 +68,6 @@ console.log(b.books[1]) // js蝴蝶书
     2. typeof 判断 object 可能是[Function, Array, null],需要区别处理
     3. 可能会有对象嵌套或嵌套数组，所以需要递归处理
 
-#### 实现
 ```js
 function deepClone(obj) {
     if (typeof obj === 'object' && obj !== null) {
@@ -95,19 +91,21 @@ function deepClone(obj) {
     return obj;
 }
 ```
-
-### 思路二
+:::
+::: tab label=思路二
 * 利用JSON.的两个语法，直接深层的取出值，将其完全转化成字符串，再转化回来
-#### 实现
 ```js
 function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 ```
+:::
+::::
+
 
 ## 模板字符串
-
-### 介绍
+:::: tabs 
+::: tab label=介绍
 * [模板字符串](../base/string.html#模板字符串)是ES6的新特性，增加了String类型的灵活性，减少了很多以字符串拼接的方式来实现的多样化字符串的书写难度。
 * 主要特性有：
     1. 可换行
@@ -129,18 +127,18 @@ const obj = {
 console.log(`我叫${obj.name},我喜欢看${obj.books[1]},我爸是${obj.parents['father']}`);
 // 我叫西瓜皮儿,我喜欢看js蝴蝶书,我爸是西瓜
 ```
-### 思路
+::: tab label=思路
 1. 需要以变量的形式传入obj对象，否则无法找到对象
 2. 解析需要以 . 和 [] 分出各级变量名
 3. 最后统一以[]的形式找子属性，否则无法找到数组 books.1 ，数组 books['1'] 也能完美找到 books[1]
-::: tip 期望结果
+:::
+::: tab label=实现
+* 期望结果
 ```js
 let str = '我叫${name},我喜欢看${books[1]},我爸是${parents.father}'
 template(obj, str);
 // 我叫西瓜皮儿,我喜欢看js蝴蝶书,我爸是西瓜
 ```
-:::
-### 实现
 ```js
 function template(obj, str) {
     const reg1 = /\$\{(.+?)\}/g; // 解析模板字符串
@@ -164,7 +162,10 @@ function template(obj, str) {
     })
 }
 ```
-* 解析过程
+:::
+::::
+
+> 解析过程
 :::: steps
 ::: step 
 * 取出模板字符串
