@@ -267,3 +267,320 @@ Object.prototype.myDeepAssign = (obj1, ...objs) => {
 }
 ```
 ::::
+
+### create
+::: tip create
+* 作用：创造一个带有指定原型链的对象
+* 调用：Object.create(obj)
+* 入参：Object[, definePropertiesObj]
+* 返回：Object[, Object]
+:::
+:::: tabs
+::: tab label=使用
+![](./assets/objectcreate.png)
+```js
+class A {}
+A.prototype.age = 18;
+
+const a1 = new A();
+a1.name = 'hdy';
+
+const a2 = Object.create(a1);
+
+console.log(a2.name); // hdy
+console.log(a2.age); // 18
+console.log(a2 instanceof A); // true
+console.log(a2.__proto__ === a1); // true
+```
+:::
+::: tab label=对象继承
+* 普通继承是通过class B extends A {}来实现的
+* 但是单个对象要继承另一个对象的属性就可以用Object.created()来实现，通过原型链的机制
+```js
+// 类式继承
+class A {}
+class B extends A {}
+
+const b = new B();
+console.log(b instanceof A); // true
+
+// 函数式继承
+function C() {}
+function D() {
+}
+D.prototype.__proto__ = C.prototype;
+
+const d = new D();
+console.log(d instanceof C); // true
+
+// 对象式继承
+const f = Object.create(d);
+console.log(f instanceof C); // true
+```
+:::
+::: tab label=通过对象继承实现类继承
+```js
+class A {
+    constructor() {
+        this.name = 'hdy';
+    }
+}
+function B() {}
+
+// 通过对象的继承来实现原型链
+B.prototype = Object.create(A.prototype);
+// ->相当于
+// B.prototype.__proto__ = A.prototype;
+
+const b = new B();
+console.log(b instanceof A); // true
+```
+:::
+::: tab label=第二个参数
+* 第二个参数类似Object.defineProperty的第二个参数
+```js
+const obj1 = { name: 'hdy' }
+const obj2 = Object.create(obj1, {
+    age: {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: 18
+    }
+})
+
+console.log(obj2); // { age: 18 }
+```
+:::
+::::
+
+### defineProperty
+::: tip defineProperty
+* 作用：给对象定义属性，可以支持get/set劫持
+* 调用：Object.defineProperty(obj, key, descriptor)
+* 入参：Object, String, Object
+* 返回：Object（第一个入参的引用）
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj = {
+    name: 'hdy'
+}
+
+Object.defineProperty(obj, '_age', {
+    configurable: true,
+    writable: true,
+
+    // 内置属性可以配置不可枚举
+    emuerable: false,
+    value: 18
+})
+
+Object.defineProperty(obj, 'age', {
+    configurable: true,
+
+    // 有getter时，这个属性就是一个函数，配置了也不会被枚举出来
+    emumerable: true,
+    get() {
+        return this._age + '岁';
+    },
+    set(value) {
+        this._age = value;
+    }
+})
+
+console.log(obj.age); // 18岁
+obj.age = 20;         // 走的setter赋值
+console.log(obj.age); // 20岁
+```
+:::
+::: tab label=descriptor规则
+1. configurable为true时，所有属性都只能配置这一遍，包括configurable，且属性不可删
+2. emuerable配置是true打印对象时才会被枚举出来，（直接赋值出来的属性默认是true，defineProperty的属性默认是false）
+3. value: 值
+4. writable决定是否可改变value
+5. get 属性的getter器
+6. set 属性的setter器
+:::
+::: tab label=configurable
+* configurable为true时，所有属性都只能配置这一遍，包括configurable(除了value和writable)，且属性不可删
+---
+> 不可配置不可删
+```js
+const obj = {};
+Object.defineProperty(obj, 'age', {
+    configurable: false,
+    value: 18
+})
+
+console.log(obj.age); // 18
+delete obj.age;       // 不起作用
+console.log(obj.age); // 18
+```
+```js
+const obj = {};
+Object.defineProperty(obj, 'age', {
+    configurable: true,
+    value: 18
+})
+
+console.log(obj.age); // 18
+delete obj.age;       // 起作用
+console.log(obj.age); // undefined
+```
+---
+> 可配置下可再改属性
+```js
+var obj = {};
+Object.defineProperty(obj, 'age', {
+    configurable: true,
+    writable: false
+    value: 18,
+});
+
+obj.age = 19;         // 不生效
+console.log(obj.age); // 18
+
+// 更改配置
+Object.defineProperty(obj, 'age', {
+    writable: true
+});
+
+obj.age = 19;         // 生效
+console.log(obj.age); // 19
+```
+:::
+::: tab label=enumerable
+* enumerable配置是true打印对象时才会被枚举出来，（直接赋值出来的属性默认是true，defineProperty的属性默认是false）
+```js
+const obj = {};
+
+// 默认enumerable是false
+Object.defineProperty(obj, 'age', {
+    value: 18
+})
+
+console.log(obj); // {}
+console.log(obj.age); // 18
+
+// 直接赋值时enuerable是true
+obj.height = 180;
+console.log(obj.height); // 180
+
+// 检查属性可枚举配置
+console.log(obj.propertyIsEnumerable('age')); // false
+console.log(obj.propertyIsEnumerable('height')); // true
+```
+* 包括for...in 和Object.keys()
+```js
+const father = { name: 'hdy' };
+const child = Object.create(father, {
+    age: {
+        enumerable: false,
+        value: 19
+    }
+});
+
+console.log(child); // {}
+console.log(child.age); // 19
+
+for (let key in child) {
+    console.log(key); // name
+}
+```
+:::
+::: tab label=writable/value
+* value: 值
+* writable决定是否可改变value，默认false
+```js
+const obj = {};
+Object.defineProperty(obj, 'age', {
+    writable: false,
+    value: 10
+})
+
+console.log(obj.age); // 10
+obj.age = 11;         // 不生效（也不报错）
+console.log(obj.age); // 10
+```
+> 引用类型只判断引用是否改变
+```js
+const obj = {};
+Object.defineProperty(obj, 'books', {
+    writable: false,
+    value: ['红宝书']
+})
+
+console.log(obj.books); // ['红宝书']
+obj.books.push('蝴蝶书'); // 引用不变，所以不判定为写，生效
+console.log(obj.books); // ['红宝书', '蝴蝶书']
+
+obj.books = ['你不知道的js']; // 引用改变，判定为写，失效
+console.log(obj.books); // ['红宝书', '蝴蝶书']
+
+```
+:::
+
+::: tab label=get/set
+* 就是对象的getter/setter器
+```js
+const obj = {
+    _age: 18,
+    get age() { return this._age + '岁'; },
+    set age(value) { this._age = value; }
+}
+
+console.log(obj.age); // 18岁
+obj.age = 20;
+console.log(obj.age); // 20岁
+```
+```js
+const obj = { _age: 18 }
+Object.defineProperty(obj, 'age', {
+    get() { return this._age; },
+    set(value) { this._age = value; }
+})
+
+console.log(obj.age); // 18岁
+obj.age = 20;
+console.log(obj.age); // 20岁
+```
+:::
+::: tab label=规则
+1. 同时拥有((value || writable) && (get || set))会产生异常
+```js
+Object.defineProperty({}, 'age', {
+    value: 18,
+
+    // 报错
+    get() {},
+    set(value) {}
+})
+```
+:::
+::: tab label=继承属性
+```js
+class A {}
+A.prototype._age = 18;
+
+Object.defineProperty(A.prototype, 'age', {
+    get() {
+        return A.prototype._age;
+    },
+    set(value) {
+        A.prototype._age = value;
+    }
+});
+
+const a1 = new A();
+const a2 = new A();
+
+// 赋值会先去原型链找一圈，找不到这个值再赋值？getter 和 setter 在原型链的查找中优先级最高。
+a1.age = 19;
+
+console.log(a2.age);
+console.log(Object.keys(a2));
+```
+:::
+::::

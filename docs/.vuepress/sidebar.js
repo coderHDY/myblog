@@ -50,7 +50,8 @@ const front = {
     ],
     '/front/sourcecode/': [
         '',
-        'dom'
+        'dom',
+        'recursion'
     ],
     '/front/interview/': [
         '',
