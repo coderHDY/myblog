@@ -148,6 +148,155 @@ Object instanceof Function; // true
 ```
 ::: 
 ::::
+### create
+::: tip create
+* 作用：创造一个带有指定原型链的对象
+* 调用：Object.create(obj[, descriptors])
+* 入参：Object[, definePropertiesObj]
+* 返回：Object[, Object]
+:::
+:::: tabs
+::: tab label=使用
+![](./assets/objectcreate.png)
+```js
+class A {}
+A.prototype.age = 18;
+
+const a1 = new A();
+a1.name = 'hdy';
+
+const a2 = Object.create(a1);
+
+console.log(a2.name); // hdy
+console.log(a2.age); // 18
+console.log(a2 instanceof A); // true
+console.log(a2.__proto__ === a1); // true
+```
+:::
+::: tab label=对象继承
+* 普通继承是通过class B extends A {}来实现的
+* 但是单个对象要继承另一个对象的属性就可以用Object.created()来实现，通过原型链的机制
+```js
+// 类式继承
+class A {}
+class B extends A {}
+
+const b = new B();
+console.log(b instanceof A); // true
+
+// 函数式继承
+function C() {}
+function D() {
+}
+D.prototype.__proto__ = C.prototype;
+
+const d = new D();
+console.log(d instanceof C); // true
+
+// 对象式继承
+const f = Object.create(d);
+console.log(f instanceof C); // true
+```
+:::
+::: tab label=通过对象继承实现类继承
+```js
+class A {
+    constructor() {
+        this.name = 'hdy';
+    }
+}
+function B() {}
+
+// 通过对象的继承来实现原型链
+B.prototype = Object.create(A.prototype);
+// ->相当于
+// B.prototype.__proto__ = A.prototype;
+
+const b = new B();
+console.log(b instanceof A); // true
+```
+:::
+::: tab label=第二个参数
+* 第二个参数类似Object.defineProperty的第二个参数
+```js
+const obj1 = { name: 'hdy' }
+const obj2 = Object.create(obj1, {
+    age: {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: 18
+    }
+})
+
+console.log(obj2); // { age: 18 }
+console.log(obj2.name); // hdy
+```
+:::
+::::
+### getPropertypeOf
+::: tip getPropertypeOf
+* 作用：获取_ _ _proto_ _ _
+* 调用：Object.getPropertypeOf(obj)
+* 入参：Object
+* 返回：Object
+:::
+```js
+class A {}
+class B extends A {}
+console.log(Object.getPrototypeOf(B.prototype) === A.prototype); // true
+```
+```js
+console.log(Object.getPrototypeOf(Object)=== Function.prototype); // true
+```
+
+### setPrototypeOf
+::: warning 性能消耗大
+* 官方说性能消耗较大，建议使用Object.create()替代写法
+:::
+::: tip setPrototypeOf
+* 作用：设置对象原型链
+* 调用：Object.setPrototypeOf(obj, _ _ _proto_ _ _)
+* 入参：Object, Object
+* 返回：Object(参数1)
+:::
+```js
+const obj1 = { name: 'hdy' };
+const obj2 = Object.setPrototypeOf({}, obj1);
+
+console.log(obj2); // {}
+console.log(obj2.name); // hdy
+```
+* create替代
+```js
+const obj1 = { name: 'hdy' };
+const obj2 = Object.create(obj1);
+
+console.log(obj2); // {}
+console.log(obj2.name); // hdy
+```
+### isPrototypeOf
+::: tip isPrototypeOf
+* 作用：查看是否在指定对象的**原型链上**
+* 调用：obj1.isPrototypeOf(obj2)
+* 入参：Object
+* 返回：Boolean
+:::
+```js
+const obj1 = {}
+const obj2 = Object.setPrototypeOf({}, obj1);
+
+console.log(obj1.isPrototypeOf(obj2)); // true
+```
+* 原型链上
+```js
+const obj1 = {};
+const obj2 = Object.create(obj1);
+const obj3 = Object.create(obj2);
+
+console.log(obj2.isPrototypeOf(obj3)); // true
+console.log(obj1.isPrototypeOf(obj3)); // true
+```
 
 ## 迭代器
 ### entries
@@ -217,6 +366,128 @@ Object.defineProperty(obj, 'age', {
 
 console.log(Object.values(obj)); // ['hdy']
 ```
+### getOwnPropertyNames
+::: tip getOwnPropertyNames
+* 作用：拿到自身所有属性名（**包括不可枚举属性**）
+* 调用：Object.getOwnPropertyNames(obj)
+* 入参：Object
+* 返回：Array
+:::
+::: warning 与Object.keys()对比
+* 相同：都不会去原型链拿属性
+* 不同：getOwnPropertyNames() 可以拿到自身不可枚举属性
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj = {
+    name: 'hdy'
+}
+Object.defineProperty(obj, 'age', {
+    enumerable: false,
+    age: 18
+})
+
+console.log(Object.getOwnPropertyNames(obj)); // [ 'name', 'age' ]
+```
+:::
+::: tab label=自身可枚举属性
+* Object.keys()
+* Object.entries()
+* Object.values()
+```js {12}
+const obj = Object.defineProperties({}, {
+    name: {
+        enumerable: true,
+        value: 'hdy'
+    },
+    age: {
+        value: 18
+    }
+})
+
+console.log(obj); // { name: 'hdy' }
+console.log(Object.keys(obj)); // [ 'name' ]
+```
+:::
+::: tab label=自身不可枚举属性
+```js {11-13}
+const obj = Object.defineProperties({}, {
+    name: {
+        enumerable: true,
+        value: 'hdy'
+    },
+    age: {
+        value: 18
+    }
+})
+
+const unEnumerable = Object.getOwnPropertyNames(obj).filter(function(item) {
+    return !this.includes(item);
+}, Object.keys(obj))
+console.log(unEnumerable); // [ 'age' ]
+```
+:::
+::::
+### getOwnPropertySymbols
+::: tip getOwnPropertySymbols
+* 作用：获取本对象的symbol
+* 调用：Object.getOwnPropertySymbols(obj)
+* 入参：Object
+* 返回：Symbol []
+:::
+```js
+var obj = {};
+var a = Symbol("a");
+var b = Symbol.for("b");
+
+obj[a] = "localSymbol";
+obj[b] = "globalSymbol";
+
+var objectSymbols = Object.getOwnPropertySymbols(obj);
+
+console.log(objectSymbols.length); // 2
+console.log(objectSymbols)         // [Symbol(a), Symbol(b)]
+console.log(objectSymbols[0])      // Symbol(a)
+```
+### hasOwnProperty
+::: tip hasOwnProperty
+* 作用：查看属性是不是属于实例本身
+* 调用：obj.hasOwnProperty(key)
+* 入参：String
+* 返回：Boolean
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj = { name: 'hdy' };
+const obj2 = Object.create(obj);
+
+console.log(obj2.name); // hdy
+console.log(obj2.hasOwnProperty('name')); // false
+```
+:::
+::: tab label=模拟keys
+* 获取自身属性名可以用Object.keys()
+```js
+const obj1 = { name: 'hdy' };
+const obj2 = Object.create(obj1, { age: { enumerable: true } });
+```
+```js
+Object.keys(obj2); // [ age ]
+```
+* 用hasOwnProperty()实现
+```js
+const ownProperty = [];
+for (let key in obj2) {
+    if (obj2.hasOwnProperty(key)) {
+        ownProperty.push(key);
+    }
+}
+console.log(ownProperty); // [ age ]
+```
+:::
+::::
 ## 描述符
 ### defineProperty
 ::: tip defineProperty
@@ -666,193 +937,66 @@ function deepCloneWithDescriptor(obj) {
 ```
 :::
 ::::
-
-## 静态方法
-### assign
-::: tip assign
-* 作用：将多个对象的属性集成到第一个对象上,**返回第一个对象的引用**
-* 使用：Object.assign(obj1, obj2[, obj3...])
-* 入参：Object, Object[, Object]
-* 返回：Object
-* tip：浅拷贝
-* tip：相同属性以后来的为准
-* tip：不支持es5就没有的Symbols
+### propertyIsEnumerable
+::: tip propertyIsEnumerable
+* 作用：查看对象的属性是否可枚举
+* 调用：obj.propertyIsEnumerable(key)
+* 入参：String
+* 返回：Boolean
 :::
 :::: tabs
-::: tab label=使用
+::: tab label=作用
 ```js
-const obj1 = {
-    name: '张三',
-    book: '红宝书'
-}
-const obj2 = {
-    name: '李四',
-    age: 19
-}
-
-const ans = Object.assign(obj1, obj2);
-console.log(ans === obj1); // true
-console.log(obj1); // { name: '李四', book: '红宝书', age: 19}
-console.log(obj2); // { name: '李四', age: 19 }
-```
-:::
-::: tab label=浅拷贝
-```js
-const obj1 = {
-    name: 'hdy'
-}
-const obj2 = {
-    books: ['红宝书']
-}
-
-Object.assign(obj1, obj2);
-obj2.books[0] = '你不知道的JS';
-console.log(obj1); // { name: 'hdy', books: ['你不知道的JS'] }
-```
-:::
-::: tab label=手写
-* 期望：
-```js
-const obj1 = {
-    name: 'hdy'
-}
-const obj2 = {
-    name: '李四',
-    books: ['红宝书']
-}
-
-Object.myAssign(obj1, obj2);
-obj2.books[0] = '你不知道的JS';
-console.log(obj1); // { name: '李四', books: ['你不知道的JS'] }
-```
-```js
-Object.prototype.myAssign = (obj1, ...objs) => {
-    objs.forEach(item =>
-        Object.entries(item).forEach(([key, value]) => 
-            obj1[key] = value));
-
-    return obj1;
-}
-```
-:::
-::: tab label=深拷贝实现
-* 期望：
-```js
-const obj1 = {
-    name: 'hdy'
-}
-const obj2 = {
-    name: '李四',
-    books: ['红宝书']
-}
-
-Object.myDeepAssign(obj1, obj2);
-obj2.books[0] = '你不知道的JS';
-console.log(obj1); // { name: '李四', books: ['红宝书'] }
-```
-```js
-Object.prototype.myDeepAssign = (obj1, ...objs) => {
-    let newObj = Object.assign({}, ...objs);
-
-    // 断连接
-    newObj = JSON.parse(JSON.stringify(newObj));
-
-    for (let [key, value] of Object.entries(newObj)) {
-        obj1[key] = value;
-    }
-    return obj1;
-}
-```
-::::
-
-### create
-::: tip create
-* 作用：创造一个带有指定原型链的对象
-* 调用：Object.create(obj[, descriptors])
-* 入参：Object[, definePropertiesObj]
-* 返回：Object[, Object]
-:::
-:::: tabs
-::: tab label=使用
-![](./assets/objectcreate.png)
-```js
-class A {}
-A.prototype.age = 18;
-
-const a1 = new A();
-a1.name = 'hdy';
-
-const a2 = Object.create(a1);
-
-console.log(a2.name); // hdy
-console.log(a2.age); // 18
-console.log(a2 instanceof A); // true
-console.log(a2.__proto__ === a1); // true
-```
-:::
-::: tab label=对象继承
-* 普通继承是通过class B extends A {}来实现的
-* 但是单个对象要继承另一个对象的属性就可以用Object.created()来实现，通过原型链的机制
-```js
-// 类式继承
-class A {}
-class B extends A {}
-
-const b = new B();
-console.log(b instanceof A); // true
-
-// 函数式继承
-function C() {}
-function D() {
-}
-D.prototype.__proto__ = C.prototype;
-
-const d = new D();
-console.log(d instanceof C); // true
-
-// 对象式继承
-const f = Object.create(d);
-console.log(f instanceof C); // true
-```
-:::
-::: tab label=通过对象继承实现类继承
-```js
-class A {
-    constructor() {
-        this.name = 'hdy';
-    }
-}
-function B() {}
-
-// 通过对象的继承来实现原型链
-B.prototype = Object.create(A.prototype);
-// ->相当于
-// B.prototype.__proto__ = A.prototype;
-
-const b = new B();
-console.log(b instanceof A); // true
-```
-:::
-::: tab label=第二个参数
-* 第二个参数类似Object.defineProperty的第二个参数
-```js
-const obj1 = { name: 'hdy' }
-const obj2 = Object.create(obj1, {
-    age: {
-        configurable: true,
+const obj = Object.defineProperties({}, {
+    name: {
         enumerable: true,
-        writable: true,
+        writable: false,
+        value: 'hdy'
+    },
+    age: {
+        enumerable: false,
         value: 18
     }
 })
 
-console.log(obj2); // { age: 18 }
-console.log(obj2.name); // hdy
+console.log(obj.propertyIsEnumerable('name')); // true
+console.log(obj.propertyIsEnumerable('age')); // false
+```
+:::
+::: tab label=所有不可枚举属性
+* Object.keys() 可以查看所有自身可枚举属性
+* Object.getOwnPropertyNames() 可以查看自身所有属性，包括不可枚举
+* 过滤取反即可得出所有不可枚举属性
+```js
+const obj1 = { book: '蝴蝶书' }; // 原型链上的属性
+const obj2 = Object.create(obj1);
+Object.defineProperties(obj2, {
+    name: {
+        enumerable: true,
+        writable: false,
+        value: 'hdy'
+    },
+    age: {
+        enumerable: false,
+        value: 18
+    }
+})
+
+// 期望：
+const unEnumerable = getUnEnumerable(obj2);
+console.log(unEnumerable); // [ 'age' ]
+```
+* 实现
+```js
+function getUnEnumerable(obj) {
+    return Object.getOwnPropertyNames(obj).filter(function (item) {
+        return !this.includes(item);
+    }, Object.keys(obj))
+}
 ```
 :::
 ::::
-
-
+## 增加限制
 ### freeze
 ::: tip freeze
 * 作用：冻结本对象的所有属性，禁止增删改属性，只能查看，**且configurable也变成false**
@@ -955,6 +1099,10 @@ Object.deepFreeze = function (obj) {
 * 入参：Object
 * 返回：Boolean
 :::
+::: warning 判断条件
+1. 所有属性不可增删改
+2. 所有属性 configurable: false
+:::
 ```js
 const obj = {};
 console.log(Object.isFrozen(obj)); // false
@@ -1013,6 +1161,153 @@ console.log(Object.isSealed(obj)); // false
 Object.seal(obj);
 console.log(Object.isSealed(obj)); // true
 ```
+
+### preventExtensions
+::: tip preventExtensions
+* 作用：使对象**不可扩展**，此操作**不可逆**
+* 调用：Object.preventExtensions(obj)
+* 入参：Object
+* 返回：Object(入参)
+* tip：不会影响到原型链，但**本对象_ _ _proto_ _ _属性也不可变**
+:::
+```js {5,7,10,15}
+const obj = { name: 'hdy' };
+const obj2 = Object.create(obj);
+obj2.age = 18;
+
+Object.preventExtensions(obj2); // 此后属性只能删、改、查，不能增，且原型链不能变
+
+obj2.book = '蝴蝶书'; // 无效
+console.log(obj2); // { age: 18 }
+
+obj2.age = 19; // 有效
+console.log(obj2.age); // 19
+
+// 改动原型链也无效
+const obj3 = { name: '张三' };
+// Object.setPrototypeOf(obj2, obj3); // 报错
+```
+### isExtensible
+::: tip isExtensible
+* 作用：对象是否可扩展
+* 调用：Object.isExtensible(obj)
+* 入参：Object
+* 返回：Boolean
+* 限制可扩展性的有：freeze/seal/preventExtensions
+:::
+```js
+const obj = { name: 'hdy' };
+console.log(Object.isExtensible(obj)); // true
+```
+```js
+const obj = Object.preventExtensions({ name: 'hdy' });
+console.log(Object.isExtensible(obj)); // false
+```
+```js
+const obj = Object.freeze({ name: 'hdy' });
+console.log(Object.isExtensible(obj)); // false
+```
+```js
+const obj = Object.seal({ name: 'hdy' });
+console.log(Object.isExtensible(obj)); // false
+```
+## 其他属性
+### assign
+::: tip assign
+* 作用：将多个对象的属性集成到第一个对象上,**返回第一个对象的引用**
+* 使用：Object.assign(obj1, obj2[, obj3...])
+* 入参：Object, Object[, Object]
+* 返回：Object
+* tip：浅拷贝
+* tip：相同属性以后来的为准
+* tip：不支持es5就没有的Symbols
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj1 = {
+    name: '张三',
+    book: '红宝书'
+}
+const obj2 = {
+    name: '李四',
+    age: 19
+}
+
+const ans = Object.assign(obj1, obj2);
+console.log(ans === obj1); // true
+console.log(obj1); // { name: '李四', book: '红宝书', age: 19}
+console.log(obj2); // { name: '李四', age: 19 }
+```
+:::
+::: tab label=浅拷贝
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    books: ['红宝书']
+}
+
+Object.assign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: 'hdy', books: ['你不知道的JS'] }
+```
+:::
+::: tab label=手写
+* 期望：
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    name: '李四',
+    books: ['红宝书']
+}
+
+Object.myAssign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: '李四', books: ['你不知道的JS'] }
+```
+```js
+Object.prototype.myAssign = (obj1, ...objs) => {
+    objs.forEach(item =>
+        Object.entries(item).forEach(([key, value]) => 
+            obj1[key] = value));
+
+    return obj1;
+}
+```
+:::
+::: tab label=深拷贝实现
+* 期望：
+```js
+const obj1 = {
+    name: 'hdy'
+}
+const obj2 = {
+    name: '李四',
+    books: ['红宝书']
+}
+
+Object.myDeepAssign(obj1, obj2);
+obj2.books[0] = '你不知道的JS';
+console.log(obj1); // { name: '李四', books: ['红宝书'] }
+```
+```js
+Object.prototype.myDeepAssign = (obj1, ...objs) => {
+    let newObj = Object.assign({}, ...objs);
+
+    // 断连接
+    newObj = JSON.parse(JSON.stringify(newObj));
+
+    for (let [key, value] of Object.entries(newObj)) {
+        obj1[key] = value;
+    }
+    return obj1;
+}
+```
+::::
 ### fromEntries
 ::: tip fromEntries
 * 作用：将键值对转化成对象，类似于entries反向操作
@@ -1067,7 +1362,46 @@ console.log(Object.is(obj1, obj2)); // false
 console.log(Object.is(+0, -0)); // false
 console.log(Object.is(NaN, NaN)); // true
 ```
-## 其他属性
+### toString
+::: tip toString
+* 作用：检测对象类型
+* 调用：obj.toString()
+* 返回：[ object type ]
+* tip：只是最基础的toString，继承类也可以自定义自己的toString方法
+:::
+:::: tabs
+::: tab label=使用
+* 固定返回：[ object type]
+```js
+const obj = {}
+console.log(obj.toString()); // [ object Object]
+
+// 继承重写
+const func = function () {};
+console.log(func.toString()); // function () {}
+
+const arr = [1, 2, 3];
+console.log(arr.toString()); // [1, 2, 3]
+```
+:::
+::: tab label=判断类型
+* 由于返回值第一个是固定的object，但是第二个是构造器类型，就可以利用call/apply配合做类型检测
+```js
+const arr = [1, 2, 3];
+console.log(Object.prototype.toString.call(arr)); // [object Array]
+```
+* 只能做基础类型检测
+```js
+class A {}
+const a = new A();
+console.log(Object.prototype.toString.call(a)); // [object Object]
+```
+```js
+const a = '';
+console.log(Object.prototype.toString.call(a)); // [object String]
+```
+:::
+::::
 ### length
 * 值为1
 ### constructor
@@ -1102,187 +1436,3 @@ Child.prototype.constructor = Child;
 ```
 :::
 ::::
-
-### getOwnPropertyNames
-::: tip getOwnPropertyNames
-* 作用：拿到自身所有属性名（**包括不可枚举属性**）
-* 调用：Object.getOwnPropertyNames(obj)
-* 入参：Object
-* 返回：Array
-:::
-:::: tabs
-::: tab label=使用
-```js
-const obj = {
-    name: 'hdy'
-}
-Object.defineProperty(obj, 'age', {
-    enumerable: false,
-    age: 18
-})
-
-console.log(Object.getOwnPropertyNames(obj)); // [ 'name', 'age' ]
-```
-:::
-::: tab label=自身可枚举属性
-* Object.keys()
-* Object.entries()
-* Object.values()
-```js {12}
-const obj = Object.defineProperties({}, {
-    name: {
-        enumerable: true,
-        value: 'hdy'
-    },
-    age: {
-        value: 18
-    }
-})
-
-console.log(obj); // { name: 'hdy' }
-console.log(Object.keys(obj)); // [ 'name' ]
-```
-:::
-::: tab label=自身不可枚举属性
-```js {11-13}
-const obj = Object.defineProperties({}, {
-    name: {
-        enumerable: true,
-        value: 'hdy'
-    },
-    age: {
-        value: 18
-    }
-})
-
-const unEnumerable = Object.getOwnPropertyNames(obj).filter(function(item) {
-    return !this.includes(item);
-}, Object.keys(obj))
-console.log(unEnumerable); // [ 'age' ]
-```
-:::
-::::
-### getOwnPropertySymbols
-::: tip getOwnPropertySymbols
-* 作用：获取本对象的symbol
-* 调用：Object.getOwnPropertySymbols(obj)
-* 入参：Object
-* 返回：Symbol []
-:::
-```js
-var obj = {};
-var a = Symbol("a");
-var b = Symbol.for("b");
-
-obj[a] = "localSymbol";
-obj[b] = "globalSymbol";
-
-var objectSymbols = Object.getOwnPropertySymbols(obj);
-
-console.log(objectSymbols.length); // 2
-console.log(objectSymbols)         // [Symbol(a), Symbol(b)]
-console.log(objectSymbols[0])      // Symbol(a)
-```
-### getPropertypeOf
-::: tip getPropertypeOf
-* 作用：获取_ _ _proto_ _ _
-* 调用：Object.getPropertypeOf(obj)
-* 入参：Object
-* 返回：Object
-:::
-```js
-class A {}
-class B extends A {}
-console.log(Object.getPrototypeOf(B.prototype) === A.prototype); // true
-```
-```js
-console.log(Object.getPrototypeOf(Object)=== Function.prototype); // true
-```
-
-### setPrototypeOf
-::: warning 性能消耗大
-* 官方说性能消耗较大，建议使用Object.create()替代写法
-:::
-::: tip setPrototypeOf
-* 作用：设置对象原型链
-* 调用：Object.setPrototypeOf(obj, _ _ _proto_ _ _)
-* 入参：Object, Object
-* 返回：Object(参数1)
-:::
-```js
-const obj1 = { name: 'hdy' };
-const obj2 = Object.setPrototypeOf({}, obj1);
-
-console.log(obj2); // {}
-console.log(obj2.name); // hdy
-```
-* create替代
-```js
-const obj1 = { name: 'hdy' };
-const obj2 = Object.create(obj1);
-
-console.log(obj2); // {}
-console.log(obj2.name); // hdy
-```
-### isPrototypeOf
-::: tip isPrototypeOf
-* 作用：查看是否在指定对象的**原型链上**
-* 调用：obj1.isPrototypeOf(obj2)
-* 入参：Object
-* 返回：Boolean
-:::
-```js
-const obj1 = {}
-const obj2 = Object.setPrototypeOf({}, obj1);
-
-console.log(obj1.isPrototypeOf(obj2)); // true
-```
-* 原型链上
-```js
-const obj1 = {};
-const obj2 = Object.create(obj1);
-const obj3 = Object.create(obj2);
-
-console.log(obj2.isPrototypeOf(obj3)); // true
-console.log(obj1.isPrototypeOf(obj3)); // true
-```
-## 原型方法
-### hasOwnProperty
-::: tip hasOwnProperty
-* 作用：查看属性是不是属于实例本身
-* 调用：obj.hasOwnProperty(key)
-* 入参：String
-* 返回：Boolean
-:::
-:::: tabs
-::: tab label=使用
-```js
-const obj = { name: 'hdy' };
-const obj2 = Object.create(obj);
-
-console.log(obj2.name); // hdy
-console.log(obj2.hasOwnProperty('name')); // false
-```
-:::
-::: tab label=模拟keys
-* 获取自身属性名可以用Object.keys()
-```js
-const obj1 = { name: 'hdy' };
-const obj2 = Object.create(obj1, { age: { enumerable: true } });
-```
-```js
-Object.keys(obj2); // [ age ]
-```
-* 用hasOwnProperty()实现
-```js
-const ownProperty = [];
-for (let key in obj2) {
-    if (obj2.hasOwnProperty(key)) {
-        ownProperty.push(key);
-    }
-}
-console.log(ownProperty); // [ age ]
-```
-:::
-::::
-
