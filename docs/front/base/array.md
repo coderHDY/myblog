@@ -19,7 +19,6 @@ console.log(Array.isArray(a)); // true
 * 通常判断数组Array.isArray() 是最优的
 * arr instanceof Array 不能判断iframs，Array.isArray() 可以，[详情](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray)
 * [其他判断数组的方法](./typeof.html#判断数组)
-
 ### from
 ::: tip Array.from()
 * Array.from()将**伪数组对象**或**可迭代对象iterator**转换成数组
@@ -73,7 +72,6 @@ console.log(arr); // [ '张三: 180', '李四: 175', '王五: 170' ]
 ```
 :::
 ::::
-
 ### of
 * Array.of()与new Array() 相似，都是创建新数组
 ```js
@@ -640,6 +638,7 @@ function sortIt(names) {
 * 调用：arr.flat(deepth)
 * 入参：Number(可选，默认是1)
 * 返回：Array
+* tip：可入参infinity直接**无限打平**成一维数组
 :::
 :::: tabs
 ::: tab label=使用
@@ -649,6 +648,13 @@ const arr = [1, 2, [10, 20, [100, 200]]];
 console.log(arr.flat()); // [1, 2, 10, 20, [100, 200]]
 console.log(arr); // [1, 2, [10, 20, [100, 200]]]
 console.log(arr.flat(2)); // [1, 2, 10, 20, 100, 200]
+```
+:::
+::: tab label=infinity
+```js
+const arr = [1, 2, [10, 20, [100, 200, [1000, 2000]]]];
+
+console.log(arr.flat(Infinity)); // [ 1, 2, 10, 20, 100, 200, 1000, 2000 ]
 ```
 :::
 ::: tab label=手写原理

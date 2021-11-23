@@ -4,7 +4,7 @@
 ### 原理
 1. 每个function上都有一个prototype属性，指向一个对象，叫做**原型对象**
 2. 原型对象上又有一个constructor属性能够找到构造他的function
-    * constructor 是用 **new 关键字调用**时才会调用，主要做四件事：
+    * 用 new 关键字调用function时主要做四件事：
         > 1. 生成一个新的对象 {}
         > 2. 给这个对象添加一个属性 _ _ _proto_ _ _  = function的prototype;
         > 3. function 的this绑定到这个对象上去执行
@@ -43,9 +43,6 @@
 :::
 ::: tab label=代码
 ```html
-<head>
-    <title>Document</title>
-</head>
 <body>
     <script>
         function A() {
@@ -140,7 +137,7 @@ Function.__proto__ === Function.prototype; // true
 Function.__proto__ === Function.prototype; // true
 Function instanceof Function; // true
 
-Function.prototype.__proto__ === Object.prototype; // true
+Function.__proto__.__proto__ === Object.prototype; // true
 Function instanceof Object; // true
 
 Object.__proto__.__proto__ === Object.prototype; // true
@@ -158,6 +155,8 @@ Object instanceof Function; // true
 ### constructor
 * 原型对象上的属性，指向构造函数
 * 每个对象都能够通过[原型链](./object.html#原型链)找到构造函数的原型对象，然后原型对象上就有对应的constructor属性，所以每个对象都能拿到自己的构造函数
+:::: tabs
+::: tab label=使用
 ```js
 class A {}
 const a = new A();
@@ -170,6 +169,91 @@ const b = new B();
 
 console.log(b.constructor); // B
 ```
+:::
+::: tab label=创造function的继承
+* class的extends继承现象的内部行为
+```js
+function Parent() {}
+function Child() {}
+
+// 关联 Child.__proto__.__proto === Parent.prototype
+Child.prototype = Object.create(Parent.prototype);
+
+// prototype变成了一个新的对象，所以要重新关联constructor
+Child.prototype.constructor = Child;
+```
+:::
+::::
+
+## 迭代器
+### entries
+::: tip entries
+* 作用：返回对象实例**可枚举属性**的键值对（**不包括原型链**）
+* 调用：Object.entries(obj);
+* 入参：Object
+* 返回：Array（二维数组）
+:::
+:::: tabs
+::: tab label=使用
+```js
+const obj = {
+    name: 'hdy',
+    age: 18,
+}
+Object.defineProperty(obj, 'books', {
+    value: ['红宝书']
+})
+console.log([...Object.entries(obj)]); // [[name: 'hdy'], [age: 18]]
+```
+:::
+::: tab label=对象转map
+```js {5}
+const obj = {
+    name: 'hdy',
+    age: 18,
+}
+const map = new Map(Object.entries(obj));
+console.log(map); // Map(2) { 'name' => 'hdy', 'age' => 18 }
+```
+:::
+::::
+### keys
+::: tip keys
+* 作用：拿到对象自身的**可枚举属性**
+* 调用：Object.keys(obj)
+* 入参：Object
+* 返回：Array
+:::
+```js
+const obj = {
+    name: 'hdy'
+}
+Object.defineProperty(obj, 'age', {
+    enumerable: false,
+    value: 18
+})
+
+console.log(Object.keys(obj)); // ['name']
+```
+### values
+::: tip values
+* 作用：拿到自身所有**可枚举属性**的值
+* 调用：Object.keys(obj)
+* 入参：Object
+* 返回：Array
+:::
+```js
+const obj = {
+    name: 'hdy'
+}
+Object.defineProperty(obj, 'age', {
+    enumerable: false,
+    value: 18
+})
+
+console.log(Object.values(obj)); // ['hdy']
+```
+
 ## 静态方法
 ### assign
 ::: tip assign
@@ -271,7 +355,7 @@ Object.prototype.myDeepAssign = (obj1, ...objs) => {
 ### create
 ::: tip create
 * 作用：创造一个带有指定原型链的对象
-* 调用：Object.create(obj)
+* 调用：Object.create(obj[, descriptors])
 * 入参：Object[, definePropertiesObj]
 * 返回：Object[, Object]
 :::
@@ -350,20 +434,21 @@ const obj2 = Object.create(obj1, {
 })
 
 console.log(obj2); // { age: 18 }
+console.log(obj2.name); // hdy
 ```
 :::
 ::::
 
 ### defineProperty
 ::: tip defineProperty
-* 作用：给对象定义属性，可以支持get/set劫持
+* 作用：以描述符的形式给对象定义属性，可以支持get/set劫持
 * 调用：Object.defineProperty(obj, key, descriptor)
 * 入参：Object, String, Object
 * 返回：Object（第一个入参的引用）
 :::
 :::: tabs
 ::: tab label=使用
-```js
+```js{6,7,10}
 const obj = {
     name: 'hdy'
 }
@@ -396,7 +481,7 @@ console.log(obj.age); // 20岁
 ```
 :::
 ::: tab label=descriptor规则
-1. configurable为true时，所有属性都只能配置这一遍，包括configurable，且属性不可删
+1. configurable为true时，所有属性都只能配置这一遍，包括configurable，且属性不可删（默认是false）
 2. emuerable配置是true打印对象时才会被枚举出来，（直接赋值出来的属性默认是true，defineProperty的属性默认是false）
 3. value: 值
 4. writable决定是否可改变value
@@ -404,10 +489,10 @@ console.log(obj.age); // 20岁
 6. set 属性的setter器
 :::
 ::: tab label=configurable
-* configurable为true时，所有属性都只能配置这一遍，包括configurable(除了value和writable)，且属性不可删
+* configurable为true时，所有属性都只能配置这一遍，包括configurable(除了value和writable)，且属性不可删（默认是false）
 ---
 > 不可配置不可删
-```js
+```js {3,8}
 const obj = {};
 Object.defineProperty(obj, 'age', {
     configurable: false,
@@ -418,7 +503,7 @@ console.log(obj.age); // 18
 delete obj.age;       // 不起作用
 console.log(obj.age); // 18
 ```
-```js
+```js {3,8}
 const obj = {};
 Object.defineProperty(obj, 'age', {
     configurable: true,
@@ -453,7 +538,7 @@ console.log(obj.age); // 19
 :::
 ::: tab label=enumerable
 * enumerable配置是true打印对象时才会被枚举出来，（直接赋值出来的属性默认是true，defineProperty的属性默认是false）
-```js
+```js {3,11}
 const obj = {};
 
 // 默认enumerable是false
@@ -473,7 +558,7 @@ console.log(obj.propertyIsEnumerable('age')); // false
 console.log(obj.propertyIsEnumerable('height')); // true
 ```
 * 包括for...in 和Object.keys()
-```js
+```js {4}
 const father = { name: 'hdy' };
 const child = Object.create(father, {
     age: {
@@ -493,7 +578,7 @@ for (let key in child) {
 ::: tab label=writable/value
 * value: 值
 * writable决定是否可改变value，默认false
-```js
+```js {3,8}
 const obj = {};
 Object.defineProperty(obj, 'age', {
     writable: false,
@@ -505,7 +590,7 @@ obj.age = 11;         // 不生效（也不报错）
 console.log(obj.age); // 10
 ```
 > 引用类型只判断引用是否改变
-```js
+```js {3,8,11}
 const obj = {};
 Object.defineProperty(obj, 'books', {
     writable: false,
@@ -581,6 +666,156 @@ a1.age = 19;
 
 console.log(a2.age);
 console.log(Object.keys(a2));
+```
+:::
+::::
+
+::: warning writable与继承
+* 一个对象的writable设置成false时，其继承者只能通过defineProperty定义同名属性
+* getter/setter设置时就默认writable是false，且无法更改，所以实例也无法生成自己的同名属性
+* 类的constructor函数可以主动为实例对象添加实例属性，可以覆盖同名父类属性
+:::
+:::: tabs
+::: tab label=继承修改无效
+* 一个对象的writable设置成false时，其继承者普通赋值方式无效
+![](./assets/writablefalse.png)
+```js {6,10}
+class A {}
+Object.defineProperty(A.prototype, 'age', {
+    value: 1
+})
+class B extends A {}
+B.prototype.age = 2; // 父类同名属性writable是false，无效
+
+const b1 = new B();
+console.log(b1.age); // 1
+b1.age = 3;          // writable是false，还是无效
+console.log(b1.age); // 1
+```
+:::
+::: tab label=继承修改方式
+* * 一个对象的writable设置成false时，后续的原型链上也用defineProperty设置属性才有效
+```js {3-4,8-9,13,15,18-19}
+class A {}
+Object.defineProperty(A.prototype, 'age', {
+    writable: false,
+    value: 1
+})
+class B extends A {}
+Object.defineProperty(B.prototype, 'age', {
+    writable: true // 有效覆盖，且开放了后面原型链上的可写能力
+    value: 2,
+})
+
+const b1 = new B();
+console.log(b1.age); // 2
+b1.age = 3;          // writable是true，有效
+console.log(b1.age); // 3
+console.log(b1.hasOwnProperty('age')); // true  说明writable是true让后续原型链可以自身新增同名属性
+
+// 证明没有修改到原型链
+const b2 = new B();
+console.log(b2.age); // 2
+```
+:::
+::: tab label=getter/setter
+* getter/setter设置时就默认writable是false，且无法更改，
+* 所以后续原型链也无法通过赋值生成自己的同名属性，一直都是调用的原型链上的getter/setter方法
+* 重写方式也是defineProperty
+```js{14}
+const obj1 = {
+    _age: 1,
+    get age() {
+        return obj1._age;
+    },
+    set age(value) {
+        obj1._age = value;
+    }
+};
+const obj2 = Object.create(obj1);
+const obj3 = Object.create(obj1);
+
+console.log(obj2.age); // 1
+obj2.age = 18; // 调用了原型链的setter，修改了obj1的属性
+console.log(obj1._age); // 18
+console.log(obj3.age); // 18
+```
+:::
+::: tab label=constructor覆盖
+* 类的构造函数中为类的实例对象添加实例属性，可以覆盖同名父类属性
+```js
+class A {}
+Object.defineProperty(A.prototype, 'age', { value: 1 })
+class B extends A { age = 2; }
+
+const b = new B();
+console.log(b.age); // 2
+console.log(b.hasOwnProperty('age')); // true
+```
+
+:::
+::::
+
+### defineProperties
+::: tip defineProperties
+* 作用：同时可定义多个属性，作用与[defineProperty](./object.html#defineproperty)一样
+* 调用：Object.defineProperties(obj, {name: descriptor[, name: descriptor...] })
+* 入参：Object,Object
+* 返回：Object(第一个参数的应用)
+:::
+```js
+const obj = {};
+Object.defineProperties(obj, {
+    name: {
+        enumerable: true,
+        value: 'hdy'
+    },
+    _age: {
+        value: 1
+    },
+    age: {
+        get() { return this._age + '岁'; },
+        set(value) {this._age = value}
+    }
+})
+
+console.log(obj); // { name: 'hdy' }
+console.log(obj.age); // 1
+```
+
+### freeze
+::: tip freeze
+* 作用：冻结本对象的所有属性，禁止增删改属性，只能查看
+* 使用：Object.freeze(obj)
+* 入参：Object
+* 返回：Object(入参引用)
+:::
+:::: tabs
+::: tab label=使用
+* 冻结对象
+```js
+const obj1 = { name: 'hdy' };
+const obj2 = Object.create(obj1);
+const obj3 = Object.create(obj2);
+
+Object.freeze(obj2);
+obj1.age = 17;
+obj2.age = 18; // 已冻结，无效
+console.log(obj3.age); // 17
+
+// 冻结对象新增属无效，但不会报错
+obj2.height = 180; // error
+console.log(obj2.height);
+```
+* 冻结数组
+```js
+const arr = [1, 2];
+Object.freeze(arr);
+arr[0] = 3;
+console.log(arr); // [1, 2]
+
+// 冻结数组无法调用push，会报错
+arr.push(3);
 ```
 :::
 ::::
