@@ -997,6 +997,13 @@ function getUnEnumerable(obj) {
 :::
 ::::
 ## 增加限制
+::: warning preventExtensions/seal/freeze对比
+||限制_ _ _proto_ _ _不可改(不能修改原型链的指向)、不可以增加属性|configurable:false(不可删除属性、其他配置不可改)| writable:false|
+|--|---|---|---|
+|preventExtensions|*|||
+|seal|*|*||
+|freeze|*|*|*|
+:::
 ### freeze
 ::: tip freeze
 * 作用：冻结本对象的所有属性，禁止增删改属性，只能查看，**且configurable也变成false**
@@ -1102,6 +1109,7 @@ Object.deepFreeze = function (obj) {
 ::: warning 判断条件
 1. 所有属性不可增删改
 2. 所有属性 configurable: false
+3. 原型链指向不能改（_ _ _proto_ _ _）
 :::
 ```js
 const obj = {};
@@ -1214,7 +1222,7 @@ console.log(Object.isExtensible(obj)); // false
 ## 其他属性
 ### assign
 ::: tip assign
-* 作用：将多个对象的属性集成到第一个对象上,**返回第一个对象的引用**
+* 作用：将多个对象的**可枚举属性**集成到第一个对象上,**返回第一个对象的引用**
 * 使用：Object.assign(obj1, obj2[, obj3...])
 * 入参：Object, Object[, Object]
 * 返回：Object
