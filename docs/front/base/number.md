@@ -3,7 +3,7 @@
 ## 构造器
 ::: warning 注意
 * 可以用Nunber()/字面量或者+的形式创造
-* new Number()制作出来的是对象，在**堆内存区**，所以不属于字面量
+* new Number()制作出来的是对象，在**堆内存区**，所以不属于常用的栈内存的数字类型
 * 一般使用字面量
 :::
 * 区别
@@ -33,7 +33,7 @@ console.log(Number('A')); // NaN
 ### EPSILON
 ::: tip EPSILON
 * 表示：2^-52，js可表示的最小正浮点数
-* 常用作：计算精确相等，弥补类0.1不能存储带来的BUG
+* 常用作：浮点计算相等，弥补二进制0.1不能存储带来的BUG
 :::
 * 问题：JS不能精确表示小数计算
 ```js
@@ -53,8 +53,9 @@ console.log(Math.abs(0.1 + 0.2 - 0.3) < Number.EPSILON); // true
 ### MAX\_SAFE\_INTEGER
 ::: warning 双精度浮点数
 * JS采用的双精度浮点数标准能表示的安全整数范围是 -(2^53 - 1) ~ (2^53 - 1) (包含边界)范围之间
-* 作计算在这个安全范围之内
+* 做计算的值应在这个安全范围之内
 :::
+* 超过安全范围无法保证计算的准确性
 ```js
 console.log(Number.MAX_SAFE_INTEGER + 1 === Number.MAX_SAFE_INTEGER + 2); // true
 ```
@@ -209,25 +210,26 @@ const str = '1，一'
 console.log(parseFloat(str)); // 1
 ```
 ```js
-const str = '一'
+const str = '二1.1'
 console.log(parseFloat(str)); // NaN
 ```
 ### parseInt
 ::: tip parseInt
 * 作用：将字符串的整数**以指定的进制**解析出来
 * 调用：parseInt(num, radix)/Number.parseInt(num, radix)
-* 入参：Number, Number
+* 入参：Number[, Number]
 * 返回：Number/NaN
 * tip：**必须以数字开头，否则解析成NaN**
+* tip：第二个数表示进制，默认10，范围(2~36)
 :::
 ```js{6-8}
 const n = '123';
 console.log(parseInt(n, 10)); // 123
 
-console.log(parseInt(n, 4)); // (16 * 1) + (4 * 2) +3 = 27
+console.log(parseInt(n, 4)); // (4 * 4 * 1) + (4 * 2) +3 = 27
 
-// 3进制里面3是非法数，所以不计算，类似非数字当做不认识处理
-console.log(parseInt(n, 3)); // 3*1 + 2 = 5
+// 3进制里面3是非法数，所以不计算，当做非数字不认识处理
+console.log(parseInt(n, 3)); // (3 * 1) + 2 = 5
 console.log(parseInt('321', 3)); // NaN
 ```
 ```js
@@ -235,7 +237,7 @@ const n = '12三';
 console.log(parseInt(n)); // 12
 ```
 ```js
-const n = '一23';
+const n = '二23';
 console.log(parseInt(n)); // NaN
 ```
 ## 原型方法
@@ -254,7 +256,7 @@ console.log(n.toExponential(10)); // 1.2333330000e+2
 ```
 ### toFixed
 ::: tip toFixed
-* 作用：将数字格式化成**字符串**
+* 作用：将数字格式化成**有指定小数位数的字符串**
 * 调用：num.fixed(num)
 * 入参：Number(小数位数)
 * 返回：String
@@ -263,4 +265,32 @@ console.log(n.toExponential(10)); // 1.2333330000e+2
 const n = 12.22222;
 console.log(n.toFixed(3)); // '12.222'
 console.log(n.toFixed(7)); // '12.222200'
+```
+### toPrecision
+::: tip toPrecision
+* 作用：将数字转换成指定位数的字符串（整数 + 小数）
+* 调用：num.toPrecision(precision)
+* 入参：Number(整数 + 小数总位数)
+* 返回：String
+* tip：toFixed传入小数位数，toPrecision传入整数+小数位数
+:::
+```js
+const num = 1.11
+console.log(num.toPrecision(2)); // 1.1
+console.log(num.toPrecision(4)); // 1.110
+console.log(num.toFixed(4));     // 1.1100
+```
+
+### toString
+::: tip toString
+* 作用：将数字转换成**指定进制的字符串**
+* 调用：num.toString([radix])
+* [Number]
+* 返回：String
+* tip：进制可传入范围（2，36）
+:::
+```js
+// JS不能精确存储小数问题
+const num = 1.3;
+console.log(num.toString(4)); // 1.10303030303030303030303031
 ```
