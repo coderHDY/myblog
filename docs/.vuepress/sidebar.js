@@ -12,8 +12,6 @@ const front = {
                 'number',
                 'function',
                 'object',
-                'set',
-                'map',
                 'class',
             ]
         },
@@ -21,6 +19,8 @@ const front = {
             title: '内置对象',
             collapsable: false,
             children: [
+                'set',
+                'map',
                 'iterator',
                 'regexp',
                 'date',
@@ -46,7 +46,13 @@ const front = {
         },
     ],
     '/front/algorithm/': [
-        '',
+        {
+            title: '字符串相关',
+            collapsable: false,
+            children: [
+                ''
+            ]
+        }
     ],
     '/front/sourcecode/': [
         '',

@@ -22,19 +22,63 @@ const obj = {
     age: 19
 }
 function fn1(book, web) {
-    console.log(this.name);
-    console.log(book);
-    console.log(web);
+    console.log(this.name); // hdy
+    console.log(book);      // js红宝书
+    console.log(web);       // MDN
 }
 const book = 'js红宝书';
 const web = 'MDN';
 
+// 绑定了fn1的第一个参数
 const fn2 = fn1.bind(obj, book);
-fn2(web); // hdy js红宝书 MDN
+
+// 传入了fn1的第二个参数
+fn2(web);
 ```
 :::
-::: tab label=手写原生bind
-* 核心思想：箭头函数的this是外层的this，外层function的this是调用者的this，调用者就是需要被绑定的函数
+::: tab label=核心思想
+* 期望：
+1. 函数式调用
+```js
+const obj = {
+    name: 'hdy',
+}
+
+function fn1() {
+    console.log(this.name); // hdy
+    return "对";
+}
+
+const fn2 = fn1.bind(obj);
+
+// 函数调用
+const ans = fn2();
+console.log(ans); // 对
+```
+2. 类式调用不管用，因为类式调用应该走的是内部constructor方法的逻辑，this应该是被绑定到super传下来的this
+```js
+const obj = {
+    name: 'hdy',
+}
+
+function fn1(age) {
+    this.age = age;
+}
+
+const fn2 = fn1.bind(obj);
+
+// 类式调用
+const ans = new fn2();
+console.log(ans); // { age: 11 }
+console.log(ans.name); //undefined
+```
+:::
+:::tab label=手写原生
+* 核心思想：
+    1. 通过instanceof判断是否是new调用，然后分别绑定this
+    2. 绑定原型链，保证new调用继承的属性不会丢失，同时作为instanceof识别是new调用的方式
+> new调用新function时，创建了新的对象，绑定了新的this，_ _ _proto_ _ _指向新function的prototype。
+那么bind也要保证原function的原型链不会断
 ```js
 Function.prototype.newBind = function (obj, ...args1) {
     const _self = this;
@@ -55,9 +99,7 @@ Function.prototype.newBind = function (obj, ...args1) {
     return fn2;
 }
 ```
-:::
-:::tab label=测试
-* 定义变量
+* 测试
 ```js
 const obj = {
     name: 'hdy',
@@ -65,55 +107,17 @@ const obj = {
 }
 
 function fn1(age) {
+
+    // 函数调用：hdy  类式调用：undefined
     console.log(this.name);
+
+    // 都是 11
     console.log(age);
+
+    // 函数调用赋值给obj 类式调用赋值给新对象
     this.book = '蝴蝶书';
     return "对";
 }
-```
-* 原生
-```js
-const fn2 = fn1.bind(obj);
-
-// 函数调用
-const ans = fn2(11);
-
-// 类调用
-const n1 = new fn2(11);
-
-console.log(ans);
-console.log(n1);
-/**
- *  hdy
- *  11
- *  undefined
- *  11
- *  对
- *  fn1: {book: '蝴蝶书'}
- */
-```
-* 手写原生
-```js
-
-Function.prototype.newBind = function (obj, ...args1) {
-    const _self = this;
-
-    const fn2 =  function (...args2) {
-        if (this instanceof _self) {
-
-            // 类调用：类调用的时候默认就创造出来了一个空对象并绑定上了this
-            return _self.call(this, ...args1, ...args2);
-        } else {
-
-            // 函数式调用：函数式调用就可以用bind上传入的obj作为this
-            return _self.call(obj, ...args1, ...args2);
-        }
-    }
-
-    fn2.prototype = this.prototype;
-    return fn2;
-}
-
 const fn2 = fn1.newBind(obj);
 
 // 函数调用
@@ -122,16 +126,10 @@ const ans = fn2(11);
 // 类调用
 const n1 = new fn2(11);
 
-console.log(ans);
-console.log(n1);
-/**
- *  hdy
- *  11
- *  undefined
- *  11
- *  对
- *  fn1: {book: '蝴蝶书'}
- */
+console.log(ans); // 对
+console.log(n1); // fn1: {book: '蝴蝶书'}
+
+console.log(obj); // { name: 'hdy', age: 18, book: '蝴蝶书' }
 ```
 :::
 ::::
