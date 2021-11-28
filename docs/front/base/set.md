@@ -17,6 +17,7 @@ console.log(set); // Set{}
 const entries = Object.entries({name: 'hdy', age: 18});
 console.log(new Set(entries)); // Set(2) { [ 'name', 'hdy' ], [ 'age', 18 ] }
 ```
+* 必须传入可迭代对象，否则报错
 ```js
 const set = new Set(1); // error
 const set = new Set({name: 'hdy'}); // error
@@ -107,4 +108,43 @@ console.log(set.delete(obj)); // false
 const set = new Set([1, 2, 3]);
 console.log(set.entries().next().value); // [1, 1]
 console.log([...set.entries()]); // [[1, 1], [2, 2], [3, 3]]
+```
+## has
+::: tip has
+* 作用：判断一个set中是否包含某个值
+* 调用：set.has(value)
+* 入参：any
+* 返回：Boolean
+:::
+```js
+const set = new Set([1, 2]);
+console.log(set.has(2)); // true
+console.log(set.has(3)); // false
+console.log(set.has()); // false
+
+// 增加一个空值
+set.add();
+console.log(set.has()); // true
+```
+* 对象判断的是引用是否相同
+```js
+const set = new Set();
+const obj = { name: 'hdy' };
+const obj2 = { name: 'hdy' };
+
+set.add(obj);
+console.log(set.has(obj)); // true
+console.log(set.has(obj2)); // false
+```
+## forEach
+::: tip forEach
+* 作用：遍历set
+* 调用：set.forEach(function(item, index, set){}, thisArg)
+* 入参：Function[, Object]
+* 返回：undefined
+:::
+```js
+const set = new Set([1, , 3]);
+set.forEach((item, index, set) => console.log(item));
+// 1 undefined 3
 ```

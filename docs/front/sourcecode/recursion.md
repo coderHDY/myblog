@@ -98,3 +98,34 @@ function flatten(obj, cKey, ans = {}) {
 ```
 :::
 ::::
+
+## n变1次数
+:::: tabs
+::: tab label=问题
+* 给正整数n：
+    1. 偶数：n = n/2
+    2. 奇数：n = n + 1 || n -1
+* 求：n 变成1最小替换次数
+```js
+let n = 2;
+console.log(toOneNeedsTime(n)); // 1
+
+n = 11;
+console.log(toOneNeedsTime(n)); // 5
+```
+:::
+::: tab label=实现
+* 核心思路：递归外层函数计算递归次数(可以用while递归也可以用函数递归)
+```js
+function toOneNeedsTime(num) {
+    let times = 0;
+    let cNum = num;
+    while(cNum !== 1) {
+        cNum = cNum % 2 === 0 ? cNum / 2 : cNum - 1;
+        times++;
+    }
+    return cNum;
+}
+```
+:::
+::::
