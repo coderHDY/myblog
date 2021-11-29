@@ -24,6 +24,7 @@ const front = {
                 'iterator',
                 'regexp',
                 'date',
+                'math',
                 'proxy',
                 'promise',
                 'async',
