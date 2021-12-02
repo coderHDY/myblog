@@ -189,7 +189,7 @@ b.go(); // { go: [Function: go] }
 ::: tip
 * 原型属性只能在类外定义
 :::
-```js{4,5}
+```js{2,4,5}
 class A {}
 A.prototype.age = 18;
 const a = new A();
@@ -231,7 +231,29 @@ console.log(Object.keys(a)); // ['name']  方法go不在实例上，在原型上
 :::
 ::::
 ## this
+::: tip
+* class内有三种this
+    1. 实例身上的函数this指向实例本身
+    2. 原型对象上的函数this指向调用的实例
+    3. 类上的静态方法谁调用指向谁
+:::
+```js{2-3,5-6,8-9}
+class A {
+    // 实例方法
+    a = () => console.log(this);
+    
+    // 原型函数
+    b() { console.log(this) }
 
+    // 静态方法
+    static  c = () => { console.log(this) }
+}
+
+const obj = new A();
+obj.a(); // { a: [Function] }
+obj.b(); // { a: [Function] }
+A.c();   // [class A] { c: [Function: c] }
+```
 ## 总结
 * js中class是特殊的function
 * function内部有call方法和constructor方法，**class定义后只能用new方法调用内部constructor方法**
