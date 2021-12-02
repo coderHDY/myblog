@@ -63,11 +63,16 @@ console.log(values.next().value); // 1
 * 调用：set.add(any)
 * 入参：any(必须)
 * 返回：set引用
+* tip：添加重复值不生效
 :::
 ```js
 const set = new Set([1]);
-set.add('吃');
-console.log(set.size); // 2
+set.add('吃').add('饭');
+console.log(set.size); // 3
+
+// 不生效
+set.add('吃').add('饭');
+console.log(set.size); // 3
 ```
 ## clear
 ::: tip clear

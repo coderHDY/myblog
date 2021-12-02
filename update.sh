@@ -20,6 +20,6 @@ do
         update
     fi
 
-    sleepTime=`expr 60 \* 58`
+    sleepTime=`expr 60 \* 60 \* 58`
     sleep ${sleepTime}
 done
