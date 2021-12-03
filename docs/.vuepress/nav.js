@@ -67,7 +67,19 @@ const skill = {
         },
     ]
 }
+
+const books = {
+    text: '读书笔记',
+    ariaLabel: 'reading and thinking',
+    items: [
+        {
+            text: '前端相关',
+            link: '/books/javascript/'
+        },
+    ]
+}
 module.exports = [
     front,
-    skill
+    skill,
+    books
 ]
