@@ -140,7 +140,28 @@ const skill = {
     ]
 }
 
+const books = {
+    '/books/javascript/': [
+        {
+            title: '编程能力',
+            collapsable: false,
+            children: [
+                ''
+            ]
+        },
+        {
+            title: '开发思想',
+            collapsable: false,
+            children: [
+                'principle'
+            ]
+        },
+
+    ],
+}
+
 module.exports = {
     ...front,
-    ...skill
+    ...skill,
+    ...books
 }
