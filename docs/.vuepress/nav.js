@@ -34,6 +34,10 @@ const front = {
             text: 'react',
             link: '/front/react/'
         },
+        {
+            text: '代码技巧',
+            link: '/front/technique/'
+        },
     ]
 };
 

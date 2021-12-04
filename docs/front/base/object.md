@@ -694,28 +694,32 @@ Object.defineProperty({}, 'age', {
 })
 ```
 :::
-::: tab label=继承属性
-```js
-class A {}
-A.prototype._age = 18;
+::: tab label=劫持数组
+```js{4,9}
+const arr = [1, 2, 3];
+arr.forEach((item, index) => {
+    Object.defineProperties(arr,{
+        // 留一个不可枚举属性用来存值
+        [`_${index}`]: {
+            value: item,
+            writable: true
+        },
+        // 暴露属性做劫持
+        [`${index}`]: {
+            get() {
+                console.log(`劫持get操作：下标${index}的值是${this['_' + index]}`);
+                return this[`_${index}`];
+            },
+            set(value) {
+                console.log(`劫持set操作：下标${index}的值变换为${value}`);
+                this[`_${index}`] = value;
+            }
+        }
+    })
+})
 
-Object.defineProperty(A.prototype, 'age', {
-    get() {
-        return A.prototype._age;
-    },
-    set(value) {
-        A.prototype._age = value;
-    }
-});
-
-const a1 = new A();
-const a2 = new A();
-
-// 赋值会先去原型链找一圈，找不到这个值再赋值？getter 和 setter 在原型链的查找中优先级最高。
-a1.age = 19;
-
-console.log(a2.age);
-console.log(Object.keys(a2));
+console.log(arr[0]);      // 劫持get操作：下标0的值是1     1
+console.log(arr[1] = 3);  // 劫持set操作：下标1的值变换为3  3
 ```
 :::
 ::::
@@ -802,7 +806,6 @@ const b = new B();
 console.log(b.age); // 2
 console.log(b.hasOwnProperty('age')); // true
 ```
-
 :::
 ::::
 

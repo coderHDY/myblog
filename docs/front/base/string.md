@@ -168,6 +168,16 @@ console.log(str.search(re)); // 4
 console.log(str.search(re2)); // -1
 ```
 
+::: warning search和indexof的区别
+* search支持正则，但也只能返回第一个匹配项
+* indexOf支持变换起始下标
+```js
+const str = '1231';
+console.log(str.search(/1/, 1)); // 0
+console.log(str.indexOf('1', 1)); // 3
+```
+:::
+
 ## 判断
 ### includes
 ::: tip includes
@@ -486,7 +496,7 @@ console.log(a.slice(-4, -2)); // 'el'
 ### split
 ::: tip split
 * 调用：str.split(str2[, len])
-* 入参：String | Iterator[, Number]
+* 入参：String | RegExp[, Number]
 * 返回：Array，用str2分割出来的数组，可限制要几个
 * tip：第二个参数是限制了数组的长度
 * tip：第一个参数可以是正则

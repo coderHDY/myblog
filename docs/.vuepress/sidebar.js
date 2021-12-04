@@ -13,6 +13,7 @@ const front = {
                 'function',
                 'object',
                 'class',
+                'symbol',
             ]
         },
         {
@@ -21,7 +22,6 @@ const front = {
             children: [
                 'set',
                 'map',
-                'iterator',
                 'regexp',
                 'date',
                 'math',
@@ -74,7 +74,10 @@ const front = {
     ],
     '/front/react/': [
         '',
-    ]
+    ],
+    '/front/technique/': [
+        '',
+    ],
 }
 
 const skill = {
