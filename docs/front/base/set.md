@@ -41,7 +41,7 @@ console.log(set.size); //3
 * 返回：Iterator
 * tip：底层和values作用一样
 :::
-```js
+```js{2}
 const set = new Set([1, 2, {}]);
 const iterator = set[Symbol.iterator]();
 console.log(iterator.next().value); // 1
@@ -52,7 +52,7 @@ console.log(iterator.next().value); // {}
 ::: tip values
 tip：作用以及底层都和[Symbol.iterator](./set.html#symbol-iterator)一样
 :::
-```js
+```js{2}
 const set = new Set([1, 2]);
 const values = set.values();
 console.log(values.next().value); // 1

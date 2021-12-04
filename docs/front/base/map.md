@@ -25,7 +25,7 @@ for (let i in obj) {
 ```js
 const map = new Map();
 for (let i in map) {
-    console.log(i); // ''
+    console.log(i); // 无
 }
 ```
 :::
