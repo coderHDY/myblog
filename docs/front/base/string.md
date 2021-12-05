@@ -170,7 +170,7 @@ console.log(str.search(re2)); // -1
 
 ::: warning search和indexof的区别
 * search支持正则，但也只能返回第一个匹配项
-* indexOf支持变换起始下标
+* indexOf支持变换起始下标，但不支持正则
 ```js
 const str = '1231';
 console.log(str.search(/1/, 1)); // 0
@@ -357,7 +357,7 @@ console.log(a.replace(reg2, (matchs, index, input) => {
 ```
 :::
 ::: tab label=正则有分组
-* 经典算法题：[手写模板字符串](../sourcecode/template.html)
+* 经典算法题：[手写模板字符串](../sourcecode/#模板字符串)
 ```js
 let a = 'hello world!';
 let reg3 = /l(.*?)w/;
