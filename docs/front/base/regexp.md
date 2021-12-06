@@ -1,6 +1,13 @@
 # RegExp
-## 声明方式
-::: warning 声明
+## 构造函数
+::: tip 构造函数
+* 作用：构造一个正则表达式
+* 调用：new RegExp(pattern[, flags])
+* 入参：String|RegExp [, String]
+* 返回：RegExp
+* tip：flags支持的标志有：g / i / m / s / u / y
+:::
+::: warning 字面量和构造函数
 * 有两种方式构造正则：字面量和构造器
 * 区别：
     1. **字面量赋值是编译状态，效率更高。**
@@ -14,14 +21,7 @@ const reg2 = new RegExp(/qq.com/, 'g');
 console.log(reg1.test(str)); // true
 console.log(reg2.test(str)); // true
 ```
-## 构造函数
-::: tip 构造函数
-* 作用：构造一个正则表达式
-* 调用：new RegExp(pattern[, flags])
-* 入参：String|RegExp [, String]
-* 返回：RegExp
-* tip：flags支持的标志有：g / i / m / s / u / y
-:::
+## falgs语法
 ::: warning flags
 |flag|作用|
 |---|---|
@@ -30,15 +30,64 @@ console.log(reg2.test(str)); // true
 |m|多行匹配模式：开头匹配(^)/结尾匹配($)按照每行匹配。(以\n或者\r 分隔)|
 |s|点匹配所有字符(包括换行字符)|
 |u|unicode模式匹配|
-|y|粘性匹配，下次匹配继续本次结束的位置|
+|y|粘性匹配，从lastIndex匹配，且不会向下搜索|
 :::
 :::: tabs
-::: tab label=基本使用
-```js{2,4}
-const str = 'www.music.qq.com/'
-const reg = /qq.com/;
+::: tab label=查看flags
+* 查看所有：[reg.flags](./regexp.html#flags)
+```js
+const reg = /./gimsuy
+console.log(reg.flags); // gimsuy
+```
+* 查看g：[reg.global](./regexp.html#global)
+* 查看s：[reg.dotAll](./regexp.html#dotall)
+* 查看m：[reg.multiline](./regexp.html#multiline)
+* 查看i：[reg.ignoreCase](./regexp.html#ignorecase)
+* 查看u：[reg.unicode](./regexp.html#unicode)
+* 查看y：[reg.sticky](./regexp.html#sticky)
+:::
+::: tab label=g
+* 全局匹配，exec/test启用lastIndex
+```js{5}
+const reg = /1/g;
+const str = '121';
+console.log(reg.exec(str)); // [ '1', index: 0, input: '121', groups: undefined ]
+console.log(reg.exec(str)); // [ '1', index: 2, input: '121', groups: undefined ]
+console.log(reg.exec(str)); // null 同时lastIndex被重置0
+```
+* 对search/match等无效。**matchAll必须加g，否则报错**
+```js
+const reg = /1/g;
+const str = '121';
 
-console.log(str.match(reg)); // [ 'qq.com', index: 10, input: 'www.music.qq.com/', groups: undefined ]
+console.log(str.search(reg)); // 0
+console.log(str.search(reg)); // 0
+console.log(str.search(reg)); // 0
+```
+:::
+::: tab label=i
+* 是否忽略大小写
+```js{5}
+const reg1 = /HELLO/i;
+const reg2 = /HELLO/;
+const str = 'hello world!';
+
+console.log(reg1.test(str)); // true
+console.log(reg2.test(str)); // false
+```
+:::
+::: tab label=m
+* 多行匹配模式
+    1. 【^】和【$】默认是匹配全文的头尾
+    2. 加m后匹配的是每一行得头尾
+```js
+const reg1 = /^h/m;
+const reg2 = /^h/;
+const str = `I am
+happy
+!`
+console.log(reg1.test(str)); // true
+console.log(reg2.test(str)); // false
 ```
 :::
 ::: tab label=s
@@ -55,6 +104,26 @@ const str = `1
 3`;
 console.log(str.match(reg1)); // [ '1', '2', '3' ]
 console.log(str.match(reg2)); // [ '1', '\n', '2', '\n', '3' ]
+```
+:::
+::: tab label=u
+* 用unicode匹配模式
+* [中文的unicode范围](https://www.qqxiuzi.cn/zh/hanzi-unicode-bianma.php)
+```js
+let text = "安㑝㑞㑟㑠㑡㑢";
+
+// 非字母、数字、下划线。等价于 '[^A-Za-z0-9_]'。
+let reg1 = /[\W]+/g;
+
+// 普通汉字unicode范围
+let reg2 = /[\u4E00-\u9FA5]+/g;
+
+// 匹配出了所有非字母数字下划线的字符
+console.log(reg1.exec(text));  // [ '安㑝㑞㑟㑠㑡㑢', index: 0, input: '安㑝㑞㑟㑠㑡㑢', groups: undefined ]
+
+// 由于简单汉子字符unicode编码集，不包括后面几个复杂汉字，所以未匹配到
+console.log(reg2.exec(text));  // [ '安', index: 0, input: '安㑝㑞㑟㑠㑡㑢', groups: undefined ]
+
 ```
 :::
 ::: tab label=y
@@ -86,7 +155,259 @@ console.log(reg2.test(str)); // true
 ```
 :::
 ::::
+## pattern模式
+### 语法
+:::: tabs
+::: tab label=数量限制
+* 【+】匹配一个到多个
+* 【*】匹配零个到多个
+* 【?】匹配零个到一个
+```js{4,8,12,16}
+const str = 'aab';
+
+// 匹配一个
+const reg1 = /a/g;
+console.log(str.match(reg1)); // [ 'a', 'a' ]
+
+// 一个以上（贪婪）
+const reg2 = /a+/g;
+console.log(str.match(reg2)); // [ 'aa' ]
+
+// 0个以上（贪婪）
+const reg3 = /a*/g;
+console.log(str.match(reg3)); // [ 'aa', '', '' ]  每匹配一次，lastIndex +1，所以只有两个空匹配项(0个a)
+
+// 0个/1个
+const reg4 = /a?/g;
+console.log(str.match(reg4)); // [ 'a', 'a', '', '' ]
+```
+:::
+::: tab label=贪婪/非贪婪
+* 【a+】匹配**最大数量**的a
+* 【a+?】匹配**最少数量**(不包括0)的a
+* 【a*】匹配**最大数量**的a
+* 【a*?】匹配**最少数量**(包括0)的a
+```js{4,8,12,16}
+const str = 'aab';
+
+// 一个以上（贪婪）
+const reg1 = /a+/g;
+console.log(str.match(reg1)); // [ 'aa' ]
+
+// 一个以上（非贪婪）
+const reg2 = /a+?/g;
+console.log(str.match(reg2)); // [ 'a', 'a' ]
+
+// 0个以上（贪婪）
+const reg3 = /a*/g;
+console.log(str.match(reg3)); // [ 'aa', '', '' ]
+
+// 0个以上（非贪婪）
+const reg4 = /a*?/g;
+console.log(str.match(reg4)); // [ '', '', '', '' ]
+```
+:::
+::: tab label=值的范围/取反
+* 【[-]】可以取数字、小写字母、大写字母的**区间**。例如，取abc：[a-c]
+* 【[]】可以限制值的范围。例如，所有小写字母：[a-z]
+* 【[^]】可以**取反范围**。例如，所有非小写字母：[^a-z]
+```js{3,6}
+const str = 'abCD';
+
+const reg1 = /[a-z]/g;
+console.log(str.match(reg1)); // ['a', 'b']
+
+const reg2 = /[^a-z]/g;
+console.log(str.match(reg2)); // ['C', 'D']
+```
+:::
+::: tab label=取值次数
+1. 用贪婪/非贪婪限制
+2. 用【{}】限制
+    * 【[a-z]{2}】 匹配**2个**小写字符
+    * 【[a-z]{2,}】匹配**2个以上**小写字符
+    * 【[a-z]{2,4}】匹配**2-4个**小写字符
+    * 【[a-z]{1,4}】匹配**4个以下**小写字符
+```js{3,6,9,12}
+const str = 'aDcdEfghi';
+
+const reg1 = /[a-z]{2}/g;
+console.log(str.match(reg1)); // [ 'cd', 'fg', 'hi' ]
+
+const reg2 = /[a-z]{2,}/g;
+console.log(str.match(reg2)); // [ 'cd', 'fghi' ]
+
+const reg3 = /[a-z]{2,4}/g;
+console.log(str.match(reg3)); // [ 'cd', 'fghi' ]
+
+const reg4 = /[a-z]{1,4}/g;
+console.log(str.match(reg4)); // [ 'a', 'cd', 'fghi' ]
+```
+:::
+::::
+## 主动执行方法
+::: warning 规则
+* 如果一个表达式同时指定了 sticky 和 global，其将会忽略 global 标志。
+* sticky不会更改lastIndex，除非匹配结束，重置lastIndex
+:::
+### exec
+::: tip exec
+* 作用：**逐条**遍历匹配项（在加g/y的情况下）
+* 调用：reg.exec(str)
+* 入参：String
+* 返回：Array | null
+:::
+::: warning exec对比match
+* exec和match都可以拿到所有匹配项
+* exec可以逐条遍历，match只是返回匹配数组
+:::
+:::: tabs
+::: tab label=使用
+* 返回的是数组
+```js
+const str = 'aaple';
+const reg2 = /a/g;
+
+console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
+console.log(Array.isArray(reg2.exec(str))); // true
+```
+* 逐条遍历(加g/y)
+```js{6}
+const str = 'aaple';
+const reg2 = /a/g;
+
+console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
+console.log(reg2.exec(str)); // [ 'a', index: 1, input: 'aaple', groups: undefined ]
+console.log(reg2.exec(str)); // null  lastIndex重置为0
+console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
+```
+:::
+::: tab label=匹配组
+* 有匹配组的情况下会在返回数组的**第二项开始插入**
+```js{5}
+const str = 'aaple';
+const reg = /a(p?)/g;
+
+console.log(reg.exec(str)); // [ 'a', '', index: 0, input: 'aaple', groups: undefined ]
+console.log(reg.exec(str)); // [ 'ap', 'p', index: 1, input: 'aaple', groups: undefined ]
+console.log(reg.exec(str)); // null
+```
+:::
+::: tab label=和match对比
+```js
+const str = 'hello world!';
+const reg = /l/g;
+
+// match直接返回所有匹配项
+console.log(str.match(reg)); // ['l', 'l', 'l']
+
+// exec需要逐个执行，遍历结果项
+console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
+console.log(reg.exec(str)); // [ 'l', index: 3, input: 'hello world!', groups: undefined ]
+console.log(reg.exec(str)); // [ 'l', index: 9, input: 'hello world!', groups: undefined ]
+console.log(reg.exec(str)); // null
+```
+:::
+::: tab label=不加g/y会怎么样
+* 不加g/y它就不会更改lastIndex，lastIndex一直是0，那么就一直从0开始查找
+```js
+const str = 'hello world!';
+const reg = /l/;
+
+console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
+console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
+```
+:::
+::::
+### test
+::: tip test
+* 作用：检测字符串是否由匹配项
+* 调用：reg.test(str)
+* 入参：String
+* 返回：Boolean
+:::
+:::: tabs
+::: tab label=使用
+```js
+const reg = /apple/;
+const str = 'I like apple';
+console.log(reg.test(str)); // true
+```
+:::
+::: tab label=与search比较
+```js
+const str = '1234';
+const reg = /1/;
+
+console.log(str.search(reg)); // 0
+console.log(reg.test(str)); // true
+```
+:::
+::: tab label=粘性y
+* 粘性y每次匹配必须再lastIndex处匹配到，否则就算失败
+```js
+const str = '121111';
+const reg = /1/y;
+
+console.log(reg.test(str)); // true
+console.log(reg.lastIndex); // 1
+
+console.log(reg.test(str)); // false
+console.log(reg.lastIndex); // 0
+
+console.log(reg.test(str)); // true
+console.log(reg.lastIndex); // 1
+```
+:::
+::: tab label=全局模式g
+* 全局模式也是会从lastIndex开始匹配，会向下搜索，搜索完毕为null会重置lastIndex
+```js{7}
+const reg = /1/g;
+const str = '1211';
+
+console.log(reg.test(str)); // true
+console.log(reg.test(str)); // true
+console.log(reg.test(str)); // true
+console.log(reg.test(str)); // false lastIndex被重置
+console.log(reg.test(str)); // true
+```
+:::
+::::
+### toString
+::: tip toString
+* 作用：以字符串形式返回正则表达式
+* 调用：reg.toString()
+* 返回：String
+:::
+```js
+const reg = /abc/gmi;
+console.log(reg.toString()); // '/abc/gmi'
+```
+
 ## 属性
+### lastIndex
+::: tip lastIndex
+* 作用：记录全局匹配模式下，上一次匹配的下标 + 1
+* 使用：reg.lastIndex
+* 值：Number
+:::
+* 注：全局匹配模式(g)/粘性模式(y) 会启用此属性
+```js{4-6,8-10}
+const str = 'hello';
+const reg = /o/g;
+
+// 匹配的下标 4 ，lastIndex存 5
+console.log(reg.exec(str)); // [ 'o', index: 4, input: 'hello', groups: undefined ]
+console.log(reg.lastIndex); // 5
+
+// 没匹配到，lastIndex重置0
+console.log(reg.exec(str)); // null
+console.log(reg.lastIndex); // 0
+
+console.log(reg.exec(str)); // [ 'o', index: 4, input: 'hello', groups: undefined ]
+console.log(reg.lastIndex); // 5
+```
+
 ### dotAll
 ::: tip dotAll
 * 作用：查看是否使用了标识符【s】
@@ -138,28 +459,6 @@ console.log(reg2.ignoreCase); // true
 |chrome|90|
 |node|no|
 :::
-### lastIndex
-::: tip lastIndex
-* 作用：记录全局匹配模式下，上一次匹配的下标 + 1
-* 使用：reg.lastIndex
-* 值：Number
-:::
-* 注：全局匹配模式(g)/粘性模式(y) 会启用此属性
-```js{4-6,8-10}
-const str = 'hello';
-const reg = /o/g;
-
-// 匹配的下标 4 ，lastIndex存 5
-console.log(reg.exec(str)); // [ 'o', index: 4, input: 'hello', groups: undefined ]
-console.log(reg.lastIndex); // 5
-
-// 没匹配到，lastIndex重置0
-console.log(reg.exec(str)); // null
-console.log(reg.lastIndex); // 0
-
-console.log(reg.exec(str)); // [ 'o', index: 4, input: 'hello', groups: undefined ]
-console.log(reg.lastIndex); // 5
-```
 ### multiline
 ::: tip multiline
 * 作用：查看是否使用了标识符【m】
@@ -174,7 +473,7 @@ console.log(reg1.multiline); // true
 console.log(reg2.multiline); // false
 ```
 ### source
-::: source
+::: tip source
 * 作用：拿到正则的pattern（不包括falgs）
 * 使用：reg.source
 * 值：String
@@ -241,91 +540,7 @@ Object.defineProperty(RegExp.prototype, 'myFlags', {
 ```
 :::
 ::::
-## 主动执行方法
-::: warning 规则
-* 如果一个表达式同时指定了 sticky 和 global，其将会忽略 global 标志。
-* sticky不会更改lastIndex，除非匹配结束，重置lastIndex
-:::
-### exec
-::: tip exec
-* 作用：**逐条**遍历匹配项（在加g/y的情况下）
-* 调用：reg.exec(str)
-* 入参：String
-* 返回：Array | null
-:::
-::: warning exec对比match
-* exec和match都可以拿到所有匹配项
-* exec可以逐条遍历，match只是返回匹配数组
-:::
-:::: tabs
-::: tab label=使用
-* 返回的是数组
-```js
-const str = 'aaple';
-const reg2 = /a/g;
 
-console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
-console.log(Array.isArray(reg2.exec(str))); // true
-```
-* 逐条遍历(加g/y)
-```js
-const str = 'aaple';
-const reg2 = /a/g;
-
-console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
-console.log(reg2.exec(str)); // [ 'a', index: 1, input: 'aaple', groups: undefined ]
-console.log(reg2.exec(str)); // null
-console.log(reg2.exec(str)); // [ 'a', index: 0, input: 'aaple', groups: undefined ]
-```
-:::
-::: tab label=匹配组
-* 有匹配组的情况下会在返回数组的**第二项开始插入**
-```js{5}
-const str = 'aaple';
-const reg = /a(p?)/g;
-
-console.log(reg.exec(str)); // [ 'a', '', index: 0, input: 'aaple', groups: undefined ]
-console.log(reg.exec(str)); // [ 'ap', 'p', index: 1, input: 'aaple', groups: undefined ]
-console.log(reg.exec(str)); // null
-```
-:::
-::: tab label=和match对比
-```js
-const str = 'hello world!';
-const reg = /l/g;
-
-// match直接返回所有匹配项
-console.log(str.match(reg)); // ['l', 'l', 'l']
-
-// exec需要逐个执行，遍历结果项
-console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
-console.log(reg.exec(str)); // [ 'l', index: 3, input: 'hello world!', groups: undefined ]
-console.log(reg.exec(str)); // [ 'l', index: 9, input: 'hello world!', groups: undefined ]
-console.log(reg.exec(str)); // null
-```
-:::
-::: tab label=不加g/y会怎么样
-* 不加g/y它就不会更改lastIndex，lastIndex一直是0，那么就一直从0开始查找
-```js
-const str = 'hello world!';
-const reg = /l/;
-
-console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
-console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: undefined ]
-```
-:::
-::::
-### test
-### toString
-::: tip toString
-* 作用：以字符串形式返回正则表达式
-* 调用：reg.toString()
-* 返回：String
-:::
-```js
-const reg = /abc/gmi;
-console.log(reg.toString()); // '/abc/gmi'
-```
 ## Symbol方法
 ::: warning
 * 被Symbol标识出来的方法，基本都被String.prototype.XXX **内部调用**
@@ -486,13 +701,13 @@ console.log(str.indexOf('1', 1)); // 3
 ### split
 ::: tip split
 * tip：String.prototype.split()内部调用
-* 调用：str.split(str2[, len])
+* 调用：str1.split(str2|reg[, len])
 * 入参：String | RegExp[, Number]
-* 返回：Array，用str2分割出来的数组，可限制要几个
+* 返回：Array，用str2/reg分割得来的数组，可限制数组长度
 * tip：第二个参数是限制了数组的长度
 * tip：第一个参数可以是正则
 :::
-* String.prototype.split()内部调用
+* **参数1是正则时，String.prototype.split()内部调用此方法**
 ::::tabs
 ::: tab label=调用证明
 ```js{5,6}
