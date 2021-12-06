@@ -149,7 +149,8 @@ const books = {
             title: '编程能力',
             collapsable: false,
             children: [
-                ''
+                '',
+                'regexp'
             ]
         },
         {
