@@ -1,4 +1,9 @@
 # RegExp
+::: tip
+* js正则底层是基于perl实现的正则引擎
+* 同样的字符串处理正则会比一般的字符串方法快很多
+* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/regexp.html#第十章-嵌入式条件)
+:::
 ## 构造函数
 ::: tip 构造函数
 * 作用：构造一个正则表达式
@@ -156,6 +161,7 @@ console.log(reg2.test(str)); // true
 :::
 ::::
 ## pattern模式
+* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/regexp.html#第十章-嵌入式条件)
 ### 基础语法
 :::: tabs
 ::: tab label=数量限制1
