@@ -2,7 +2,7 @@
 ::: tip
 * js正则底层是基于perl实现的正则引擎
 * 同样的字符串处理正则会比一般的字符串方法快很多
-* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/regexp.html#第十章-嵌入式条件)
+* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/)
 :::
 ## 构造函数
 ::: tip 构造函数
@@ -161,7 +161,7 @@ console.log(reg2.test(str)); // true
 :::
 ::::
 ## pattern模式
-* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/regexp.html#第十章-嵌入式条件)
+* 详细的匹配模式可以看[《正则表达式必知必会》读书笔记](../../../books/javascript/)
 ### 基础语法
 :::: tabs
 ::: tab label=数量限制1
@@ -358,7 +358,7 @@ console.log(reg2.exec(str)); // [ 'abc', index: 5, input: 'I am abc', groups: un
 ::::
 ### 高级筛选
 :::: tabs
-::: tab label=相对位置
+::: tab label=环视
 * 【exp1(?=exp2)】：查找 exp2 前面的 exp1。
 * 【exp1(?!exp2)】：查找后面不是 exp2 的 exp1。
 * 【(?<=exp2)exp1】：查找前面是 exp2 的 exp1。
@@ -371,8 +371,24 @@ const reg1 = /[\w]+?(?=@)/g;
 console.log(str.match(reg1)); // [ '986005715' ]
 
 // 取到【@】后面的域名
-const reg2 = /(?<=@)[\S]+/g;
+const reg2 = /(?<=@)[\w\.]+/g;
 console.log(str.match(reg2)); // [ 'qq.com' ]
+```
+:::
+::: tab label=反向引用
+> 可以使用前面已经匹配到的项
+* 字符串去重
+```js
+const str = 'aabbccc';
+const reg = /(\w)\1+/g;
+console.log(str.match(reg)); // [ 'aa', 'bb', 'ccc' ]
+console.log(str.replace(reg, '$1')); // 'abc'
+```
+* 单词去重
+```js
+const str = 'Hello my my name is is hdy~';
+const reg = /(\b\w+\b)\s+\1+/g;
+console.log(str.replace(reg, '$1')); // Hello my name is hdy~
 ```
 :::
 ::::
@@ -708,7 +724,7 @@ console.log(a.match(c));
  */
 ```
 * String.prototype.match()内部调用证明
-```js{5,6}
+```js{6,7}
 const reg = /1/g;
 const str = '123';
 
@@ -806,6 +822,23 @@ console.log(a.replace(reg3, (matchs, match, index, input) => {
     return 'L'
 })); // heLord?
 ```
+:::
+::: tab label=引用匹配项
+> replace可以使用前面已经匹配到的项，用$表示
+* 字符串去除连续重复字符
+```js
+const str = 'aabbccc';
+const reg = /(\w)\1+/g;
+console.log(str.match(reg)); // [ 'aa', 'bb', 'ccc' ]
+console.log(str.replace(reg, '$1')); // 'abc'
+```
+* 单词去除连续重复
+```js
+const str = 'Hello my my name is is hdy~';
+const reg = /(\b\w+\b)\s+\1+/g;
+console.log(str.replace(reg, '$1')); // Hello my name is hdy~
+```
+:::
 ::::
 ### search
 ::: tip search
