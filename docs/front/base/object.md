@@ -299,6 +299,41 @@ console.log(obj1.isPrototypeOf(obj3)); // true
 ```
 
 ## 迭代器
+### for in
+::: tip for in
+* 作用：迭代**本身包括原型链**的**可枚举属性**的**键**
+* 调用：for (let key in obj) {}
+:::
+:::: tabs
+::: tab label=使用
+* in操作符可以遍历包括原型链的可枚举属性的键
+```js{7-10}
+const father = {
+    name: 'hdy'
+}
+
+const child = Object.create(father);
+
+// 遍历到原型链上的【键】
+for (let key in child) {
+    console.log(key); // name
+}
+```
+:::
+::: tab label=if
+* if...in..也同理，会去找原型链的属性
+```js{6-8}
+const father = {
+    name: 'hdy'
+}
+const child = Object.create(father);
+
+if( 'name' in child) {
+    console.log(child['name']); // hdy
+}
+```
+:::
+::::
 ### entries
 ::: tip entries
 * 作用：返回对象实例**可枚举属性**的键值对（**不包括原型链**）
@@ -1420,12 +1455,14 @@ console.log(Object.prototype.toString.call(a)); // [object String]
 * 每个对象都能够通过[原型链](./object.html#原型链)找到构造函数的原型对象，然后原型对象上就有对应的constructor属性，所以每个对象都能拿到自己的构造函数
 :::: tabs
 ::: tab label=使用
+* 类
 ```js
 class A {}
 const a = new A();
 
 console.log(a.constructor); // A
 ```
+* 函数类
 ```js
 function B() {}
 const b = new B();

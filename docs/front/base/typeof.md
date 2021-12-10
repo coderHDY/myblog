@@ -104,6 +104,7 @@ console.log(instanceOf(p1, Object)); // true
 ::::
 ### 阻止函数式调用
 * 根据instanceof的特性，和[new关键字的特性](./object.html#原型链)，可以推导出**阻止类的函数式调用的方法**
+* 另外，也可以通过[new.target](./function.html#new-target)判断
 ::: tip 阻止类的函数式调用
 * 一般我们定义一个class就是一个function，只是阻止了函数直接调用
 ```js

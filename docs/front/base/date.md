@@ -1,4 +1,4 @@
-# Date对象
+# Date
 ## 设置方法
 ### new Date
 ::: tip 构造函数(四种)
