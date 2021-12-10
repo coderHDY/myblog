@@ -430,3 +430,45 @@ callback = callback || (() => {});    // ok
 :::
 
 ::::
+## new.target
+::: tip new.target
+* 作用：指向构造函数的应用
+* 值：本Function的引用
+* tip：只有new操作符才会被赋值，否则是undefined
+:::
+:::: tabs
+::: tab label=使用
+```js{2-4,11}
+function People(name) {
+    if (!new.target) {
+        throw Error('只能new调用此函数');
+    }
+    this.name = name;
+}
+
+const p1 = new People('hdy');
+console.log(p1); // { name: 'hdy' }
+
+// const p2 = People('张三'); // Error: 只能new调用此函数
+```
+:::
+::: tab label=值
+* 总是存储本Function的引用
+>和this判断不同，this是拿到本function的实例对象
+```js{2,6,12}
+function A() {
+    console.log(new.target); // undefined
+    this.name = 'hdy';
+}
+function B() {
+    console.log(new.target); // Funtion B
+    A.call(this);
+    this.age = 18;
+}
+B.prototype.__proto__ = A.prototype;
+
+const b = new B();
+console.log(b); // B { name: 'hdy', age: 18 }
+```
+:::
+::::

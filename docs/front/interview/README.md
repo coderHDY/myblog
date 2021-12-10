@@ -1,40 +1,49 @@
 # 前端面试题整理
 
 ## 连续赋值
+:::: tabs
+::: tab label=题目
 ```js
 var a = {
     n: 1,
     x: 3
 }
 a.x = a = { n: 2};
-console.log(a.x);
+console.log(a.x); // ?
 ```
-* 理解(不一定完全正确)
-```js
+:::
+::: tab label=思路
+* 理解：正常时从右到左赋值，但是【.】操作符比【=】操作符优先级高，所以先走a.x的赋值
+```js{7}
 var a = {
     n: 1,
     x: 3
 }
-
-// 直接将等式拆成两个，中间的隔离
-a.x = a;
-a = { n: 2 };
+// a.x = a = { n: 2};
+a.x = {n: 2};
+a = {n: 2}; // 引用赋值，所以现在 a = {n: 2}，a.x消失
 console.log(a.x); // undefined
 ```
+:::
+::: tab label=证明
 * 证明猜测
 ```js
-var a = {
-    n: 1,
-    x: 3
+let me = {
+    name: 'hdy',
+    age: 18,
+    books: [
+        '红宝书',
+        '蝴蝶书'
+    ]
 }
-var b = {n: 4};
 
-// a.x = b = a = { n: 2};
-// console.log(a.x); // undefined
+me.name = me = me.books;
+console.log(me); // ['红宝书', '蝴蝶书']
 
-// 解释
-a.x = b; // a.x = {n: 4}
-b = a; // a.x = {n: 4} // b 不指向这块内存了，a.x还指着他
-a = {n: 2}; // a.x = undefined // a换了一块内存
-console.log(a.x); // undefined
+/**
+ * 1. me.name = me.books; ['红宝书', '蝴蝶书']
+ * 2. me = me.books;      ['红宝书', '蝴蝶书']
+ */
 ```
+:::
+::::
