@@ -4,7 +4,7 @@
 * Proxy：用于创建一个对象的代理，从而实现对目标对象操作的拦截。
 * target：被代理的对象，一般理解为存储后端。
 * handler：处理器对象。
-* traps：提供访问属性的方法。
+* traps：handler提供的拦截原生操作方法。
 :::
 ## 声明
 ### 构造函数
@@ -14,6 +14,7 @@
 :::
 ::: warning
 * get入参的属性名默认时String类型：get(target: object, name: string) {}
+* 数组要将String转化为Number才能计算下标
 :::
 :::: tabs
 ::: tab label=基础使用
@@ -74,7 +75,7 @@ console.log(obj.email);   // 986005715@qq.com
 ```
 :::
 ::: tab label=无操作转发
-* 不设置任何handler处理函数，那么proxy接受到的函数就会原样传递给target
+* 不设置任何handler处理函数，那么proxy接受到的操作就会原样传递给target
 ```js
 const obj = {};
 const proxy = new Proxy(obj, {});
@@ -88,7 +89,7 @@ console.log(obj.name); // hdy
 * 作用：创建一个可撤销的代理对象
 * 调用：Proxy.revocable(target, handler)
 * 入参：Object, Object
-* 返回：{ proxy: proxy, revoke: 'revoke' }
+* 返回：{ proxy: proxy, revoke: revokeFn }
 * tip：和new Proxy()创建的一样，只是这个可以被删除
 :::
 ```js{7,9,17-18}
@@ -118,7 +119,7 @@ ans.revoke();
 :::
 ### this
 ::: warning
-* handler里面的traps函数，**this已经被绑定到handler上了**。不是proxy也不是target也不是receiver
+* handler里面的traps函数里的**this已经被绑定到handler上了**。不是proxy也不是target也不是receiver
 ```js{3}
 const handler = {
     set(target, key, value, receiver) {
@@ -243,7 +244,7 @@ console.log(proxy.name = 'hdy');
 ```
 :::
 ::: tab label=原型链调用
-```js{3,9-10}
+```js{3,7,10-11}
 const proxy = new Proxy({ name: 'hdy' }, {
     set(target, key, value, receiver) {
         console.log(receiver === proxy);
@@ -300,22 +301,26 @@ const obj = Object.defineProperties(
     {
         name: {
             get() {
-                return obj['_name'];
+                return this['_name'];
             },
             set(value) {
-                obj['_name'] = value;
+                this['_name'] = value;
             }
         }
     }
 )
 const proxy = new Proxy(obj, {
     has(target, key) {
-        return key[0] === '_' ? false : target[key];
+        return key[0] !== '_';
     }
 })
 
 console.log('_name' in obj);   // true
 console.log('_name' in proxy); // false
+
+console.log(proxy.name); // hdy
+proxy.name = '张三';
+console.log(proxy.name); // 张三
 ```
 :::
 ::: tab label=Reflect.has
@@ -340,17 +345,17 @@ console.log('name' in obj); // true
 ::: tab label=使用
 * 将所有入参加上代理【(proxy)】标识
 ```js
-function say(word) {
-    console.log(`I said ${word}`);
+function say(word, word2) {
+    console.log(`I said ${word} and ${word2}!`);
 }
 const proxy = new Proxy(say, {
     apply(target, thisArg, args) {
         args = args.map(item => `(proxy)${item}`);
-        return target.call(this, args);
+        return target.call(thisArg, ...args);
     }
 })
 
-proxy('hdy'); // I said (proxy)hdy
+proxy('hdy', 'cool'); // I said (proxy)hdy and (proxy)cool!
 ```
 :::
 ::: tab label=thisArg
@@ -380,7 +385,7 @@ obj.finished('coding'); // 张三 finished coding
 ```
 :::
 ::: tab label=call/apply
-* 
+* 除了new调用的是construct代理，其他函数调用方式都是触发apply代理
 ```js
 // 原对象
 function finished(work) {
@@ -419,7 +424,7 @@ Reflect.apply(sayValue, obj, ['name']); // hdy
 ::::
 ### ownKeys
 ::: tip ownKeys
-* 作用：劫持Reflect.ownKeys(target)
+* 作用：劫持获取对象keys值操作
 * 定义：ownKeys(target)
 * 入参：Object
 * 返回：Iterator
@@ -482,7 +487,7 @@ class People {
     }
 }
 const proxy = new Proxy(People, {
-    construct(target, args, proxy) {
+    construct(target, args, newTarget) {
         const obj = new target(...args);
         obj.hand = 2;
         obj.foot = 2;
@@ -491,7 +496,7 @@ const proxy = new Proxy(People, {
 })
 
 const a = new proxy();
-console.log(a);
+console.log(a); // People { head: 1, hand: 2, foot: 2 }
 ```
 :::
 ::: tab label=拦截验证
@@ -531,18 +536,24 @@ const UserProxy = new Proxy(User, {
 * 调用：Reflect.construct(target, args, newTarget)
 * 入参：Function, Array, Function(新对象原型的constructor属性，默认是参数1)
 * 返回：Object | null
-```js{1,9}
+```js{1,13,15-16}
 // 用 People 的构造函数构造对象，但原型链设置成 Animal
 class Animal {}
+Animal.prototype.protoIs = 'Animal的原型';
+
 class People {
     constructor(name, age) {
         this.name = name;
         this.age = age;
     }
 }
+People.prototype.protoIs = 'People的原型';
+
 const p1 = Reflect.construct(People, ['hdy', 18], Animal);
 
 console.log(p1); // Animal { name: 'hdy', age: 18 }
+console.log(p1.protoIs); // Animal的原型
+
 console.log(p1 instanceof Animal); // true
 console.log(p1 instanceof People); // false
 ```
@@ -550,7 +561,7 @@ console.log(p1 instanceof People); // false
 ::::
 ### getPropertypeOf
 ::: tip getPropertypeOf
-* 作用：劫持Object.getPropertypeOf(target)
+* 作用：劫持访问原型链对象操作
 * 定义：getPropertypeOf(target)
 * 入参：Object
 * 返回：Object | null
@@ -563,7 +574,7 @@ console.log(p1 instanceof People); // false
 :::
 ::: warning 限制
 * 必须返回Object或null
-* target不可扩展的情况下不返回target本身的原型
+* target不可扩展的情况下禁止撒谎
 :::
 :::: tabs
 ::: tab label=使用
@@ -652,7 +663,7 @@ const proxy = new Proxy(child, {
         return Reflect.setPrototypeOf(target, proto);
     }
 })
-Object.setPrototypeOf(proxy, father);
+Object.setPrototypeOf(proxy, father); // 设置原型劫持操作
 
 console.log(father.isPrototypeOf(proxy)); // true
 console.log(father.isPrototypeOf(child)); // true
@@ -758,7 +769,7 @@ console.log(delete obj.name); // true
 Object.defineProperty(obj, 'age', {
 
     // 默认configurable是false
-    get() { return 18; }
+    value: 18
 });
 
 console.log(Reflect.deleteProperty(obj, 'age')); // false
@@ -818,7 +829,7 @@ const proxy = new Proxy({ name: 'hdy' }, {
 console.log(Object.getOwnPropertyDescriptor(proxy, 'name'));
 /**
 {
-    value: 'proxy:hdy',
+  value: 'proxy:hdy',
   writable: false,
   enumerable: true,
   configurable: true
@@ -909,11 +920,14 @@ console.log(Reflect.isExtensible(obj)); // false
 ::::
 ### preventExtensions
 ::: tip preventExtensions
-* 作用：劫持Object.preventExtensions(target)
+* 作用：劫持限制对象扩展类操作
 * 定义：preventExtensions(target)
 * 入参：Object
 * 返回：Boolean
-* 调用：Object.preventExtensions(proxy)
+* 调用：
+    1. Object.preventExtensions(proxy)
+    2. Object.seal(proxy)
+    3. Object.freeze(proxy)
 :::
 :::: tabs
 ::: tab label=使用
@@ -923,7 +937,10 @@ const proxy = new Proxy({}, {
         throw Error('此对象不可禁止扩展');
     }
 })
-Object.preventExtensions(proxy); // Error: 此对象不可禁止扩展
+
+// Object.preventExtensions(proxy); // Error: 此对象不可禁止扩展
+// Object.seal(proxy); // Error: 此对象不可禁止扩展
+// Object.freeze(proxy); // Error: 此对象不可禁止扩展
 ```
 :::
 ::: tab label=Reflect.preventExtensions
