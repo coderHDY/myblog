@@ -86,7 +86,108 @@ console.log('同步任务');
     1. 尾调用优化
     2. 将递归写成同步函数(while)
     3. 递归函数放到异步函数里面(会一直变换任务队列，会比同步代码慢)
+:::: tabs
+::: tab label=递归爆栈
+* 实现阶乘函数
+* 递归函数如果没被释放会有**栈帧**，根据环境栈会有上限值，超过就会出现爆栈
+```js
+function factorial(i) {
+    console.log(i);
+    return i === 1 ? i : i * factorial(i -1);
+}
+console.log(factorial(100000));
+/**
+ * ...
+ * 88702
+ * RangeError: Maximum call stack size exceeded
+ */
+```
+:::
+::: tab label=尾调用优化
+* 尾调用优化：函数return递归函数，本函数不依赖递归函数的返回值做计算，本函数就会被释放。
+> 目前没有环境支持JS尾调用优化写法，但是可以用异步配合将其实现，防止爆栈
+* 递归返回一个计时器，以参数的形式传递了计算值，没有与本函数变量计算的地方，所以本轮调用栈清空，进入下一轮事件轮询
+* 返回Promise，让外部能拿到最终计算的值
+```js{4-11}
+// setTimeout配尾调用优化
+function factorial(i) {
+    return new Promise(resolve => {
+        const deepFn = (num, total) => {
+            console.log(num);
+            if (num === 1) {
+                return resolve(total);
+            }
+            total = total * num;
+            return setTimeout(() => deepFn(num - 1, total));
+        }
 
+        return i <= 1 ? Promise.resolve(i) : deepFn(i, 1);
+    })
+}
+factorial(100000).then(res => console.log(res));
+/**
+ * 3
+ * 2
+ * 1
+ * Infinity
+ */
+```
+:::
+::: tab label=while优化
+* setTimeout是将事件存储到宿主环境的延迟列表里面，存取效率会比较低
+* 用while将递归函数换成同步执行的代码也能实现同样的目标，效率会高很多（mac2014十倍左右）
+```js{6-14}
+// while优化
+function factorial(i) {
+    if (i <= 1) {
+        return i;
+    }
+    let total = i;
+    while(--i !== 1) {
+        console.log(i);
+        total = total * i;
+    }
+    return total;
+}
+
+console.log(factorial(100000));
+/**
+ * 3
+ * 2
+ * 1
+ * Infinity
+ */
+```
+:::
+::: tab label=promise异步优化
+* 每层的promise拿到上层的结果再做计算
+```js
+// promise优化
+function factorial(i) {
+
+    // 一直变换当前的promise值，做动态定义then回调
+    let cPromise = Promise.resolve(i);
+    while(--i > 1) {
+        console.log(i);
+
+        // 外层的i是入参，是一直在变化的，里面再定义一个块级的i，给每个Promise自调用
+        const scopedI = i;
+        cPromise = cPromise.then(res => res * scopedI);
+    }
+    return cPromise;
+}
+
+factorial(1000000).then(res => console.log(res));
+/**
+ * ...
+ * 3
+ * 2
+ * 1
+ * Infinity
+ */
+```
+:::
+::::
 ## 方法
 ### Promise
 ::: tip 构造器
@@ -95,7 +196,7 @@ console.log('同步任务');
 * 返回：Promise对象
 :::
 ::: warning 状态
-* Promise有三种状态，不可逆转换  
+* Promise有三种状态，不可逆转   
 pending -> fulfilled  
 pending -> rejected
 ![](./assets/promisestatus.png)
@@ -423,8 +524,8 @@ allSettled.then(res => console.log(res));
 * 入参有两种情况
     1. Promise/thenble
     2. other
-* Promise/thenable会被当做Promise.resolve(promise) 的返回处理
-* other会被当做本Promise成功时resolve的值
+* Promise/thenable会被当做Promise.resolve(promise) 的返回处理。也就是直接入参当做返回值
+* other会被当做本Promise成功时resolve的值。也就是返回一个新的Promise，resolve(other)
 :::
 :::: tabs
 ::: tab label=promise
