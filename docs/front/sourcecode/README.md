@@ -225,3 +225,98 @@ obj['parents']['father']
 ```
 :::
 ::::
+## 手写promise
+::: tip promise规范
+[完整规范](https://promisesaplus.com/)
+1. 构造函数接受一个函数，函数两个入参都是方法，resolve和reject
+2. 三种状态，不可逆
+3. 状态改变触发将回调函数推进微任务队列（用process.nextTick）
+4. 抛出错误触发回调函数2
+5. 回调函数的入参来自resolve、reject的值
+6. 可链式调用，then或catch应该返回promise，如果参数返回Promise就用参数返回值代替
+:::
+:::: tabs
+::: tab label= 初版
+>实现规范1、2、3、5
+* 期望：
+```js
+console.log(1)
+new MyPromise((resolve, reject) => {
+    setTimeout(() => resolve(2));
+}).then(res => console.log(res))
+
+console.log(3);
+setTimeout(() => console.log(4))
+/**
+ * 1
+ * 3
+ * 2
+ * 4
+ */
+```
+```js
+class MyPromise {
+    // 规范2，三种状态是固定的值，存常量，初始值是pending
+    static PENDING = 'pending';
+    static FULFILLING = 'fulfilling';
+    static REJECTED = 'rejected';
+    status = MyPromise.PENDING;
+
+    // 规范5，因为触发和调用并不是同时（微任务队列），所以将值保存起来
+    value = undefined;
+    result = undefined;
+
+    // 规范3，成功和失败的回调函数，占位符，按规范应该要返回promise
+    fulfilled = function(value) {}
+    rejected = function(reason) {}
+
+    // 规范5，回调函数要用他们的入参，所以调用时先将入参存起来
+    resolve(value) {
+        this.value = value;
+        this.changeStatus(MyPromise.FULFILLING);
+    }
+    reject(reason) {
+        this.reason = reason;
+        this.changeStatus(MyPromise.REJECTED);
+    }
+    
+    // 核心，状态控制
+    changeStatus(status) {
+
+        // 规范2，状态只能从pending流转出去
+        if (this.status !== MyPromise.PENDING || status === MyPromise.PENDING) {
+            return;
+        }
+
+        // 规范3，状态流转后推对应的回调进微任务队列
+        if (status === MyPromise.FULFILLING) {
+            process.nextTick(() => this.fulfilled.call(this, this.value));
+            this.status = MyPromise.FULFILLING;
+            return;
+        }
+        if (status === MyPromise.REJECTED) {
+            process.nextTick(() => this.rejected.call(this, this.reason));
+            this.status = MyPromise.REJECTED;
+            return;
+        }
+    }
+
+    // then 和 catch因为是同步执行，所以只做存回调函数
+    then(fulfilled) {
+        this.fulfilled = fulfilled;
+    }
+    catch(rejected) {
+        this.rejected = rejected;
+    }
+
+    constructor(callback) {
+
+        // 规范2，resolve和reject被当做入参，那么调用时this就是undefined，所以要绑定他们的this,才能正确的执行
+        this.resolve = this.resolve.bind(this);
+        this.reject = this.reject.bind(this);
+        callback.call(this, this.resolve, this.reject);
+    }
+}
+```
+:::
+::::

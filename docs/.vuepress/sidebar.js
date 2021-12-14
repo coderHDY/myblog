@@ -43,6 +43,7 @@ const front = {
                 'cors',
                 'storage',
                 'module',
+                'worker',
             ]
         },
     ],
