@@ -640,7 +640,7 @@ resolve.then(res => console.log(res)); // [Function: p]
 ::: tab label=异步入参机制
 * Promise.resolve(value)实际上就是new Promise(resolve => resolve(value))
 >对比1：Promise.resolve(value) 的 value 为 Promise。  
->p2实际上是将p1推入了微任务队列，等微任务执行到p1，发现这是一个已经fulfilling的promise，不做处理并将p2后续的then推入微任务队列
+>p2发现入参p1是promise，就将p1推入了微任务队列，而p1存的是p1这一行的promise.then返回的**pending状态的promise**，也就是要等p1行的promise.then执行完后才能将p2后续的then推入微任务队列
 
 ![](./assets/promiseresolve.png)
 ```js{3-5}
