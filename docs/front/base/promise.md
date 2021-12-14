@@ -188,6 +188,93 @@ factorial(1000000).then(res => console.log(res));
 ```
 :::
 ::::
+### 宏任务
+:::: tabs
+::: tab label=setTimeout
+* 调用：setTimeout(fn, time[, args...])
+```js
+function say(name, age) {
+    console.log(`我叫${name}，我今年${age}岁啦！`);
+}
+setTimeout(say, 2000, 'hdy', 18); // (...2s后) 我叫hdy，我今年18岁啦！
+```
+* 可以用clearTimeout清除
+```js
+const timer = setTimeout(() => console.log('不会执行'), 2000);
+clearTimeout(timer); // 计时器被清除，无打印
+```
+:::
+::: tab label=setInterval
+* 调用：setInterval(fn, time[, args...])
+```js
+function say(name, age) {
+    console.log(`我叫${name}，我今年${age}岁啦！`);
+}
+setInterval(say, 2000, 'hdy', 18); // (每隔2s) 我叫hdy，我今年18岁啦！
+```
+* 可以用clearInterval清除
+```js
+const timer = setInterval(() => console.log('不会执行'), 2000);
+clearInterval(timer); // 计时器被清除，无打印
+```
+:::
+::: tab label=循环选择
+* setTimeout保证等待time后执行
+* setInterval在每次执行完后再计时
+> 如果要保证每次的间隔的话可以选择setTimeout递归
+```js
+// 等两秒推一个宏任务，但是每个任务执行了1秒，宏任务在最下面递归调用，就能标准的等2秒
+const run = () => {
+    const now = Date.now();
+    const end = now + 1000;
+    console.log(now);
+    while(Date.now() < end) {}
+    console.log('本人耗时1秒，要求间隔两秒执行');
+    setTimeout(run,2000);
+}
+setTimeout(run, 2000);
+```
+* setInterval
+```js
+// 隔两秒把回调函数推入一次调用栈，但是函数自己执行了一秒，所以看起来函数执行间隔少了一秒
+setInterval(() => {
+    const now = Date.now();
+    const end = now + 1000;
+    console.log(now);
+    while(Date.now() < end) {}
+    console.log('本人未耗时1秒，要求间隔两秒执行');
+}, 2000);
+```
+:::
+::: tab label=requestAnimationFrame
+* requestAnimationFrame是setInterval的升级版，解决了一些循环上的问题,会在浏览器重新加载指定代码之前执行代码块，从而允许动画以适当的帧速率运行
+>只有浏览器支持
+* 在动画函数最后用requestAnimationFrame在下次重绘前调用自己
+* 入参：Function，并传入了一个时间戳
+```js
+function draw(timeStamp) {
+    console.log(timeStamp)
+   
+   // Drawing code goes here
+
+   requestAnimationFrame(draw);
+}
+
+const now = Date.now();
+draw(now);
+```
+* 撤销
+```js
+const timer;
+function draw(timeStamp) {
+   timer = requestAnimationFrame(draw);
+}
+draw();
+
+cancelAnimationFrame(timer);
+```
+:::
+::::
 ## 方法
 ### Promise
 ::: tip 构造器
@@ -548,6 +635,56 @@ const resolve = Promise.resolve(p);
 
 console.log(resolve === p); // false
 resolve.then(res => console.log(res)); // [Function: p]
+```
+:::
+::: tab label=异步入参机制
+* Promise.resolve(value)实际上就是new Promise(resolve => resolve(value))
+>对比1：Promise.resolve(value) 的 value 为 Promise。  
+>p2实际上是将p1推入了微任务队列，等微任务执行到p1，发现这是一个已经fulfilling的promise，不做处理并将p2后续的then推入微任务队列
+
+![](./assets/promiseresolve.png)
+```js{3-5}
+const p1 = new Promise(resolve => resolve(1)).then(res => console.log(res));
+
+// 返回promise的情况下会推promise进微任务队列，promise执行完了才执行.then。
+// new Promise和Promise.resolve结果一样
+const p2 = Promise.resolve(p1).then(res => console.log(2));
+// const p2 = new Promise(resolve => resolve(p1)).then(res => console.log(2));
+
+const p3 = new Promise(resolve => resolve(3)).then(res => console.log(res));
+
+console.log('同步');
+/**
+ * 同步
+ * 1
+ * 3
+ * 2
+ */
+```
+:::
+::: tab label=同步入参机制
+* Promise.resolve入参是同步代码时，那么会直接resolve(value)，将自己的then推入微任务队列
+![](./assets/promiseresolve2.png)
+```js{6-7}
+const p1 = new Promise(resolve => {
+    console.log('p1代码')
+    resolve(1)
+}).then(res => console.log(res));
+
+// 同步代码，直接将 then 的回调推入微任务队列，并且入参为resolve的值
+Promise.resolve(2).then(res => console.log(res));
+// new Promise(resolve => resolve(2)).then(res => console.log(res));
+
+const p3 = new Promise(resolve => resolve(3)).then(res => console.log(res));
+
+console.log('同步');
+/**
+ * p1同步代码
+ * 同步
+ * 1
+ * 2
+ * 3
+ */
 ```
 :::
 ::::
