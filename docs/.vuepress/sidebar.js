@@ -28,6 +28,7 @@ const front = {
                 'proxy',
                 'promise',
                 'async',
+                'generator',
                 'dom',
                 'bom',
                 'event',

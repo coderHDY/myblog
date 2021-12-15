@@ -275,7 +275,7 @@ console.log('script end');
 * 结果分析
 ::::tabs
 ::: tab label=返回同步
-```js{5}
+```js{5,10}
 /**     同步      */
 // script start
 // async1 start
@@ -295,7 +295,7 @@ console.log('script end');
 ```
 :::
 ::: tab label=返回异步
-```js{14}
+```js{12,14,17}
 /**     同步      */
 // script start
 // async1 start
