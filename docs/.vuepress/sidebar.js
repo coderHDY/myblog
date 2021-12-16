@@ -95,7 +95,8 @@ const skill = {
             children: [
                 '',
                 'base',
-                'bugs'
+                'bugs',
+                'regexp'
             ]
         },
         {
