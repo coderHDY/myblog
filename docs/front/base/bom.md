@@ -25,7 +25,7 @@
 |host|主机 + 端口号|www.baidu.com:8080|
 |hostname|主机|www.baidu.com|
 |port|端口号|8080|
-|path|路径|/s|
+|path/pathname|路径，**window.location.pathname**|/s|
 |search|查询参数|?q=刘德华|
 |hash|哈希路由参数|#bp|
 :::
