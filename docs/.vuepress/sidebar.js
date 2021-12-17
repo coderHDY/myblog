@@ -31,6 +31,7 @@ const front = {
                 'generator',
                 'dom',
                 'bom',
+                'history',
                 'event',
                 'json',
                 'ajax',
