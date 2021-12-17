@@ -1,6 +1,6 @@
 # DOM
 ## 元素查找
-### 总结
+### 汇总
 ::: warning 查找元素方法概览
 |方法|作用|返回|
 |---|---|---|
@@ -152,7 +152,7 @@
 </body>
 ```
 ## 查找关系
-### 总结
+### 汇总
 ::: warning 元素按关系查找方法总结
 |方法|作用|返回|
 |---|---|---|
@@ -425,6 +425,25 @@
 |activeElement|返回当前活跃的元素：被选中的input/button|Object|
 :::
 ## 元素增删
+### 汇总
+::: tip 汇总
+|方法|作用|调用|
+|---|---|---|
+|prepend|【第一个子节点前】增【1-多】|father.prepend(node1, node2)|
+|append|【最后一个子节点后】增【1-多】，建议|father.append(node1, node2)|
+|appendChild|【最后一个子节点后】增【1个】，不支持domString，不灵活|father.appendChild(node)|
+|insertBefore|【最某个子节点前】增【1个】，建议|father.insertBefore(newNode, referenceNode)|
+|after|本节点之后增【1-多】|node.after(node1, node2)|
+|before|本节点之前增【1-多】|node.before(node1, node2)|
+|removeChild|移除某个子元素|father.removeChild(child)|
+|replaceChild|替换某个子元素|father.replaceChild(newChild, oldChild)|
+|replaceChildren|替换全部子元素|father.replaceChildren(node1, node2)|
+|remove|移除本节点|node.remove()|
+|cloneNode|克隆节点|node.cloneNode(isDeep)|
+|insertAdjacentElement|指定位置插入节点|node.insertAdjacentElement(position, node)|
+|insertAdjacentText|指定位置插入文本|node.insertAdjacentText(position, node)|
+|createElement|创造元素|document.createElement(tagName)|
+:::
 ### prepend
 ::: tip prepend
 * 作用：在父节点的第一个子节点之前插入节点【们】
