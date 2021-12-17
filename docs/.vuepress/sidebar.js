@@ -17,7 +17,7 @@ const front = {
             ]
         },
         {
-            title: '内置类型',
+            title: '内置类型/对象',
             collapsable: false,
             children: [
                 'set',
