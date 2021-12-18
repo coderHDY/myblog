@@ -1,1 +1,106 @@
 # JSON
+## 规则
+|值|规则|
+|---|---|
+|key|必须使用双引号|
+|Array\|Object|最后一个值后面不能有逗号|
+|Number|数字出现前导零会被视作小数JSON.parse('{"a": 0.1}') => { a: 0.1 }|
+## parse
+::: tip parse
+* 作用：将json字符串解析成对象
+* 调用：JSON.parse(JSON)
+* 入参：String
+* 返回：Object
+:::
+```js
+const json = '{"a": 0.1}';
+console.log(JSON.parse(json)); // { a: 0.1 }
+```
+## stringify
+::: tip stringify
+* 作用：将对象转化成json形式字符串
+* 调用：JSON.stringify(obj)
+* 入参：Object
+* 返回：String
+:::
+```js
+const obj = {
+    'name': 'hdy',
+    age: 18,
+    books: [
+        '蝴蝶书',
+        '红宝书',
+    ],
+}
+
+ // 不符合规范的地方都会被转化成标准的json格式
+console.log(JSON.stringify(obj));
+// {"name":"hdy","age":18,"books":["蝴蝶书","红宝书"]}
+```
+## 深浅拷贝
+* Object等是引用类型，所以存在深浅拷贝的问题，就是引用类型拷贝的时候关系没有断干净
+* String是值类型，拷贝就是深拷贝
+* 所以可以利用JSON的转换方法进行深拷贝
+* 期望
+```js{8-9}
+const obj1 = {
+    books: [
+        '蝴蝶书',
+        '红宝书',
+    ]
+}
+const obj2 = obj1;
+const obj3 = deepClone(obj1);
+obj1.books[1] = '你不知道的JS';
+
+console.log(obj2.books[1]); // '你不知道的JS'
+console.log(obj3.books[1]); // '红宝书'
+```
+* 实现
+```js
+function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+```
+
+## 手写JSON.stringify
+* 期望
+```js
+const obj1 = {
+    parents: {
+        father: 'zs',
+        father: 'ls',
+        gift:[
+            '你不知道的JS'
+        ]
+    },
+    books: [
+        '蝴蝶书',
+        '红宝书',
+        {
+            currentRead: '正则表达式必知必会'
+        }
+    ]
+}
+
+const ans = stringify(obj1);
+const json = JSON.stringify(obj1);
+console.log(ans === json); // true
+```
+* 主要就是要注意类型的判断，然后递归
+* tip：数组转字符串时会去掉中括号，所以不用处理【第五行】
+:::: tabs
+::: tab label=递归实现
+```js{3-5}
+function stringify(obj) {
+    if (typeof obj === 'object' && obj != null) {
+        return Array.isArray(obj) ?
+        `[${obj.map(item => stringify(item))}]`
+        : `{${Object.entries(obj).map(([key, value]) => `"${key}":${stringify(value)}`)}}`;
+    } else {
+        return `"${obj}"`;
+    }
+}
+```
+:::
+::::
