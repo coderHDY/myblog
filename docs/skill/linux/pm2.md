@@ -142,6 +142,13 @@ systemctl enable pm2-root
 # 重启
 reboot
 ```
+### 问题解决
+* 一开程序就stopped
+```shell
+# 应该是换了node版本，原版本开的程序就出问题了
+pm2 kill
+pm2 start 0
+```
 ### 其他命令
 * 重启服务：[启动服务](./pm2.html#启动服务) 的 start 改为 restart
 * 重新加载：[启动服务](./pm2.html#启动服务) 的 start 改为 reload
