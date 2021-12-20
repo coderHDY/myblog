@@ -1,5 +1,8 @@
 # 避坑指南
 
+## 乱跳bug
+* 空行、img、横线，连着的时候就会乱跳
+![](./assets/luantiaobug.png)
 ## 组件嵌套
 * 除非本身是嵌套组件，否则尽量不要使用组件嵌套，容易出现编译错误
 * markdown-it-container是通过成对的 ::: 作为token来判断编译语法的，嵌套时容易出现token配对错误

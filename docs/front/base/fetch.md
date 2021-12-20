@@ -385,7 +385,7 @@ app.get('/', (req, res) => {
 ::: tip Response的方法
 * 实际上是依据不同的返回值做不同的处理
 
-|属性|作用|
+|方法|作用|
 |---|---|
 |clone|将响应对象克隆|
 |error|返回包含网络错误信息的新Response对象|
@@ -439,6 +439,7 @@ app.get('/json', (req, res) => {
 * 设置请求头/响应头的封装对象
 
 |方法|作用|
+|---|---|
 |append|追加键值对|
 |delete|删除键值对|
 |entries|返回键值对的iterator|
