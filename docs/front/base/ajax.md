@@ -74,6 +74,10 @@ app.get('/data', (req, res) => {
     while (Date.now() < end) {}
     res.send();
 })
+/**
+ * 请求返回
+ * 同步代码
+ */
 ```
 :::
 ::: tab label=异步
@@ -107,6 +111,10 @@ app.get('/data', (req, res) => {
     while (Date.now() < end) {}
     res.send();
 })
+/**
+ * 同步代码
+ * 请求返回
+ */
 ```
 :::
 ::::
@@ -117,7 +125,7 @@ app.get('/data', (req, res) => {
 * 入参：document | FormData | Blob | URLSearchParams
 :::
 * node解析body需要安装body-parser
-```js{3-5,25-26,33-34}
+```js{3-5,25-26,33,36}
 const express = require('express');
 const app = new express();
 const bdParser = require('body-parser');
@@ -151,6 +159,8 @@ app.get('/', (req, res) => {
 
 app.post('/data', (req, res) => {
     console.log(req.body);
+
+    // express处理post请求返回必须是对象或序列化对象【JSON.stringify()】
     res.send(req.body);
 })
 ```
@@ -230,18 +240,6 @@ xhr.send();
 * tip：必须在send前指定
 :::
 ## 属性
-### response
-::: tip response
-* 作用：响应结果
-* 值：根据responseType的值决定
-* 需要在【下载响应数据中】readyState >= 3 以后才有值
-:::
-### responseText
-::: tip responseText
-* 作用：后端返回的文本
-* 值：String
-* 注：DOMString也是以String的形式返回的
-:::
 ### responseType
 ::: tip responseType
 * 作用：用于判断响应的类型，response接受到值后做出对应的改变
@@ -249,7 +247,7 @@ xhr.send();
 
 |responseType的值|response的值|
 |---|---|
-|""|DOMString对象中的文本|
+|""|DOMString对象中的文本【默认】|
 |text|DOMString对象中的文本|
 |document|HTTP document或XML document对象|
 |json|json解析后的对象|
@@ -319,6 +317,18 @@ app.get('/data', (req, res) => {
 ```
 :::
 ::::
+### response
+::: tip response
+* 作用：响应结果
+* 值：根据responseType的值决定
+* 需要在【下载响应数据中】readyState >= 3 以后才有值
+:::
+### responseText
+::: tip responseText
+* 作用：后端返回的文本
+* 值：String
+* 注：DOMString也是以String的形式返回的
+:::
 ### onreadystatechange
 ::: tip onreadystatechange
 * 注：此属性没有驼峰写法
@@ -422,7 +432,7 @@ app.get('/data', (req, res) => {
 :::: tabs
 ::: tab label=跨域服务器1
 * 【跨域服务器1】 -> 【跨域服务器2】
-```js{14}
+```js{14,18-20}
 const express = require('express');
 const app = new express();
 app.listen(8888, () => {
@@ -440,16 +450,13 @@ app.get('/', (req, res) => res.send(`
         setTimeout(() => {
             const xhr = new XMLHttpRequest();
             xhr.addEventListener('load', () => console.log(xhr.response));
-            xhr.open('GET', 'http://localhost:8888/otherOrigin');
+            console.log('我去拿跨域内容了，跨域的服务器需要给我加cors响应头');
+            xhr.open('GET', 'http://localhost:8889');
             xhr.send();
         }, 2000);
     </script>
 </body>
 `));
-
-app.get('/otherOrigin', (req, res) => {
-    res.redirect('http://localhost:8889');
-})
 ```
 :::
 ::: tab label=跨域服务器2
@@ -478,7 +485,8 @@ app.get('/', (req, res) => {
 ::: tab label=带cookie跨域服务器1
 * 【带cookie跨域服务器1】 -> 【带cookie跨域服务器2】
 * 写入res.cookie不需要插件，读取req.cookies需要【cookie-parser】
-```js{8,17,26,}
+> res.cookie(key, vlaue)在响应头增加Set-Cookie字段
+```js{8,17,27}
 const express = require('express');
 const app = new express();
 app.listen(8888, () => {
@@ -508,7 +516,8 @@ app.get('/otherOrigin', (req, res) => {
     res.cookie('friend', '张三');
     res.redirect('http://localhost:8889')
 })
-``` 
+```
+> 重定向用redirect，转发用request库
 :::
 ::: tab label=带cookie跨域服务器2
 ```js{2,5,23-25}
@@ -590,7 +599,7 @@ xhr.open('GET', 'http://localhost:8888/data');
 xhr.send();
 ```
 ```JS{3}
-// 返回
+// 返回重定向
 app.get('/data', (req, res) => {
     res.redirect('http://localhost:8888/error');
 })
