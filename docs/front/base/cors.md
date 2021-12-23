@@ -354,6 +354,10 @@ app.post('/', function(req, res) {
 :::
 ::: tab label=cookie
 
+* 跨域传cookie需要同时满足三个条件：
+    1. Access-Control-Allow-Origin为非 *
+    2. Access-Control-Allow-Credentials为true
+    3. 请求设置credentials
 * 请求带去同源服务器，同源服务器拿到user字段，响应头增加cookie，再重定向到跨域服务器要数据
 * 首先默认允许跨域，然后还要允许【credentials】，重定向要跟随也要特殊设置【redirect】
 ```js{15-18,31-32}
@@ -442,3 +446,335 @@ app.get('/', function(req, res) {
 <img src='./assets/daicookiekuayuheader.png' style="width:400px;">
 :::
 ::::
+
+### node代理
+::: tip 思路
+* 同源限制是浏览器规定的
+* 不限制其他平台的网络请求
+* 那么就让服务器代理发送请求，再把数据还给浏览器端，浏览器就不知道这是跨域的资源了
+:::
+:::: tabs
+::: tab label=图解
+* 浏览器还是向源服务器发送请求，源服务器去发跨域请求。取回数据给浏览器
+![](./assets/nodedaili.png)
+:::
+::: tab label=资源服务器
+* 代理的情况下不需要跨域的服务器做什么，因为他也不知道这是浏览器的跨域请求
+```js{22-32}
+const express = require('express');
+const app = new express();
+app.listen(8889, () => {
+    console.log('listen 8889');
+});
+
+// 模拟数据库
+const database = {
+    hdy: {
+        name: 'hdy',
+        age: 18,
+        major: '软件工程'
+    },
+    zs: {
+        name: '张三',
+        age: 20,
+        major: '法律'
+    }
+}
+
+app.get('/', function(req, res) {
+    new Promise(resolve => {
+        setTimeout(() => {
+
+            // 异步：假装去数据库读取
+            const name = req.query.name;
+            const data = database[name] ? JSON.stringify(database[name]) : '{}';
+            resolve(data);
+        }, 1000);
+    }).then(data => {
+        res.send(data);
+    })
+});
+```
+:::
+::: tab label=express代理
+* express代理有封装好的【express-http-proxy】库
+```js{16,28-29}
+const express = require('express');
+const app = new express();
+app.listen(8888,() => {
+    console.log('listen 8888');
+});
+
+app.get('/', (req, res) => res.send(`
+<body>
+    <div>首页</div>
+
+    <script>
+        let user;
+        const name = 'hdy'
+
+        setTimeout(() => {
+            fetch('http://localhost:8888/proxy?name=' + name)
+            .then(res => res.json())
+            .then(res => {
+                user = res;
+                console.log(user);
+                // {name: 'hdy', age: 18, major: '软件工程'}
+            })
+        }, 2000);
+    </script>
+</body>
+`));
+
+const proxy = require('express-http-proxy');
+app.use('/proxy', proxy('http://localhost:8889'));
+```
+:::
+::: tab label=vue2配置代理
+* 开发环境下
+* vue.config.js配置
+```js
+// vue项目开发模式中，所有【/api】开头的请求路径都使用node代理请求，再把数据还给浏览器
+module.exports = {
+  devServer: {
+    proxy: {
+        '/api': {
+            target: 'http://localhost:8889',
+            changeOrigin: true, // 跨域
+            pathRewrite: {
+                '^/api': '/'
+            }
+        }
+    }
+  }
+}
+```
+* 跨域请求vue文件
+```vue
+<template>
+    <div>
+        <div>{{data}}</div>
+        <button @click='getData'>获取跨域数据</button>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            data: '默认数据'
+        }
+    },
+    methods: {
+        getData() {
+            fetch('/api?name=zs')
+            .then(res => res.json())
+            .then(res => this.data = res);
+        }
+    }
+}
+</script>
+
+<style>
+</style>
+```
+:::
+::: tab label=效果
+![](./assets/vueproxy.png)
+:::
+::::
+### Nginx
+::: tip nginx
+* 原理和proxy代理一样，只是vue的proxy配置只有开发环境生效，生产环境一般用nginx
+:::
+:::: tabs
+::: tab label=nginx配置
+* nginx.conf
+```shell{11-13}
+server {
+    # ...
+
+    # 源页面路径
+    location / {
+        root   /Users/huangdeyu/Documents/code/00test/test;
+        index  test.html;
+    }
+
+    # 代理服务器路径
+	location /api {
+        proxy_pass http://localhost:8889;
+    }
+
+    # ...
+}
+```
+* 执行命令
+```shell
+# 启动
+nginx
+
+# 重载配置文件
+nginx -s reload
+```
+:::
+::: tab label=源页面
+* 还是向源服务器发起同源请求，nginx处理跨域请求
+```html{15}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div>首页</div>
+
+    <script>
+        let user;
+        const name = 'hdy'
+
+        setTimeout(() => {
+            fetch('/api?name=' + name)
+            .then(res => res.json())
+            .then(res => {
+                user = res;
+                console.log(user);
+                // {name: 'hdy', age: 18, major: '软件工程'}
+            })
+        }, 2000);
+    </script>
+</body>
+</html>
+
+```
+:::
+::: tab label=跨域数据服务器
+* 注：nginx配置代理默认会带上路径，例：【/api】
+```js{21-33}
+const express = require('express');
+const app = new express();
+app.listen(8889, () => {
+    console.log('listen 8889');
+});
+
+// 模拟数据库
+const database = {
+    hdy: {
+        name: 'hdy',
+        age: 18,
+        major: '软件工程'
+    },
+    zs: {
+        name: '张三',
+        age: 20,
+        major: '法律'
+    }
+}
+
+app.get('/api', function(req, res) {
+    new Promise(resolve => {
+        setTimeout(() => {
+
+            // 异步：假装去数据库读取
+            const name = req.query.name;
+            const data = database[name] ? JSON.stringify(database[name]) : JSON.stringify({msg: "未查到此人"});
+            resolve(data);
+        }, 1000);
+    }).then(data => {
+        res.send(data);
+    })
+});
+```
+:::
+::: tab label=效果
+![](./assets/nginxxiaoguo.png)
+:::
+::::
+### webSocket
+::: tip 定义
+* 规范定义了一种 API，可在网络浏览器和服务器之间建立“套接字”连接。简单地说：客户端和服务器之间存在持久的连接，而且双方都可以随时开始发送数据。
+* 跨域原理：本质上是浏览器和服务器建立了持久链接，并不是传统的http请求，所以并没有跨域限制
+:::
+:::: tabs 
+::: tab label=源服务器
+```js{14-17,19-21,24-25}
+const express = require('express');
+const app = new express();
+app.listen(8888,() => {
+    console.log('listen 8888');
+});
+
+app.get('/', (req, res) => res.send(`
+<body>
+    <div>首页</div>
+
+    <script>
+        let user;
+
+        let socket = new WebSocket("ws://localhost:8889");
+        socket.onopen = function() {
+            console.log('用websocket与服务器建立连接...');
+        };
+
+        socket.onmessage = function(e) {
+            user = JSON.parse(e.data);
+        };
+
+        setTimeout(() => {
+            socket.send('zs');
+            setTimeout(() => console.log(user), 1000);
+        }, 2000);
+    </script>
+</body>
+`));
+```
+:::
+::: tab label=跨域数据服务器
+* node服务器可用的webSocket库有：
+    * ws
+    * Socket.IO
+    * WebSocket-Node
+* 这里用ws库
+```js{15-16,18-25}
+// 模拟数据库
+const database = {
+    hdy: {
+        name: 'hdy',
+        age: 18,
+        major: '软件工程'
+    },
+    zs: {
+        name: '张三',
+        age: 20,
+        major: '法律'
+    }
+}
+
+const ws = require('ws');
+const wsServer = new ws.Server({ port: 8889 });
+
+wsServer.on('connection', function (ws) {
+    console.log('已和客户端持久连接');
+    ws.on('message', function (message) {
+        const name = message.toString();
+        const user = database[name] ? JSON.stringify(database[name]) : JSON.stringify({msg: '查无此人'})
+        ws.send(user);
+    });
+});
+```
+:::
+::: tab label=效果
+<img src="./assets/socketkehuduan.png" style="width: 600px;">
+<img src="./assets/socketfuwuduan.png" style="width: 600px;">
+:::
+::::
+
+### 其他方案
+::: tip 其他不常用方案
+
+|方案|适用|
+|---|---|
+|window.postMessage|可以向浏览器的其他窗口或内嵌iframe进行跨域通信|
+|document.domain + iframe|可以让同一个基础域名的网页进行相互操作，如：【id.qq.com】和【qq.com】可以互相嵌套iframe进行跨域通信操作，只要把他们都设置【document.domain = 'qq.com'】|
+|浏览器关闭跨域限制|启动增加参数【--disable-web-security --user-data-dir】|
+:::

@@ -106,7 +106,8 @@ const skill = {
             children: [
                 'pm2',
                 'git',
-                'node'
+                'node',
+                'nginx',
             ]
         },
     ],
