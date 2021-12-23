@@ -47,6 +47,40 @@ export NVM_DIR="$HOME/.nvm"
 ```shell
 source ~/.zshrc
 ```
+### 安装vue-devtool
+* 能访问外网直接取扩展程序下载
+* 不能访问外网的情况下：
+:::: steps
+::: step
+* 官网下载
+```shell
+git clone git@github.com:vuejs/devtools.git 
+```
+:::
+::: step
+* 使用yarn安装（npm安装会有问题）
+```shell
+npm install -g yarn
+
+# 换淘宝镜像
+yarn config set registry https://registry.npm.taobao.org --global
+yarn config set disturl https://npm.taobao.org/dist --global
+
+# 检查
+yarn config get registry
+```
+:::
+::: step
+安装依赖
+```shell
+yarn install
+yarn run build
+```
+:::
+::: step
+* chrome扩展程序 -> 开发者模式 -> 添加已解压包 -> packages\shell-chrome文件夹
+:::
+::::
 ### 配置代理
 * 访问github更快  
 代理地址：http://pac.internal.baidu.com/bdnew.pac

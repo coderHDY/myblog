@@ -268,6 +268,57 @@ app.get('/data2', (req, res) => {
 ```
 :::
 ::::
+### 上传数据
+::: tip 上传多种数据
+* JSON
+* 表单文件
+:::
+:::: tabs
+::: tab label=JSON上传
+* 将对象转化为json -> post发到后端 -> 后端存储数据
+```js{18-22}
+const express = require('express');
+const app = new express();
+app.listen(8888,() => {
+    console.log('listen 8888');
+});
+
+app.get('/', (req, res) => res.send(`
+<body>
+    <div>首页</div>
+
+    <script>
+        let user = {
+            name: 'hdy',
+            age:18
+        };
+
+        setTimeout(() => {
+            fetch('http://localhost:8888/data', {
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(user),
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(res => console.log(res));
+        }, 2000);
+    </script>
+</body>
+`));
+
+const bdParser = require('body-parser');
+app.use(bdParser.urlencoded({extended: false}));
+app.use(bdParser.json());
+const fs = require('fs');
+app.post('/data' , (req, res) => {
+    const user = '\n' + JSON.stringify(req.body);
+    console.log(user);
+    fs.appendFileSync('./database.json', user, "utf-8");
+    res.send({data: '上传成功'});
+})
+```
+:::
+::::
 ## Request
 ### 构造
 ::: tip Request
