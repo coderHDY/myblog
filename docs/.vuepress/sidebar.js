@@ -67,7 +67,14 @@ const front = {
         '',
     ],
     '/front/css/': [
-        '',
+        {
+            title: '基础样式',
+            collapsable: false,
+            children: [
+                '',
+                'text',
+            ]
+        },
     ],
     '/front/node/': [
         '',

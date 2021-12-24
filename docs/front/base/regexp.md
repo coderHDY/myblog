@@ -375,6 +375,64 @@ const reg2 = /(?<=@)[\w\.]+/g;
 console.log(str.match(reg2)); // [ 'qq.com' ]
 ```
 :::
+::: tab label=非捕获性匹配
+> 需要用括号语法来匹配，但是不希望它存分组
+* 捕获组：匹配且单独存储捕获组
+```js{3,5,11}
+const str = `
+const zs = {name: '张三', age: 20};
+const me = {name: 'hdy', age: 18};
+`;
+const reg = /(me\s*=\s*)\{[^\}]+\}/g;
+
+console.log(reg.exec(str));
+/**
+[
+  "me = {name: 'hdy', age: 18}",
+  'me = ',
+  index: 41,
+  input: "\nconst zs = {name: '张三', age: 20};\nconst me = {name: 'hdy', age: 18};\n",
+  groups: undefined
+]
+ */
+```
+* 非捕获性匹配：不存储捕获组
+```js{5,8}
+const str = `
+const zs = {name: '张三', age: 20};
+const me = {name: 'hdy', age: 18};
+`;
+const reg = /(?:me\s*=\s*)\{[^\}]+\}/g;
+
+console.log(reg.exec(str));
+/** 没有捕获组项
+[
+  "me = {name: 'hdy', age: 18}",
+  index: 41,
+  input: "\nconst zs = {name: '张三', age: 20};\nconst me = {name: 'hdy', age: 18};\n",
+  groups: undefined
+]
+ */
+```
+* 环视：主匹配项也不要括号匹配的内容
+```js{5,8}
+const str = `
+const zs = {name: '张三', age: 20};
+const me = {name: 'hdy', age: 18};
+`;
+const reg = /(?<=me\s*=\s*)\{[^\}]+\}/g;
+
+console.log(reg.exec(str));
+/**括号内容完全不匹配，只是用来定位
+[
+  "{name: 'hdy', age: 18}",
+  index: 46,
+  input: "\nconst zs = {name: '张三', age: 20};\nconst me = {name: 'hdy', age: 18};\n",
+  groups: undefined
+]
+ */
+```
+:::
 ::: tab label=反向引用
 > 可以使用前面已经匹配到的项
 * 字符串去重
@@ -533,7 +591,30 @@ console.log(reg.test(str)); // true
 const reg = /abc/gmi;
 console.log(reg.toString()); // '/abc/gmi'
 ```
+### 例子
+* 一些常见的正则用法
+:::: tabs
+::: tab label=匹配require路径
+* commonjs匹配依赖文件路径的简单写法
+* str文件依赖了【./a】【./b】文件
+```js{8}
+const str = `
+console.log('main run');
+const a = require('./a');
+const b = require('./b');
+a.run();
+b.run();
+`
+const reg = /(?<=require\(['"])[^['"]+(?=['"]\))/g;
 
+const requireArr = [];
+while((ans = reg.exec(str)) != null) {
+    requireArr.push(ans[0]);
+}
+console.log(requireArr); //[ './a', './b' ]
+```
+:::
+::::
 ## 属性
 ### lastIndex
 ::: tip lastIndex
