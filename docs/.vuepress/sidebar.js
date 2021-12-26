@@ -75,6 +75,15 @@ const front = {
                 'text',
             ]
         },
+        {
+            title: 'css动画',
+            collapsable: false,
+            children: [
+                'animation',
+                'transition',
+                'transform',
+            ]
+        },
     ],
     '/front/node/': [
         '',
