@@ -1190,7 +1190,7 @@
 * 需要计算出伪元素占主轴的长度  
 <img src="./assets/spacebetween2.png" style="width:300px;">
 
-```html
+```html{31-34}
 <body>
     <div id='container'>
         <span class='child'>中</span>
