@@ -9,8 +9,13 @@
 |to|100%|
 |50%|执行到一半的时间节点|
 :::
-## 整合属性
+## 组合属性
 ::: tip animation
+* animation是组合属性
+```css
+animation: roll 2s 0s linear forwards infinite running;
+```
+
 |属性|效果|值|
 |---|---|---|
 |animation-name|应用的关键帧的名字|none /【 [0-9a-zA-Z-_]+ 】|
@@ -109,17 +114,160 @@ animation-direction: alternate;
 ![](./assets/animationduration.png)
 :::
 ::::
+
 * 动画
 :::: tabs
-::: tab label=动画
-:::
-::: tab label=play-state
->animation-play-state
-:::
-::: tab label=timing-function
->animation-timing-function
+::: tab label=旋转球
+<video src="./assets/animationfillmode0.mp4" style="width:300px;" controls />
+
+```html{27-40}
+<body>
+    <div id="container">
+        <div id="ball">你好</div>
+    </div>
+
+    <style>
+        #container {
+            position: relative;
+            margin: 50px;
+            width: 200px;
+            height: 200px;
+            padding-left: 50px;
+            padding-top: 50px;
+            box-sizing: border-box;
+            background-color: rgb(118, 144, 233);
+            overflow: hidden;
+        }
+        #ball {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background-color: rgb(185, 247, 183);
+            text-align: center;
+            line-height: 100px;
+        }
+
+        #ball:hover {
+            animation-name: roll;
+            animation-duration: 1s;
+            animation-delay: 0;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
+        @keyframes roll {
+            0% {
+            }
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+    </style>
+</body>
+```
 :::
 ::: tab label=fill-mode
 >animation-fill-mode
+* 决定动画结束时的样式：
+
+|值|样式|
+|---|---|
+|froward|就是结束时的样式|
+|backwards|回到起始样式|
+
+```css
+animation-fill-mode: backwards;
+```
+
+<video src="./assets/animationfillmode1.mp4" style="width:300px;" controls />
+
+:::
+::: tab label=timing-function
+>animation-timing-function
+* 描述过渡加速曲线，如：【cubic-bezier(0.1, 0.7, 1.0, 0.1)】是一个[贝塞尔曲线(Cubic Bezier)](https://blog.csdn.net/wjnf012/article/details/78795573)
+* 分别对应的值是：cubic-bezier(x1, y1, x2, y2)，与[0, 0]、[1, 1] 分别连线生成的曲线，作为加速曲线
+```css
+animation-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1);
+```
+* 匀加速曲线：
+```css
+animation-timing-function: cubic-bezier(1, 0, 1, 0);
+```
+<img src="./assets/cubicbezier.png" style="width:300px;">
+* 效果:
+<video src="./assets/animationcubzier.mp4" style="width:300px" controls />
+
+|值|效果|
+|---|---|
+|ease|【默认】慢-快-慢（cubic-bezier(0.25, 0.1, 0.25, 1)）|
+|linear|全程匀速，（等于 cubic-bezier(0, 0, 1, 1)）|
+|ease-in|慢-快（等于 cubic-bezier(0.42, 0, 1, 1)）|
+|ease-out|快-慢（等于 cubic-bezier(0, 0, 0.58, 1)）|
+|ease-in-out|慢-快-慢，（等于 cubic-bezier(0.42, 0, 0.58, 1)）|
+:::
+::: tab label=play-state
+>animation-play-state
+
+|值|效果|
+|---|---|
+|running|动画动起来|
+|paused|动画暂停|
+
+<video src="./assets/animationplaystate.mp4" controls style="width:300px;" />
+
+```html{32-33,45-51}
+<body>
+    <div id="container">
+        <div id="ball">你好</div>
+    </div>
+
+    <style>
+        #container {
+            position: relative;
+            margin: 50px;
+            width: 200px;
+            height: 200px;
+            padding-left: 50px;
+            padding-top: 50px;
+            box-sizing: border-box;
+            background-color: rgb(118, 144, 233);
+            overflow: hidden;
+        }
+        #ball {
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            background-color: rgb(185, 247, 183);
+            text-align: center;
+            line-height: 100px;
+
+            animation-name: roll;
+            animation-duration: 2s;
+            animation-delay: 0;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+            animation-play-state: running;
+        }
+        @keyframes roll {
+            0% {
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        const ball = document.querySelector("#ball");
+        ball.addEventListener('click', () => {
+            if (ball.hasAttribute('style')) {
+                ball.removeAttribute('style');
+            } else {
+                ball.setAttribute('style', 'animation-play-state: paused;');
+            }
+        })
+    </script>
+</body>
+```
 :::
 ::::
