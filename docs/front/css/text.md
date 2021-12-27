@@ -254,7 +254,7 @@
 * 多少个空格换行都转化成一个空格
 <img src="./assets/whitespacenormal.png" width="500px;">
 
-```html{8}
+```html{12}
 <body>
     <div>
         我叫张三
@@ -275,7 +275,7 @@
 ::: tab label=pre
 <img src="./assets/whitespacepre.png" width="500px;">
 
-```html{8}
+```html{12}
 <body>
     <div>
         我叫张三
@@ -296,7 +296,7 @@
 ::: tab label=nowrap
 <img src="./assets/whitespacenowrap.png" width="500px;">
 
-```html{8}
+```html{12}
 <body>
     <div>
         我叫张三
@@ -317,7 +317,7 @@
 ::: tab label=pre-line
 <img src="./assets/whitespacepreline.png" width="500px;">
 
-```html{8}
+```html{12}
 <body>
     <div>
         我叫张三    我叫张三
@@ -338,7 +338,7 @@
 ::: tab label=pre-line
 <img src="./assets/whitespaceprewrap.png" width="500px;">
 
-```html{8}
+```html{12}
 <body>
     <div>
         我叫张三    我叫张三
@@ -357,3 +357,57 @@
 ```
 :::
 ::::
+## text-transform
+::: tip text-transform
+* 英语大小写转换
+
+|属性|效果|
+|---|---|
+|capitalize|首字母大写|
+|uppercase|全部大写|
+|lowercase|全部小写|
+:::
+## user-select
+::: tip 指定用户选中文本的能力
+|值|效果|
+|---|---| 
+|auto|【默认】伪元素和html产生的结构化标记不能选中|
+|none|禁止选中文本|
+|text|文本|
+|content|元素内可以选择|
+|all|一选择就整体选中|
+:::
+:::: tabs
+::: tab label=示例
+<video src="./assets/userselect.mp4" style="width:400px;" controls />
+
+```html
+<body>
+    <p class="all">我是all我是all我是all我是all</p>
+    <p class="content">我是content我是content</p>
+    <p class="none">我是none我是none我是none</p>
+    <style>
+        .all {
+            user-select: all;
+        }
+        .content {
+            user-select: content;
+        }
+        .none {
+            user-select: none;
+        }
+    </style>
+</body>
+```
+:::
+::::
+## vertical-align
+::: tip vertical-align
+* 行内元素或表格元素的对齐方式
+* 可设置图片的此属性来对齐同行内的文字
+>图片是行内块元素
+
+```css
+vertical-align: middle;
+```
+:::

@@ -35,12 +35,9 @@ app.get('/', (req, res) => res.send(`
 ```
 :::
 ::: tab label=跨域资源服务器
-```js{12}
+```js{9}
 const express = require('express');
 const app = new express();
-
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
 app.listen(8889, () => {
     console.log('listen 8889');
@@ -95,12 +92,9 @@ app.get('/', (req, res) => res.send(`
 ```
 :::
 ::: tab label=跨域数据服务器1
-```js{12}
+```js{9}
 const express = require('express');
 const app = new express();
-
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
 
 app.listen(8889, () => {
     console.log('listen 8889');

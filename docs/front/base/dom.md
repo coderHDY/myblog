@@ -1018,6 +1018,36 @@
     </script>
 </body>
 ```
+### getComputedStyle
+::: tip getComputedStyle
+* 获取元素的计算属性
+:::
+:::: tabs
+::: tab label=示例
+```html{16-18}
+<body>
+    <div class="father">你好</div>
+
+    <style>
+        .father {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+
+<script>
+    const div = document.querySelector('.father');
+    console.log(getComputedStyle(div).boxSizing); // content-box
+    console.log(getComputedStyle(div).backgroundColor); // rgb(255, 0, 0)
+</script>
+</body>
+```
+:::
+::::
 ## 坐标/大小
 ### scrollxxx
 ::: tip scrollHeight/scrollWidth

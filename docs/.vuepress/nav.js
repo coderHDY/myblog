@@ -7,6 +7,10 @@ const front = {
             link: '/front/base/'
         },
         {
+            text: 'CSS相关',
+            link: '/front/css/'
+        },
+        {
             text: 'js手写底层',
             link: '/front/sourcecode/'
         },
@@ -17,10 +21,6 @@ const front = {
         {
             text: '前端面试题',
             link: '/front/interview/'
-        },
-        {
-            text: 'CSS相关',
-            link: '/front/css/'
         },
         {
             text: 'node',
