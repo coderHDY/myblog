@@ -72,6 +72,8 @@ const front = {
             collapsable: false,
             children: [
                 '',
+                'selector',
+                'box',
                 'text',
             ]
         },
@@ -172,13 +174,6 @@ const books = {
             children: [
                 '',
                 'design',
-            ]
-        },
-        {
-            title: '开发思想',
-            collapsable: false,
-            children: [
-                'principle'
             ]
         },
 
