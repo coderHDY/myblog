@@ -11,12 +11,12 @@ const front = {
             link: '/front/css/'
         },
         {
-            text: 'js手写底层',
-            link: '/front/sourcecode/'
+            text: '数据结构和算法',
+            link: '/front/algorithm/'
         },
         {
-            text: 'js算法',
-            link: '/front/algorithm/'
+            text: 'js手写底层',
+            link: '/front/sourcecode/'
         },
         {
             text: '前端面试题',
