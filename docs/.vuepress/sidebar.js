@@ -51,10 +51,22 @@ const front = {
     ],
     '/front/algorithm/': [
         {
-            title: '字符串相关',
+            title: '数据结构',
             collapsable: false,
             children: [
-                ''
+                '',
+                'queue',
+                'linklist',
+                'hash',
+                'binarytree',
+                'chart',
+            ]
+        },
+        {
+            title: '算法',
+            collapsable: false,
+            children: [
+                'string'
             ]
         }
     ],
@@ -84,6 +96,7 @@ const front = {
                 'animation',
                 'transition',
                 'transform',
+                'effects'
             ]
         },
     ],
