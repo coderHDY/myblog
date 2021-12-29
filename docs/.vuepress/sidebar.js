@@ -66,7 +66,8 @@ const front = {
             title: '算法',
             collapsable: false,
             children: [
-                'string'
+                'sort',
+                'string',
             ]
         }
     ],

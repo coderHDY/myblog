@@ -27,8 +27,8 @@ const front = {
             link: '/front/node/'
         },
         {
-            text: 'vue',
-            link: '/front/vue/'
+            text: 'vue2',
+            link: '/front/vue2/'
         },
         {
             text: 'react',
