@@ -133,3 +133,175 @@ class BST {
 ```
 :::
 ::::
+## 做题
+### 最大深度
+:::: tabs
+::: tab label=题目
+* [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xnd69e/)
+* 返回3
+
+```txt
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+::: 
+::: tab label=深度优先
+* 内置类型TreeNode{val, left, right}
+> 时间【O(n)】：95.62%  
+> 空间【O(n)】：56.10%  
+
+```js
+var maxDepth = function(root, deep = 0) {
+    if (!root) {
+        return deep;
+    }
+    deep += 1;
+    deep = Math.max(maxDepth(root.left, deep), maxDepth(root.right, deep));
+    return deep;
+};
+```
+:::
+::: tab label=广度优先
+>时间【O(n)】:88.18%  
+>空间【O(n)】:7.57%  
+```js
+var maxDepth = function(root) {
+    if (!root) {
+        return 0;
+    }
+    const queue = [];
+    queue.push(root);
+    let deep = 0;
+    while (queue.length) {
+        deep += 1;
+        const len = queue.length;
+        for (let i = 0; i < len; i++) {
+            const cNode = queue.shift();
+            if (cNode.left != null) {
+                queue.push(cNode.left);
+            }
+            if (cNode.right != null) {
+                queue.push(cNode.right);
+            }
+        }
+    }
+    return deep;
+};
+```
+:::
+::::
+### 验证二叉搜索树
+:::: tabs
+::: tab label=题
+* [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xn08xg/)
+* 给定节点看是否是二叉搜索树
+    1. 左子树小于当前节点
+    2. 右字树大于当前节点
+    3. 字树也是二叉搜索树
+:::
+::: tab label=递归
+>时间：44.32%    
+>空间：36.30%  
+```js
+var isValidBST = function(root, max = Number.MAX_VALUE, min = -Number.MAX_VALUE) {
+    if (!root) {
+        return true;
+    }
+    if ((root.val <= min) || (root.val >= max)) {
+        return false;
+    }
+    return isValidBST(root.left, root.val, min) && isValidBST(root.right, max, root.val);
+};
+```
+:::
+::::
+### 对称二叉树
+:::: tabs
+::: tab label=题
+* [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xn7ihv/)
+* 根据中轴左右对称
+```txt
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+```
+:::
+::: tab label=对称递归
+>时间：82.13%  
+>空间：31.96%
+```js
+var isSymmetric = function(root, left = null, right = null) {
+    if (!root) {
+        return true;
+    }
+    const deepHelper = (left, right) => {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        if (left.val != right.val) {
+            return false
+        }
+        return deepHelper(left.left, right.right) && deepHelper(left.right, right.left)
+    }
+    return deepHelper(root.left, root.right);
+};
+```
+:::
+::::
+### 层序遍历
+:::: tabs
+::: tab label=题
+* [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xnldjj/)
+```ts
+    3
+   / \
+  9  20
+    /  \
+   15   7
+
+// 输出
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+:::
+::: tab label=解
+* 用队列
+>时间：80.02%  
+>空间：94.35%  
+```js
+var levelOrder = function(root) {
+    if (!root) {
+        return [];
+    }
+    const ans = [];
+    const queue = [];
+    queue.push(root);
+    while (queue.length) {
+        ans.push(queue.map(item => item.val));
+        let len = queue.length;
+        for (let i = 0; i < len; i++) {
+            const cNode = queue.shift();
+            if (cNode.left) {
+                queue.push(cNode.left);
+            }
+            if (cNode.right) {
+                queue.push(cNode.right);
+            }
+        }
+    }
+    return ans;
+};
+```
+:::
+::::

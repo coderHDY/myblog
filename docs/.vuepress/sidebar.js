@@ -59,7 +59,6 @@ const front = {
                 'linklist',
                 'hash',
                 'binarytree',
-                'chart',
             ]
         },
         {
