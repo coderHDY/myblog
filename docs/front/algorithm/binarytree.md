@@ -239,7 +239,7 @@ var isSymmetric = function(root, left = null, right = null) {
     if (!root) {
         return true;
     }
-    const deepHelper = (left, right) => {
+    const inorderTraversal = (left, right) => {
         if (left == null && right == null) {
             return true;
         }
@@ -302,6 +302,59 @@ var levelOrder = function(root) {
     }
     return ans;
 };
+```
+:::
+::::
+### 中序遍历
+:::: tabs
+::: tab label=题
+* [力扣94](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
+* 求中序遍历
+```txt
+输入：root = [1,null,2,3]
+输出：[1,3,2]
+```
+:::
+::: tab label=默认入参
+>时间：97.37%  
+>空间：13.96%
+```js
+var inorderTraversal = function(root, ans = []) {
+    if (!root) {
+        return ans;
+    }
+    if (root.left) {
+        inorderTraversal(root.left, ans);
+    }
+    ans.push(root.val);
+    if (root.right) {
+        inorderTraversal(root.right, ans);
+    }
+    return ans;
+};
+```
+:::
+::: tab label=辅助函数
+>时间：76.74%   
+>空间：41.39%
+```js
+var inorderTraversal = function(root) {
+    const ans = [];
+    const deepHelper = (node) => {
+        if (!node) {
+            return;
+        }
+        if (node.left) {
+            deepHelper(node.left);
+        }
+        ans.push(node.val)
+        if (node.right) {
+            deepHelper(node.right);
+        }
+    }
+    deepHelper(root);
+    return ans;
+}
 ```
 :::
 ::::
