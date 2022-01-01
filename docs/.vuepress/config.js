@@ -1,5 +1,5 @@
 module.exports = {
-    title: '西瓜皮儿的blog',
+    title: '西瓜皮儿',
     port: 8070,
     head: [
         ['link', {
@@ -8,7 +8,7 @@ module.exports = {
         }]
     ],
     themeConfig: {
-        logo: 'https://vuepress.vuejs.org/logo.png',
+        logo: '/portrait.jpg',
         sidebarDepth: 2,
         nav: require('./nav'),
         sidebar: require('./sidebar'),
