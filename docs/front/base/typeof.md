@@ -1,4 +1,7 @@
-# 类型判断
+---
+title: 类型判断
+date: 2021-11-01
+---
 
 ## typeof
 ::: tip typeof

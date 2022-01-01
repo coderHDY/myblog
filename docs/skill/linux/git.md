@@ -1,5 +1,7 @@
-
-# git
+---
+title: git
+date: 2021-11-10
+---
 ## 安装
 * 更多安装版本[官网](https://github.com/git/git/releases/tag/v2.17.2)
 ```shell

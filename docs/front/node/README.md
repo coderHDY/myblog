@@ -1,4 +1,7 @@
-# node基础
+---
+title: node基础
+date: 2021-11-10
+---
 ## 静态资源服务器
 ```js
 const path = require("path");

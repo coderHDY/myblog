@@ -1,4 +1,7 @@
-# 常用命令
+---
+title: 常用命令
+date: 2021-11-10
+---
 更全的命令可以看：[api大全](https://www.runoob.com/linux/linux-shell-test.html)
 
 ## 变量

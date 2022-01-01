@@ -1,4 +1,7 @@
-# node
+---
+title: node
+date: 2021-11-11
+---
 ## 安装
 * 自选版本：[官方链接](https://nodejs.org/en/download/)
 ```shell

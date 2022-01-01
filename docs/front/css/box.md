@@ -1,4 +1,7 @@
-# 盒子
+---
+title: 盒子
+date: 2021-12-27
+---
 ## BFC盒子
 ::: tip BFC
 * 块格式化上下文（Block Formatting Context，BFC）

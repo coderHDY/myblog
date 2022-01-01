@@ -1,4 +1,7 @@
-# event
+---
+title: event
+date: 2021-12-18
+---
 ## EventTarget
 ### 构造
 ::: tip EventTarget

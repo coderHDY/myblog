@@ -1,4 +1,7 @@
-# git 基础
+---
+title: git 基础
+date: 2021-10-27
+---
 * 最详细的文档请查看[权威英文文档](https://www.git-scm.com/docs)
 ::: tip 仓库版本
 ![版本概念](./assets/thinking.png)

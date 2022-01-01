@@ -1,4 +1,7 @@
-# String
+---
+title: String
+date: 2021-11-13
+---
 
 ## 模板字符串
 ::: tip 特性

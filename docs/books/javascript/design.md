@@ -1,5 +1,9 @@
-# 《js设计模式》
-
+---
+title: 《js设计模式》
+date: 2021-12-8
+categories: 
+ - 读书笔记
+---
 ## 第一章 构造对象
 :::: tabs
 ::: tab label=重点

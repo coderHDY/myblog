@@ -1,4 +1,7 @@
-# 插件开发
+---
+title: 插件开发
+date: 2021-10-15
+---
 * 为了更好地展现我们的能力，我们可能需要更多元化的表达方式，来做更好的讲解，下面介绍我们的开发流程。
 ::: tip
 [vuepress官方文档](https://vuepress.vuejs.org/)可能教学并不是很全，因为它是依赖于[markdown-it](https://markdown-it.docschina.org/)和[markdown-it-container](https://www.npmjs.com/package/markdown-it-container)这两个库搭建起来的插件系统，如果需要详细地学习，需要将三个文档结合起来看。

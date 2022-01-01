@@ -1,4 +1,7 @@
-# fetch
+---
+title: fetch
+date: 2021-12-20
+---
 ## 对比ajax
 ::: tip 优势
 * promise封装，更灵活简洁
