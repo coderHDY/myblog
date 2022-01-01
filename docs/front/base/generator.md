@@ -1,4 +1,7 @@
-# generator
+---
+title: generator
+date: 2021-12-15
+---
 ## 可迭代协议
 ::: tip 可迭代协议
 * 可迭代协议规定了【for...of】迭代的条件是自身或原型链上有[Symbol.iterator]方法

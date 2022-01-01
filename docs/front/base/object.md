@@ -1,4 +1,9 @@
-# Object
+---
+title: Object
+date: 2021-11-01
+tags:
+ - 前端重点
+---
 
 ## 原型链
 ### 原理

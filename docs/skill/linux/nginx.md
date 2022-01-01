@@ -1,4 +1,7 @@
-# nginx
+---
+title: nginx
+date: 2021-12-23
+---
 ## 基础命令
 * 安装
 ```shell

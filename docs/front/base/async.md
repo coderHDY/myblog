@@ -1,4 +1,7 @@
-# async/await
+---
+title: async/await
+date: 2021-12-14
+---
 ## 介绍
 ::: tip async/await
 * async定义异步函数。async函数本身被包装成了一个new Promise

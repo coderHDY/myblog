@@ -1,4 +1,7 @@
-# Math
+---
+title: Math
+date: 2021-12-09
+---
 ::: warning
 * Math所有的属性和方法都是静态的
 :::

@@ -1,4 +1,7 @@
-# storage
+---
+title: storage
+date: 2021-12-23
+---
 ## 对比
 ::: tip localStorage和sessionStorage
 |特性|localStorage|sessionStorage|

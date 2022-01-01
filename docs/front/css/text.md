@@ -1,4 +1,7 @@
-# text
+---
+title: text
+date: 2021-12-25
+---
 ## text-align
 ::: tip text-align
 |值|效果|

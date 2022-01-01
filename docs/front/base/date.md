@@ -1,4 +1,7 @@
-# Date
+---
+title: Date
+date: 2021-12-09
+---
 ## 设置方法
 ### new Date
 ::: tip 构造函数(四种)

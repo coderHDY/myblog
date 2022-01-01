@@ -1,4 +1,7 @@
-# Symbol
+---
+title: Symbol
+date: 2021-12-04
+---
 ## 介绍
 ::: warning Symbol
 * 作用：作为对象属性的标识符

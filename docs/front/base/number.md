@@ -1,4 +1,7 @@
-# Number
+---
+title: Number
+date: 2021-11-26
+---
 
 ## 构造器
 ::: warning 注意

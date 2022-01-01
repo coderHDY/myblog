@@ -1,4 +1,7 @@
-# worker
+---
+title: worker
+date: 2021-12-25
+---
 ## 介绍
 ::: tip worker
 * 作用：为 JavaScript 创造多线程环境，主线程运行的同时，Worker 线程在后台运行，两者互不干扰

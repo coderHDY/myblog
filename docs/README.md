@@ -1,9 +1,12 @@
 ---
-pageClass: custom-page-class
 home: true
-heroImage: /assets/img/logo.jpeg
-heroText: 前端学习笔记
-tagline: 负责人：西瓜皮儿
-actionText: 进入文档 →
-actionLink: /front/base/
+bgImage: '/assets/img/bgimg.jpg'
+bgImageStyle: {
+  color: 'white',
+  maxHeight: '400px',
+  boxShadow: '0 5px 18px rgba(0,0,0,0.2)'
+}
+isShowTitleInHome: true
+heroText: coderHDY
+tagline: 千帆过尽 不忘初心
 ---

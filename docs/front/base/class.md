@@ -1,4 +1,7 @@
-# class
+---
+title: class
+date: 2021-12-02
+---
 
 ## 声明
 ::: warning 没有变量提升

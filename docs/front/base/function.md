@@ -1,4 +1,7 @@
-# function
+---
+title: function
+date: 2021-11-10
+---
 
 ## bind
 ::: warning

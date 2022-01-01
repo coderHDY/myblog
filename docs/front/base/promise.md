@@ -1,4 +1,9 @@
-# promise
+---
+title: promise
+date: 2021-12-12
+tags:
+ - 前端重点
+---
 ## JS异步
 ### 宏任务/微任务
 ::: tip 概念

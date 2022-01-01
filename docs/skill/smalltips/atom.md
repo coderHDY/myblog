@@ -1,4 +1,7 @@
-# atom
+---
+title: atom
+date: 2021-11-02
+---
 ## 框架介绍
 [atom](http://atom.baidu-int.com/atom-web)是百度搜索业务的框架，拥有类vue语法，提供更好的性能。  
 手百app的

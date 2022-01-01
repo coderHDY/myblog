@@ -1,4 +1,7 @@
-# map
+---
+title: map
+date: 2021-11-29
+---
 ## Map和Object比较
 ::: warning Map和Object
 |          |   Map                           |                     Object                         |

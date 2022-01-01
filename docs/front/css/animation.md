@@ -1,4 +1,9 @@
-# animation动画
+---
+title: animation动画
+date: 2021-12-26
+tags:
+ - 前端重点
+---
 ## keyframes
 ::: tip keyframes
 * 建立两个或以上关键帧，每一个关键帧都描述了动画元素在给定的时间点上应该如何渲染。
