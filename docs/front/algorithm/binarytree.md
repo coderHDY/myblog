@@ -242,7 +242,7 @@ var isSymmetric = function(root, left = null, right = null) {
     if (!root) {
         return true;
     }
-    const inorderTraversal = (left, right) => {
+    const deepHelper = (left, right) => {
         if (left == null && right == null) {
             return true;
         }

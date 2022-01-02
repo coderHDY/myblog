@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
     title: '西瓜皮儿',
     port: 8070,
@@ -79,4 +81,5 @@ module.exports = {
         '@vuepress/back-to-top',
         require('./components/index.js')
     ],
+    clientRootMixin: path.resolve(__dirname, './components/mixins/index.js'),
 }
