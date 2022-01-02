@@ -1,6 +1,7 @@
 module.exports = {
     title: '西瓜皮儿',
     port: 8070,
+    base: '/myBlog/',
     theme: 'reco',
     head: [
         ['link', { rel: 'icon', href: 'https://vuepress.vuejs.org/logo.png' }],
