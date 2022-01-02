@@ -1,0 +1,24 @@
+{
+  "name": "coderHDY",
+  "short_name": "BLOG",
+  "description": "西瓜皮儿的个人博客",
+  "icons": [
+    {
+      "src": "/assets/icons/book16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    }, {
+      "src": "/assets/icons/book48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    }, {
+      "src": "/assets/icons/book128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#ceffa0"
+}
