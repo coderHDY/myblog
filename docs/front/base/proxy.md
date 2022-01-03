@@ -437,7 +437,7 @@ Reflect.apply(sayValue, obj, ['name']); // hdy
     4. Object.getOwnPropertySymbols(proxy)
 :::
 ::: warning
-* 必须返回一个**可枚举对象**
+* 必须返回一个`可枚举对象`
 :::
 :::: tabs
 ::: tab label=使用

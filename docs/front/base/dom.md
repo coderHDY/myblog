@@ -1455,6 +1455,20 @@ date: 2021-12-16
 </body>
 ```
 :::
+::: tab label=offsetBody
+* 可以根据`offsetParent`拿到偏移参照节点，再用`offsetLeft/offsetTop`来记录长度，循环得到距body的长度
+```js
+getOffsetBody(el) {
+    let ans = el.offsetLeft;
+    let parent = el.offsetParent;
+    while (parent) {
+        ans += parent.offsetLeft;
+        parent = parent.offsetParent;
+    }
+    return ans;
+}
+```
+:::
 ::::
 ## 滚动
 ### scroll

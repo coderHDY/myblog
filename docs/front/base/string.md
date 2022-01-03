@@ -560,7 +560,7 @@ console.log(str); // abc
 * 调用：String.fromCharCode(code)
 * 入参：Number
 * 返回：String
-* tip：处理的最大编码为FFFF(16进制)，要更完善的要用**fromCodePoint**
+* tip：处理的最大编码为FFFF(16进制)，要更完善的要用`fromCodePoint`
 :::
 ```js
 const str = 'abc';

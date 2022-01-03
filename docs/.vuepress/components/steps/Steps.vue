@@ -80,8 +80,17 @@ export default {
 
       // 四舍五入计算出应该跳转的步数
       const stepLength = e.currentTarget.clientWidth / (this.steps - 1);
-      const jump = Math.round((e.x - e.currentTarget.offsetLeft) / stepLength);
+      const jump = Math.round((e.x - this.getOffsetBody(e.currentTarget)) / stepLength);
       this.active = jump;
+    },
+    getOffsetBody(el) {
+      let ans = el.offsetLeft;
+      let parent = el.offsetParent;
+      while (parent) {
+        ans += parent.offsetLeft;
+        parent = parent.offsetParent;
+      }
+      return ans;
     }
   },
   computed: {
