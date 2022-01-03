@@ -46,6 +46,7 @@ const front = {
                 'storage',
                 'module',
                 'worker',
+                'canvas',
             ]
         },
     ],
