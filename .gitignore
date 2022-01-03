@@ -2,4 +2,4 @@ node_modules/*
 .vscode/*
 docs/.vuepress/dist
 package-lock.json
-*/.DS_Store
+**/.DS_Store
