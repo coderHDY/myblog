@@ -78,7 +78,6 @@ module.exports = {
               after: '</div>',
             },
         ],
-        '@vuepress/back-to-top',
         require('./components/index.js')
     ],
     clientRootMixin: path.resolve(__dirname, './components/mixins/index.js'),

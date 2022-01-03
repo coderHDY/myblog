@@ -176,7 +176,8 @@ const skill = {
     ],
     '/skill/smalltips/': [
         '',
-        'atom'
+        'atom',
+        'vuepress',
     ]
 }
 

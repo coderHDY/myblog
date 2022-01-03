@@ -287,7 +287,7 @@ console.log(b); // () => {}
 * 使用：函数内固有属性
 * tip：**箭头函数没有arguments**
 * tip：一般不建议直接用隐式对象，可以用...args显示调用
-* tip：arguments是**类数组**，不是纯正的数组
+* tip：arguments是`类数组`，不是纯正的数组
 :::
 :::: tabs
 ::: tab label=使用

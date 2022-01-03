@@ -7,7 +7,7 @@ tags:
 
 ## 原型链
 ### 原理
-1. 每个function上都有一个prototype属性，指向一个对象，叫做**原型对象**
+1. 每个function上都有一个prototype属性，指向一个对象，叫做`原型对象`
 2. 原型对象上又有一个constructor属性能够找到构造他的function
     * 用 new 关键字调用function时主要做四件事：
         > 1. 生成一个新的对象 {}
@@ -306,7 +306,7 @@ console.log(obj1.isPrototypeOf(obj3)); // true
 ## 迭代器
 ### for in
 ::: tip for in
-* 作用：迭代**本身包括原型链**的**可枚举属性**的**键**
+* 作用：迭代**本身包括原型链**的`可枚举属性`的`键`
 * 调用：for (let key in obj) {}
 :::
 :::: tabs
@@ -341,7 +341,7 @@ if( 'name' in child) {
 ::::
 ### entries
 ::: tip entries
-* 作用：返回对象实例**可枚举属性**的键值对（**不包括原型链**）
+* 作用：返回对象实例`可枚举属性`的键值对（**不包括原型链**）
 * 调用：Object.entries(obj);
 * 入参：Object
 * 返回：Array（二维数组）
@@ -372,7 +372,7 @@ console.log(map); // Map(2) { 'name' => 'hdy', 'age' => 18 }
 ::::
 ### keys
 ::: tip keys
-* 作用：拿到对象自身的**可枚举属性**
+* 作用：拿到对象自身的`可枚举属性`
 * 调用：Object.keys(obj)
 * 入参：Object
 * 返回：Array
@@ -390,7 +390,7 @@ console.log(Object.keys(obj)); // ['name']
 ```
 ### values
 ::: tip values
-* 作用：拿到自身所有**可枚举属性**的值
+* 作用：拿到自身所有`可枚举属性`的值
 * 调用：Object.keys(obj)
 * 入参：Object
 * 返回：Array
@@ -1265,7 +1265,7 @@ console.log(Object.isExtensible(obj)); // false
 ## 其他属性
 ### assign
 ::: tip assign
-* 作用：将多个对象的**可枚举属性**集成到第一个对象上,**返回第一个对象的引用**
+* 作用：将多个对象的`可枚举属性`集成到第一个对象上,**返回第一个对象的引用**
 * 使用：Object.assign(obj1, obj2[, obj3...])
 * 入参：Object, Object[, Object]
 * 返回：Object

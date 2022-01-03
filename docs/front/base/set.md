@@ -108,7 +108,7 @@ console.log(set.delete(obj)); // false
 ```
 ## entries
 ::: tip entries
-* 作用：以[[值， 值]]的形式返回**迭代器**
+* 作用：以[[值， 值]]的形式返回`迭代器`
 * 调用：set.entries()
 * 返回：Iterator
 :::

@@ -18,8 +18,6 @@
   },
   "devDependencies": {
     "@vuepress/plugin-active-header-links": "^1.8.2",
-    "@vuepress/plugin-back-to-top": "^1.8.2",
-    "@vuepress/plugin-nprogress": "^1.8.2",
     "vuepress-plugin-container": "^2.1.5",
     "vuepress-plugin-permalink-pinyin": "^1.0.0"
   },

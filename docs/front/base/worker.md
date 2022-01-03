@@ -20,8 +20,8 @@ date: 2021-12-25
 * 调用：new Worker(url[, options])
 * 入参：String[, Object]
 * options:
-    * type: **classic** | module
-    * credentials: **omit** | same-origin | include
+    * type: `classic` | module
+    * credentials: `omit` | same-origin | include
     * name: String
 :::
 ::: warning

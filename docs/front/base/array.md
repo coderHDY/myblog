@@ -24,7 +24,7 @@ console.log(Array.isArray(a)); // true
 * [其他判断数组的方法](./typeof.html#判断数组)
 ### from
 ::: tip Array.from()
-* Array.from()将**伪数组对象**或**可迭代对象iterator**转换成数组
+* Array.from()将`伪数组对象`或`iterator`转换成数组
 > 伪数组对象：拥有一个length和若干个索引的对象
 * 调用：Array.from(iterator[, mapFn, thisArg])
 * 入参：Iterator[, 回调一次数组的map, map的绑定this]
@@ -1170,7 +1170,7 @@ console.log(Object.keys(arr)); // ['0', '1', '3']
 ```
 ### entries
 ::: tip entries
-* 作用：将数组以**迭代器**的形式返回
+* 作用：将数组以`迭代器`**`的形式返回
 * 调用：arr.entries()
 * 返回：数组的迭代器
 :::
