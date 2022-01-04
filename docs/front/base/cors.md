@@ -6,7 +6,7 @@ tags:
 ---
 ## 介绍
 ### 同源策略
-::: tip 同源策略
+::: tip
 * **协议 // 域名 : 端口号**
 * 完全一致才叫同源，否则会产生跨域
 * 这个同源策略是W3C对**浏览器的异步请求**的限制，也就是说服务器和html内嵌的资源请求没有此限制
@@ -176,7 +176,7 @@ app.get('/', function(req, res) {
 :::
 ::::
 ### CORS
-::: tip CORS
+::: tip
 * 全称：Cross-origin resource sharing
 * 服务器同意跨域的资源请求，并在响应头上添加对应字段
 * 响应头设置的字段：
@@ -583,7 +583,7 @@ export default {
 :::
 ::::
 ### Nginx
-::: tip nginx
+::: tip
 * 原理和proxy代理一样，只是vue的proxy配置只有开发环境生效，生产环境一般用nginx
 :::
 :::: tabs

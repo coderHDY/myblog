@@ -117,7 +117,7 @@ date: 2021-12-18
 :::
 ::::
 ### addEventListener
-::: tip addEventListener
+::: tip
 * 作用：为**文档上的元素**绑定事件监听，触发**函数**
 * 调用：element.addEventlistener(event, callback[, option | useCapture])
 * 入参：String, Function[, Object | boolean]
@@ -249,7 +249,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 :::
 ::::
 ### removeEventListener
-::: tip removeEventListener
+::: tip
 * 作用：移除监听事件
 * 调用：eventTarget.removeEventTarget(type, callback, options)
 * 入参：String, Function[, Boolean | Object]
@@ -276,7 +276,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### dispatchEvent
-::: tip dispatchEvent
+::: tip
 * 作用：向指定目标派发事件
 * 调用：element.dispatchEvent(event)
 * 入参：Event
@@ -440,12 +440,12 @@ Object.prototype.myAddEventListener = function(type, callback) {
 :::
 ::::
 ### target
-::: tip target
+::: tip
 * 值：事件发起节点对象
 * 获取：e.target
 :::
 ### currentTarget
-::: tip currentTarget
+::: tip
 * 作用：拿到事件当前传播到的node对象
 * 获取：e.currentTarget
 :::
@@ -467,7 +467,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### type
-::: tip type
+::: tip
 * 值：事件的类型
 * 返回：String
 :::
@@ -487,7 +487,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### bubbles
-::: tip bubbles
+::: tip
 * 作用：检测事件是否会冒泡
 * 获取：event.bubbles
 * 值：Boolean
@@ -516,14 +516,14 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### cancelable
-::: tip cancelable
+::: tip
 * 作用：设置事件默认事件是否可被preventDefault()取消
 * 获取：event.cancelable
 * 值：Boolean
 * tip：正常传播，只是禁止了默认事件
 :::
 ### defaultPrevented
-::: tip defaultPrevented
+::: tip
 * 作用：查看该事件是否调用了preventDefault方法
 * 调用：e.defaultPrevented
 * 返回：Boolean
@@ -553,7 +553,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### eventPhase
-::: tip eventPhase
+::: tip
 * 作用：查看当前事件传播到哪个阶段了
 * 调用：event.eventPhase
 * 返回：Number
@@ -599,7 +599,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### isTrusted
-::: tip isTrusted
+::: tip
 * 作用：查看该事件是不是系统信任的浏览器发起事件【用户生成的返回false】
 * 调用：event.isTrusted
 * 返回：Boolean
@@ -623,13 +623,13 @@ Object.prototype.myAddEventListener = function(type, callback) {
 ```
 ## Event方法
 ### preventDefault
-::: tip preventDefault
+::: tip
 * 作用：阻止浏览器默认事件作用触发
 * 调用：e.preventDefault()
 * tip：不影响自定义事件，不影响事件传播
 :::
 ### composedPath
-::: tip composedPath
+::: tip
 * 作用：时间的传播路径
 * 调用：e.composedPath()
 * 返回：Array【栈结构】
@@ -707,7 +707,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 ```
 ### stopPropagation
-::: tip stopPropagation
+::: tip
 * 作用：停止事件传播，但**本对象上的监听回调会执行完**
 * 调用：e.stopPropagation()
 :::

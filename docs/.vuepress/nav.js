@@ -2,50 +2,50 @@ const home = {
         text: 'Home',
         link: '/',
         icon: 'reco-home'
-    };
+};
 
-    const front = {
-        text: '前端基础',
-        ariaLabel: 'front base',
-        items: [
-            {
-                text: 'js基础',
-                link: '/front/base/'
-            },
-            {
-                text: 'CSS相关',
-                link: '/front/css/'
-            },
-            {
-                text: '数据结构和算法',
-                link: '/front/algorithm/'
-            },
-            {
-                text: 'js手写底层',
-                link: '/front/sourcecode/'
-            },
-            {
-                text: '前端面试题',
-                link: '/front/interview/'
-            },
-            {
-                text: 'node',
-                link: '/front/node/'
-            },
-            {
-                text: 'vue2',
-                link: '/front/vue2/'
-            },
-            {
-                text: 'react',
-                link: '/front/react/'
-            },
-            {
-                text: '代码技巧',
-                link: '/front/technique/'
-            },
-        ]
-    };
+const front = {
+    text: '前端基础',
+    ariaLabel: 'front base',
+    items: [
+        {
+            text: 'js基础',
+            link: '/front/base/'
+        },
+        {
+            text: 'CSS相关',
+            link: '/front/css/'
+        },
+        {
+            text: '数据结构和算法',
+            link: '/front/algorithm/'
+        },
+        {
+            text: 'js手写底层',
+            link: '/front/sourcecode/'
+        },
+        {
+            text: '前端面试题',
+            link: '/front/interview/'
+        },
+        {
+            text: 'node',
+            link: '/front/node/'
+        },
+        {
+            text: 'vue2',
+            link: '/front/vue2/'
+        },
+        {
+            text: 'react',
+            link: '/front/react/'
+        },
+        {
+            text: '代码技巧',
+            link: '/front/technique/'
+        },
+    ]
+};
 
 const skill = {
     text: '必备技能',

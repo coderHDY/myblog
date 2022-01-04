@@ -10,7 +10,7 @@ date: 2021-12-11
 :::
 ## 声明
 ### 构造函数
-::: tip 构造函数
+::: tip
 * 调用：new Proxy(target, handler)
 * 入参：Object, Object
 :::
@@ -87,7 +87,7 @@ console.log(obj.name); // hdy
 :::
 ::::
 ### revocable
-::: tip revocable
+::: tip
 * 作用：创建一个可撤销的代理对象
 * 调用：Proxy.revocable(target, handler)
 * 入参：Object, Object
@@ -115,7 +115,7 @@ ans.revoke();
 // console.log(proxy.name); // error
 ```
 ### Reflect
-::: tip Reflect
+::: tip
 * Reflect提供JS原生操作，并且只有静态方法
 * Reflect拥有的静态方法都和handler提供的方法一一对应，可以用来proxy劫持操作后再执行target原生JS操作
 :::
@@ -135,7 +135,7 @@ proxy.name = 'hdy';
 :::
 ## handler方法
 ### get
-::: tip get
+::: tip
 * 作用：拦截读取属性
 * 定义：get(target, prop, receiver)
 * 入参：Object, String, Object
@@ -217,7 +217,7 @@ console.log(Reflect.get(obj, 'name')); // hdy
 :::
 ::::
 ### set
-::: tip set
+::: tip
 * 作用：劫持赋值操作
 * 定义：set(target, key, value, receiver)
 * 入参：Object, String, any, Object
@@ -286,7 +286,7 @@ console.log(obj); // { age: 18 }
 :::
 ::::
 ### has
-::: tip has
+::: tip
 * 作用：针对【in】方法的劫持
 * 定义：has(target, key)
 * 入参：Object, String
@@ -335,7 +335,7 @@ console.log('name' in obj); // true
 :::
 ::::
 ### apply
-::: tip apply
+::: tip
 * 作用：劫持函数调用操作
 * 定义：apply(target, thisArg, arguments)
 * 入参：Object, Object, Array
@@ -425,7 +425,7 @@ Reflect.apply(sayValue, obj, ['name']); // hdy
 :::
 ::::
 ### ownKeys
-::: tip ownKeys
+::: tip
 * 作用：劫持获取对象keys值操作
 * 定义：ownKeys(target)
 * 入参：Object
@@ -471,7 +471,7 @@ console.log(Object.keys(obj)); // [ 'name' ]
 :::
 ::::
 ### construct
-::: tip construct
+::: tip
 * 作用：劫持原生的constructor函数
 * 定义：construct(target, arguments, newTarget)
 * 入参：Object, Array, Object(本Proxy对象)
@@ -562,7 +562,7 @@ console.log(p1 instanceof People); // false
 :::
 ::::
 ### getPropertypeOf
-::: tip getPropertypeOf
+::: tip
 * 作用：劫持访问原型链对象操作
 * 定义：getPropertypeOf(target)
 * 入参：Object
@@ -647,7 +647,7 @@ console.log(Reflect.getPrototypeOf(arr) === Object.getPrototypeOf(arr)); // true
 :::
 ::::
 ### setPrototypeOf
-::: tip setPrototypeOf
+::: tip
 * 作用：拦截Object.setProtypeOf()
 * 定义：setPrototypeOf(target, prototype)
 * 入参：Object, Object | null
@@ -682,7 +682,7 @@ console.log(father.isPrototypeOf(child)); // true
 :::
 ::::
 ### defineProperty
-::: tip defineProperty
+::: tip
 * 作用：拦截原生的defineProperty方法
 * 定义：defineProperty(target, property, descriptor)
 * 入参：Object, String, Object
@@ -726,7 +726,7 @@ console.log(obj.name); // hdy
 :::
 ::::
 ### deleteProperty
-::: tip deleteProperty
+::: tip
 * 作用：劫持delete操作
 * 定义：deleteProperty(target, name)
 * 入参：Object, String
@@ -801,7 +801,7 @@ console.log(obj.age); // 18
 :::
 ::::
 ### getOwnPropertyDescriptor
-::: tip getOwnPropertyDescriptor
+::: tip
 * 作用：拦截Object.getOwnPropertyDescriptor(target, name)
 * 定义：getOwnPropertyDescriptor(target, name)
 * 入参：Object, String
@@ -870,7 +870,7 @@ console.log(Reflect.getOwnPropertyDescriptor(obj, 'name'));
 :::
 ::::
 ### isExtensible
-::: tip isExtensible
+::: tip
 * 作用：劫持Object.isExtensible(target)
 * 定义：isExtensible(target)
 * 入参：Object
@@ -921,7 +921,7 @@ console.log(Reflect.isExtensible(obj)); // false
 :::
 ::::
 ### preventExtensions
-::: tip preventExtensions
+::: tip
 * 作用：劫持限制对象扩展类操作
 * 定义：preventExtensions(target)
 * 入参：Object

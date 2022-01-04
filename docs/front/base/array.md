@@ -87,7 +87,7 @@ console.log(new Array(3)); // [undefined, undefined, undefined]
 ```
 ## 增删改查
 ### pop
-::: tip pop
+::: tip
 * 作用：数组取出最后一项（改变原数组）
 * 调用：arr.pop()
 * 返回：删除的项
@@ -98,7 +98,7 @@ console.log(arr.pop()); // 3
 console.log(arr); // [1, 2]
 ```
 ### push
-::: tip push
+::: tip
 * 作用：数组末尾添加项
 * 调用：arr.push(item[, item...])
 * 传入：any[, any]
@@ -111,7 +111,7 @@ console.log(arr.push(5, 6, 7)); // 7
 console.log(arr); // [1, 2, 3, 4, 5, 6, 7]
 ```
 ### shift
-::: tip shift
+::: tip
 * 作用：删除数组第一个元素
 * 调用：arr.shift()
 * 返回：any
@@ -123,7 +123,7 @@ console.log(arr); // [2, 3, 4]
 console.log([].shift()); // undefined
 ```
 ### unshift
-::: tip unshift
+::: tip
 * 作用：向数组头添加项
 * 调用：arr.unshift(item[, item...])
 * 入参：any[, any...]
@@ -159,7 +159,7 @@ Array.prototype.myUnshift = function(...args) {
 :::
 ::::
 ### splice
-::: tip splice
+::: tip
 * 作用：删除、插入数组
 * 调用：arr.splice(from[, delNum, newItem...])
 * 入参：Number[, Number, any...]
@@ -191,7 +191,7 @@ console.log(arr); // [1, 100, 3]
 :::
 ::::
 ### includes
-::: tip includes
+::: tip
 * 作用：检查数组中是否包含指定的项，**可以指定开始查找的位置**
 * 调用：arr.includes(item[, start])
 * 入参：any[, Number]
@@ -208,7 +208,7 @@ const arr = [1, 1, 1, 1];
 console.log(arr.includes(1, 4)); // false
 ```
 ### every
-::: tip every
+::: tip
 * 作用：查看数组是否**所有项**都满足条件
 * 调用：arr.every((item, index, arr) => boolean, obj)
 * 入参：Function[, Object]
@@ -238,7 +238,7 @@ console.log(arr.every(function(item, index, arr){
 :::
 ::::
 ### some
-::: tip some
+::: tip
 * 作用：判断数组中是否有符合要求的项
 * 调用：arr.some((item, index, arr) => bool, thisArg)
 * 入参：Function[, obj]
@@ -280,7 +280,7 @@ console.log(others.some(function(item) {item.age > this.age}, me));
 ::::
 
 ### find
-::: tip find
+::: tip
 * 作用：找到数组中**第一个**满足条件的项
 * 调用：arr.find((item, index, arr) => bool, thisArg)
 * 入参：Function[, Object]
@@ -324,7 +324,7 @@ console.log(arr.find(function(item) {
 :::
 ::::
 ### findIndex
-::: tip findIndex
+::: tip
 * 作用：找到符合条件的第一项的下标
 * 调用：arr.findIndex((item, index, arr) => bool, thisArg)
 * 入参：Function[, Object]
@@ -369,7 +369,7 @@ console.log(arr.findIndex(function(item) {
 ::::
 
 ### indexOf
-::: tip indexOf
+::: tip
 * 作用：找到指定元素的下标，不存在则返回 -1
 * 调用：arr.indexOf(item[, start])
 * 入参：any[, Number]
@@ -403,7 +403,7 @@ function findAllIndex(arr, str) {
 :::
 ::::
 ### lastIndexOf
-::: tip lastIndexOf
+::: tip
 * 作用：反向查找指定元素的下标，**可以指定末尾开始的下标**
 * 调用：arr.lastIndexOf(item[, from])
 * 入参：any[, Number]
@@ -461,7 +461,7 @@ console.log(at(arr, -2)); // 2
 
 ## 操作数组
 ### concat
-::: tip concat
+::: tip
 * 作用：拼接数组，**自动打平一层入参**，不改变原数组
 * 调用：arr1.concat(arr2[, arr3...])
 * 入参：any[, any...]
@@ -514,7 +514,7 @@ console.log(concat(arr, 6, 6, 6, arr2)); // [1, 2, 3, 6, 6, 6, 4, 5, 6]
 :::
 ::::
 ### copyWithin
-::: tip copyWithin
+::: tip
 * 作用：将原数组的目标index变为指定index区间的数，不会改变原数组长度
 * 调用：arr.copyWithin(index, start, end);
 * 入参：Number, Number, Number
@@ -529,7 +529,7 @@ console.log(arr.copyWithin(1, 3, 5)) // [1, 4, 5, 4, 5]
 console.log(arr2.copyWithin(2, 1, 3)) // [1, 2, 2, 3, 5]
 ```
 ### fill
-::: tip fill
+::: tip
 * 作用：将数组填充，**改变原数组**
 * 调用：arr.fill(item[, start, end])
 * 入参：any(填充值)[, Number, Number]
@@ -543,7 +543,7 @@ console.log(arr.fill(6)); // [6, 6, 6, 6, 6]
 console.log(arr); // [6, 6, 6, 6, 6]
 ```
 ### join
-::: tip join
+::: tip
 * 作用：将数组加入指定的分隔符转化成字符串
 * 调用：arr.join(str)
 * 入参：String
@@ -565,7 +565,7 @@ console.log(str.split(',')); // ['1', '本书', 'true']
 ```
 
 ### reverse
-::: tip reverse
+::: tip
 * 作用：反转数组，**改变原数组**
 * 调用：arr.reverse()
 * 返回：原数组引用
@@ -576,7 +576,7 @@ console.log(arr.reverse()); // [5, 4, 3, 2, 1]
 console.log(arr); // [5, 4, 3, 2, 1]
 ```
 ### sort
-::: tip sort
+::: tip
 * 作用：排列数组，**改变原数组**
 * 调用：arr.sort((a, b) => Number)
 * 入参：conpareFn
@@ -584,8 +584,8 @@ console.log(arr); // [5, 4, 3, 2, 1]
 :::
 ::: warning conpareFn
 * 形式：(a, b) => Number
-* **返回值 > 0：a在前面**
-* 返回值 < 0：a在后面
+* **返回值 > 0：a在后面**
+* 返回值 < 0：a在前面
 :::
 :::: tabs
 ::: tab label=使用
@@ -636,7 +636,7 @@ function sortIt(names) {
 ```
 ::::
 ### flat
-::: tip flat
+::: tip
 * 作用：打平多维数组,**不改变原数组**
 * 调用：arr.flat(deepth)
 * 入参：Number(可选，默认是1)
@@ -694,7 +694,7 @@ console.log(deepFlat(arr)); // [ 1, 2, 10, 20, 100, 200, 1000, 2000 ]
 ::::
 
 ### toString
-::: tip toString
+::: tip
 * 作用：将数组转化成字符串，以逗号分隔，不改变原数组
 * 调用：arr.toString()
 * 返回：String
@@ -708,7 +708,7 @@ console.log(arr); // [1, 2, true, '黄']
 ## 高级方法
 
 ### filter
-::: tip filter
+::: tip
 * 作用：指定条件筛选数组项，**返回新数组，不改变原数组**
 * 调用：arr.filter((item, index, arr) => bool, thisArg)
 * 入参：Function[, Object]
@@ -777,7 +777,7 @@ console.log(arr2);  // [10, 100]
 ::::
 
 ### forEach
-::: tip forEach
+::: tip
 * 作用：**以迭代器的形式**遍历数组
 * 调用：arr.forEach((item, index, arr) => {}, thisArg)
 * 入参：function[, obj]
@@ -834,7 +834,7 @@ console.log(arr); // [1, 99, 99, 99, 10, 100, 1000]
 :::
 ::::
 ### map
-::: tip map
+::: tip
 * 作用：将数组执行一个处理函数，**返回新的数组**
 * 调用：arr.map((item, index, arr) => newItem, thisArg)
 * 入参：function[, obj]
@@ -1139,7 +1139,7 @@ class Chain {
 :::
 ::::
 ### reduceRight
-::: tip reduceRight
+::: tip
 * 作用：从右往左迭代数组，得出迭代结果
 * 调用：arr.reduceRight((pre, item, index, arr) => pre, pre)
 * 入参：Function, any
@@ -1154,7 +1154,7 @@ console.log(arr.reduceRight((pre, item, index, arr) => pre + item, '')); // 4321
 
 ## 迭代器
 ### keys
-::: tip keys
+::: tip
 * 作用：拿到所有项的键值（迭代器的形式）
 * 调用：arr.keys()
 * 返回：Iterator
@@ -1169,7 +1169,7 @@ console.log([...arr.keys()]); // [0, 1, 2, 3]
 console.log(Object.keys(arr)); // ['0', '1', '3']
 ```
 ### entries
-::: tip entries
+::: tip
 * 作用：将数组以`迭代器`**`的形式返回
 * 调用：arr.entries()
 * 返回：数组的迭代器
@@ -1190,7 +1190,7 @@ for( let [index, value] of arrEts) {
 }
 ```
 ### values
-::: tip values
+::: tip
 * 作用：拿到所有的值，**以迭代器方式返回**
 * 调用：arr.values()
 * 返回：Iterator
@@ -1200,7 +1200,7 @@ const arr = [1, 10, 100, 1000];
 console.log(arr.values().next().value); // 1
 ```
 ### Symbol.iterator
-::: tip Symbol.iterator
+::: tip
 * 作用：将数组返回成一个迭代器
 * 调用：arr[ Symbol.iterator ] ()
 * 返回：Iterator

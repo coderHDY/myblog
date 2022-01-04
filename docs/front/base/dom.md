@@ -15,7 +15,7 @@ date: 2021-12-16
 |getElementByTagName|用【标签明】获取匹配的DOM元素集合|nodelist|
 :::
 ### querySelector
-::: tip querySelector
+::: tip
 * 作用：获取第一个匹配的DOM元素
 * 注意：
     1. 只返回第一个匹配的
@@ -78,7 +78,7 @@ date: 2021-12-16
 </body>
 ```
 ### getElementById
-::: tip getElementById
+::: tip
 * 以id获取第一个匹配项
 :::
 ```html
@@ -115,7 +115,7 @@ date: 2021-12-16
 </body>
 ```
 ### getElementsByName
-::: tip getElementsByName
+::: tip
 * 根据【name】属性获取nodelist
 :::
 ```html{7}
@@ -135,7 +135,7 @@ date: 2021-12-16
 </body>
 ```
 ### getElementByTagName
-::: tip getElementByTagName
+::: tip
 * 根据标签名获取nodelist
 :::
 ```html
@@ -172,7 +172,7 @@ date: 2021-12-16
 
 :::
 ### children
-::: tip children
+::: tip
 * 获取子元素节点【不包括文本节点和属性节点】
 :::
 ```html{11,13-15}
@@ -195,7 +195,7 @@ date: 2021-12-16
 </body>
 ```
 ### childNodes
-::: tip childNodes
+::: tip
 * 获取所有子节点，包括【文本节点、属性节点、元素节点】
 * 可以用nodeType属性来区分节点
     * 1：元素节点
@@ -243,7 +243,7 @@ date: 2021-12-16
 :::
 ::::
 ### firstElementChild
-::: tip firstElementChild
+::: tip
 * 第一个元素子节点
 :::
 ```html
@@ -262,7 +262,7 @@ date: 2021-12-16
 </body>
 ```
 ### firstChild
-::: tip firstChild
+::: tip
 * 返回第一个子节点（包括文本节点）
 :::
 ```html
@@ -281,7 +281,7 @@ date: 2021-12-16
 </body>
 ```
 ### lastElementChild
-::: tip lastElementChild
+::: tip
 * 第一个元素子节点
 :::
 ```html{10-11}
@@ -300,7 +300,7 @@ date: 2021-12-16
 </body>
 ```
 ### childElementCount
-::: tip childElementCount
+::: tip
 * 获取子元素节点个数【不包含跨层级的，直系子元素个数】
 :::
 ```html{11}
@@ -319,7 +319,7 @@ date: 2021-12-16
 </body>
 ```
 ### previousElementSibling
-::: tip previousElementSibling
+::: tip
 * 作用：返回同一个父节点的前一个相邻节点，无则返回null
 * 调用：refrence.previousElementSubling
 :::
@@ -338,7 +338,7 @@ date: 2021-12-16
 </body>
 ```
 ### nextElementSibling
-::: tip nextElementSibling
+::: tip
 * 返回同一个父节点的下一个相邻节点，无则返回null
 :::
 ```html
@@ -356,7 +356,7 @@ date: 2021-12-16
 </body>
 ```
 ### parentElement
-::: tip parentElement
+::: tip
 * 当前元素的父节点
 * parentNode效果相同
 :::
@@ -376,7 +376,7 @@ date: 2021-12-16
 </body>
 ```
 ### closest
-::: tip closest
+::: tip
 * 作用：以指定的选择器寻找祖先
 * 返回：Element | null
 :::
@@ -429,7 +429,7 @@ date: 2021-12-16
 :::
 ## 元素增删
 ### 汇总
-::: tip 汇总
+::: tip
 |方法|作用|调用|
 |---|---|---|
 |prepend|【第一个子节点前】增【1-多】|father.prepend(node1, node2)|
@@ -448,7 +448,7 @@ date: 2021-12-16
 |createElement|创造元素|document.createElement(tagName)|
 :::
 ### prepend
-::: tip prepend
+::: tip
 * 作用：在父节点的第一个子节点之前插入节点【们】
 * 调用：parent.prepend(node[, node...])
 :::
@@ -476,7 +476,7 @@ date: 2021-12-16
 </body>
 ```
 ### appendChild
-::: tip appendChild
+::: tip
 * 作用：父节点最后添加子节点
 * 调用：parent.appendChild(child)
 :::
@@ -501,7 +501,7 @@ date: 2021-12-16
 </body>
 ```
 ### append
-::: tip append
+::: tip
 * 作用：在本元素节点的【最后一个子元素节点之后】添加元素，node或DOMString
 * 调用：parent.append(node[, node...])
 * 入参：Node或DOMString
@@ -526,7 +526,7 @@ date: 2021-12-16
 </body>
 ```
 ### insertBefore
-::: tip insertBefore
+::: tip
 * 在父节点的某个子节点之前插入节点
 * 调用：father.insertBefore(newNode, referenceNode)
 :::
@@ -551,7 +551,7 @@ date: 2021-12-16
 </body>
 ```
 ### after
-::: tip after
+::: tip
 * 作用：在指定节点之后插入节点/文本
 * 调用：node.after(node[, node...])
 :::
@@ -576,7 +576,7 @@ date: 2021-12-16
 </body>
 ```
 ### before
-::: tip before
+::: tip
 * 作用：在指定节点前插入节点
 * 调用：node.before(node)
 :::
@@ -601,12 +601,12 @@ date: 2021-12-16
 </body>
 ```
 ### createElement
-::: tip createElement
+::: tip
 * 作用：创建指定标签的元素
 * 调用：document.querySelector(tag[, options])
 :::
 ### removeChild
-::: tip removeChild
+::: tip
 * 移除某个子元素
 :::
 ```html{11-13}
@@ -627,7 +627,7 @@ date: 2021-12-16
 </body>
 ```
 ### replaceChild
-::: tip replaceChild
+::: tip
 * 替换子节点，oldNode节点会被删除，newNode如果在页面上会被移动
 * 调用：father.replaceChild(newNode, oldNode)
 :::
@@ -652,7 +652,7 @@ date: 2021-12-16
 </body>
 ```
 ### replaceChildren
-::: tip replaceChildren
+::: tip
 * 作用：把子节点全部换掉
 * 调用：parent.replaceChildren(node[, node...])
 :::
@@ -714,7 +714,7 @@ date: 2021-12-16
 :::
 ::::
 ### cloneNode
-::: tip cloneNode
+::: tip
 * 拷贝一个节点
 * 调用：node.clone(deep)
 * 入参：Boolean
@@ -793,7 +793,7 @@ date: 2021-12-16
 :::
 ::::
 ### remove
-::: tip remove
+::: tip
 * 删除本节点
 * 调用：node.remove()
 :::
@@ -815,7 +815,7 @@ date: 2021-12-16
 </body>
 ```
 ### insertAdjacentElement
-::: tip insertAdjacentElement
+::: tip
 * 作用：指定位置插入节点
 * 调用：node.insertAdjacentElement(position, node)
 :::
@@ -844,7 +844,7 @@ date: 2021-12-16
 </body>
 ```
 ### insertAdjacentText
-::: tip insertAdjacentText
+::: tip
 * 作用：指定位置插入文本
 * 调用：node.insertAdjacentText(position, text)
 :::
@@ -867,7 +867,7 @@ date: 2021-12-16
 ```
 ## 常用属性
 ### id
-::: tip id
+::: tip
 * 获取id属性
 :::
 ```html
@@ -887,7 +887,7 @@ date: 2021-12-16
 </body>
 ```
 ### tagName
-::: tip tagName
+::: tip
 * 获取tagName【大写形式返回】
 :::
 ```html
@@ -905,7 +905,7 @@ date: 2021-12-16
 </body>
 ```
 ### className
-::: tip className
+::: tip
 * 作用：以字符串的形式返回元素所有类名
 * tip：classList完全可替代此方法
 :::
@@ -924,7 +924,7 @@ date: 2021-12-16
 </body>
 ```
 ### classList
-::: tip classList
+::: tip
 * 作用：以DOMTokenList的形式返回元素的class
 * 返回值是DOMTokenList，有专门的增删改查方法，比className好用
 :::
@@ -964,7 +964,7 @@ date: 2021-12-16
 </body>
 ```
 ### xxxAttribute
-::: tip xxxAttribute
+::: tip
 * 作用：增删改查属性
 * 增：node.setAttribute(key, value)
 * 删：node.removeAttribute(key)
@@ -1022,7 +1022,7 @@ date: 2021-12-16
 </body>
 ```
 ### getComputedStyle
-::: tip getComputedStyle
+::: tip
 * 获取元素的计算属性
 :::
 :::: tabs
@@ -1472,7 +1472,7 @@ getOffsetBody(el) {
 ::::
 ## 滚动
 ### scroll
-::: tip scroll
+::: tip
 * 作用：滚动到本元素的特定位置
 * 调用：node.scroll(x, y)
 :::
@@ -1498,12 +1498,12 @@ getOffsetBody(el) {
 </body>
 ```
 ### scrollTo
-::: tip scrollTo
+::: tip
 * 作用：元素滚动到指定的位置【[同scroll](./dom.html#scroll)】
 * 调用：node.scrollTo(x, y)
 :::
 ### scrollBy
-::: tip scrollBy
+::: tip
 * 作用：元素滚动指定距离【参照当前的位置滚动】
 :::
 ```html
@@ -1529,7 +1529,7 @@ getOffsetBody(el) {
 </body>
 ```
 ### scrollIntoView
-::: tip scrollIntoView
+::: tip
 * 滚动父元素让本元素可见
 * 调用：node.scrollIntoView(options)
 :::

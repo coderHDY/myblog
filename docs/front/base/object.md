@@ -154,7 +154,7 @@ Object instanceof Function; // true
 ::: 
 ::::
 ### create
-::: tip create
+::: tip
 * 作用：创造一个带有指定原型链的对象
 * 调用：Object.create(obj[, descriptors])
 * 入参：Object[, definePropertiesObj]
@@ -240,7 +240,7 @@ console.log(obj2.name); // hdy
 :::
 ::::
 ### getPropertypeOf
-::: tip getPropertypeOf
+::: tip
 * 作用：获取_ _ _proto_ _ _
 * 调用：Object.getPropertypeOf(obj)
 * 入参：Object
@@ -281,7 +281,7 @@ console.log(obj2); // {}
 console.log(obj2.name); // hdy
 ```
 ### isPrototypeOf
-::: tip isPrototypeOf
+::: tip
 * 作用：查看是否在指定对象的**原型链上**
 * 调用：obj1.isPrototypeOf(obj2)
 * 入参：Object
@@ -340,7 +340,7 @@ if( 'name' in child) {
 :::
 ::::
 ### entries
-::: tip entries
+::: tip
 * 作用：返回对象实例`可枚举属性`的键值对（**不包括原型链**）
 * 调用：Object.entries(obj);
 * 入参：Object
@@ -371,7 +371,7 @@ console.log(map); // Map(2) { 'name' => 'hdy', 'age' => 18 }
 :::
 ::::
 ### keys
-::: tip keys
+::: tip
 * 作用：拿到对象自身的`可枚举属性`
 * 调用：Object.keys(obj)
 * 入参：Object
@@ -389,7 +389,7 @@ Object.defineProperty(obj, 'age', {
 console.log(Object.keys(obj)); // ['name']
 ```
 ### values
-::: tip values
+::: tip
 * 作用：拿到自身所有`可枚举属性`的值
 * 调用：Object.keys(obj)
 * 入参：Object
@@ -407,7 +407,7 @@ Object.defineProperty(obj, 'age', {
 console.log(Object.values(obj)); // ['hdy']
 ```
 ### getOwnPropertyNames
-::: tip getOwnPropertyNames
+::: tip
 * 作用：拿到自身所有属性名（**包括不可枚举属性**）
 * 调用：Object.getOwnPropertyNames(obj)
 * 入参：Object
@@ -470,7 +470,7 @@ console.log(unEnumerable); // [ 'age' ]
 :::
 ::::
 ### getOwnPropertySymbols
-::: tip getOwnPropertySymbols
+::: tip
 * 作用：获取本对象的symbol
 * 调用：Object.getOwnPropertySymbols(obj)
 * 入参：Object
@@ -491,7 +491,7 @@ console.log(objectSymbols)         // [Symbol(a), Symbol(b)]
 console.log(objectSymbols[0])      // Symbol(a)
 ```
 ### hasOwnProperty
-::: tip hasOwnProperty
+::: tip
 * 作用：查看属性是不是属于实例本身
 * 调用：obj.hasOwnProperty(key)
 * 入参：String
@@ -530,7 +530,7 @@ console.log(ownProperty); // [ age ]
 ::::
 ## 描述符
 ### defineProperty
-::: tip defineProperty
+::: tip
 * 作用：以描述符的形式给对象定义属性，可以支持get/set劫持
 * 调用：Object.defineProperty(obj, key, descriptor)
 * 入参：Object, String, Object
@@ -850,7 +850,7 @@ console.log(b.hasOwnProperty('age')); // true
 ::::
 
 ### defineProperties
-::: tip defineProperties
+::: tip
 * 作用：同时可定义多个属性，作用与[defineProperty](./object.html#defineproperty)一样
 * 调用：Object.defineProperties(obj, {name: descriptor[, name: descriptor...] })
 * 入参：Object,Object
@@ -877,7 +877,7 @@ console.log(obj.age); // 1
 ```
 
 ### getOwnPropertyDescriptor
-::: tip getOwnpropertyDescriptor
+::: tip
 * 作用：查看对象某个属性的描述符对象
 * 调用：Object.getOwnPropertyDescriptor(obj, key)
 * 入参：Object, String
@@ -981,7 +981,7 @@ function deepCloneWithDescriptor(obj) {
 :::
 ::::
 ### propertyIsEnumerable
-::: tip propertyIsEnumerable
+::: tip
 * 作用：查看对象的属性是否可枚举
 * 调用：obj.propertyIsEnumerable(key)
 * 入参：String
@@ -1048,7 +1048,7 @@ function getUnEnumerable(obj) {
 |freeze|*|*|*|
 :::
 ### freeze
-::: tip freeze
+::: tip
 * 作用：冻结本对象的所有属性，禁止增删改属性，只能查看，**且configurable也变成false**
 * 使用：Object.freeze(obj)
 * 入参：Object
@@ -1143,7 +1143,7 @@ Object.deepFreeze = function (obj) {
 :::
 ::::
 ### isFrozen
-::: tip isFrozen
+::: tip
 * 作用：判断一个对象是否被冻结
 * 调用：Object.isFrozen(obj)
 * 入参：Object
@@ -1167,7 +1167,7 @@ console.log(Object.isFrozen(obj)); // true
 ```
 
 ### seal
-::: tip seal
+::: tip
 * 单词：seal 密封
 * 作用：将一个对象密封起来，不可新增属性，当前所有属性的configurable变成false
 * 调用：Object.seal(obj)
@@ -1200,7 +1200,7 @@ delete obj.name; // 无效
 console.log(obj); // { name: 'coderHdy', age: 18 }
 ```
 ### isSealed
-::: tip isSealed
+::: tip
 * 作用：判断一个对象有没有被密封
 * 调用：Object.isSealed(obj)
 * 入参：Object
@@ -1214,7 +1214,7 @@ console.log(Object.isSealed(obj)); // true
 ```
 
 ### preventExtensions
-::: tip preventExtensions
+::: tip
 * 作用：使对象**不可扩展**，此操作**不可逆**
 * 调用：Object.preventExtensions(obj)
 * 入参：Object
@@ -1239,7 +1239,7 @@ const obj3 = { name: '张三' };
 // Object.setPrototypeOf(obj2, obj3); // 报错
 ```
 ### isExtensible
-::: tip isExtensible
+::: tip
 * 作用：对象是否可扩展
 * 调用：Object.isExtensible(obj)
 * 入参：Object
@@ -1264,7 +1264,7 @@ console.log(Object.isExtensible(obj)); // false
 ```
 ## 其他属性
 ### assign
-::: tip assign
+::: tip
 * 作用：将多个对象的`可枚举属性`集成到第一个对象上,**返回第一个对象的引用**
 * 使用：Object.assign(obj1, obj2[, obj3...])
 * 入参：Object, Object[, Object]
@@ -1360,7 +1360,7 @@ Object.prototype.myDeepAssign = (obj1, ...objs) => {
 ```
 ::::
 ### fromEntries
-::: tip fromEntries
+::: tip
 * 作用：将键值对转化成对象，类似于entries反向操作
 * 调用：Object.fromEntries(entries)
 * 入参：Iterator
@@ -1399,7 +1399,7 @@ console.log(reverseObj); // { hdy: 'name', '18': 'age', '蝴蝶书': 'books' }
 :::
 ::::
 ### is
-::: tip is
+::: tip
 * 作用：比较两个参数是否相等
 * 调用：Object.is(arg1, arg2)
 * 入参：any, any
@@ -1414,7 +1414,7 @@ console.log(Object.is(+0, -0)); // false
 console.log(Object.is(NaN, NaN)); // true
 ```
 ### toString
-::: tip toString
+::: tip
 * 作用：检测对象类型
 * 调用：obj.toString()
 * 返回：[ object type ]

@@ -25,7 +25,7 @@ tags:
 
 ## transform-function
 ### rotate
-::: tip rotate
+::: tip
 * 作用：2D旋转。旋转圆心根据transform-origin定义
 * 定义：rotate(angle)
 * 入参：旋转角度。
@@ -77,7 +77,7 @@ tags:
 :::
 ::::
 ### rotate3d
-::: tip rotate3d
+::: tip
 * 作用：定义3d旋转动画
 * 旋转轴：transform-origin定义轴的起点，rotate3d三个值【x, y, z】定义矢量方向，合成旋转轴
 * 使用：rotate3d(a, y, z, a)
@@ -141,7 +141,7 @@ tags:
 :::
 ::::
 ### scale
-::: tip scale
+::: tip
 * 作用：2d平面图像伸缩，伸缩的起点由transform-origin定义
 * 使用：
     1. scale(both)
@@ -232,7 +232,7 @@ tags:
 :::
 ::::
 ### scale3d
-::: tip scale3d
+::: tip
 * 作用：3d图像各方向伸缩比例
 * 使用：scale3d(x, y, z)
 * 简写：
@@ -244,7 +244,7 @@ tags:
 |scaleZ(a)|scale3d(1, 1, a)|
 :::
 ### skew
-::: tip skew
+::: tip
 * 作用：二维平面上的倾斜，对应的像素会做拉伸处理
 * 使用：skew(x, y)
 * 入参：倾斜角度，同rotate四种单位
@@ -304,7 +304,7 @@ transform: skew(0, 45deg);
 ```
 ::::
 ### translate
-::: tip translate
+::: tip
 * 作用：平移
 * 使用：translate(x, y)
 * 入参：向量上的平移量，**如果是百分比，参照的是自身向量方向上的长度**
@@ -352,7 +352,7 @@ transform: translate(50%, 50%);
 :::
 ::::
 ### translate3d
-::: tip translate3d
+::: tip
 * 作用：3d方向上的平移矢量
 * 使用：translate3d(x, y, z)
 * 简写：

@@ -34,7 +34,7 @@ console.log(Number('A')); // NaN
 ```
 ## 属性
 ### EPSILON
-::: tip EPSILON
+::: tip
 * 表示：2^-52，js可表示的最小正浮点数
 * 常用作：浮点计算相等，弥补二进制0.1不能存储带来的BUG
 :::
@@ -78,7 +78,7 @@ console.log(Number.MAX_SAFE_INTEGER < Number.MAX_VALUE); // true
 
 
 ### MAX_VALUE
-::: tip MAX_VALUE
+::: tip
 * 表示：JS能表示的最大数，接近于 1.79E+308
 * 作用：做算法的时候可以用来当做最大值边界，大于这个数就是无限大'infinity'
 :::
@@ -87,7 +87,7 @@ console.log(Number.MAX_VALUE > Number.MAX_SAFE_INTEGER); // true
 ```
 
 ### MIN_VALUE
-::: tip MIN_VALUE
+::: tip
 * 表示：JS能表示**最接近0的值**，比Number.EPSILON小
 :::
 ```js
@@ -112,14 +112,14 @@ console.log(Number.NEGATIVE_INFINITY === Number.NEGATIVE_INFINITY -1); // true
 console.log(Number.NEGATIVE_INFINITY === -Infinity); // true
 ```
 ### POSITIVE_INFINITY
-::: tip POSITIVE_INFINITY
+::: tip
 * 表示：正无穷大，与**全局的Infinity**值相等
 :::
 ```js
 console.log(Number.POSITIVE_INFINITY === Infinity); // true
 ```
 ### NaN
-::: tip NaN
+::: tip
 * 表示：Not a Number
 * tip：也可以直接用全局的NaN
 :::
@@ -131,7 +131,7 @@ console.log(NaN === Number.NaN); // false
 
 ## 静态方法
 ### isFinite
-::: tip isFinite
+::: tip
 * 作用：判断有穷数
 * 调用：Number.isFinite(num)
 * 调用：isFinite(num)
@@ -147,7 +147,7 @@ console.log(Number.isFinite(Infinity)); // false
 console.log(isFinite(Infinity)); // false
 ```
 ### isInteger
-::: tip isInteger
+::: tip
 * 作用：判断是否是整数
 * 调用：Number.isInteger(num)
 * 入参：Number
@@ -159,7 +159,7 @@ console.log(Number.isInteger(1.1)); // false
 console.log(Number.isInteger('1')); // false
 ```
 ### isNaN
-::: tip isNaN
+::: tip
 * 作用：判断是否为NaN
 * 调用：Number.isNaN(num)
 * 入参：any
@@ -183,7 +183,7 @@ const arg = Number('我'); // NaN
 const ans = Number.isNaN(arg); // true
 ```
 ### isSafeInteger
-::: tip isSafeInteger
+::: tip
 * 作用：判断一个数是否在安全范围内(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER)
 * 调用：Number.isSafeInteger(num)
 * 入参：Number
@@ -197,7 +197,7 @@ console.log(Number.isSafeInteger(Math.pow(2, 53))); // false
 console.log(Number.isSafeInteger(Math.pow(2, 53) - 1)); // true
 ```
 ### parseFloat
-::: tip parseFloat
+::: tip
 * 作用：将**只有浮点数**的字符串转成数字
 * 调用：parseFloat(str)/Number.parseFloat(str)
 * 入参：String
@@ -217,7 +217,7 @@ const str = '二1.1'
 console.log(parseFloat(str)); // NaN
 ```
 ### parseInt
-::: tip parseInt
+::: tip
 * 作用：将字符串的整数**以指定的进制**解析出来
 * 调用：parseInt(num, radix)/Number.parseInt(num, radix)
 * 入参：Number[, Number]
@@ -245,7 +245,7 @@ console.log(parseInt(n)); // NaN
 ```
 ## 原型方法
 ### toExponential
-::: tip toExponential
+::: tip
 * 作用：将数字返回成指数表达形式，**以字符串返回**
 * 调用：num.toExponential(bit)
 * 入参：Number(指定保留几位小数，只有一位整数)
@@ -258,7 +258,7 @@ console.log(n.toExponential(2)); // 1.23e+2
 console.log(n.toExponential(10)); // 1.2333330000e+2
 ```
 ### toFixed
-::: tip toFixed
+::: tip
 * 作用：将数字格式化成**有指定小数位数的字符串**
 * 调用：num.fixed(num)
 * 入参：Number(小数位数)
@@ -270,7 +270,7 @@ console.log(n.toFixed(3)); // '12.222'
 console.log(n.toFixed(7)); // '12.222200'
 ```
 ### toPrecision
-::: tip toPrecision
+::: tip
 * 作用：将数字转换成指定位数的字符串（整数 + 小数）
 * 调用：num.toPrecision(precision)
 * 入参：Number(整数 + 小数总位数)
@@ -285,7 +285,7 @@ console.log(num.toFixed(4));     // 1.1100
 ```
 
 ### toString
-::: tip toString
+::: tip
 * 作用：将数字转换成**指定进制的字符串**
 * 调用：num.toString([radix])
 * [Number]

@@ -461,7 +461,7 @@ console.log(str.replace(reg, '$1')); // Hello my name is hdy~
 * sticky不会更改lastIndex，除非匹配结束，重置lastIndex
 :::
 ### exec
-::: tip exec
+::: tip
 * 作用：**逐条**遍历匹配项（在加g/y的情况下）
 * 调用：reg.exec(str)
 * 入参：String
@@ -530,7 +530,7 @@ console.log(reg.exec(str)); // [ 'l', index: 2, input: 'hello world!', groups: u
 :::
 ::::
 ### test
-::: tip test
+::: tip
 * 作用：检测字符串是否由匹配项
 * 调用：reg.test(str)
 * 入参：String
@@ -587,7 +587,7 @@ console.log(reg.test(str)); // true
 :::
 ::::
 ### toString
-::: tip toString
+::: tip
 * 作用：以字符串形式返回正则表达式
 * 调用：reg.toString()
 * 返回：String
@@ -622,7 +622,7 @@ console.log(requireArr); //[ './a', './b' ]
 ::::
 ## 属性
 ### lastIndex
-::: tip lastIndex
+::: tip
 * 作用：记录全局匹配模式下，上一次匹配的下标 + 1
 * 使用：reg.lastIndex
 * 值：Number
@@ -644,7 +644,7 @@ console.log(reg.exec(str)); // [ 'o', index: 4, input: 'hello', groups: undefine
 console.log(reg.lastIndex); // 5
 ```
 ### source
-::: tip source
+::: tip
 * 作用：拿到正则的pattern（不包括falgs）
 * 使用：reg.source
 * 值：String
@@ -654,7 +654,7 @@ const reg = /aaa/gim;
 console.log(reg.source); // aaa
 ```
 ### dotAll
-::: tip dotAll
+::: tip
 * 作用：查看是否使用了标识符【s】
 * 调用：reg.dotAll
 * 值：Boolean
@@ -667,7 +667,7 @@ console.log(reg1.dotAll); // false
 console.log(reg2.dotAll); // true
 ```
 ### global
-::: tip global
+::: tip
 * 作用：查看是否使用了标识符【g】
 * 使用：reg.global
 * 值：Boolean
@@ -680,7 +680,7 @@ console.log(reg1.global); // true
 console.log(reg2.global); // false
 ```
 ### ignoreCase
-::: tip ignoreCase
+::: tip
 * 作用：查看是否使用了标识符【i】
 * 使用：reg.ignoreCase
 * 值：Boolean
@@ -693,7 +693,7 @@ console.log(reg1.ignoreCase); // false
 console.log(reg2.ignoreCase); // true
 ```
 ### multiline
-::: tip multiline
+::: tip
 * 作用：查看是否使用了标识符【m】
 * 使用：reg.multiline
 * 值：Boolean
@@ -706,7 +706,7 @@ console.log(reg1.multiline); // true
 console.log(reg2.multiline); // false
 ```
 ### sticky
-::: tip sticky
+::: tip
 * 作用：查看是否使用了标识符【y】
 * 使用：reg.sticky
 * 值：Boolean
@@ -719,7 +719,7 @@ console.log(reg1.sticky); // true
 console.log(reg2.sticky); // false
 ```
 ### unicode
-::: tip unicode
+::: tip
 * 作用：查看是否使用了标识符【u】
 * 调用：reg.unicode
 * 值：Boolean
@@ -764,7 +764,7 @@ Object.defineProperty(RegExp.prototype, 'myFlags', {
 :::
 ::::
 ### hasIndices
-::: tip hasIndices
+::: tip
 * **tip：有版本限制**
 * 作用：查看是否使用了标识符【d】
 * 调用：reg.hasIndices
@@ -782,7 +782,7 @@ Object.defineProperty(RegExp.prototype, 'myFlags', {
 * 如：**RegExp.prototype[Symbol.match]被**String.prototype.match()**内部调用**
 :::
 ### match
-::: tip match
+::: tip
 * tip：该方法是被String.prototype.match()内部调用
 * 调用：str1.match(reg)
 * 入参：RegExp
@@ -820,7 +820,7 @@ reg[Symbol.match] = (str) => ['嘿', '嘿嘿', '嘿嘿嘿']
 console.log(str.match(reg)); // ['嘿', '嘿嘿', '嘿嘿嘿']
 ```
 ### matchAll
-::: tip matchAll
+::: tip
 * tip：是被String.prototype.matchAll()内部调用
 * 调用：str1.matchAll(reg)
 * 入参：RegExp
@@ -844,7 +844,7 @@ console.log(Array.from(a.matchAll(b)));
  */
 ```
 ### replace
-::: tip replace
+::: tip
 * tip：由String.prototype.replace()内部调用
 * 作用：替换（一个或全部）指定字符串
 * 调用：str1.replace(reg, str2)
@@ -927,7 +927,7 @@ console.log(str.replace(reg, '$1')); // Hello my name is hdy~
 :::
 ::::
 ### search
-::: tip search
+::: tip
 * tip：由String.prototype.search()内部调用
 * 作用：查找字符串的**第一个**匹配项
 * 调用：str.search(reg)
@@ -954,7 +954,7 @@ console.log(str.indexOf('1', 1)); // 3
 ```
 :::
 ### split
-::: tip split
+::: tip
 * tip：String.prototype.split()内部调用
 * 调用：str1.split(str2|reg[, len])
 * 入参：String | RegExp[, Number]
