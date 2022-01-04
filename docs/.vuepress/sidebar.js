@@ -68,6 +68,7 @@ const front = {
             children: [
                 'sort',
                 'string',
+                'greedy'
             ]
         }
     ],

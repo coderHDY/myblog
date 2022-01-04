@@ -37,7 +37,7 @@ app.get('/data', (req, res) => {
 ```
 ## fetch()
 ### 入参1
-::: tip 入参1
+::: tip
 * 可以是url
 * 可以是一个[Request对象](./fetch.html#request)
 :::

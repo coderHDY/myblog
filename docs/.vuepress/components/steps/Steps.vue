@@ -2,7 +2,11 @@
   <el-container :id="hashId">
     <el-header>
       <div @click="jumpTo">
-        <el-steps :active="active" finish-status="success" process-status="finish">
+        <el-steps
+          :active="active"
+          finish-status="success"
+          process-status="finish"
+        >
           <el-step v-for="index in this.steps" :key="index"></el-step>
         </el-steps>
       </div>
@@ -12,16 +16,19 @@
     </el-main>
     <el-footer>
       <el-button
-          style="margin-top: 12px;"
-          type="success" @click="prev"
-          :disabled="active === 0"
-      >上一步</el-button>
+        style="margin-top: 12px"
+        type="success"
+        @click="prev"
+        :disabled="active === 0"
+        >上一步</el-button
+      >
       <el-button
-          style="margin-top: 12px;"
-          type="success"
-          :disabled="active === steps - 1"
-          @click="next"
-      >下一步</el-button>
+        style="margin-top: 12px"
+        type="success"
+        :disabled="active === steps - 1"
+        @click="next"
+        >下一步</el-button
+      >
     </el-footer>
   </el-container>
 </template>
@@ -38,7 +45,7 @@ export default {
   data() {
     return {
       active: 0,
-      steps: 0
+      steps: 0,
     };
   },
   components: {
@@ -61,7 +68,7 @@ export default {
       this.backToTop();
     },
     prev() {
-      if (this.active-- < 1){
+      if (this.active-- < 1) {
         this.active = this.steps - 1;
       }
       this.backToTop();
@@ -70,17 +77,18 @@ export default {
       let topBar = document.querySelector(`#${this.hashId}`);
       setTimeout(() => {
         topBar.scrollIntoView({
-          behavior: 'auto',
-          block: 'start',
-          inline: 'start'
-        })
-      }, 10)
+          behavior: "auto",
+          block: "start",
+          inline: "start",
+        });
+      }, 10);
     },
     jumpTo(e) {
-
       // 四舍五入计算出应该跳转的步数
       const stepLength = e.currentTarget.clientWidth / (this.steps - 1);
-      const jump = Math.round((e.x - this.getOffsetBody(e.currentTarget)) / stepLength);
+      const jump = Math.round(
+        (e.x - this.getOffsetBody(e.currentTarget)) / stepLength
+      );
       this.active = jump;
     },
     getOffsetBody(el) {
@@ -91,16 +99,15 @@ export default {
         parent = parent.offsetParent;
       }
       return ans;
-    }
+    },
   },
   computed: {
-
     // 防止一个页面中出现多个 steps组件，页面跳转的时候判断错误，加一个hashId
     hashId: () => "id_" + Math.floor(Math.random() * 10000),
     contentClass() {
-        return "content_" + this.hashId;
+      return "content_" + this.hashId;
     },
-  }
+  },
 };
 </script>
 
@@ -120,6 +127,7 @@ export default {
 }
 .el-container {
   margin-bottom: 10px;
+  padding-top: 60px;
 }
 .el-header {
   height: 35px !important;

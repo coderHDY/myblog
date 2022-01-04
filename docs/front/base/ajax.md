@@ -40,7 +40,7 @@ app.get('/data', (req, res) => res.send({
 ```
 ## 方法
 ### open
-::: tip open
+::: tip
 * 作用：初始化一个请求
 * 调用：xhr.open(method, url[, async, user, password])
 * 入参：String, String, Boolean, String, String
@@ -122,7 +122,7 @@ app.get('/data', (req, res) => {
 :::
 ::::
 ### send
-::: tip send
+::: tip
 * 作用：将请求发送出去
 * 调用：xhr.send(body)
 * 入参：document | FormData | Blob | URLSearchParams
@@ -168,7 +168,7 @@ app.post('/data', (req, res) => {
 })
 ```
 ### setRequestHeader
-::: tip setRequestHeader
+::: tip
 * 作用：设置请求头
 * 调用：xhr.setRequestHeader(key, value)
 * 入参：String, String
@@ -183,7 +183,7 @@ xhr.setRequestHeader('Cache-Control', 'catch');
 xhr.send();
 ```
 ### abort
-::: tip abort
+::: tip
 * 作用：终止请求
 * 调用：xhr.abort()
 :::
@@ -205,7 +205,7 @@ app.get('/data', (req, res) => {
 })
 ```
 ### getResponseHeader
-::: tip getResponseHeader
+::: tip
 * 作用：获取某一个响应头的值
 * 调用：xhr.getResponseHeader(key)
 * 入参：String
@@ -223,7 +223,7 @@ xhr.open('GET', 'http://localhost:8888/data');
 xhr.send();
 ```
 ### getAllResponseHeaders
-::: tip getAllResponseHeaders
+::: tip
 * 作用：拿到所有响应头
 * 调用：xhr.getAllResponseHeaders()
 * 返回：string
@@ -237,14 +237,14 @@ xhr.open('GET', 'http://localhost:8888/data');
 xhr.send();
 ```
 ### overrideMimeType
-::: tip overrideMimeType
+::: tip
 * 作用：强制指定返回的MIME类型
 * 调用：xhr.overrideMimeType(type)
 * tip：必须在send前指定
 :::
 ## 属性
 ### responseType
-::: tip responseType
+::: tip
 * 作用：用于判断响应的类型，response接受到值后做出对应的改变
 * **必须要在send前修改，否则无效**
 
@@ -321,19 +321,19 @@ app.get('/data', (req, res) => {
 :::
 ::::
 ### response
-::: tip response
+::: tip
 * 作用：响应结果
 * 值：根据responseType的值决定
 * 需要在【下载响应数据中】readyState >= 3 以后才有值
 :::
 ### responseText
-::: tip responseText
+::: tip
 * 作用：后端返回的文本
 * 值：String
 * 注：DOMString也是以String的形式返回的
 :::
 ### onreadystatechange
-::: tip onreadystatechange
+::: tip
 * 注：此属性没有驼峰写法
 * 作用：当xhr对象readyState状态发生变化时内部调用钩子
 * 调用：xhr.onreadystatechange = function () {}
@@ -347,7 +347,7 @@ setTimeout(() => xhr.open('get', 'http://localhost:8888/data'), 1000); // 1
 setTimeout(() => xhr.send(), 2000); // 2 3 4
 ```
 ### readyState
-::: tip readyState
+::: tip
 |值|阶段|对应XMLHttpRequest的静态属性|
 |---|---|---|
 |0|创建未调用 open() 方法|UNSENT|
@@ -371,7 +371,7 @@ setTimeout(() => xhr.send(), 2000); // 2 3 4
 </body>
 ```
 ### responseXML
-::: tip responseXML
+::: tip
 * 作用：存储返回值的HTML或XML对象
 :::
 ```js{2,5}
@@ -391,7 +391,7 @@ app.get('/data', (req, res) => {
 })
 ```
 ### timeout
-::: tip timeout
+::: tip
 * 设置超时时间，如果响应超时，就会触发ontimeout事件
 * 应该在【open之后】【send之前】设置
 :::
@@ -414,7 +414,7 @@ app.get('/data', (req, res) => {
 })
 ```
 ### upload
-::: tip upload
+::: tip
 * 值：一个XmlHttpRequestUpload对象，给它绑定事件监听器来查看上传的进度
 
 |addEventListener|触发|
@@ -428,7 +428,7 @@ app.get('/data', (req, res) => {
 |onload|获取完成（不论成功与否）|
 :::
 ### withCredentials
-::: tip withCredentials
+::: tip
 * 作用：**跨域访问**时是否可以携带cookies
 * 值：Boolean
 :::
@@ -555,7 +555,7 @@ app.get('/', function(req, res) {
 :::
 ::::
 ### status
-::: tip status
+::: tip
 * 作用：请求响应状态码
 * 值：Number
 * [全部状态码](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status)
@@ -588,7 +588,7 @@ app.get('/data', (req, res) => {
 })
 ```
 ### responseURL
-::: tip responseURL
+::: tip
 * 作用：拿到最终返回的后端URL
 * tip：无论中间经历过多少重定向，都会返回最后的一个URL，且去掉锚点【#】
 :::
@@ -612,7 +612,7 @@ app.get('/error', (req, res) => {
 })
 ```
 ### statusText
-::: tip statusText
+::: tip
 * 作用：当前相应的状态值，只有readyState > 3 才有值
 * 成功响应且服务器没有给具体的状态文本信息时，值为【OK】
 :::

@@ -39,7 +39,7 @@ console.log(date3.toString()); // Thu Dec 09 2021 00:16:49 GMT+0800 (中国标�
 console.log(date4.toString()); // Thu Dec 09 2021 00:16:49 GMT+0800 (中国标准时间)
 ```
 ### setFullYear
-::: tip setFullYear
+::: tip
 * 作用：设置日期对象本地日期的【年】
 * 调用：date.setFullYear(year[, mounth, day])
 * 入参：Number[, Number, Number]
@@ -74,7 +74,7 @@ console.log(date); // 2021-12-31T11:54:17.655Z
 :::
 ::::
 ### setMonth
-::: tip setMonth
+::: tip
 * 作用：设置日期对象本地日期的【月】
 * 调用：date.setMonth(month[, day])
 * 入参：Number[, Number]
@@ -97,7 +97,7 @@ console.log(date.getMonth()); // 0
 console.log(date);            // 2021-01-31T11:47:37.531Z
 ```
 ### setDate
-::: tip setDate
+::: tip
 * 作用：**根据本地日期**(不是UTC日期)设置一个日期对象的【日】
 * 调用：date.setDate(day)
 * 入参：Number
@@ -115,7 +115,7 @@ date.setDate(-3);
 console.log(date); // 2021-11-27T11:23:12.174Z
 ```
 ### setHours
-::: tip setHours
+::: tip
 * 作用：设置日期对象本地日期的【时】
 * 调用：date.setHours(hour[, minute, second, msecond])
 * 入参：Number[, Number, Number, Number]
@@ -151,7 +151,7 @@ console.log(date.toLocaleString()); // 2021/12/8 下午1:59:00
 ```
 ::::
 ### setMinutes
-::: tip setMinutes
+::: tip
 * 作用：设置日期对象本地日期的【分】
 * 调用：date.setMinutes(minutes)
 * 入参：Number
@@ -166,7 +166,7 @@ date.setMinutes(10);
 console.log(date.getMinutes()); // 10
 ```
 ### setSeconds
-::: tip setSeconds
+::: tip
 * 作用：设置日期对象本地日期的【秒】
 * 调用：date.setSeconds(second)
 * 入参：Number
@@ -179,7 +179,7 @@ date.setSeconds(30);
 console.log(date.getSeconds()); // 30
 ```
 ### setMilliseconds
-::: tip setMilliseconds
+::: tip
 * 作用：设置日期对象本地日期的【毫秒】
 * 调用：date.setMilliseconds(millisecond)
 * 入参：Number
@@ -194,7 +194,7 @@ date.setMilliseconds(10);
 console.log(date.getMilliseconds()); // 10
 ```
 ### setTime
-::: tip setTime
+::: tip
 * 作用：用一个纪元时间毫秒数重置本Date对象
 * 调用：date.setTime(distance)
 * 入参：Number (距纪元时间毫秒数)
@@ -217,7 +217,7 @@ console.log(date2.toString() === date1.toString()); // true
 ```
 ## 获取时间
 ### getFullYear
-::: tip getFullYear
+::: tip
 * 作用：拿到【年】
 * 调用：date.getFullYear()
 * 返回：Number (0000-9999)
@@ -228,7 +228,7 @@ console.log(date.getFullYear()); // 2021
 console.log(date.getFullYear() + 1); // 2022
 ```
 ### getMonth
-::: tip getMonth
+::: tip
 * 作用：拿到【月】
 * 调用：date.getMonth()
 * 返回：Number (0-11)
@@ -241,7 +241,7 @@ const date = new Date();
 console.log(date.getMonth()); // 11
 ```
 ### getDate
-::: tip getDate
+::: tip
 * 作用：拿到date对象的【日】
 * 调用：date.getDate()
 * 返回：Number (1-31)
@@ -252,7 +252,7 @@ const date = new Date();
 console.log(date.getDate()); // 8
 ```
 ### getDay
-::: tip getDay
+::: tip
 * 作用：拿到【星期几】
 * 调用：date.getDay()
 * 返回：Number (0-6)
@@ -264,7 +264,7 @@ const date = new Date();
 console.log(date.getDay()); // 3
 ```
 ### getHours
-::: tip getHours
+::: tip
 * 作用：拿到【时】
 * 调用：date.getHours()
 * 返回：Number (0-23)
@@ -274,7 +274,7 @@ const date = new Date();
 console.log(date.getHours()); // 18
 ```
 ### getMinutes
-::: tip getMinutes
+::: tip
 * 作用：拿到【分】
 * 调用：date.getMinutes()
 * 返回：Number (0-59)
@@ -284,7 +284,7 @@ const date = new Date();
 console.log(date.getMinutes()); // 20
 ```
 ### getSeconds
-::: tip getSeconds
+::: tip
 * 作用：拿到【秒】
 * 调用：date.getSeconds()
 * 返回：Number (0-59)
@@ -294,7 +294,7 @@ const date = new Date();
 console.log(date.getSeconds()); // 36
 ```
 ### getMilliseconds
-::: tip getMilliseconds
+::: tip
 * 作用：拿到【毫秒】
 * 调用：date.getMilliseconds()
 * 返回：Number (0-999)
@@ -309,7 +309,7 @@ console.log(date.getMilliseconds()); // 528
 UTC时间 - 中国时间 = -480
 :::
 ### getTimezoneOffset
-::: tip getTimezoneOffset
+::: tip
 * 作用：获取协调世界时（UTC）相对于当前时区的时间差值，单位为分钟。
 * 调用：date.getTimezoneOffset()
 * 返回：Number
@@ -319,7 +319,7 @@ const date = new Date();
 console.log(date.getTimezoneOffset()); // -480
 ```
 ### getUTCFullYear
-::: tip getUTCFullYear
+::: tip
 * 作用：拿到【UTC时间标准的】【年】
 * 调用：date.getUTCFullYear()
 * 返回：Number (0000-9999)
@@ -329,7 +329,7 @@ const date = new Date();
 console.log(date.getUTCFullYear()); // 2021
 ```
 ### getUTCMonth
-::: tip getUTCMonth
+::: tip
 * 作用：获取【UTC时间标准的】【秒】
 * 调用：date.getUTCMonth()
 * 返回：Number (0-11)
@@ -342,7 +342,7 @@ const date = new Date();
 console.log(date.getUTCMonth()); // 11
 ```
 ### getUTCDate
-::: tip getUTCDate
+::: tip
 * 作用：拿到【UTC时间标准的】【日】
 * 调用：date.getUTCDate()
 * 返回：Number (0-31)
@@ -352,7 +352,7 @@ const date = new Date();
 console.log(date.getUTCDate()); // 8
 ```
 ### getUTCDay
-::: tip getUTCDay
+::: tip
 * 作用：获取【UTC时间标准的】【星期几】
 * 调用：date.getUTCDay()
 * 返回：Number (0-6)
@@ -362,7 +362,7 @@ const date = new Date();
 console.log(date.getUTCDay()); // 3
 ```
 ### getUTCHours
-::: tip getUTCHours
+::: tip
 * 作用：获取【UTC时间标准的】【时】
 * 调用：date.getUTCHours()
 * 返回：Number (0-23)
@@ -373,7 +373,7 @@ const date = new Date();
 console.log(date.getUTCHours()); // 10
 ```
 ### getUTCMinutes
-::: tip getUTCMinutes
+::: tip
 * 作用：获取【UTC时间标准的】【分】
 * 调用：date.getUTCMinutes()
 * 返回：Number
@@ -383,7 +383,7 @@ const date = new Date();
 console.log(date.getUTCMinutes()); // 57
 ```
 ### getUTCSeconds
-::: tip getUTCSeconds
+::: tip
 * 作用：获取【UTC时间标准的】【秒】
 * 调用：date.getUTCSeconds()
 * 返回：Number
@@ -393,7 +393,7 @@ const date = new Date();
 console.log(date.getUTCSeconds()); // 6
 ```
 ### getUTCMilliseconds
-::: tip getUTCMilliseconds
+::: tip
 * 作用：获取【UTC时间标准的】【毫秒】
 * 调用：date.getUTCMilliseconds()
 * 返回：Number (0-999)
@@ -404,7 +404,7 @@ console.log(date.getUTCMilliseconds()); // 964
 ```
 ## 设置UTC时间
 ### setUTCFullYear
-::: tip setUTCFullYear
+::: tip
 * 作用：设置对象UTC的【年】
 * 调用：date.setUTCFullYear(year[, month, day])
 * 入参：Number[, Number, Number]
@@ -420,7 +420,7 @@ console.log(date.toUTCString()); // Fri, 26 Jul 1996 14:55:55 GMT
 console.log(date.toLocaleDateString()); // 1996/7/26
 ```
 ### setUTCMonth
-::: tip setUTCMonth
+::: tip
 * 作用：设置对象UTC时间的【月】
 * 调用：date.setUTCMonth(month)
 * 入参：Number
@@ -435,7 +435,7 @@ date.setUTCMonth(7);
 console.log(date.getUTCMonth()); // 7
 ```
 ### setUTCDate
-::: tip setUTCDate
+::: tip
 * 作用：设置对象UTC时间的【日】
 * 调用：date.setUTCDate(day)
 * 入参：Number
@@ -448,7 +448,7 @@ console.log(date.getDate()); // 20
 console.log(date.getUTCDate()); // 20
 ```
 ### setUTCHours
-::: tip setUTCHours
+::: tip
 * 作用：设置对象UTC时间的【时】
 * 调用：date.setUTCHours(hour[, minute, second])
 * 入参：Number[, Number, Number]
@@ -463,7 +463,7 @@ console.log(date.toUTCString()); // Wed, 08 Dec 2021 10:59:00 GMT
 console.log(date.toTimeString()); // 18:59:00 GMT+0800 (中国标准时间)
 ```
 ### setUTCMinutes
-::: tip setUTCMinutes
+::: tip
 * 作用：设置对象UTC时间的分钟数
 * 调用：date.setUTCMinutes(minute[, seconds, mseconds])
 * 入参：Number[, Number, Number]
@@ -482,7 +482,7 @@ date.setUTCMinutes(5, 5, 5);
 console.log(date.toLocaleTimeString()); // 下午11:05:05
 ```
 ### setUTCSeconds
-::: tip setUTCSeconds
+::: tip
 * 作用：设置UTC时间的【秒】
 * 调用：date.setUTCSeconds(seconds)
 * 入参：Number
@@ -495,7 +495,7 @@ console.log(date.getSeconds()); //20
 console.log(date.getUTCSeconds()); //20
 ```
 ### setUTCMilliseconds
-::: tip setUTCMilliseconds
+::: tip
 * 作用：设置UTC时间的【毫秒】
 * 调用：date.setUTCMilliseconds(msconds)
 * 入参：Number
@@ -524,7 +524,7 @@ console.log(date.getMilliseconds()); // 100
 |toLocaleTimeString|返回指定时区的时分秒|下午11:46:58|
 :::
 ### Symbol.toPrimitive
-::: tip Symbol.toPrimitive
+::: tip
 * 作用：自动转化值
 * 调用：date[Symbol.toPrimitive] (hint)
 * 入参：'number' | 'string' | 'default'
@@ -532,7 +532,7 @@ console.log(date.getMilliseconds()); // 100
 * tip：内部调用，当期望一个原始值却收到一个对象时，调用此方法。**根据hint，调用valueOf或toString**，无法转换最后抛出错误。
 :::
 ### valueOf
-::: tip valueOf
+::: tip
 * 作用：返回日期对象的原始值
 * 调用：date.valueOf()
 * 返回：Number
@@ -553,7 +553,7 @@ console.log(date.getTime()); // 1638957011751
 console.log(typeof date.getTime()); // number
 ```
 ### toString
-::: tip toString
+::: tip
 * 作用：将date对象输出为**美式英语日期格式的字符串**
 * 调用：date.toString()
 * 返回：String
@@ -563,7 +563,7 @@ const date = new Date();
 console.log(date.toString()); // Wed Dec 08 2021 17:59:08 GMT+0800 (中国标准时间)
 ```
 ### getTime
-::: tip getTime
+::: tip
 * 作用：获取从1970年1月1日0时0分0秒（UTC，即协调世界时）到该日期的**毫秒数**。
 * 调用：date.getTime()
 * 返回：Number
@@ -574,7 +574,7 @@ const date = new Date();
 console.log(date.getTime()); // 1638959162725
 ```
 ### toDateString
-::: tip toDateString
+::: tip
 * 作用：美式英语和人类易读的形式返回一个日期对象日期部分的字符串
 * 调用：date.toDateString()
 * 返回：String
@@ -588,7 +588,7 @@ console.log(date.toUTCString());    // Wed, 08 Dec 2021 15:20:31 GMT
 console.log(date.valueOf());        // 1638976736688
 ```
 ### toTimeString
-::: tip toTimeString
+::: tip
 * 作用：拿到时间对象的【时分秒】
 * 调用：date.toTimeString()
 * 返回：String
@@ -598,7 +598,7 @@ const date = new Date();
 console.log(date.toTimeString()); // 23:51:33 GMT+0800 (中国标准时间)
 ```
 ### toISOString
-::: tip toISOString
+::: tip
 * 作用：将对象的**UTC时间**返回一个ISO标准的字符串【YYYY-MM-DDTHH:mm:ss.sssZ】
 * 调用：date.toISOString()
 * 返回：String
@@ -609,7 +609,7 @@ const date = new Date();
 console.log(date.toISOString()); // 2021-12-08T15:24:29.682Z
 ```
 ### toJSON
-::: tip toJSON
+::: tip
 * 作用：返回date对象的字符串格式。
 * 调用：date.toJSON()
 * 返回：String
@@ -624,7 +624,7 @@ const date2 = new Date(json);
 console.log(date2.toString() === date.toString()); // true
 ```
 ### toLocaleString
-::: tip toLocaleString
+::: tip
 * 作用：将日期对象以指定的时区返回字符串（默认当地时区）
 * 调用：date.toLocaleString(locale, options)
 * 入参：String, Object
@@ -637,7 +637,7 @@ console.log(date.toLocaleString());        // 2021/12/8 下午11:38:35
 console.log(date.toLocaleString('en-US')); // 12/8/2021, 11:38:35 PM
 ```
 ### toLocaleDateString
-::: tip toLocaleDateString
+::: tip
 * 作用：将日期对象以指定的时区返回字符串（默认当地时区）(只要年月日)
 * 调用：date.toLocaleDateString(locale, options)
 * 入参：String, Object
@@ -649,7 +649,7 @@ console.log(date.toLocaleDateString());        // 2021/12/8
 console.log(date.toLocaleDateString('en-US')); // 12/8/2021
 ```
 ### toLocaleTimeString
-::: tip toLocaleTimeString
+::: tip
 * 作用：将日期对象以指定的时区返回字符串（默认当地时区）(只要时分秒)
 * 调用：date.toLocaleTimeString(locale, options)
 * 入参：String, Object
@@ -662,7 +662,7 @@ console.log(date.toLocaleTimeString('en-US')); // 11:46:58 PM
 ```
 ## 静态方法
 ### now
-::: tip now
+::: tip
 * 作用：获取自 1970 年 1 月 1 日 00:00:00 (UTC) 到当前时间的毫秒数。
 * 调用：Date.now()
 * 返回：Number
@@ -684,7 +684,7 @@ console.log(now()); // 1638961853427
 :::
 ::::
 ### parse
-::: tip parse
+::: tip
 * 作用：解析日期字符串，返回从1970-1-1 00:00:00 UTC 到该日期对象（该日期对象的UTC时间）的毫秒数
 * 调用：Date.parse(String);
 * 返回：Number
@@ -699,7 +699,7 @@ console.log(str);             // Wed Dec 08 2021 19:15:52 GMT+0800 (中国标准
 console.log(Date.parse(str)); // 1638962152000
 ```
 ### UTC
-::: tip UTC
+::: tip
 * 作用：以UTC的形式构造纪元时间的距离毫秒数
 * 调用：Date.UTC(year[, month, day, hour, minutes, seconds, mseconds])
 * 入参：Number[, Number, Number, Number, Number, Number]

@@ -16,7 +16,7 @@ date: 2021-12-25
 :::
 ## 方法
 ### 构造函数
-::: tip 构造函数
+::: tip
 * 调用：new Worker(url[, options])
 * 入参：String[, Object]
 * options:
@@ -82,7 +82,7 @@ onmessage = e => {
 :::
 ::::
 ### postMessage
-::: tip postMessage
+::: tip
 * 作用：
     1. 向worker内发信息，触发内部onmessage钩子
     2. worker环境内部调用，触发主线程的onmessage钩子
@@ -169,7 +169,7 @@ self.addEventListener('message', e => {
 ::::
 
 ### terminate
-::: tip terminate
+::: tip
 * 作用：立即终止worker线程，**无论内部在执行什么**
 * 调用：worker.terminate()
 :::
@@ -232,17 +232,17 @@ setInterval(() => {
 ::::
 ## 钩子
 ### onmessage
-::: tip onmessage
+::: tip
 * 作用：主线程调用postMessage向worker内发送信息时调用
 * 定义：onmessage = (e) => console.log(e.data)
 :::
 ### onerror
-::: tip onerror
+::: tip
 * 作用：传入方法错误时的钩子函数
 * 定义：onerror = (e) => console.log(e);
 :::
 ### onmessageerror
-::: tip onmessageerror
+::: tip
 * 作用：worker收到的消息是不能进行序列化的时候触发
 * 定义：onmessageerror = (e) => console.log(e)
 :::

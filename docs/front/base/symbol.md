@@ -30,7 +30,7 @@ console.log(typeof s1); // symbol
 
 ## 方法
 ### for
-::: tip for
+::: tip
 * 作用：在全局注册表中**注册或读取**Symbol
 * 调用：Symbol.for(str)
 * 返回：注册好的Symbol
@@ -48,7 +48,7 @@ const js = Symbol.for('hdy.skill');
 console.log(Symbol.for('hdy.name')); // Symbol(hdy.name)
 ```
 ### keyFor
-::: tip keyFor
+::: tip
 * 作用：拿到全局注册表的Symbol的键
 * 调用：Symbol.keyFor(syb)
 * 入参：Symbol
@@ -60,7 +60,7 @@ console.log(Symbol.keyFor(js)); // hdy.skill
 
 ## 属性
 ### description
-::: tip description
+::: tip
 * 原型属性：Symbol.prototype.description
 * 类型：String
 * 值：构造时的入参，和Symbol.keyFor()返回值一样
@@ -80,7 +80,7 @@ const js = Symbol.for('hdy.skill');
 console.log(js.description === Symbol.keyFor(js)); // true
 ```
 ### hasInstance
-::: tip hasInstance
+::: tip
 * 作用：重写instanceof判断方式
 * 调用：obj instanceof CLASS
 :::
@@ -100,7 +100,7 @@ console.log(b instanceof A); // true
 console.log(c instanceof A); // true
 ```
 ### isConcatSpreadable
-::: tip isConcatSpreadable
+::: tip
 * 作用：调用数组concat连接时是否展开
 * 类型：Boolean
 * 默认：true
@@ -230,7 +230,7 @@ for (let value of obj) {
 }
 ```
 ### asyncIterator
-::: tip asyncIterator
+::: tip
 * 作用：异步迭代器
 * 调用：**for await (...of...) {}**
 * 难点：每一层await都会包装一次Promise，影响执行顺序
@@ -318,7 +318,7 @@ new Promise(resolve => {
 ::::
 
 ### match
-::: tip match
+::: tip
 * 作用：以正则的规则去匹配调用者
 * 调用：str.match(RegExp)
 * 值：**Function(String.prototype.match调用的方法)/Boolean (判断是否用正则匹配，false就转换字符串匹配)**
@@ -364,22 +364,22 @@ console.log(str.match(reg)); // 12345
 :::
 ::::
 ### matchAll
-::: tip matchAll
+::: tip
 * 作用：同[match](./symbol.html#match)
 * 调用：String.prototype.matchAll()
 :::
 ### replace
-::: tip replace
+::: tip
 * 作用：同[match](./symbol.html#match)
 * 调用：String.prototype.replace()
 :::
 ### search
-::: tip search
+::: tip
 * 作用：同[match](./symbol.html#match)
 * 调用：String.prototype.search()
 :::
 ### split
-::: tip split
+::: tip
 * 作用：同[match](./symbol.html#match)
 * 调用：String.prototype.split(reg)
 :::
@@ -394,7 +394,7 @@ reg[Symbol.split] = (str) => ['嘿', '嘿嘿', '嘿嘿嘿'];
 console.log(s.split(reg)); // [ '嘿', '嘿嘿', '嘿嘿嘿' ]
 ```
 ### species
-::: tip species
+::: tip
 * 作用：决定此对象衍生出来的对象的构造类
 :::
 * 原生构造类
@@ -420,7 +420,7 @@ console.log(mapped instanceof MyArray); // false
 console.log(mapped instanceof Array);  // true
 ```
 ### toPrimitive
-::: tip toPrimitive
+::: tip
 * 作用：默认转化类型时使用
 * 调用：+str/`${obj.str}`/!str/等
 * 入参hint:'number'|'string'| 'default'
@@ -433,7 +433,7 @@ obj[Symbol.toPrimitive] = (hint) => 1000;
 console.log(+str + 3); // 1003
 ```
 ### toStringTag
-::: tip toStringTag
+::: tip
 * 作用：Object.prototype.toString()会拿到此方法返回值做拼接
 :::
 ```js{4,12}
@@ -451,7 +451,7 @@ Object.defineProperty(A.prototype, Symbol.toStringTag, {
 console.log(a.toString()); // [Object A]
 ```
 ### unscopables
-::: tip unscopables
+::: tip
 * 作用：使用with更换作用域时时排除的属性名称
 * tip：《红宝书》不建议使用with，代码不易读不易维护
 :::

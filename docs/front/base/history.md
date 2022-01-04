@@ -4,7 +4,7 @@ date: 2021-12-17
 ---
 ## 属性
 ### length
-::: tip length
+::: tip
 * 值：当前session的history个数，新开的页面值是1
 :::
 ```html
@@ -19,7 +19,7 @@ date: 2021-12-17
 </body>
 ```
 ### state
-::: tip state
+::: tip
 * history栈顶的值
 :::
 ::: warning 入栈
@@ -54,7 +54,7 @@ date: 2021-12-17
 </body>
 ```
 ### scrollRestoration
-::: tip scrollRestoration
+::: tip
 * 作用：回退页面时是否回到上次离开的滚动位置
 
 |值|意思|
@@ -157,7 +157,7 @@ date: 2021-12-17
 ```
 ## 方法
 ### pushState
-::: tip pushState
+::: tip
 * 作用：向浏览器记录添加一个状态
 * 调用：history.pushState(property, title[, url])
 :::
@@ -190,7 +190,7 @@ date: 2021-12-17
 </body>
 ```
 ### replaceState
-::: tip replaceState
+::: tip
 * 更新当前的history栈
 :::
 ```html{5,9,11}
@@ -210,7 +210,7 @@ date: 2021-12-17
 </body>
 ```
 ### back
-::: tip back
+::: tip
 * 作用：回到history栈的上一个位置
 * 调用：history.back()
 :::
@@ -219,7 +219,7 @@ date: 2021-12-17
 history.back()
 ```
 ### forward
-::: tip forward
+::: tip
 * 向前移动一页
 :::
 * 在百度页面多搜索几个关键词，然后回退，然后的控制台中执行：
@@ -227,7 +227,7 @@ history.back()
 history.forward()
 ```
 ### go
-::: tip go
+::: tip
 * 向移动指定页数，-X 代表后退 X页
 :::
 * 在百度页面多搜索几个关键词，然后的控制台中执行：
@@ -236,7 +236,7 @@ history.go(-2)
 ```
 ## 事件
 ### onpopstate
-::: tip onpopstate
+::: tip
 * 位置：window.onpopstate
 * 触发条件：
     1. 浏览器按前进后退

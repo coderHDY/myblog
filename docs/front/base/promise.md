@@ -363,7 +363,7 @@ new Promise((resolve, reject) => {
 :::
 ::::
 ### then
-::: tip then
+::: tip
 * 作用：Promise对象状态发生改变后的回调函数
 * 定义：promise.then(res => {}[, err => {}])
 * 入参：Function[, Function]
@@ -405,7 +405,7 @@ new Promise(resolve => resolve('同步代码'))
 :::
 ::::
 ### catch
-::: tip catch
+::: tip
 * 作用：promise状态变rejected或抛出异常时调用
 * 定义：promise.catch(err => {})
 * 定义2：promise.then(undefined, err => {})
@@ -439,7 +439,7 @@ new Promise(resolve => {throw 'error!'})
 :::
 ::::
 ### finally
-::: tip finally
+::: tip
 * 作用：无论状态变成什么，最后都会执行的一个回调
 * 定义：promise.finally(callback)
 * 入参：Function
@@ -480,7 +480,7 @@ Promise.resolve('11')
 ::::
 ## 静态方法
 ### all
-::: tip all
+::: tip
 * 作用：将多个Promise包装成一个Promise
 * 调用：Promise.all(promiseArr)
 * 入参：Iterator
@@ -535,7 +535,7 @@ all.then(undefined, err => console.log(err)); // err
 * race就是要第一个结果，无论是成功还是失败
 :::
 ### race
-::: tip race
+::: tip
 * 作用：接收一个promise集合，采用第一个状态改变的promise的结果作为整体的结果
 * 定义：Promise.race(promiseArr)
 * 入参：Iterator
@@ -564,7 +564,7 @@ race.catch(err => console.log(err)); // err
 :::
 ::::
 ### allSettled
-::: tip allSettled
+::: tip
 * 作用：收集一个promise集合，等所有的promise状态都发生转变了，将所有的promise结果包装起来返回**无论是成功还是失败**
 * 定义：Promise.allSettled(promiseArr)
 * 入参：Iterator
@@ -606,7 +606,7 @@ allSettled.then(res => console.log(res));
 :::
 ::::
 ### resolve
-::: tip resolve
+::: tip
 * 作用：返回一个以给定值解析后的Promise对象
 * 定义：Promise.resolve(promise)
 * 入参：[Promise | thenable]（当做本promise.resovle的返回） | any（被当做resolve的值）
@@ -694,7 +694,7 @@ console.log('同步');
 :::
 ::::
 ### reject
-::: tip reject
+::: tip
 * 作用：reject返回一个带有拒绝原因的Promise对象
 * 定义：Promise.reject(reason)
 * 入参：any

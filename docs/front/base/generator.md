@@ -150,7 +150,7 @@ const gen = generator();
 console.log(gen.next().value);
 ```
 ### next
-::: tip next
+::: tip
 * 作用：调用生成器的下一个值，并且可以传值
 * 调用：generator.next(any)
 * 入参：any
@@ -233,7 +233,7 @@ console.log(gen.next(5).value); // undefined
 :::
 ::::
 ### throw
-::: tip throw
+::: tip
 * 作用：向生成器抛出异常
 * 调用：generator.throw(new Error(tip))
 * 入参：Error

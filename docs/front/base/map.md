@@ -110,7 +110,7 @@ for (let [key, value] of map) {
 
 ## 增删改查
 ### size
-::: tip size
+::: tip
 * 作用：显示数组长度
 * 使用：map.size
 * 返回：Number
@@ -120,7 +120,7 @@ const map = new Map([['name', 'hdy'], ['age', 18]]);
 console.log(map.size); // 2
 ```
 ### set
-::: tip set
+::: tip
 * 作用：map对象**添加一个键值对**
 * 调用：map.set(key, value)
 * 入参：any, any
@@ -154,7 +154,7 @@ const map = new Map([[fn, ]]);
 console.log(map.get(fn)); // undefined
 ```
 ### has
-::: tip has
+::: tip
 * 作用：用键判断是否存在该项
 * 调用：map.has(key)
 * 入参：any
@@ -166,7 +166,7 @@ console.log(map.has('name')); // true
 console.log(map.has('age')); // false
 ```
 ### delete
-::: tip delete
+::: tip
 * 作用：通过键删除项
 * 调用：map.delete(key)
 * 入参：any
@@ -178,7 +178,7 @@ console.log(map.delete('name')); // true
 console.log(map.delete('name')); // false
 ```
 ### clear
-::: tip clear
+::: tip
 * 作用：清空map
 * 调用：map.clear()
 * 返回：undefined
@@ -191,7 +191,7 @@ console.log(map.size); // 0
 ```
 ## 迭代器
 ### keys
-::: tip keys
+::: tip
 * 作用：拿到所有的键的迭代器
 * 调用：map.keys()
 * 返回：Iterator
@@ -201,7 +201,7 @@ const map = new Map([['name', 'hdy'], ['age', 18]]);
 console.log(map.keys().next().value); // 'name'
 ```
 ### values
-::: tip values
+::: tip
 * 作用：拿到所有的值的迭代器
 * 调用：map.values()
 * 返回：Iterator
@@ -211,7 +211,7 @@ const map = new Map([['name', 'hdy'], ['age', 18]]);
 console.log(map.values().next().value); // 'hdy'
 ```
 ### entries
-::: tip entries
+::: tip
 * 作用：拿到所有键值对的迭代器
 * 调用：map.entries()
 * 返回：Iterator
@@ -222,7 +222,7 @@ const entries = map.entries();
 console.log(entries.next().value); // ['name', 'hdy']
 ```
 ### forEach
-::: tip forEach
+::: tip
 * 作用：按顺序遍历map所有元素，执行对应函数
 * 调用：map.forEach(function(value, key, map) {}[, thisArg])
 * 入参：Function[, Object]
@@ -233,7 +233,7 @@ const map = new Map([['name', 'hdy'], ['age', 18]]);
 map.forEach((value, key, map) => console.log(`${key}:${value}`)); // name:hdy age:18
 ```
 ### Symbol.iterator
-::: tip Symbol.iterator
+::: tip
 * 作用：拿到Map的迭代器对象
 * 调用：map[Symbol.iterator] ()
 * 返回：Iterator

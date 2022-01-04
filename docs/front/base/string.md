@@ -39,7 +39,7 @@ console.log(`我的名字是${obj.name}, 我去年${obj.age - 1}岁，我爱读$
 ::::
 ## 查找
 ### indexOf
-::: tip indexOf
+::: tip
 * 调用：str1.indexOf(str2[, start])
 * 入参：String[, Number]
 * 返回：str2在str1的下标，没有返回-1，**可选定开始位置**
@@ -56,7 +56,7 @@ console.log(str1.indexOf(str2, 3)); // 3
 console.log(str1.indexOf(str2, 4)); // 9
 ```
 ### lastIndexOf
-::: tip lastIndexOf
+::: tip
 * 调用：str1.lastIndexOf(str2[, fromIndex])
 * 入参：String[, Number]
 * 返回：str2在str1的最后一次出现的下标，没有返回-1，**可选定末端开始位置**
@@ -74,7 +74,7 @@ console.log(str1.lastIndexOf(str2, 3)); // 3
 console.log(str1.lastIndexOf(str2, 5)); // 3
 ```
 ### match
-::: tip match
+::: tip
 * 调用：str1.match(reg)
 * 入参：RegExp
 * 返回：Array | Object
@@ -99,7 +99,7 @@ console.log(a.match(c));
  */
 ```
 ### matchAll
-::: tip matchAll
+::: tip
 * 调用：str1.matchAll(reg)
 * 入参：RegExp
 * 返回：iterator，所有的捕获组的一个迭代器
@@ -122,7 +122,7 @@ console.log(Array.from(a.matchAll(b)));
  */
 ```
 ### charAt
-::: tip charAt
+::: tip
 * 调用：str.charAt(index)
 * 入参：Number
 * 返回：String
@@ -131,7 +131,7 @@ console.log(Array.from(a.matchAll(b)));
 console.log('hello'.charAt(3)); // l
 ```
 ### charCodeAt
-::: tip charCodeAt
+::: tip
 * 调用：str.charCodeAt(index)
 * 入参：Number
 * 返回：Number
@@ -140,7 +140,7 @@ console.log('hello'.charAt(3)); // l
 console.log('hello'.charCodeAt(3)); // 108
 ```
 ### at
-::: tip at
+::: tip
 * 作用：支持负值下标查找元素
 * 调用：str.at(index)
 * tip：较新属性，支持环境要求高
@@ -155,7 +155,7 @@ const str = 'abc';
 console.log(str.at(-1)); // c
 ```
 ### search
-::: tip search
+::: tip
 * 作用：查找字符串的**第一个**匹配项
 * 调用：str.search(reg)
 * 传参：RegExp
@@ -183,7 +183,7 @@ console.log(str.indexOf('1', 1)); // 3
 
 ## 判断
 ### includes
-::: tip includes
+::: tip
 * 调用：str1.includes(str2[, start])
 * 入参：String[, Number]
 * 返回：bool，str1是否包含str2，**可选定开始位置**
@@ -200,7 +200,7 @@ console.log(str1.includes(str2, 9)); // true
 console.log(str1.includes(str2, 10)); // false
 ```
 ### endsWith
-::: tip endsWith
+::: tip
 * 作用：判断字符串是否以指定字符串结尾
 * 调用：str1.endsWith(str2[, searchIndex])
 * 入参：String[, Number]
@@ -246,7 +246,7 @@ String.prototype.myStartsWith = function (str, from = 0) {
 ::::
 ## 更改
 ### concat
-::: tip concat
+::: tip
 * 调用：str1.concat(str2)
 * 入参：String [, String...]
 * 返回：新的字符串，**不改变原字符串**
@@ -263,7 +263,7 @@ console.log(str1); // hello
 console.log(str1 + str2); // hello world!
 ```
 ### parseInt
-::: tip parseInt
+::: tip
 * 调用：parseInt(str)
 * 入参：String
 * 返回：number
@@ -277,7 +277,7 @@ console.log(parseInt(a)); // 1
 console.log(parseInt(b)); // NaN
 ```
 ### padStart
-::: tip padStart
+::: tip
 * 调用：str1.padStart(maxLength, str2)
 * 入参：Number, String
 * 返回：String，从首部用str2把maxLength填满
@@ -298,7 +298,7 @@ console.log(a.padStart(10)); // '        21'
 console.log(a); // 21
 ```
 ### padEnd
-::: tip padEnd
+::: tip
 * 调用：str1.padEnd(maxLength, str2)
 * 入参：Number, String
 * 返回：String，从尾部用str2把maxLength填满
@@ -312,7 +312,7 @@ console.log('2021年'.padEnd(2, '0')); // 2021年  //长度超了，不做修改
 console.log('1'.padEnd(10)); // '1         '
 ```
 ### replace
-::: tip replace
+::: tip
 * 作用：替换（一个或全部）指定字符串
 * 调用：str1.replace(reg, str2)
 * 入参1：String | RegExp 
@@ -407,7 +407,7 @@ console.log(a.replace(/l(.*?)w/g, (matchs, match, index, input) => {
 })); // heLord?
 ```
 ### repeat
-::: tip repeat
+::: tip
 * 作用：字符串重复
 * 调用：str.repeat(num)
 * 入参：Number
@@ -419,7 +419,7 @@ console.log(str1.repeat(2)); // abcabc
 console.log(str1); // abc
 ```
 ### trim
-::: tip trim
+::: tip
 * 作用：去掉头尾空格
 * 调用：str.trim()
 * 返回：String
@@ -429,7 +429,7 @@ const str = '   A B C  '
 console.log(str.trim()); // 'A B C'
 ```
 ### trimStart
-::: tip trimStart
+::: tip
 * 作用：去掉头空格
 * 调用：str.trimStart()
 * 返回：String
@@ -440,7 +440,7 @@ const str = '  A B C  ';
 console.log(str.trimStart()); // 'A B C  '
 ```
 ### trimEnd
-::: tip trimEnd
+::: tip
 * 作用：去掉尾空格
 * 调用：str.trimEnd()
 * 返回：String
@@ -453,7 +453,7 @@ console.log(str.trimEnd()); // '  A B C'
 
 ## 切割
 ### slice
-::: tip slice
+::: tip
 * 调用：str.slice(from[, to])
 * 入参：Number[, Number]
 * 返回：切割掉的字符串
@@ -470,7 +470,7 @@ console.log(a.slice(-1)); // o
 console.log(a); // hello
 ```
 ### substring
-::: tip substring
+::: tip
 * 调用：str.substring(from, to)
 * 入参：Number, Number
 * 返回：String
@@ -497,7 +497,7 @@ console.log(a.slice(-4, -2)); // 'el'
 ```
 :::
 ### split
-::: tip split
+::: tip
 * 调用：str.split(str2[, len])
 * 入参：String | RegExp[, Number]
 * 返回：Array，用str2分割出来的数组，可限制要几个
@@ -529,7 +529,7 @@ console.log(str.split(reg)); // ['h', 'llo world !']
 :::
 ::::
 ### substr
-::: tip substr
+::: tip
 * 调用：str.substr(from[, length])
 * 入参：Number[, Number]
 * 返回：String
@@ -544,7 +544,7 @@ console.log(a); // hello
 
 ## 其他
 ### Symbol.iterator
-::: tip Symbol.iterator
+::: tip
 * 作用：用字符串转生成可迭代对象
 * 调用：str[ Symbol.iterator ] ()
 * 返回：Iterator
@@ -573,7 +573,7 @@ console.log(codeArr); // [65, 66, 67]
 console.log(String.fromCharCode(...codeArr)); // ABC
 ```
 ### fromCodePoint
-::: tip fromCodePoint
+::: tip
 * 作用：支持更大的编码转化成字符串
 * 调用：String.charCodePoint(code)
 * 入参：Number
@@ -593,7 +593,7 @@ console.log(String.fromCodePoint(9731, 9733, 9842, 0x2F804)); // ☃★♲你
 ```
 
 ### toLowerCase
-::: tip toLowerCase
+::: tip
 * 作用：将字符串全部转换成小写
 * 调用：str.toLowerCase()
 * 返回：String
@@ -605,7 +605,7 @@ console.log(str.toLowerCase()); // abcd
 console.log(str); // AbCD
 ```
 ### toUpperCase
-::: tip toUpperCase
+::: tip
 * 作用：将字符串全部转换成大写
 * 调用：str.toUpperCase()
 * 返回：String
