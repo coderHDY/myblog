@@ -6,5 +6,5 @@ export default {
     create() {},
     mounted() {
         new bubbles();
-    }
+    },
 }

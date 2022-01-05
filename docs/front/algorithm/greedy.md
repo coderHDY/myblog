@@ -8,7 +8,8 @@ categories:
 ::: tip
 1. 最优子结构：每个问题都由较小的子问题组成，每个子问题都有一个最优解
 2. 局部最优解产生全局最优解
-3. 贪心算法核心：搜索前先排序，排序后尽量减少无效搜索
+3. 贪心算法重点步骤：搜索前先排序，排序后尽量减少无效搜索
+4. 贪心算法核心：**当前最优解**
 
 >js的sort的排序时间：O(mlogm)
 :::
@@ -272,6 +273,220 @@ function merge(intervals) {
         ans.push(current);
     }
     return ans;
+}
+```
+:::
+::::
+### 跳跃问题
+::: tip
+* 一个正整数数组
+* 每个数字代表能跳跃的步数
+* 判断能否跳到最后一个位置
+
+```js
+const arr1 = [2, 3, 1, 1, 4];
+console.log(canJump(arr1)); // true
+
+const arr2 = [3, 2, 1, 0, 4];
+console.log(canJump(arr2)); // false
+```
+* [力扣55](https://leetcode-cn.com/problems/jump-game/)
+:::
+:::: tabs
+::: tab label=贪心思路
+* 存一个jumpSize，走一步减一个，如果遇到更大的数就替换
+>时间O(n)：82.97%  
+>空间O(1)：82.07%
+```js{9-15}
+function canJump(arr) {
+    let jumpSize = arr[0];
+    if (jumpSize === 0 && arr.length > 1) {
+        return false;
+    }
+
+    // 边界是length - 1，因为最后一位不用判断
+    for (let i = 1; i < arr.length - 1; i++) {
+        jumpSize--;
+        if (arr[i] > jumpSize) {
+            jumpSize = arr[i];
+        }
+        if (jumpSize <= 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+```
+:::
+::: tab label=贪心优化
+* 可以再加一个len判断，如果本身就能达到最后，就不用遍历完了
+>时间：97.26%  
+>空间：77.06%
+```js{16-18}
+function canJump(arr) {
+    let jumpSize = arr[0];
+    if (jumpSize === 0 && arr.length > 1) {
+        return false;
+    }
+
+    // 边界是length - 1，因为最后一位不用判断
+    for (let i = 1; i < arr.length - 1; i++) {
+        jumpSize--;
+        if (arr[i] > jumpSize) {
+            jumpSize = arr[i];
+        }
+        if (jumpSize <= 0) {
+            return false;
+        }
+        if (jumpSize > arr.length - i - 1) {
+            return true;
+        }
+    }
+    return true;
+}
+```
+:::
+::::
+### 跳跃游戏2
+::: tip
+* 正整数数组
+* 最少跳跃次数到最后
+* 假设一定能到最后的位置
+```js
+const arr = [2, 3, 1, 1, 4];
+console.log(jump(arr)); // 2
+```
+* [力扣45](https://leetcode-cn.com/problems/jump-game-ii/)
+:::
+:::: tabs
+::: tab label=贪心思路
+* 拿一个end记录当前步数的结束位置
+* 总是拿到当前可跳跃的最远位置，作为下一步的结束位置（贪）
+* 每触碰到当前步数结束位置步数就+1，并更新结束位置
+>时间O(n)：66.77%  
+>空间O(1)：98.02%
+```js
+function jump(arr) {
+    let maxPosition = 0;
+    let end = 0;
+    let step = 0;
+    for (let i = 0; i < arr.length - 1; i++) {
+        maxPosition = Math.max(maxPosition, i + arr[i]);
+        if (i === end) {
+            step++;
+            end = maxPosition;
+        }
+    }
+    return step;
+}
+```
+:::
+::: tab label=优化
+* end已经超过length了就不计算了，直接返回
+>时间：92.86%  
+>空间：72.14%
+```js{10-12}
+function jump(arr) {
+    let maxPosition = 0;
+    let end = 0;
+    let step = 0;
+    for (let i = 0; i < arr.length - 1; i++) {
+        maxPosition = Math.max(maxPosition, i + arr[i]);
+        if (i === end) {
+            step++;
+            end = maxPosition;
+            if (end > arr.length) {
+                return step;
+            }
+        }
+    }
+    return step;
+}
+```
+:::
+::::
+### 判断子序列
+::: tip
+* 给两个字符串
+* 一个字符串是另一个字符串的子集，且出现的顺序是正确的
+```js
+const s = "abc";
+const t = "ahbgdc";
+console.log(isSubsequence(s, t)); // true
+```
+* [力扣392](https://leetcode-cn.com/problems/is-subsequence/)
+:::
+:::: tabs
+::: tab label=贪心思路
+* 拿一个指针记录已经到的位置，接着搜下一个。
+>时间：100.00%  
+>空间：92.94%
+```js
+function isSubsequence(child, father) {
+    let cIndex = -2;
+    for (let char of child) {
+        let index = father.indexOf(char, cIndex + 1);
+        if (index === -1) {
+            return false;
+        } else {
+            cIndex = index;
+        }
+    }
+    return true;
+}
+```
+:::
+::::
+### 买卖股票
+::: tip
+* 一个数组是股票一个时间段的涨跌
+* 求能获取最大的利润
+
+```js
+const prices = [7,1,5,3,6,4]
+console.log(maxProfit(prices)); // 7
+```
+* [力扣122](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/)
+:::
+:::: tabs
+::: tab label=思路
+* 【低点买入，高点卖出】下一个时间段涨了我就买，下一个时间段跌了我就卖
+<img src="./assets/maigupiao.png" style="width:400px;">
+
+>时间：99.15%  
+>空间：56.41%
+```js{6-12}
+function maxProfit(prices) {
+    let isIn = false;
+    let profits = 0;
+    let cPrice = 0;
+    for (let i = 0; i < prices.length; i++) {
+        if (!isIn && prices[i + 1] && prices[i] < prices[i + 1]) {
+            isIn = true;
+            cPrice = prices[i];
+        } else if (isIn &&  (!prices[i + 1] || prices[i] > prices[i + 1])) {
+            isIn = false;
+            profits += prices[i] - cPrice;
+        }
+    }
+    return profits;
+}
+```
+:::
+::: tab label=思路二
+* 【我是股神，所有利益我都要】差值是正值就是利润，其他不管
+>时间：96.55%  
+>空间：62.06%
+```js{4-6}
+function maxProfit(prices) {
+    let profits = 0;
+    for (let i = 0; i < prices.length - 1; i++) {
+        if (prices[i] < prices[i + 1]) {
+            profits += prices[i + 1] - prices[i];
+        }
+    }
+    return profits;
 }
 ```
 :::

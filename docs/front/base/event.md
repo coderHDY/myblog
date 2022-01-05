@@ -630,7 +630,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 :::
 ### composedPath
 ::: tip
-* 作用：时间的传播路径
+* 作用：事件的传播路径
 * 调用：e.composedPath()
 * 返回：Array【栈结构】
 :::
