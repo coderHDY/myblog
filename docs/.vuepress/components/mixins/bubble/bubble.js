@@ -16,6 +16,7 @@ export default function bubbleCursor(options) {
 
   function init(wrapperEl) {
     canvas = document.createElement("canvas");
+    canvas.style.zIndex = 999;
     context = canvas.getContext("2d");
 
     canvas.style.top = "0px";
