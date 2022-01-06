@@ -70,6 +70,7 @@ const front = {
                 'string',
                 'greedy',
                 'dynamic',
+                'tree',
             ]
         }
     ],
