@@ -21,10 +21,6 @@ const front = {
             link: '/front/algorithm/'
         },
         {
-            text: 'js手写底层',
-            link: '/front/sourcecode/'
-        },
-        {
             text: '前端面试题',
             link: '/front/interview/'
         },

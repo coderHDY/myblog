@@ -74,13 +74,10 @@ const front = {
             ]
         }
     ],
-    '/front/sourcecode/': [
-        '',
-        'dom',
-        'recursion'
-    ],
     '/front/interview/': [
         '',
+        'js',
+        'css',
     ],
     '/front/css/': [
         {

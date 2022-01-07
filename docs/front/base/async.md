@@ -89,8 +89,9 @@ console.log(9);
  * 3
  * 7
  * 
- * async返回包装：[Promise.resolve(4)]
+ * async返回包装：[new Promise(resolve => resolve(4))], sum().then被推进队列
  * 8
+ * 
  * 4
  */
 ```
