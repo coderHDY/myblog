@@ -973,3 +973,299 @@ app.post('/data', (req, res) => {
 ```
 :::
 ::::
+## 手写bind
+:::: tabs
+::: tab label=期望
+>难点：需要考虑函数式调用和new调用，new调用可以用`instanceof`或`new.target`来判断
+* 函数使用
+```js{9-10}
+const name = '张三';
+const obj = {
+    name: 'hdy',
+};
+
+function getName() {
+    console.log(this.name);
+}
+const objGetName = getName.myBind(obj);
+objGetName(); // hdy
+```
+* 构造函数使用
+```js{6-7}
+function Cat(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+const initCat = Cat.myBind({}, 'hdy');
+console.log(new initCat(20)); // Cat {name: 'hdy', age: 20}
+```
+:::
+::: tab label=实现
+```js{3,6,13}
+Function.prototype.myBind = function(obj, ...args) {
+    let fn;
+    let that = this;
+
+    fn = function (...args2) {
+        if (new.target) {
+            return that.call(this, ...args, ...args2);
+        } else {
+            return that.call(obj, ...args, ...args2);
+        }
+    }
+
+    fn.prototype = this.prototype;
+    return fn;
+}
+```
+:::
+::::
+## 手写require
+:::: tabs
+::: tab label=原理
+* commonJS原理是require的时候将源文件包装成函数执行一遍，module.exports的数据作为返回值
+* exports是module.exports的引用，所以exports等于号赋值会断开链接【exports = {xxx}】，返回的依旧是module.exports
+```shell
+# 目录
+|- a.js
+|- main.js
+```
+:::
+::: tab label=a.js
+```js
+let a = 0;
+function add() {
+    a++;
+}
+module.exports = {
+    add,
+    a
+}
+```
+:::
+::: tab label=main.js
+```js{5-6,12-13,16}
+const fs = require('fs');
+const path = require('path');
+
+function _require(filePath) {
+    const _module = {exports: {}};
+    let _exports = _module.exports;
+
+    filePath = filePath.endsWith('.js') ? filePath : filePath + '.js';
+    const p = path.join(__dirname, filePath);
+    const file = fs.readFileSync(p).toString();
+
+    eval(file);
+    return _module.exports;
+}
+
+let {add, a} = _require('./a.js');
+console.log(a); // 0
+add();
+console.log(a); // 0
+```
+:::
+::::
+## es6模块化原理
+:::: tabs
+::: tab label=ES6
+* ES6模块化会先生成一个依赖关系图，然后根据依赖顺序进行反向执行
+* import 有变量提升效果，就能方便的拿到依赖关系
+* 最后所有的文件都只会执行一遍，因为有依赖关系图的存在
+* 所拿到的是值的引用【commonJS拿的是值的拷贝】，所有的值共享一个值
+```shell
+# 目录
+|- b.js
+|- main.html
+|- server.js
+```
+:::
+::: tab label=server.js
+```js
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+app.listen('8888', () => console.log('listen 8888'));
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    const url = path.join(__dirname, './main.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+})
+
+app.get('/b', (req, res) => {
+    res.setHeader('Content-Type', 'text/javascript');
+    const url = path.join(__dirname, './b.js');
+    const code = fs.readFileSync(url);
+    res.send(code)
+})
+```
+:::
+::: tab label=b.js
+```js
+let a = 0;
+function add() {
+    a++;
+}
+export { a, add }
+```
+:::
+::: tab label=main.html
+* 和上面CommonJS规范形成对比，说明ES6是`值的引用`，commonjs是`值的拷贝`
+```html{4-6}
+<body>
+    <script type="module">
+        import { a, add } from './b';
+        console.log(a);    // 0
+        add();
+        console.log(a);    // 1
+    </script>
+</body>
+```
+:::
+::::
+## 事件代理
+:::: tabs
+::: tab label=代理机制
+* 一个列表每一项都要设置同一个事件的不同效果
+* 如果每个列表项都增加事件监听，性能消耗比较大
+* 实现在列表添加事件监听，然后对应不同的列表项触发不同的事件
+---
+
+<video src="./assets/shijiandaili.mp4" style="width:400px;" controls />
+
+:::
+::: tab label=事件代理
+```html{20-26}
+<body>
+    <ul>
+        <li data='1'>1</li>
+        <li data='2'>2</li>
+        <li data='3'>3</li>
+        <li data='4'>4</li>
+        <li data='5'>5</li>
+        <li data='6'>6</li>
+        <li data='7'>7</li>
+        <li data='8'>8</li>
+        <li data='9'>9</li>
+        <li data='10'>10</li>
+    </ul>
+
+    <script>
+        const ul = document.querySelector('ul');
+        function getData(key) {
+            console.log(`获取${key}的数据`);
+        }
+        ul.addEventListener('click', e => {
+            const data = e.target.getAttribute('data');
+            if (!data) {
+                return;
+            }
+            getData(data);
+        });
+    </script>
+
+    <style>
+        li {
+            width: 100px;
+            height: 25px;
+            margin-top: 2px;
+            list-style: none;
+        }
+        ul>li:nth-child(3N) {
+            background-color: blue;   
+        }
+        ul>li:nth-child(3N + 1) {
+            background-color: red;   
+        }
+        ul>li:nth-child(3N + 2) {
+            background-color: green;   
+        }
+    </style>
+</body>
+```
+:::
+::::
+## 手写EventTarget
+:::: tabs
+::: tab label=期望
+```js
+function getData() {
+    console.log('getData');
+}
+const target = new MyEventTarget();
+target.addEventListener('click', () => console.log('---'));
+target.addEventListener('click', getData);
+target.dispatch('click');
+/**
+ * ---
+ * getData
+ */
+
+target.removeEventListener('click', getData);
+setTimeout(() => target.dispatch('click'), 1000);
+/**
+ * ---
+ */
+
+```
+:::
+::: tab label=实现
+```js{12,18-19,27}
+class MyEventTarget {
+    bindMap = new Map();
+    initListener(event) {
+        if (!this.bindMap.get(event)) {
+            this.bindMap.set(event, []);
+        }
+    }
+    addEventListener(event, callback) {
+        this.initListener(event);
+
+        const callbackList = this.bindMap.get(event);
+        callbackList.push(callback);
+    }
+    removeEventListener(event, callback) {
+        this.initListener(event);
+
+        let callbackList = this.bindMap.get(event);
+        callbackList = callbackList.filter(item => item !== callback);
+        this.bindMap.set(event, callbackList);
+    }
+    dispatch(e, ...args) {
+        // const event = e instanceof Event ? e.type : e;
+        const event = e;
+        this.initListener(event);
+
+        let callbackList = this.bindMap.get(event);
+        callbackList.forEach(item => item.call(null, e, ...args));
+    }
+}
+```
+:::
+::::
+## 每天自动问好
+:::: tabs
+::: tab label=localStorage实现
+* 一个网页每天自动问好，使用localStorage
+* 使用IIFE，一次性的代码，不用污染全局变量
+```html
+<body>
+    <script>
+        (function() {
+            let lastTime = localStorage.getItem('lastTime');
+            let today = new Date().toDateString();
+            if (!lastTime || lastTime != today) {
+                localStorage.setItem('lastTime', today);
+                alert('你好~，新的一天要开心哦~');
+            }
+        })()
+    </script>
+</body>
+```
+:::
+::::
