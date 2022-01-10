@@ -101,10 +101,10 @@ const front = {
             ]
         },
     ],
-    '/front/node/': [
+    '/front/vue2/': [
         '',
     ],
-    '/front/vue/': [
+    '/front/node/': [
         '',
     ],
     '/front/react/': [

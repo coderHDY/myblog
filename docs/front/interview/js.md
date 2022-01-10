@@ -1045,7 +1045,7 @@ module.exports = {
 ```
 :::
 ::: tab label=main.js
-```js{5-6,12-13,16}
+```js{4-14,16}
 const fs = require('fs');
 const path = require('path');
 

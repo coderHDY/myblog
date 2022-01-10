@@ -25,6 +25,12 @@ module.exports = {
               logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/theme_reco.png',
               link: 'https://vuepress-theme-reco.recoluan.com'
             },
+            {
+                title: '午后南杂',
+                desc: 'Enjoy when you can, and endure when you must.',
+                logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/reco.png',
+                link: 'https://www.recoluan.com'
+            },
         ],
         // 博客设置
         blogConfig: {
