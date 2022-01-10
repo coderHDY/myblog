@@ -225,3 +225,23 @@ class DBLinkList {
 ```
 :::
 ::::
+## 算法题
+### 反转链表
+:::: tabs
+::: tab lable=双指针法
+>时间：88.33%  
+>空间：37.73%
+```js
+var reverseList =  function(head) {
+    let prev = null;
+    while (head) {
+        let next = head.next;
+        head.next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+};
+```
+:::
+::::

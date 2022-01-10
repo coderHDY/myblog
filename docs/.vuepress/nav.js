@@ -25,12 +25,12 @@ const front = {
             link: '/front/interview/'
         },
         {
-            text: 'node',
-            link: '/front/node/'
-        },
-        {
             text: 'vue2',
             link: '/front/vue2/'
+        },
+        {
+            text: 'node',
+            link: '/front/node/'
         },
         {
             text: 'react',
