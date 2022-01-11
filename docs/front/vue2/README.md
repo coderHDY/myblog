@@ -73,7 +73,9 @@ data: 2022-01-10
 ```
 :::
 ::: tab label=for
-* v-for：列表渲染
+* v-for：列表渲染【v-for="(s, index) in students"】
+* 【for...in...】和【for...of...】效果一样
+* 可以用【v-for="n in 10"】来直接重复渲染10次
 * 需要唯一的key值，优化diff算法的。**不要用index值作为key，因为从头添加，index整体都会改变，diff算法就更耗时。**
 
 <video src="./assets/v-for.mp4" style="width:400px;" controls />
@@ -359,8 +361,9 @@ data: 2022-01-10
 
 ### 组件化
 :::: tabs
-::: tab label=注册组件
-
+::: tab label=全局组件
+* 注册组件分为`全局组件`和`局部组件`，Vue.component是注册的全局组件
+* **每个组件必须只有一个根元素**
 <img src="./assets/zizujian.png" style="width:200px;">
 
 ```html{5-9,14-27}
@@ -399,7 +402,31 @@ data: 2022-01-10
 </body>
 ```
 :::
-::: tab label=组件传参
+::: tab label=局部组件
+<img src="./assets/jubuzujian.png" style="width:300px;">
+
+```html{8,11-13}
+<body>
+    <div id="app">
+        <home />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const home = {template: '<div>首页内容</div>'};
+        const app = new Vue({
+            el: '#app',
+            components: {
+                home
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=组件传参1
+* props是单向的【父 -> 子】，如果需要双向绑定，可以加 [.sync](./props.html#父-子) 修饰符
+
 <img src="./assets/zujianchuancan.png" style="width:200px">
 
 ```html{6,9,22-27,34-35}
@@ -438,6 +465,205 @@ data: 2022-01-10
                 return {
                     students: ['hdy', '小赵', '张三'],
                     teachers: ['黄老师', '张老师', '李老师'],
+                }
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=组件传参2
+* 如果要传递一个对象的所有参数作为props，直接使用【v-bind="obj"】
+
+<img src="./assets/quanbuprops.png" style="width:300px"/>
+
+```html{3,10,19-22}
+<body>
+    <div id="app">
+        <home v-bind="me"/>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const home = {
+            template: '<div>我的名字是：{{name}}，年龄是{{age}}</div>',
+            props: ['name', 'age']
+        };
+        const app = new Vue({
+            el: '#app',
+            components: {
+                home
+            },
+            data() {
+                return {
+                    me: {
+                        name: 'hdy',
+                        age: 18
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=事件发射
+* 使用组件的时候可以用@监听组件内的事件，可以是自定义事件
+* 组件内部可以用`$emit`发射事件
+>注：emit事件**不能用驼峰**
+```html{3,15-17,24-27}
+<body>
+    <div id="app">
+        <comp @btn-clk="fatherSay"/>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('comp', {
+            template: `
+            <div>
+                <button @click="say">组件按钮</button>
+            </div>
+            `,
+            methods: {
+                say(e) {
+                    this.$emit('btn-clk', '100', e)
+                }
+            }
+        })
+
+        const app = new Vue({
+            el: '#app',
+            methods: {
+                fatherSay(msg, e) {
+                    console.log(msg);
+                    console.log(e);
+                }
+            }
+        })
+    </script>
+</body>
+```
+
+<img src="./assets/emitjiexi.png" style="width:600px">
+
+:::
+::: tab label=组件用model
+* v-model本质就是v-bind和v-on的结合语法糖
+
+<video src="./assets/v-modelzizujian.mp4" style="width:400px;" controls />
+
+```html{3,18-28}
+<body>
+    <div id="app">
+        <comp v-model="myMsg"/>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('comp', {
+            template: `
+            <div>
+                <input
+                    type="text"
+                    :value="value"
+                    @input="input"
+                >
+            </div>
+            `,
+            props: {
+                value: {
+                    type: String,
+                    default: ''
+                }
+            },
+            methods: {
+                input(e) {
+                    this.$emit('input', e.target.value);
+                }
+            }
+        })
+
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    myMsg: '消息'
+                }
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=动态组件
+* 可以使用`component`标签，添加属性【**v-bind:is="compName"**】来动态定义组件
+
+<video src="./assets/dynamiccomp.mp4" style="width:400px;" controls />
+
+```html{13,44-46,61-63}
+<body>
+    <div id="app">
+        <div class="tabs-box">
+            <div
+                v-for="(tab, index) in tabs"
+                class="tab"
+                :class="{select: selected === index}"
+                @click="changeTab(index)"
+            >{{tab}}</div>
+        </div>
+
+        <div class="content">
+            <component :is="componentName"></component>
+        </div>
+    </div>
+
+
+    <style>
+        .tabs-box {
+            height: 30px;
+            background-color: rgb(192, 234, 245);
+            display: flex;
+            user-select: none;
+        }
+        .tab {
+            width: auto;
+            padding: 5 10px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .tab.select {
+            background-color: rgb(247, 136, 136);
+            border: 2px;
+        }
+        .content {
+            background-color: rgb(247, 255, 199);
+            width: 100%;
+            min-height: 100vh;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('home', {template: '<div>首页内容</div>'})
+        Vue.component('about', {template: '<div>相关内容</div>'})
+        Vue.component('me', {template: '<div>我的空间</div>'})
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    tabs: ['home', 'about', 'me'],
+                    selected: 0
+                }
+            },
+            methods: {
+                changeTab(index) {
+                    this.selected = index;
+                }
+            },
+            computed: {
+                componentName() {
+                    return this.tabs[this.selected];
                 }
             }
         })
@@ -781,7 +1007,12 @@ data: 2022-01-10
 <div v-bind:class="{ active: isActive }"></div>
 
 <div v-bind:class="{ active: isActive, 'text-danger': hasError }"></div>
+
+<div v-bind:class="[activeClass, errorClass]"></div>
+
+<div v-bind:class="[{ active: isActive }, errorClass]"></div>
 ```
+---
 * 可以用计算属性返回对象的形式计算动态class
 
 <img src="./assets/class.png" style="width:400px;">
@@ -807,6 +1038,311 @@ data: 2022-01-10
         })
     </script>
 </body>
+```
+:::
+::: tab label=组件class
+* 组件根元素的class会被渲染上，调用组件时传入的class也会被渲染上
+<img src="./assets/zujianclass.png" style="width:400px;">
+
+```html{3-4}
+<body>
+    <div id="app">
+        <comp></comp>
+        <comp :class="'c d'"></comp>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('comp', {
+            template: `
+            <div class="a b">
+                <p>组件</p>
+            </div>
+            `
+        })
+        
+        const app = new Vue({
+            el: '#app',
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=内联样式
+* 动态语法
+```html
+<!-- 动态传值 -->
+<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+
+<!-- 绑定对象 -->
+<div v-bind:style="styleObject"></div>
+
+<!-- 多个对象 -->
+<div v-bind:style="[baseStyles, overridingStyles]"></div>
+```
+:::
+::::
+### 数组
+:::: tabs
+::: tab label=注意事项
+* 要使用唯一的key值
+* **不能使用下标更改**，数组监听只是重写了下面的方法
+    * push()
+    * pop()
+    * shift()
+    * unshift()
+    * splice()
+    * sort()
+    * reverse()
+:::
+::: tab label=下标修改测试
+<video src="./assets/splice.mp4" style="width:400px;" controls />
+
+```html{6-7,21,24}
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="s of stu" key="s">{{s}}</li>
+        </ul>
+        <button @click="indexMod">下标修改</button>
+        <button @click="splice">splice修改</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    stu: ['张三', '李四', '王五'],
+                }
+            },
+            methods: {
+                indexMod() {
+                    this.stu[0] = 'hdy'
+                },
+                splice() {
+                    this.stu.splice(0, 1, 'hdy');
+                }
+            }
+        })
+    </script>
+</body>
+```
+:::
+::::
+### Event
+:::: tabs
+::: tab label=方法总览
+* 可以用 v-on / @ 指令监听 DOM 事件，并在触发时**运行一些 JavaScript 代码或函数**
+* 当一个 ViewModel 被销毁时，**所有的事件处理器都会自动被删除**。你无须担心如何清理它们。
+```html
+<!-- 执行JS代码 -->
+<button v-on:click="counter += 1">Add 1</button>
+
+<!-- 函数默认接收event参数 -->
+<button v-on:click="greet">Greet</button>
+
+<!-- 函数传值 -->
+<button @click="getMoney(10)">转换美元</button>
+
+<!-- 又想传值又想传事件 -->
+<button @click="getMoney(10, $event)">转换美元</button>
+```
+:::
+::: tab label=事件修饰符
+* 已支持修饰符
+    * .stop
+    * .prevent
+    * .capture
+    * .self
+    * .once
+    * .passive
+    * .native : 在一个组件的根元素上直接监听一个原生事件。
+
+```html
+<!-- 阻止单击事件继续传播 -->
+<a v-on:click.stop="doThis"></a>
+
+<!-- 提交事件不再重载页面 -->
+<form v-on:submit.prevent="onSubmit"></form>
+
+<!-- 修饰符可以串联 -->
+<a v-on:click.stop.prevent="doThat"></a>
+```
+* 支持的键盘触发事件
+```html
+<!-- 只有在 `key` 是 `Enter` 时调用 `vm.submit()` -->
+<input v-on:keyup.enter="submit">
+```
+* 提供的别名
+    * .enter
+    * .tab
+    * .delete (捕获“删除”和“退格”键)
+    * .esc
+    * .space
+    * .up
+    * .down
+    * .left
+    * .right
+:::
+::: tab label=表单内事件
+* v-model 在内部为不同的输入元素使用不同的 property 并抛出不同的事件：
+    * text 和 textarea 元素使用 value property 和 `input` 事件；
+    * checkbox 和 radio 使用 checked property 和 `change` 事件；
+    * select 字段将 value 作为 prop 并将 `change` 作为事件。
+* 修饰符
+    * lazy：将表单change时同步【鼠标离开时】
+    * number：内部用parseFloat解析
+    * trim：内部调用String.prototype.trim()
+>lazy和非lazy对比
+
+<video src="./assets/lazy.mp4" style="width:400px;" controls />
+
+```html{3,4}
+<body>
+    <div id="app">
+        <input type="text" v-model="msg">
+        <input type="text" v-model.lazy="msg">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: '消息'
+                }
+            },
+        })
+    </script>
+</body>
+```
+:::
+::::
+### 插槽
+:::: tabs
+::: tab label=规则
+* 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。
+>**父模板能向子模板的slot传值，但编译过程是在父模板走的**，子模板拿到的只是编译后的值替换掉对应的slot标签。
+
+<img src="./assets/slotchuanzhi.png" style="width:400px;">
+
+```html{3,10-12,16,27}
+<body>
+    <div id="app">
+        <home>{{name}}</home>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const home = {
+            template: `
+            <div>我的名字是：
+                <slot />
+            </div>
+            `,
+            data() {
+                return {
+                    name: '儿子',
+                }
+            }
+        };
+        const app = new Vue({
+            el: '#app',
+            components: {
+                home
+            },
+            data() {
+                return {
+                    name: '爸爸',
+                }
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=作用域插槽
+* **使用插槽时也想使用子组件的变量**，就可以用`作用域插槽`。
+* 子组件定义插槽时向插槽bind参数
+* 父组件使用插槽时【v-slot="propsObj"】能够拿到所有子组件传来的参数
+```html{4-6,15}
+<body>
+    <div id="app">
+        <home>
+            <template v-slot='slotData'>
+                {{slotData.myName}}
+            </template>
+        </home>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const home = {
+            template: `
+            <div>我的名字是：
+                <slot :myName="name"></slot>
+            </div>
+            `,
+            data() {
+                return {
+                    name: '儿子',
+                }
+            }
+        };
+        const app = new Vue({
+            el: '#app',
+            components: {
+                home
+            },
+            data() {
+                return {
+                    name: '爸爸',
+                }
+            }
+        })
+    </script>
+</body>
+```
+* 也可以不用template，直接传到子组件标签上
+```html
+<home v-slot='slotData'>
+    {{slotData.myName}}
+</home>
+```
+:::
+::: tab label=其他规则
+* 具名插槽
+```html
+<slot name="header"></slot>
+```
+```html
+<template v-slot:header>
+    <h1>Here might be a page title</h1>
+</template>
+
+<!-- 缩写 -->
+<template #header>
+    <h1>Here might be a page title</h1>
+</template>
+
+<!-- 或 -->
+<h1 slot="header">Here might be a page title</h1>
+```
+* 不带名字的被视为`默认插槽`，双标签内部的内容就被默认传进来
+* 解构插槽props
+```html
+<home v-slot="{ name }">
+  {{ user }}
+</home>
+```
+* 动态插槽名
+```html
+<template v-slot:[dynamicSlotName]>
+    啦啦啦
+</template>
 ```
 :::
 ::::
