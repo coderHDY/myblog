@@ -5,9 +5,10 @@ data: 2022-01-10
 ## 入门网址
 ::: tip
 * [Vue官网](https://cn.vuejs.org/)
+* [VueX官网](https://vuex.vuejs.org/zh/#%E4%BB%80%E4%B9%88%E6%98%AF-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F)
+* [Vue-Router](https://router.vuejs.org/zh/installation.html)
 :::
-## 基础知识
-### 基础指令
+## 基础指令
 :::: tabs
 ::: tab label=model/on
 * v-model：表单输入和应用状态之间的双向绑定
@@ -359,7 +360,7 @@ data: 2022-01-10
 :::
 ::::
 
-### 组件化
+## 组件化
 :::: tabs
 ::: tab label=全局组件
 * 注册组件分为`全局组件`和`局部组件`，Vue.component是注册的全局组件
@@ -672,7 +673,7 @@ data: 2022-01-10
 ```
 :::
 ::::
-### 生命周期
+## 生命周期
 :::: tabs
 ::: tab label=概览
 <img src="./assets/lifecycle.png" style="width:500px;">
@@ -756,8 +757,56 @@ data: 2022-01-10
 * beforeDestory：VUE实例销毁前调用，可以用啦销毁事件监听器、setTimeout/setTimeInterval
 * destroyed：Vue实例已销毁，拿不到数据了
 :::
+::: tab label=activated/deactivated
+* activated: `keep-alive`包含组件激活时触发
+* deactivated: `keep-alive`包含组件离开时触发
+
+<img src="./assets/activated.png" style="width:300px;">
+
+```html
+<body>
+    <div id="app">
+        <keep-alive>
+            <component :is="path"/>
+        </keep-alive> 
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        Vue.component('home', {
+            template:`
+            <div>这是主页</div>
+            `,
+            activated() {
+                console.log('in');
+            },
+            deactivated(e) {
+                console.log('out');
+            },
+        });
+
+        Vue.component('about', {
+            template:`
+            <div>关于我们</div>
+            `,
+        })
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    path: 'home'
+                }
+            },
+            mounted() {
+                setTimeout(() => this.path = 'about', 2000);
+            }
+        })
+    </script>
+</body>
+```
+:::
 ::::
-### data/computed/watch
+## data/computed/watch
 :::: tabs
 ::: tab label=data
 * 为什么不直接用对象，而用函数返回对象？
@@ -999,7 +1048,7 @@ data: 2022-01-10
 ```
 :::
 ::::
-### class/style
+## class/style
 :::: tabs
 ::: tab label=class
 * 动态绑定方法：
@@ -1082,7 +1131,7 @@ data: 2022-01-10
 ```
 :::
 ::::
-### 数组
+## 数组
 :::: tabs
 ::: tab label=注意事项
 * 要使用唯一的key值
@@ -1131,7 +1180,7 @@ data: 2022-01-10
 ```
 :::
 ::::
-### Event
+## Event
 :::: tabs
 ::: tab label=方法总览
 * 可以用 v-on / @ 指令监听 DOM 事件，并在触发时**运行一些 JavaScript 代码或函数**
@@ -1221,7 +1270,7 @@ data: 2022-01-10
 ```
 :::
 ::::
-### 插槽
+## 插槽
 :::: tabs
 ::: tab label=规则
 * 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。
@@ -1343,6 +1392,165 @@ data: 2022-01-10
 <template v-slot:[dynamicSlotName]>
     啦啦啦
 </template>
+```
+:::
+::::
+## 混入
+:::: tabs
+::: tab label=minxins
+* 定义一些可直接复用的方法、生命周期事情。
+* 混入对象的钩子将在组件自身钩子之前调用。
+* methods和data重名以组件本地的为准。
+
+<img src="./assets/mixin.png" style="width:200px;"/>
+
+```html{8-10,12-14,20-23}
+<body>
+    <div id="app">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const mixin = {
+            created() {
+                console.log('created');
+            },
+            methods: {
+                say() {
+                    console.log('mixin');
+                }
+            }
+        }
+
+        const app = new Vue({
+            el: '#app',
+            mixins: [mixin],
+            mounted() {
+                this.say();
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=全局混入
+* 使用后所有组件都会被影响
+```html{21}
+<body>
+    <div id="app">
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const mixin = {
+            created() {
+                console.log('所有组件created都要执行');
+            },
+            methods: {
+                say() {
+                    console.log('全局混入');
+                }
+            },
+            mounted() {
+                this.say();
+            }
+        }
+
+        Vue.mixin(mixin);
+        const app = new Vue({
+            el: '#app',
+        })
+    </script>
+</body>
+```
+:::
+::::
+## 自定义指令
+:::: tabs
+::: tab label=介绍
+* 对普通 DOM 元素进行底层操作
+* 可执行钩子：
+    * bind：只调用一次，指令**第一次绑定到元素时调用**。在这里可以进行一次性的初始化设置。
+    * `inserted`：被绑定元素**插入父节点时调用** (仅保证父节点存在，但不一定已被插入文档中)。
+    * update：**所在组件的 VNode 更新时调用**
+    * componentUpdated：指令**所在组件的 VNode 及其子 VNode 全部更新后调用**。
+    * unbind：只调用一次，指令**与元素解绑时调用**。
+* 入参：
+    * el
+    * binding = { name, value, expression, oldValue, arg, modifiers }
+    * vnode
+    * oldVnode
+:::
+::: tab label=局部指令
+* 组件内接收`directives`对象，每个属性是一个指令
+>有两个输入框，一进入页面光标就聚焦在第二个上
+```html{4,21}
+<body>
+    <div id="app">
+        <input type="text"/>
+        <input type="text" v-focus />
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const directives = {
+            focus: {
+                // 指令的定义
+                inserted: function (el) {
+                    console.log(el.focus);
+                    el.focus();
+                }
+            }
+        }
+
+        const app = new Vue({
+            el: '#app',
+            directives,
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=全局指令
+* 自定义鉴权按钮
+
+<video src="./assets/directives.mp4" style="width:300px;" controls />
+
+```html{3,11-16,18}
+<body>
+    <div id="app">
+        <div v-admin="'admin'">只有管理员可见的盒子</div>
+        <button @click="login">添加管理员权限</button>
+        <button @click="logout">移除管理员权限</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const directives = {
+            inserted: function (el, bind) {
+                const val = bind.value;
+                if (!localStorage.getItem('power')?.includes(val)) {
+                    el.parentElement.removeChild(el);
+                }
+            }
+        }
+        Vue.directive('admin', directives);
+
+        const app = new Vue({
+            el: '#app',
+            methods: {
+                login() {
+                    localStorage.setItem('power', 'admin');
+                    location.reload();
+                },
+                logout() {
+                    localStorage.removeItem('power');
+                    location.reload();
+                }
+            }
+        })
+    </script>
+</body>
 ```
 :::
 ::::

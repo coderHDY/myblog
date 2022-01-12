@@ -923,4 +923,22 @@ store.state.a // -> moduleA 的状态
 store.state.b // -> moduleB 的状态
 ```
 :::
+::: tab label=v-model
+* 如果需要用到双向绑定的位置
+```html
+<input v-model="message">
+```
+```js
+computed: {
+    message: {
+        get () {
+            return this.$store.state.message;
+        },
+        set (value) {
+            this.$store.commit('updateMessage', value);
+        }
+    }
+}
+```
+:::
 ::::
