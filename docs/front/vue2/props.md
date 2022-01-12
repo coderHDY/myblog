@@ -659,12 +659,268 @@ new Vue({
 ::: tip
 * [VueX官网](https://vuex.vuejs.org/zh/#%E4%BB%80%E4%B9%88%E6%98%AF-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F)
 * 状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
-* 配合浏览器退出的vue-devtools，可以生成状态快照，方便调试
+* 配合vue-devtools，可以生成状态快照，方便调试
 :::
 :::: tabs
 ::: tab label=概念
 <img src="./assets/vuex.png" style="width:500px;">
+
+* 通过store.state获取数据
+* dispatch调用actions
+* commit调用mutations
+* mutations触发数据源state改变能够被devtools记录前后的数据快照，从而方便调试
+>常被管理的状态：用户名、头像、地理位置等信息，商品收藏、购物车等信息。
+:::
+::: tab label=起步
+<video src="./assets/vuex.mp4" style="width:300px;" controls />
+
+```html{9,11-20,24}
+<body>
+    <div id="app">
+        {{$store.state.count}}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+    <script>
+        Vue.use(Vuex);
+
+        const store = new Vuex.Store({
+            state: {
+                count: 0
+            },
+            mutations: {
+                increment (state) {
+                    state.count++;
+                }
+            }
+        });
+
+        const app = new Vue({
+            el: '#app',
+            store,
+            mounted() {
+                setInterval(() => this.$store.commit('increment'), 1000);
+            }
+        })
+    </script>
+</body>
+```
+:::
+::: tab label=state
+* 状态源，每个应用只应该包含一个状态源。定义：
+```js{2-4}
+const store = new Vuex.Store({
+    state: {
+        count: 0
+    },
+    mutations: {
+        increment (state) {
+            state.count++;
+        }
+    }
+});
+```
+* 组件内调用：
+```js
+computed: {
+    count() {
+        return this.$store.state.count;
+    }
+}
+```
+>mapState：提供更简单的获取方式：
+```html{10,21,36-38}
+<body>
+    <div id="app">
+        {{count}}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+    <script>
+        Vue.use(Vuex);
+        const { mapState } = Vuex;
+
+        const store = new Vuex.Store({
+            state: {
+                count: 0
+            },
+            mutations: {
+                increment (state) {
+                    state.count++;
+                }
+            },
+            computed: mapState(['count']),
+
+            // 写法二：
+            // computed: mapState({
+            //     count: state => state.count,
+            //     countAlias: 'count',
+            //     countPlusLocalState (state) {
+            //         return state.count + this.localCount
+            //     }
+            // })
+        });
+
+        const app = new Vue({
+            el: '#app',
+            store,
+            computed: {
+                ...mapState([ 'count' ]),
+            }
+        })
+    </script>
+</body>
+```
 :::
 ::: tab label=getters
+* 作用：类似组件内的computed，能将store内的值进行计算制作出新的变量名，并且能够随着依赖变量的改变而改变
+* 入参：`state`
+
+<video src="./assets/vuex4.mp4" style="width:300px;" controls />
+
+```html
+<body>
+    <div id="app">
+        {{ dollar }}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+    <script>
+        Vue.use(Vuex);
+
+        const store = new Vuex.Store({
+            state: {
+                money: 10
+            },
+            mutations: {
+                increment (state) {
+                    state.money++;
+                }
+            },
+            getters: {
+                dollar(state) {
+                    return '$' + (state.money * 7.2).toFixed(2);
+                }
+            }
+        });
+
+        const app = new Vue({
+            el: '#app',
+            store,
+            mounted() {
+                setInterval(() => this.$store.commit('increment'), 1000);
+            },
+            computed: {
+                dollar() {
+                    return this.$store.getters.dollar;
+                }
+            }
+        })
+    </script>
+</body>
+```
+>getters也有类似的`mapGetters`辅助函数
+:::
+::: tab label=mutations
+* 更改vuex数据源的唯一方法是`commit`触发`mutations`
+* 只能进行**同步修改**，异步需要借助`actions`
+* mutations:
+    * 入参：state, payload
+    * payload：提交的`载荷`数据
+    * 名字是唯一，一般使用一个`mutations-types.js`文件保存所有的mutations名，以便统一。
+```js
+// mutations-types.js
+export const ADD_COUNT = 'addCount';
+```
+```js
+mutations: {
+    [ADD_COUNT](state, payload) {
+        const { num } = payload;
+        state.count += num;
+    }
+}
+```
+* commit：
+    * 组件内触发mutations的方式。
+    * 入参：{type, payload} | type, payload
+```js
+this.$store.commit([ADD_COUNT], {
+    num: 10
+})
+```
+* 也支持`mapMutations`简写
+```js
+// 导出，组件内在 methods 混入
+methods: {
+    ...mapMutations([
+      'increment', // 将 `this.increment()` 映射为 `this.$store.commit('increment')`
+    ]),
+
+    ...mapMutations({
+      add: 'increment' // 将 `this.add()` 映射为 `this.$store.commit('increment')`
+    })
+}
+```
+:::
+::: tab label=actions
+* action内支持异步操作，然后再commit让mutation去修改数据源状态。
+* 组件内用dispatch去触发actions
+* 入参：
+    * context。可以拿到commit方法和state、getters。
+    * payload。dispatch的载荷。
+>不直接传store的原因是：store可以设置modules模块划分，但是这里的数据一般都是只要管自己的模块的state，不应该直接拿到全部的store。要拿全局的对象可以用{ rootState }
+```js
+actions: {
+    increment ({ commit }) {
+        commit('increment');
+    }
+}
+```
+* 处理异步：
+```js
+actions: {
+    increment ({ commit }) {
+        return new Promise(resolve => {
+            fetch('xxx')
+            .then(res => res.json())
+            .then(res => resolve(res));
+        }).then(res => commit('increment'));
+    }
+}
+```
+* 异步调用：
+```js
+this.$store.dispatch('increment').then(...)
+```
+:::
+::: tab label=module
+* 将store内的状态和对应管理的mutations、actions、getters切割到不同的模块，方便管理
+```js
+const moduleA = {
+  state: () => ({ ... }),
+  mutations: { ... },
+  actions: { ... },
+  getters: { ... }
+}
+
+const moduleB = {
+  state: () => ({ ... }),
+  mutations: { ... },
+  actions: { ... }
+}
+
+const store = new Vuex.Store({
+  modules: {
+    a: moduleA,
+    b: moduleB
+  }
+})
+
+store.state.a // -> moduleA 的状态
+store.state.b // -> moduleB 的状态
+```
 :::
 ::::
