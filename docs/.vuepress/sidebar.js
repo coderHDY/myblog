@@ -103,7 +103,8 @@ const front = {
     ],
     '/front/vue2/': [
         '',
-        'props'
+        'props',
+        'router',
     ],
     '/front/node/': [
         '',
