@@ -1276,7 +1276,7 @@ data: 2022-01-10
 * 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的。
 >**父模板能向子模板的slot传值，但编译过程是在父模板走的**，子模板拿到的只是编译后的值替换掉对应的slot标签。
 
-<img src="./assets/slotchuanzhi.png" style="width:400px;">
+<img src="./assets/slotchuanzhi.png" style="width:300px;">
 
 ```html{3,10-12,16,27}
 <body>
@@ -1317,6 +1317,9 @@ data: 2022-01-10
 * **使用插槽时也想使用子组件的变量**，就可以用`作用域插槽`。
 * 子组件定义插槽时向插槽bind参数
 * 父组件使用插槽时【v-slot="propsObj"】能够拿到所有子组件传来的参数
+
+<img src="./assets/slotzuoyongyu.png" style="width:300px;">
+
 ```html{4-6,15}
 <body>
     <div id="app">

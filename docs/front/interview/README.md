@@ -336,3 +336,461 @@ wait
 8. 服务器用自己的私钥解开随机密钥，作为`对称密钥`和浏览器进行交流
 :::
 ::::
+## 网络攻防
+### XSS攻击
+:::: tabs
+::: tab label=介绍
+* XSS攻击通常指的是通过利用网页开发时留下的漏洞，通过巧妙的方法注入恶意指令代码到网页，使用户加载并执行攻击者恶意制造的网页程序。
+* 常见情况：
+    * 展示用户评论，用户留下恶意脚本
+    * 利用ajax执行一些用户自身才能执行的操作
+* 防范：
+    * 非必要永远不要用`v-html`/`innerHTML`
+    * 如果要展示用户输入，用`v-text`/`innerText`
+    * 如果一定要解析，先转义`reg = /<[^>]*>(.*?)<\/[^>]*>/gi`
+    * 或直接`<`/`>`转义成`&lt;`/`&gt;`
+:::
+::: tab label=恶意脚本
+* 一个简单的评论系统
+
+<video src="./assets/xssmoni1.mp4" style="width:400px;" controls />
+
+>server.js
+```js
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const app = express();
+const bdParser = require('body-parser');
+app.use(bdParser.json());
+app.use(bdParser.urlencoded({extended: false}));
+app.listen('8888');
+
+let database = {};
+
+function getDatabase() {
+    const uri = path.join(__dirname, 'database.json');
+    const json = fs.readFileSync(uri).toString();
+    database = JSON.parse(json);
+}
+
+function writeDatabase({ name, comment }) {
+    database[name] = comment;
+    const uri = path.join(__dirname, 'database.json');
+    fs.writeFile(
+        uri,
+        JSON.stringify(database),
+        () => console.log('写入数据库成功')
+    );
+}
+getDatabase();
+
+app.get('/', (req, res) => {
+    const url = path.join(__dirname, './index.html')
+    const file = fs.readFileSync(url).toString();
+    res.send(file);
+});
+
+app.post('/comment', (req, res) => {
+    const { name, comment } = req.body;
+    writeDatabase({name, comment});
+    res.json({ seccess: true });
+})
+
+app.get('/api/comments', (req, res) => {
+    res.json(database);
+})
+```
+>database.json
+```json
+{"张三":"我真帅","赵四":"你放屁","王五":"网络空间，不要吹牛"}
+```
+>index.html
+```html{28-29}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <table class="comments">
+    </table>
+    <div>
+        <input type="text" class="name" placeholder="姓名">
+        <input type="text" id="comment" placeholder="评论">
+        <button id="commit">提交</button>
+    </div>
+    <script>
+        function initComment() {
+            fetch('/api/comments')
+            .then(res => res.json())
+            .then(comments => {
+                    const commentsBox = document.querySelector('.comments');
+                    commentsBox.innerHTML = '';
+                    Object.entries(comments).forEach(([key, val]) => {
+                        const tr = document.createElement('tr');
+                        const td1 = document.createElement('td');
+                        const td2 = document.createElement('td');
+                        commentsBox.appendChild(tr);
+                        tr.appendChild(td1);
+                        tr.appendChild(td2);
+                        td1.innerHTML = key + ':';
+                        td2.innerHTML = val;
+                    })
+                }
+            )
+        }
+        initComment();
+        const commitBtn = document.querySelector('#commit');
+        commitBtn.addEventListener('click', () => {
+            const nameBox = document.querySelector('.name');
+            const valBox = document.querySelector('#comment');
+            const name = nameBox.value;
+            const val = valBox.value;
+            if (val.trim().length > 0) {
+                fetch('/comment', {
+                    body: JSON.stringify({name, comment: val}),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'post'
+                }).then(res => res.json())
+                .then(res => {
+                    nameBox.value = '';
+                    valBox.value = '';
+                    initComment();
+                });
+            }
+        })
+    </script>
+</body>
+</html>
+```
+:::
+::: tab label=恶意诱导用户操作
+* 用户本人正常操作
+
+<video src="./assets/xss2.mp4" style="width:400px;" controls />
+
+---
+* **恶意植入操作**
+
+<video src="./assets/xss3.mp4" style="width:400px;" controls />
+
+>server.js
+```js{45-50}
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const app = express();
+const bdParser = require('body-parser');
+app.use(bdParser.json());
+app.use(bdParser.urlencoded({extended: false}));
+app.listen('8888');
+
+let database = {};
+
+function getDatabase() {
+    const uri = path.join(__dirname, 'database.json');
+    const json = fs.readFileSync(uri).toString();
+    database = JSON.parse(json);
+}
+
+function writeDatabase({ name, comment }) {
+    database[name] = comment;
+    const uri = path.join(__dirname, 'database.json');
+    fs.writeFile(
+        uri,
+        JSON.stringify(database),
+        () => console.log('写入数据库成功')
+    );
+}
+getDatabase();
+
+app.get('/', (req, res) => {
+    const url = path.join(__dirname, './index.html')
+    const file = fs.readFileSync(url).toString();
+    res.send(file);
+});
+
+app.post('/comment', (req, res) => {
+    const { name, comment } = req.body;
+    writeDatabase({name, comment});
+    res.json({ seccess: true });
+})
+
+app.get('/api/comments', (req, res) => {
+    res.json(database);
+})
+
+app.get('/api/clear', (req, res) => {
+    database = {};
+    const url = path.join(__dirname, './index.html')
+    const file = fs.readFileSync(url).toString();
+    res.send(file);
+})
+```
+>database.json
+```json
+{"张三":"我真帅","赵四":"你放屁","王五":"网络空间，不要吹牛"}
+```
+>index.html
+```html{14,29-30,55-59}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <table class="comments">
+    </table>
+    <div>
+        <input type="text" class="name" placeholder="姓名">
+        <input type="text" id="comment" placeholder="评论">
+        <button id="commit">提交</button>
+    </div>
+    <button id="clear">删除所有评论</button>
+    <script>
+        function initComment() {
+            fetch('/api/comments')
+            .then(res => res.json())
+            .then(comments => {
+                    const commentsBox = document.querySelector('.comments');
+                    commentsBox.innerHTML = '';
+                    Object.entries(comments).forEach(([key, val]) => {
+                        const tr = document.createElement('tr');
+                        const td1 = document.createElement('td');
+                        const td2 = document.createElement('td');
+                        commentsBox.appendChild(tr);
+                        tr.appendChild(td1);
+                        tr.appendChild(td2);
+                        td1.innerHTML = key + ':';
+                        td2.innerHTML = val;
+                    })
+                }
+            )
+        }
+        initComment();
+        const commitBtn = document.querySelector('#commit');
+        commitBtn.addEventListener('click', () => {
+            const nameBox = document.querySelector('.name');
+            const valBox = document.querySelector('#comment');
+            const name = nameBox.value;
+            const val = valBox.value;
+            if (val.trim().length > 0) {
+                fetch('/comment', {
+                    body: JSON.stringify({name, comment: val}),
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'post'
+                }).then(res => res.json())
+                .then(res => {
+                    nameBox.value = '';
+                    valBox.value = '';
+                    initComment();
+                });
+            }
+        })
+        const clear = document.querySelector('#clear');
+        clear.addEventListener('click', () => {
+            fetch('/api/clear')
+            .then(res => initComment())
+        })
+    </script>
+</body>
+</html>
+```
+:::
+::::
+### csrf攻击
+:::: tabs
+::: tab label=介绍
+* 触发方式：
+    * 在登录一个网站，做完操作后**cookie并没有过期**
+    * 登录另一个网站，另一个网站有一个攻击原先网站的操作链接，**并且由于浏览器的机制，向原网站发送请求会携带原本的cookies**
+    * 这样你就在另一个网站发送了原网站的恶意请求。
+* 防御方式：
+    * 重要操作时设置短信验证、做一个随机数验证码验证等
+    * 验证请求头的refer字段，存储的是发起请求的网址，如果不是信任的网址直接拒绝
+    * token，在请求的url中拼接一个本段会话有效的token，重要请求设置拦截器，如果没有token或者token不对就拒绝。
+:::
+::: tab label=网抑云服务器
+* 模拟网抑云的后端，客户本人拥有三个能力：
+    * 登录
+    * 登出
+    * 注销账号
+
+```js{55-62}
+const path = require('path');
+const fs = require('fs');
+const bdParser = require('body-parser');
+const express = require('express');
+const app = express();
+app.use(bdParser.json());
+app.use(bdParser.urlencoded({extended: false}));
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+app.listen('8888');
+
+let database = {
+    hdy: {
+        pwd: '123',
+        songs: [
+            '穷叉叉',
+            '富叉叉',
+            '两只老虎'
+        ]
+    },
+    '张三': {
+        pwd: '456',
+        songs: [
+            '黑猫警长',
+            '六只老虎'
+        ]
+        
+    }
+};
+
+app.get('/', (req, res) => {
+    const url = path.join(__dirname, './index.html')
+    const file = fs.readFileSync(url).toString();
+    res.send(file);
+});
+
+app.post('/login', (req, res) => {
+    const { name, pwd } = req.body;
+    if (database[name] && database[name].pwd === pwd) {
+        const { songs } = database[name];
+        res.cookie('name', name);
+        res.cookie('pwd', pwd);
+        res.json({ songs });
+    } else {
+        res.status(304).json({msg: '用户不存在'});
+    }
+})
+
+app.get('/logout', (req, res) => {
+    res.clearCookie('name');
+    res.clearCookie('pwd');
+    res.json({success: true});
+})
+
+// 注销账号
+app.get('/byby', (req, res) => {
+    const { name } = req.cookies;
+    delete database[name];
+    res.clearCookie('name');
+    res.clearCookie('pwd');
+    res.json({success: true});
+})
+```
+:::
+::: tab label=网抑云首页
+* 正常操作
+
+<video src="./assets/csrf1.mp4" style="width:400px;" controls />
+
+```html{82-85}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div id="app">
+        <div v-if="admin">
+            <div>你好，{{admin}}</div>
+            <ul>
+                <li v-for="song of songs" :key="song">{{song}}</li>
+            </ul>
+            <button @click="logout">退出</button>
+            <button @click="del">注销</button>
+        </div>
+        <div v-else>
+            <div>欢迎来到网抑云，请先登录</div>
+            <input type="text" v-model="name">
+            <input type="text" v-model="pwd">
+            <button @click="login">登录</button>
+        </div>
+        <div>{{tip}}</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    admin: '',
+                    songs: [],
+                    name: '',
+                    pwd: '',
+                    tip: ''
+                }
+            },
+            mounted() {
+                this.defaultLogin();
+            },
+            methods: {
+                defaultLogin() {
+                    const cookie = document.cookie;
+                    const reg = /\b(name|pwd)\b=[^;]*/g;
+                    if (reg.test(cookie)) {
+                        const userInfo = Object.fromEntries(cookie.match(reg).map(item => item.split('=')));
+                        Object.entries(userInfo).forEach(([key, val]) => this[key] = decodeURI(val));
+                        this.login();
+                    }
+                },
+                login() {
+                    fetch('/login', {
+                        method: 'post',
+                        body: JSON.stringify({ name: this.name, pwd: this.pwd }),
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            return res.json();
+                        } else {
+                            return Promise.reject();
+                        }
+                    })
+                    .then(res => {
+                        console.log(this.name);
+                        this.songs = res.songs;
+                        this.admin = this.name;
+                        console.log(this.admin);
+                        console.log(this.name);
+                        console.log(this.admin);
+                        this.name = '';
+                        this.pwd = '';
+                    })
+                    .catch(res => {
+                        this.tip = '账号或密码错误';
+                    })
+                },
+                logout() {
+                    fetch('/logout')
+                    .then(res => this.admin = '');
+                },
+                del() {
+                    fetch('/byby')
+                    .then(res => this.admin = '');
+                },
+                
+            }
+        })
+    </script>
+</body>
+</html>
+```
+:::
+::: tab label=黑客服务器
+* 网抑云cookie保持在有效期，在黑客网站点击了恶意攻击按钮，**浏览器向网抑云服务器发送请求携带了cookie**，导致服务器以为是我本人想注销账号，受到很大的损失
+
+<video src="./assets/csrf2.mp4" style="width:400px;" controls />
+
+```html
+<body>
+    <h1>网抑云周边商城</h1>
+    <a href="http://localhost:8888/byby">点击就送网抑云会员</a>
+</body>
+```
+:::
+::::
