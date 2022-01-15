@@ -12,7 +12,16 @@ data: 2022-01-10
 :::: tabs
 ::: tab label=model/on
 * v-model：表单输入和应用状态之间的双向绑定
+    * .number
+    * .lazy
+    * .trim
 * v-on：绑定事件，简写【@】
+    * .stop
+    * .prevent
+    * .capture
+    * .self
+    * .once
+    * .passive
 ---
 
 <video src="./assets/qibudemo.mp4" style="width:400px;" controls />
