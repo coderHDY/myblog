@@ -178,7 +178,6 @@ const skill = {
     ],
     '/skill/smalltips/': [
         '',
-        'atom',
         'vuepress',
     ]
 }
