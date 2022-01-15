@@ -85,7 +85,3 @@ yarn run build
 * chrome扩展程序 -> 开发者模式 -> 添加已解压包 -> packages\shell-chrome文件夹
 :::
 ::::
-### 配置代理
-* 访问github更快  
-代理地址：http://pac.internal.baidu.com/bdnew.pac
-![](./assets/daili.png)
