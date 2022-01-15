@@ -1002,6 +1002,8 @@ console.log(new initCat(20)); // Cat {name: 'hdy', age: 20}
 ```
 :::
 ::: tab label=实现
+* new调用时，this绑定的是一个对象，return隐式返回的就是该对象
+* fn不能用箭头函数替代，因为**箭头函数不能用作构造函数**
 ```js{3,6,13}
 Function.prototype.myBind = function(obj, ...args) {
     let fn;
@@ -1018,6 +1020,144 @@ Function.prototype.myBind = function(obj, ...args) {
     fn.prototype = this.prototype;
     return fn;
 }
+```
+:::
+::::
+## this
+:::: tabs
+::: tab label=问题1
+* 注：浏览器和node结果不一样，**node没有全局的window，默认也找不到**
+* const/let 定义的变量也不会挂载到window上
+```js{13}
+var name = "window";
+var person = {
+    name: "person",
+    sayName: function () {
+        console.log(this.name);
+    }
+};
+
+function sayName() {
+    var sss = person.sayName;
+    sss();
+    person.sayName();
+    (person.sayName)();
+    (b = person.sayName)();
+}
+sayName();
+```
+:::
+::: tab label=问题2
+* 牢记箭头函数this指的是自己上层作用域的this
+```js{34-36}
+var name = 'window'
+var person1 = {
+    name: 'person1',
+    foo1: function () {
+        console.log(this.name)
+    },
+    foo2: () => console.log(this.name),
+    foo3: function () {
+        return function () {
+            console.log(this.name)
+        }
+    },
+    foo4: function () {
+        return () => {
+            console.log(this.name)
+        }
+    }
+}
+
+var person2 = {
+    name: 'person2'
+}
+
+person1.foo1();
+person1.foo1.call(person2);
+
+person1.foo2();
+person1.foo2.call(person2);
+
+person1.foo3()();
+person1.foo3.call(person2)();
+person1.foo3().call(person2);
+
+person1.foo4()();
+person1.foo4.call(person2)();
+person1.foo4().call(person2);
+```
+:::
+::: tab label=问题3
+* new调用function内部this指向本实例对象
+```js{14-18,20,21}
+var name = 'window';
+
+function Person(name) {
+    this.name = name;
+    this.foo1 = function () {
+        console.log(this.name);
+    }
+    this.foo2 = () => console.log(this.name);
+    this.foo3 = function () {
+        return function () {
+            console.log(this.name);
+        }
+    }
+    this.foo4 = function () {
+        return () => {
+            console.log(this.name);
+        }
+    }
+}
+var person1 = new Person('person1');
+var person2 = new Person('person2');
+
+person1.foo1();
+person1.foo1.call(person2);
+
+person1.foo2();
+person1.foo2.call(person2);
+
+person1.foo3()();
+person1.foo3.call(person2)();
+person1.foo3().call(person2);
+
+person1.foo4()();
+person1.foo4.call(person2)();
+person1.foo4().call(person2);
+```
+:::
+::: tab label=问题4
+```js{12-16}
+var name = 'window'
+
+function Person(name) {
+    this.name = name
+    this.obj = {
+        name: 'obj',
+        foo1: function () {
+            return function () {
+                console.log(this.name);
+            }
+        },
+        foo2: function () {
+            return () => {
+                console.log(this.name);
+            }
+        }
+    }
+}
+var person1 = new Person('person1');
+var person2 = new Person('person2');
+
+person1.obj.foo1()(); // window
+person1.obj.foo1.call(person2)(); // window
+person1.obj.foo1().call(person2); // person2
+
+person1.obj.foo2()(); // obj
+person1.obj.foo2.call(person2)(); // person2
+person1.obj.foo2().call(person2); // obj
 ```
 :::
 ::::
