@@ -1,6 +1,6 @@
 ---
 title: vuepress项目搭建
-date: 2022-01-03
+date: 2021-11-03
 ---
 ## 基础搭建
 :::: steps
@@ -159,7 +159,7 @@ module.exports = {
 ```
 ---
 title: 元旦
-date: 2022-01-01
+date: 2021-11-01
 tags:
  - 生活
 categories:
