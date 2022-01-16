@@ -1,6 +1,6 @@
 ---
 title: 动态规划
-date: 2022-01-05
+date: 2021-11-05
 categories:
  - 算法
 ---
