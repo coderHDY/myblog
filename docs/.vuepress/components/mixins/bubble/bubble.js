@@ -61,7 +61,7 @@ export default function bubbleCursor(options) {
   }
 
   function preventCode(e) {
-    if (typeof e?.path !== 'array') {
+    if (!Array.isArray(e?.path)) {
       return;
     }
     if (isCode(e)) {
