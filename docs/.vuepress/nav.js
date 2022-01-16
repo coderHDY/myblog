@@ -1,7 +1,7 @@
 const home = {
-        text: 'Home',
-        link: '/',
-        icon: 'reco-home'
+    text: 'Home',
+    link: '/',
+    icon: 'reco-home'
 };
 
 const front = {

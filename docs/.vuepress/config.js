@@ -20,10 +20,10 @@ module.exports = {
         lastUpdated: '上次更新',
         friendLink: [
             {
-              title: 'vuepress-theme-reco',
-              desc: 'A simple and beautiful vuepress Blog & Doc theme.',
-              logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/theme_reco.png',
-              link: 'https://vuepress-theme-reco.recoluan.com'
+                title: 'vuepress-theme-reco',
+                desc: 'A simple and beautiful vuepress Blog & Doc theme.',
+                logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/theme_reco.png',
+                link: 'https://vuepress-theme-reco.recoluan.com'
             },
             {
                 title: '午后南杂',
@@ -61,30 +61,6 @@ module.exports = {
     markdown: {
         lineNumbers: true
     },
-    plugins: [
-        [
-            'permalink-pinyin',
-            {
-              lowercase: true,
-              separator: '-'
-            }
-        ],
-        [
-            'vuepress-plugin-container',
-            {
-              type: 'right',
-              defaultTitle: '',
-            },
-          ],
-          [
-            'vuepress-plugin-container',
-            {
-              type: 'theorem',
-              before: info => `<div class="theorem"><p class="title">${info}</p>`,
-              after: '</div>',
-            },
-        ],
-        require('./components/index.js')
-    ],
+    plugins: require('./components/index.js'),
     clientRootMixin: path.resolve(__dirname, './components/mixins/index.js'),
 }
