@@ -56,11 +56,14 @@ export default function bubbleCursor(options) {
   }
 
   function isCode(e) {
-    const eventPath = e.path;
-    return eventPath.some(item => item.tagName === 'PRE');
+      const eventPath = e.path;
+      return eventPath.some(item => item.tagName === 'PRE');
   }
 
   function preventCode(e) {
+    if (typeof e?.path !== 'array') {
+      return;
+    }
     if (isCode(e)) {
       e.stopImmediatePropagation();
     }
