@@ -1,6 +1,6 @@
 // 各组件除了markdown写入的属性以外，需要固定传入的属性
 const FIXED_ATTR = new Map([
-    ['demo', 'name="百度搜索产品运营小组"'],
+    ['demo', 'name="搜索产品运营小组"'],
     ['steps', 'v-slot="{ active }"'],
     ['step', ':active="active"'],
     ['tabs', 'type=border-card']
