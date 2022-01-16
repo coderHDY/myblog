@@ -95,3 +95,8 @@ import Vconsole from 'vconsole';
 new Vconsole();
 console.log('test');
 ```
+### 调试手机网页
+* 苹果电脑连接mac
+* mac打开safari
+* safari -> 偏好设置 -> 高级 -> 显示开发菜单
+* 手机safari打开网页，苹果电脑就能看调试页面。
