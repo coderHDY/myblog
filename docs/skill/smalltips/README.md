@@ -85,3 +85,13 @@ yarn run build
 * chrome扩展程序 -> 开发者模式 -> 添加已解压包 -> packages\shell-chrome文件夹
 :::
 ::::
+## 工作调试
+### 手机端打印
+```shell
+npm install vconsole
+```
+```js
+import Vconsole from 'vconsole';
+new Vconsole();
+console.log('test');
+```
