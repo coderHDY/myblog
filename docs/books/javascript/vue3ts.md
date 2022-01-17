@@ -12,6 +12,7 @@ sticky: 3
 * 编译优化：生成`Block tree`，`slot`优化、`diff算法优化`
 * 从`options API`到`Composition API`：options API在代码内配置的较分散，`methods`、`生命周期`等等，Composition API代码逻辑放到一处，易于管理和理解
 * 多个组件共享逻辑：Vue2使用`mixin`，Vue3使用`hooks`，将代码抽离出去，可以共享，并且还是响应式的。
+* 删除了一些不常用的方法`filter`...
 :::
 ::: tab label=起步
 * CDN引入
@@ -59,7 +60,7 @@ sticky: 3
     <div id="app"></div>
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: `
             <div>
                 <button @click="decre">-</button>
@@ -98,7 +99,7 @@ sticky: 3
     
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -123,7 +124,7 @@ sticky: 3
     
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -175,7 +176,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -205,7 +206,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -244,7 +245,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -270,7 +271,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -303,7 +304,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                  return {
@@ -337,7 +338,7 @@ sticky: 3
     </style>
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             methods: {
                 say() {
@@ -372,7 +373,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                 return {
@@ -397,7 +398,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                 return {
@@ -452,7 +453,7 @@ sticky: 3
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
-        const app = new Vue({
+        new Vue({
             el: '#app',
             data() {
                 return {
@@ -487,7 +488,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                 return {
@@ -526,7 +527,7 @@ sticky: 3
 
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                 return {
@@ -552,10 +553,10 @@ sticky: 3
 ```
 :::
 ::: tab label=综合案例
-
 <video src="./assets/demoshudian.mp4" style="width:500px;" controls />
 
-```html
+* 注意v-for和v-if的`嵌套关系`
+```html{65-77}
 <body>
     <style>
         table {
@@ -563,30 +564,39 @@ sticky: 3
             border-spacing: 0;
             border: 1px solid gray;
             margin: 0 auto;
-            width: 200px;
         }
+
         tr {
             height: 50px;
             text-align: center;
             vertical-align: top;
         }
-        td {
+
+        td, th {
             padding: 0 10px;
             border: 1px solid gray;
             min-width: 100px;
-            max-width: 120px;
+            max-width: 200px;
+        }
+        th {
+            background-color: rgb(238, 238, 238);
+            color:rgb(88, 88, 88);
+            line-height: 50px;
         }
         button {
             margin-right: 5px;
         }
+
         button:last-child {
             background-color: rgb(253, 197, 197);
         }
+
         input {
             margin: 5px 10px;
             line-height: 30px;
             max-width: 100px;
         }
+
         div {
             margin-left: 30px;
         }
@@ -597,40 +607,41 @@ sticky: 3
     <template id="temp">
         <table>
             <thead>
-                <td>编号</td>
-                <td>书籍</td>
-                <td>价格</td>
-                <td>数量</td>
-                <td>操作</td>
+                <th>编号</th>
+                <th>书籍</th>
+                <th>价格</th>
+                <th>数量</th>
+                <th>操作</th>
             </thead>
-            <tr>
-                <td><input type="text" v-model="id"></td>
-                <td><input type="text" v-model="name"></td>
-                <td><input type="text" v-model="price"></td>
-                <td><input type="text" v-model="num"></td>
-                <td><button @click="newGood">添加</button></td>
-            </tr>
-            <template v-for="item of goods">
-                <tr v-if="+item.num > 0" :key="item.id">
-                    <td>{{item.id}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.price}}</td>
-                    <td>{{item.num}}</td>
-                    <td>
-                        <button @click="decre(item.id)">-</button>
-                        <button @click="incre(item.id)">+</button>
-                        <button @click="del(item.id)">删</button>
-                    </td>
+            <tbody>
+                <tr>
+                    <td><input type="text" v-model="id"></td>
+                    <td><input type="text" v-model="name"></td>
+                    <td><input type="text" v-model="price"></td>
+                    <td><input type="text" v-model="num"></td>
+                    <td><button @click="newGood">添加</button></td>
                 </tr>
-            </template>
+                <template v-for="(item, idx) of goods">
+                    <tr v-if="+item.num > 0" :key="item.id">
+                        <td>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.price}}</td>
+                        <td>{{item.num}}</td>
+                        <td>
+                            <button @click="decre(idx)">-</button>
+                            <button @click="incre(idx)">+</button>
+                            <button @click="del(idx)">删</button>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
         </table>
         <div>总价：{{ total }}</div>
     </template>
 
-    <!-- 导入 Vue 3 -->
     <script src="https://unpkg.com/vue@next"></script>
     <script>
-        const app = Vue.createApp({
+        Vue.createApp({
             template: '#temp',
             data() {
                 return {
@@ -638,8 +649,7 @@ sticky: 3
                     name: '',
                     price: '',
                     num: '',
-                    goods: [
-                        {
+                    goods: [{
                             id: 0,
                             name: '《你不知道的JS》',
                             price: 100,
@@ -660,21 +670,17 @@ sticky: 3
                 }
             },
             methods: {
-                decre(id) {
+                decre(idx) {
                     const goods = this.goods;
-                    const index = this.goods.findIndex(item => +item.id === +id);
-                    console.log(index);
-                    this.goods[index].num = goods[index].num > 0 ? goods[index].num - 1 : goods[index].num;
+                    this.goods[idx].num = goods[idx].num > 0 ? goods[idx].num - 1 : goods[idx].num;
                 },
-                incre(id) {
+                incre(idx) {
                     const goods = this.goods;
-                    const index = this.goods.findIndex(item => +item.id === +id);
-                    this.goods[index].num = goods[index].num < 99 ? goods[index].num + 1 : goods[index].num;
+                    this.goods[idx].num = goods[idx].num < 99 ? goods[idx].num + 1 : goods[idx].num;
                 },
-                del(id) {
+                del(idx) {
                     const goods = this.goods;
-                    const index = this.goods.findIndex(item => +item.id === +id);
-                    this.goods.splice(index, 1);
+                    this.goods.splice(idx, 1);
                 },
                 newGood() {
                     const newGood = {
@@ -690,5 +696,423 @@ sticky: 3
     </script>
 </body>
 ```
+:::
+::::
+## 第五节 v-model
+:::: tabs
+::: tab label=解析
+* `v-model`只是`v-bind`和`v-on`的语法糖
+```html{5-6}
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <input type="text" v-model="msg">
+        <input type="text" :value="msg" @input="msg = $event.target.value">
+        <div>{{ msg }}</div>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            template: '#temp',
+            data() {
+                return {
+                    msg: ''
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+```
+:::
+::: tab label=源码
+* 加`lazy`只是改变了监听的事件，改为change
+```ts{8}
+export const vModelText: ModelDirective<
+  HTMLInputElement | HTMLTextAreaElement
+> = {
+  created(el, { modifiers: { lazy, trim, number } }, vnode) {
+    el._assign = getModelAssigner(vnode)
+    const castToNumber =
+      number || (vnode.props && vnode.props.type === 'number')
+    addEventListener(el, lazy ? 'change' : 'input', e => {
+      if ((e.target as any).composing) return
+      let domValue: string | number = el.value
+      if (trim) {
+        domValue = domValue.trim()
+      } else if (castToNumber) {
+        domValue = toNumber(domValue)
+      }
+      el._assign(domValue)
+    })
+    if (trim) {
+      addEventListener(el, 'change', () => {
+        el.value = el.value.trim()
+      })
+    }
+    if (!lazy) {
+      addEventListener(el, 'compositionstart', onCompositionStart)
+      addEventListener(el, 'compositionend', onCompositionEnd)
+      // Safari < 10.2 & UIWebView doesn't fire compositionend when
+      // switching focus before confirming composition choice
+      // this also fixes the issue where some browsers e.g. iOS Chrome
+      // fires "change" instead of "input" on autocomplete.
+      addEventListener(el, 'change', onCompositionEnd)
+    }
+  },
+  // set value on mounted so it's after min/max for type="range"
+  mounted(el, { value }) {
+    el.value = value == null ? '' : value
+  },
+  beforeUpdate(el, { value, modifiers: { lazy, trim, number } }, vnode) {
+    el._assign = getModelAssigner(vnode)
+    // avoid clearing unresolved text. #2302
+    if ((el as any).composing) return
+    if (document.activeElement === el) {
+      if (lazy) {
+        return
+      }
+      if (trim && el.value.trim() === value) {
+        return
+      }
+      if ((number || el.type === 'number') && toNumber(el.value) === value) {
+        return
+      }
+    }
+    const newValue = value == null ? '' : value
+    if (el.value !== newValue) {
+      el.value = newValue
+    }
+  }
+}
+```
+:::
+::: tab label=checkbox
+<video src="./assets/checkbox.mp4" style="width:300px;" controls />
+
+* **必须要有value**，`$event.target.value`才能正确的跟踪值
+* `label`里的for对应input里的id
+```html{5-20,29}
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <div>
+            <label for="红宝书">红宝书
+                <input type="checkbox" v-model="books" value="红宝书" id="红宝书">
+            </label>
+        </div>
+        <div>
+            <label for="绿宝书">绿宝书
+                <input type="checkbox" v-model="books" value="绿宝书" id="绿宝书">
+            </label>
+        </div>
+        <div>
+            <label for="蓝宝书">蓝宝书
+                <input type="checkbox" v-model="books" value="蓝宝书" id="蓝宝书">
+            </label>
+        </div>
+        <div>{{ books }}</div>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            template: '#temp',
+            data() {
+                return {
+                    books: [],
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+```
+:::
+::: tab label=radio
+<video src="./assets/radio.mp4" style="width:300px;" controls />
+
+* 单选框，值唯一
+```html
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <div>
+            <label for="male">male
+                <input type="radio" v-model="sex" value="male" id="male">
+            </label>
+        </div>
+        <div>
+            <label for="female">female
+                <input type="radio" v-model="sex" value="female" id="female">
+            </label>
+        </div>
+        <div>性别是：{{ sex }}</div>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            template: '#temp',
+            data() {
+                return {
+                    sex: '',
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+```
+:::
+::: tab label=select
+```html{5-8,17-18}
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <select v-model="current">
+            <option v-for="city of cities" :value="city">{{ city }}</option>
+        </select>
+        <div>当前在：{{ current }}</div>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            template: '#temp',
+            data() {
+                return {
+                    cities: [ '北京', '上海', '深圳'],
+                    current: '上海',
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+```
+* 如果要展示多个，数值变成数组。按住command多选。
+    * mutiple：多选
+    * size：展示个数
+```html
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <select v-model="current" multiple size="4">
+            <option v-for="city of cities" :value="city">{{ city }}</option>
+        </select>
+        <div>当前在：{{ current }}</div>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        Vue.createApp({
+            template: '#temp',
+            data() {
+                return {
+                    cities: [ '北京', '上海', '深圳'],
+                    current: ['上海', '深圳'],
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+```
+:::
+::: tab label=问题
+* lodash库：封装一些好用的方法
+:::
+::::
+## 第六节 组件化
+:::: tabs
+::: tab label=全局组件
+* 一般组件取名方式：
+    * 短横线分割符 **( 推荐 )** ：`'my-comp'`
+    * 驼峰(只有在脚手架有效)：`'MyComp'`
+```html{5-6,15-17,19}
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <div>我是爸爸</div>
+        <com-a></com-a>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const app = Vue.createApp({
+            template: '#temp',
+        })
+
+        const child ={
+            template: '<div>我是子组件</div>'
+        }
+
+        app.component('com-a', child);
+        app.mount('#app');
+    </script>
+</body>
+```
+:::
+::: tab label=局部组件
+```html{18-20}
+<body>
+    <div id="app"></div>
+
+    <template id="temp">
+        <div>我是爸爸</div>
+        <com-a></com-a>
+        <com-a></com-a>
+    </template>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const child ={
+            template: '<div>我是子组件</div>'
+        };
+
+        const app = Vue.createApp({
+            template: '#temp',
+            components: {
+                'com-a': child,
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+```
+:::
+::::
+## 第七节 webpack
+:::: tabs
+::: tab label=介绍
+* webpack is a **static module bundler** for modern jsvascript application.
+* webpack是一个服务于现代javascript应用程序的`静态的模块化打包工具`。
+* 将各种资源的语法打包成 **浏览器认识的** html/css/图片/视频等格式。
+
+<img src="./assets/webpackjieshao.png" style="width:600px;">
+
+:::
+::: tab label=起步
+* 安装
+```shell
+npm i webpack webpack-cli -g
+
+webpack --version
+```
+* 打包体验
+```js
+// test/src/esm.js
+let a = 1;
+let b = 2;
+export { a, b }
+```
+```js
+// test/src/cmjs.js
+function add(a, b) {
+    return a + b;
+}
+module.exports = {
+    add
+}
+```
+```js
+// test/src/index.js
+import { a, b } from './esm';
+const { add } = require('./cmjs');
+
+console.log(add( a, b ));
+```
+>test/index.html
+```html
+<body>
+    <script src="./dist/main.js"></script>
+</body>
+```
+* test目录下执行命令，后就能看结果
+```shell
+webpack
+```
+<img src="./assets/webpack0.png" style="height:100px;">
+<img src="./assets/webpack1.png" style="height:100px;">
+
+:::
+::: tab label=依赖
+* 依赖管理：`package.json`
+* 开发依赖：直接`install`
+* 生产依赖：`install --save--dev`，简写`install -D`
+* 默认入口：当前文件夹下的src下的`index`文件，根据这个文件去寻找其他依赖，生成`依赖关系图`，进行打包
+>npm初始化：
+```shell
+npm init -y
+```
+* 使用本地webpack两种方法：
+    1. npx
+    ```shell{1}
+    npm install webpack webpack-cli -D
+
+    npx webpack
+    ```
+    2. 或者直接在package.json创建脚本
+    ```json
+    "scripts": {
+        "build": "webpack"
+    }
+    ```
+>自定义入口/出口
+```shell
+npx webpack --entry ./src/index.js --output-path ./build
+```
+:::
+::: tab label=配置文件
+* 默认的配置文件是当前项目根目录的`webpack.config.js`
+```js
+const path = require("path");
+module.exports = {
+    entry: "./src/index.js",
+    output: {
+        path: path.resolve(__dirname, "build"),
+        filename: "bundle.js",
+    }
+}
+```
+* 输出路径必须是绝对路径，`__dirname`是当前文件所在路径
+:::
+::: tab label=loader
+* loader可以对不同的源代码进行解析，打包对应的文件，如：css-loader、ts-loader
+```shell
+npm i css-loader -D
+npm i style-loader -D
+```
+* 使用方式（2种）：
+    1. 内联
+    ```js
+    import 'css-loader!./src/css/style.css'
+    ```
+    2. 配置(常用)
+    >有多个loader就用use配置数组。  
+    >注：use的执行顺序是 **倒序** 的，最下面的loader先执行。css文件需要先css-loader解析，再style-loader插入到文件内去
+    ```js{5-15}
+    //webpack.comfig.js
+    module.exports = {
+        // ...
+        module: {
+            rules: [
+                {
+                    test: /\.css$/,
+                    // loader: "css-loader",
+                    // use: [ {loader: "css-loader", options: xxx} ]
+                    use: [
+                        "style-loader",
+                        "css-loader"
+                    ]
+                }
+            ]
+        }
+    }
+    ```
 :::
 ::::
