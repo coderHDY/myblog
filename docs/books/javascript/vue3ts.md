@@ -1457,6 +1457,8 @@ module.exports = {
     }
     ```
     * webpack-dev-server(常)
+    >实际上是webpack用express搭建的一个本地服务器，配上监听变化和自动编译操作。  
+    >且打包后并不写入文件，而是使用`memfs`库写入内存，在内存中进行调用，减少了写文件阶段，访问更为快速。
     ```shell
     npm i webpack-dev-server -D
     ```
@@ -1466,6 +1468,49 @@ module.exports = {
         "server": "webpack server"
     }
     ```
+    >如果服务器没找到的资源，会从这里进行查找。  
+    >**开发阶段用`static`，生产阶段用`CopyWebpackPlugin`将静态资源一起打包。**
+    ```js{5}
+    // webpack.config.js
+    module.exports = {
+        // ...
+        devServer: {
+            static: "./public"
+        },
+    }
+    ```
     * webpack-dev-middleware
+:::
+::: tab label=模块热替换
+>当前webpack-dev-server属于热加载`live-reloade`，更改一个位置全部浏览器刷新  
+>模块热替换是修改了哪个模块只热加载哪个模块，其他模块状态不变，就不会丢失掉当前测试的整个前端保存的状态。  
+<video src="./assets/webpackmokuairejiazai.mp4" style="width:600px" controls />
+
+```js
+// webpack.config.js
+module.exports = {
+    target: "web",
+    devServer: {
+        static: "./abc",
+        hot: true,
+    },
+}
+```
+```js
+// aa.js
+console.log('cdc');
+let a = 110;
+export default {
+    a
+}
+```
+```js
+// index.js
+import "./aa";
+
+if (module.hot) {
+    module.hot.accept('./aa.js', () => console.log("aa.js模块更新了！"));
+}
+```
 :::
 ::::
