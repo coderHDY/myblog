@@ -986,7 +986,7 @@ export const vModelText: ModelDirective<
 ```
 :::
 ::::
-## 第七节 webpack
+## 第七节 webpack-loader
 :::: tabs
 ::: tab label=介绍
 * webpack is a **static module bundler** for modern jsvascript application.
@@ -1114,5 +1114,358 @@ npm i style-loader -D
         }
     }
     ```
+:::
+::: tab label=PostCSS
+* 进行一些CSS适配，将CSS转换成各浏览器都能识别的状态。如：加前缀、#12345678透明度等。
+```shell
+npm i postcss-loader -D
+npm i autoprefixer -D
+```
+```js{7-16}
+rules: [
+    {
+        test: /\.(css|less)$/,
+        use: [
+            "style-loader",
+            "css-loader",
+            {
+                loader: "postcss-loader",
+                options: {
+                    postcssOptions: {
+                        plugins: [
+                            require("autoprefixer"),
+                        ]
+                    }
+                }
+            },
+            "less-loader",
+        ]
+    }
+]
+```
+* 或者直接使用已经配置好的`postcss-preset-env`插件配置，会将大多数样式转化成各浏览器适配的版本。
+```js{12}
+rules: [
+    {
+        test: /\.(css|less)$/,
+        use: [
+            "style-loader",
+            "css-loader",
+            {
+                loader: "postcss-loader",
+                options: {
+                    postcssOptions: {
+                        plugins: [
+                            require("postcss-preset-env"),
+                        ]
+                    }
+                }
+            },
+            "less-loader",
+        ]
+    }
+]
+```
+:::
+::: tab label=图片
+* 对应`file-loader`
+```shell
+npm i file-loader -D
+```
+```js
+rules: [
+    {
+        test: /\.(jpe?g|gif|svg|png)$/,
+        loader: "file-loader"
+    }
+]
+```
+* 使用`url-loader`，与`file-loader`相似，但是可以将较小的图片转化成`base64`格式，性能优化
+:::
+::: tab label=文件命名
+* placeholder:
+    * [ext] :处理文件的扩展名
+    * [name] : 处理文件的原名称
+    * [hash] :哈希值，文件内容
+    * [path] :文件相对于webpack.config.js文件的相对路径
+    * [hash:【length】] :哈希截取长度
+    * [contentHash]: 
+```js{5-8}
+{
+    test: /\.(png|gif|svg)$/,
+    use: {
+        loader: "file-loader",
+        options: {
+            outputPath: "img",
+            name: "[name]_[hash:6][ext]"
+        }
+    },
+}
+```
+:::
+::: tab label=asset
+* `asset module type`：`webpack5`推出的统一静态资源打包方法
+* 配置项：
+    * asset/resource：类似file-loader
+    * asset/inline：类似url-loader
+    * asset/source：类似原row-loader
+    * asset：选择导出配置项
+```js
+{
+    test: /\.(png|gif|svg)$/,
+    type: "asset/resource",
+}
+```
+```js{3}
+{
+    test: /\.(jpe?g|png|gif|svg)$/,
+    type: "asset",
+    parser: {
+        dataUrlCondition: {
+            maxSize: 100 * 1024,
+        }
+    },
+    generator: {
+        filename: "img/[name]_[hash][ext]"
+    }
+}
+```
+:::
+::: tab label=问题
+* 字体、icon、font打包：`file-loader`/`asset/resource`
+* plugin和loader区别：
+    * 添加功能：plugin
+    * 模块打包：loader
+:::
+::::
+## 第八节 webpack-plugin
+:::: tabs
+::: tab label=常用
+* `CleanWebpackPlugin`：自动清理原打包文件
+```shell
+npm i clean-webpack-plugin -D
+```
+```js
+const { cleanWebpackPlugin } = require('clean-webpack-plugin');
+module.exports = {
+    plugins: [
+        new CleanWebpackPlugin()
+    ]
+}
+```
+* `HtmlWebpackPlugin`：自动生成html入口文件
+>注意，导入没有解构！
+```shell
+npm i html-webpack-plugin -D
+```
+```js{1}
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+module.exports = {
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: "./public/index.html" // 可以指定模板
+        })
+    ]
+}
+```
+* `DefinePlugin`：注入全局变量
+```js
+const { DefinePlugin } = require('webpack');
+module.exports = {
+    plugins: [
+        new DefinePlugin({
+            BASE_URL: "'./public/'"
+        })
+    ]
+}
+```
+```html
+<link rel="icon" href="<%= BASE_URL %>favicon.ico">
+```
+:::
+::: tab label=public
+* public文件夹下的东西会被直接复制到打包后的文件夹内，是因为有`CopyWebpackPlugin`这个插件
+```shell
+npm i copy-webpack-plugin -D
+```
+```js
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+module.exports = {
+    plugins: [
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: 'public',
+                    to: '',
+                    globOptions: {
+                        ignore: [
+                            "**/index.html"
+                        ]
+                    }
+                }
+            ]
+        })
+    ]
+}
+```
+:::
+::: tab label=babel
+>babel本质上是一个编译器，将我们的源代码转换成另一份源代码
+![](./assets/babeljiexi.png)
+* 安装
+```shell
+npm i @babel/core @babel/cli -D
+npm i @babel/preset-env -D
+```
+* 常用ES6转ES5
+```shell
+npx babel src/test.js --out-dir ./ --presets=@babel/preset-env
+```
+* webpack内使用
+```shell
+npm i babel-loader @babel/core -D
+```
+```js{5-7}
+{
+    test: /\.js$/,
+    use: {
+        loader: "babel-loader",
+        options: {
+            presets: [ "@babel/preset-env" ],
+        }
+    }                
+}
+```
+* 配置抽离：
+    * (荐)babel.config.js/json...
+    * babelrc.js/json
+    ```js
+    // webpack.config.js module.rules
+    {
+        test: /\.js$/,
+        loader: "babel-loader",   
+    }
+    ```
+    ```js
+    // babel.config.js
+    module.exports = {
+        plugins: [],
+        presets: [ '@babel/preset-env' ]
+    }
+    ```
+:::
+::: tab label=vue
+```shell
+npm i vue@next
+npm i vue-loader@next -D
+npm i @vue/compiler-sfc -D
+```
+```js{10-11}
+// weboack.config.js
+const { DefinePlugin } = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader/dist/index');
+
+// plugins
+plugins: [
+    // ..
+    new DefinePlugin({
+        BASE_URL: "'./public/'",
+        __VUE_OPTIONS_API__: true,
+        __VUE_PROD_DEVTOOLS__: true
+    }),
+    new VueLoaderPlugin()
+]
+
+// rules
+{
+    test: /\.vue$/,
+    loader: 'vue-loader'
+}
+```
+* vue/home.vue
+```vue
+<template>
+    <div>
+        <h2>{{ msg }}</h2>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                msg: 'Hello Vue!'
+            }
+        }
+    }
+</script>
+
+<style>
+    h2 {
+        color: red;
+    }
+</style>
+```
+```js{3}
+// index.js
+const { createApp } = require('vue');
+import home from'./vue/Home.vue';
+
+const app = createApp(home);
+app.mount("#app");
+```
+* index.html(模板)
+```html
+<body>
+    <div id="app"></div>
+</body>
+```
+* 效果  
+<img src="./assets/vuerumenpeizhi.png" style="width:300px">
+
+:::
+::: tab label=调试
+* mode:`development`开发模式，打包就不会压缩。打包上线设置`production`
+* devtool:`source-map`，出现问题能够定位到源文件位置
+* vscode调试插件：`vetur`、`volar`(vue3支持较好)
+```js
+module.exports = {
+    mode: 'development',
+    devtool: "source-map",
+}
+```
+* 编译器原理学习：[简单的源码](https://github.com/jamiebuilds/the-super-tiny-compiler)
+:::
+::::
+## 第九节 webpack-devServer
+:::: tabs
+::: tab label=自动编译
+* 三种可选方式：
+    * webpack watch mode
+    ```js{3}
+    //package.json
+    "scripts": {
+        "build": "webpack --watch"
+    }
+    ```
+    >或者直接配置里面添加watc:true
+    ```js{4}
+    // webpack.config.js
+    module.exports = {
+        // ...
+        watch: true
+    }
+    ```
+    * webpack-dev-server(常)
+    ```shell
+    npm i webpack-dev-server -D
+    ```
+    ```js
+    //package.json
+    "scripts": {
+        "server": "webpack server"
+    }
+    ```
+    * webpack-dev-middleware
 :::
 ::::
