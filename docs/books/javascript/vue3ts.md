@@ -1475,15 +1475,15 @@ module.exports = {
     module.exports = {
         // ...
         devServer: {
-            static: "./public"
-        },
+            static: "./public",
+        }
     }
     ```
     * webpack-dev-middleware
 :::
 ::: tab label=模块热替换
->当前webpack-dev-server属于热加载`live-reloade`，更改一个位置全部浏览器刷新  
->模块热替换是修改了哪个模块只热加载哪个模块，其他模块状态不变，就不会丢失掉当前测试的整个前端保存的状态。  
+>当前webpack-dev-server属于热加载`live-reloade`，更改一个位置全部浏览器刷新HMR(hot module replace)  
+>模块热替换是修改了哪个模块只热加载哪个模块，其他模块状态不变，就不会丢失掉当前测试的整个前端保存的状态。 
 <video src="./assets/webpackmokuairejiazai.mp4" style="width:600px" controls />
 
 ```js
@@ -1504,13 +1504,293 @@ export default {
     a
 }
 ```
-```js
+```js{4-7}
 // index.js
 import "./aa";
 
+// 需要热加载模块
 if (module.hot) {
     module.hot.accept('./aa.js', () => console.log("aa.js模块更新了！"));
 }
 ```
 :::
+::: tab label=热替换原理
+>Vue-loader已自动支持模块热替换 
+* 模块热加载原理：webpack起了一个express静态资源服务器，起了一个socket长连接服务实时推送信息。
+* 服务器监听到模块发生变化后，向客户端推送变化模块：（manifist.json 和 updata chunk），浏览器就能进行实时更新。
+
+<img src="./assets/hmryuanli.png" style="width:700px">
+
+:::
+::: tab label=其他配置
+```js
+// webpack.config.js
+const path = require('path');
+module.exports = {
+    // ...
+    devServer: {
+        static: "./public",
+        hot: true,
+        host: "0.0.0.0", // 可以开启ipv4访问
+        port: 8888,
+        open: true,  // 是否自动打开浏览器
+        compress: true, // 是否开启gzip压缩
+        proxy: {  // 是否开代理，开发阶段有效
+            "/api": {
+                target: "http://localhost:8070",
+                pathRewrite: { "^/api": "" },
+                secure: false, // 是否阻止非https请求转发
+                changeOrigin: true, // 修改源，防数据服务器校验header
+            }
+        }
+    },
+    resolve: {
+        extensions: [ '.js', '.json', '.vue', '.ts' ], // 默认后缀名
+        alias: {
+            "@": path.resolve(__dirname, "./src"), // 设置路径别名
+            "js": path.resolve(__dirname, "./src/js"),
+        }
+    }
+}
+
+```
+:::
+::: tab label=区分环境
+* 目录：将生产环境和开发环境做一个自定义配置，公公配置使用`webpack-merge`来合并
+```txt
+config
+  |-webpack.comm.config.js
+  |-webpack.dev.config.js
+  |-webpack.prod.config.js
+package.json
+```
+>package.json
+```js
+"scripts": {
+    "build": "webpack --config ./config/webpack.prod.config.js",
+    "serve": "webpack serve --config ./config/webpack.dev.config.js"
+}
+```
+>webpack.comm.config.js
+```js
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require("webpack");
+const { VueLoaderPlugin } = require('vue-loader/dist/index');
+
+module.exports = {
+  target: "web",
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "../build"),
+    filename: "js/bundle.js",
+  },
+  resolve: {
+    extensions: [".js", ".json", ".mjs", ".vue", ".ts", ".jsx", ".tsx"],
+    alias: {
+      "@": path.resolve(__dirname, "../src"),
+      "js": path.resolve(__dirname, "../src/js")
+    }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+      {
+        test: /\.less$/,
+        use: ["style-loader", "css-loader", "less-loader"],
+      },
+      // },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        type: "asset",
+        generator: {
+          filename: "img/[name]_[hash:6][ext]",
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024,
+          },
+        },
+      },
+      {
+        test: /\.(eot|ttf|woff2?)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "font/[name]_[hash:6][ext]",
+        },
+      },
+      {
+        test: /\.js$/,
+        loader: "babel-loader"
+      },
+      {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      }
+    ],
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: "./public/index.html",
+      title: "哈哈哈哈"
+    }),
+    new DefinePlugin({
+      BASE_URL: "'./'",
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false
+    }),
+    new VueLoaderPlugin()
+  ],
+};
+
+```
+>webpack.dev.config.js
+```js{1,5}
+const { merge } = require('webpack-merge');
+
+const commonConfig = require('./webpack.comm.config');
+
+module.exports = merge(commonConfig, {
+  mode: "development",
+  devtool: "source-map",
+  devServer: {
+    static: "./public",
+    hot: true,
+    // host: "0.0.0.0",
+    port: 7777,
+    open: true,
+    // compress: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:8888",
+        pathRewrite: {
+          "^/api": ""
+        },
+        secure: false,
+        changeOrigin: true
+      }
+    }
+  },
+})
+```
+>webpack.prod.config.js
+```js
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const {merge} = require('webpack-merge');
+
+const commonConfig = require('./webpack.comm.config');
+
+module.exports = merge(commonConfig, {
+  mode: "production",
+  plugins: [
+    new CleanWebpackPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: "./public",
+          globOptions: {
+            ignore: [
+              "**/index.html"
+            ]
+          }
+        }
+      ]
+    }),
+  ]
+})
+```
+:::
 ::::
+## 第十节 Vue-cli/vite
+:::: tabs
+::: tab label=起步
+```shell
+npm i @vue/cli -g
+vue --version
+
+# 升级
+npm update @vue/cli -g
+```
+```shell
+vue create myName
+```
+:::
+::: tab label=vite
+* 主要构成：
+    * 一个开发服务器(connect库)，它基于 原生 ES 模块 提供了 丰富的内建功能，如速度快到惊人的 模块热更新（HMR）。
+    * 一套构建指令，它使用 Rollup 打包你的代码，并且它是预配置的，可输出用于生产环境的高度优化过的静态资源。
+>vite原理：构建自己的本地服务器，在服务器端将代码构建成浏览器能解析的es6代码，然后接受到请求时进行请求转发。
+```shell
+npm i vite -D
+
+npx vite
+```
+* 直接就开启了本地服务，一般的打包功能都支持，已支持ts
+>使用第三方解析工具，如less、sass等，需要安装解析工具，不用配置  
+>如：解析less
+```shell
+npm i less -D
+
+npx vite
+```
+* 使用postcss对应插件
+```shell
+npm i postcss -D
+npm i postcss-preset-env -D
+```
+>postcss.config.js
+```js
+module.exports = {
+    plugins: [
+        require('postcss-preset-env'),
+    ]
+}
+```
+```shell
+npx vite
+```
+> vite有`预打包`能力，所以会快， 预打包文件放在node_modules/.vite文件夹下
+:::
+::: tab label=vite-vue3
+* 需要做对应的配置（vite.config.js）
+```shell
+npm i vue@next -D # vue
+npm i @vitejs/plugin-vue -D # vite 解析vue语法
+npm i @vue/compiler-sfc -D # .vue文件解析
+```
+```js
+// vite.config.js
+const vue = require('@vitejs/plugin-vue');
+module.exports = {
+    plugins: [
+        vue()
+    ]
+}
+```
+:::
+::: tab label=构建
+```shell
+npx vite build
+```
+* 预览
+```shell
+npx vite preview --host
+```
+:::
+::: tab label=脚手架
+```shell
+npm i @vitejs/create-app -g
+
+create-app myName
+cd myName
+npm i
+npm run dev
+```
+:::
+::::
+
+
