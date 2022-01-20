@@ -40,6 +40,40 @@ tags:
 </body>
 ```
 :::
+::: tab label=$attrs
+* **非props传参**：父组件用传参，子组件**未用props**接收，就会被收集到`$attrs`属性里面
+>父组件向子组件传递两个参数，一个被props接收，另一个被$attrs收集
+```html{3,10,12}
+<body>
+    <div id="app">
+        <child :msg="msg" className="hah"></child>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const child = {
+            template: `<div>{{ msg }}</div>`,
+            props: ["msg"],
+            mounted() {
+                console.log(this.$attrs); // { classname: 'hah' }
+            }
+        };
+
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: "hello"
+                }
+            },
+            components: {
+                child
+            }
+        })
+    </script>
+</body>
+```
+:::
 ::: tab label=$parent
 * 官方**不建议**子直接调用、修改父数据
 ---

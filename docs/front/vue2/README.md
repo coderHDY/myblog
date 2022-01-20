@@ -1367,7 +1367,7 @@ data: 2021-11-10
     </script>
 </body>
 ```
-* 也可以不用template，直接传到子组件标签上
+* `独占默认插槽`：可以不用template，直接把插槽名传到子组件标签上
 ```html
 <home v-slot='slotData'>
     {{slotData.myName}}
