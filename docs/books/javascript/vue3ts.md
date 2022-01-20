@@ -3,7 +3,7 @@ title: 《vue3ts进阶》
 date: 2021-11-14
 sticky: 3
 ---
-## 第一节 介绍
+## 第1节 介绍
 :::: tabs
 ::: tab label=vue2-vue3
 * vue3使用monorepo形式来管理源代码。优势是多个包本身逻辑独立，可以拥有自己的单元测试等。
@@ -147,7 +147,7 @@ sticky: 3
 * UI组件库：Element-plus、antdesign Vue
 :::
 ::::
-## 第二节 class/style绑定
+## 第2节 class/style绑定
 :::: tabs
 ::: tab label=vscode自定义代码片段
 * [生成网址](https://snippet-generator.app/)，填入名称、片段、快捷键。生成代码  
@@ -354,7 +354,7 @@ sticky: 3
 ```
 :::
 ::::
-## 第三节 条件渲染/diff算法
+## 第3节 条件渲染/diff算法
 :::: tabs
 ::: tab label=v-if
 * 输入分数判断及格
@@ -428,7 +428,7 @@ sticky: 3
 注：v-show不支持template
 :::
 ::::
-## 第四节 watch/基础案例
+## 第4节 watch/基础案例
 :::: tabs
 ::: tab label=computed
 * 模板语法缺点：
@@ -698,7 +698,7 @@ sticky: 3
 ```
 :::
 ::::
-## 第五节 v-model
+## 第5节 v-model
 :::: tabs
 ::: tab label=解析
 * `v-model`只是`v-bind`和`v-on`的语法糖
@@ -925,7 +925,7 @@ export const vModelText: ModelDirective<
 * lodash库：封装一些好用的方法
 :::
 ::::
-## 第六节 组件化
+## 第6节 组件化
 :::: tabs
 ::: tab label=全局组件
 * 一般组件取名方式：
@@ -986,7 +986,7 @@ export const vModelText: ModelDirective<
 ```
 :::
 ::::
-## 第七节 webpack-loader
+## 第7节 webpack-loader
 :::: tabs
 ::: tab label=介绍
 * webpack is a **static module bundler** for modern jsvascript application.
@@ -1238,7 +1238,7 @@ rules: [
     * 模块打包：loader
 :::
 ::::
-## 第八节 webpack-plugin
+## 第8节 webpack-plugin
 :::: tabs
 ::: tab label=常用
 * `CleanWebpackPlugin`：自动清理原打包文件
@@ -1437,7 +1437,7 @@ module.exports = {
 * 编译器原理学习：[简单的源码](https://github.com/jamiebuilds/the-super-tiny-compiler)
 :::
 ::::
-## 第九节 webpack-devServer
+## 第9节 webpack-devServer
 :::: tabs
 ::: tab label=自动编译
 * 三种可选方式：
@@ -1705,7 +1705,7 @@ module.exports = merge(commonConfig, {
 ```
 :::
 ::::
-## 第十节 Vue-cli/vite
+## 第10节 Vue-cli/vite
 :::: tabs
 ::: tab label=起步
 ```shell
@@ -1792,5 +1792,714 @@ npm run dev
 ```
 :::
 ::::
+## 第11节 emit
+:::: tabs
+::: tab label=与Vue2不同点
+* vue3定义组件可以有一个`emits`属性，提前说好这个组件可以发射哪些事件
+```js{3}
+// .vue文件
+export default {
+    emits: [ 'incre', 'decre' ],
+    methods: {
+        incre() {
+            this.$emit("incre");
+        },
+        decre() {
+            this.$emit("decre");
+        }
+    }
+}
+```
+* 参数验证：emits可以写成对象的形式，给每个发射的事件进行参数验证
+```js{2-9}
+export default {
+    emits: {
+       incre(num) {
+           return num > 0;
+       }, 
+       decre(num) {
+           return num > 0;
+       }
+    },
+    methods: {
+        incre() {
+            this.$emit("incre", 1);
+        },
+        decre() {
+            this.$emit("decre", 1);
+        }
+    }
+}
+```
+:::
+::: tab label=综合案例
+* 自己造轮子：tab-control  
+<video src="./assets/tabcontrol.mp4" style="width:250px" controls />
 
+>目录
+```txt
+components
+|-TabControl.vue
+App.vue
+```
 
+>App.vue
+```vue{3-9}
+<template>
+  <div>
+      <TabControl
+        :tabs="tabs"
+        @change-tab="changeTab"
+        :c-index="cIndex"
+      >
+        {{ contains[tabs[cIndex]] }}
+      </TabControl>
+  </div>
+</template>
+<script>
+import TabControl from "./components/TabControl.vue"
+export default {
+  data() {
+    return {
+      tabs:[ '衣服', '鞋子', '裤子' ],
+      contains: {
+        '衣服': "啦啦啦衣服",
+        '鞋子': "啦啦啦鞋子",
+        '裤子': "啦啦啦裤子",
+      },
+      cIndex: 0
+    }
+  },
+  components: {
+    TabControl
+  },
+  methods: {
+    changeTab(idx) {
+      this.cIndex = idx;
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=TabControl.vue
+```vue{8,13,20}
+<template>
+  <div>
+    <div class="tabs">
+      <div v-for="(tab, idx) of tabs" 
+        :key="tab" 
+        @click="changeTab(idx)"
+        class="tab"
+        :class="{ 'active': +cIndex === idx }"
+      >{{ tab }}
+      </div>
+    </div>
+    <div class="container">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+<script>
+
+export default {
+  emits: [ 'changeTab' ],
+  props: {
+    tabs: {
+      type: Array,
+      default: []
+    },
+    cIndex: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    changeTab(idx) {
+      if (idx !== this.cIndex) {
+        this.$emit('changeTab', idx);
+      }
+    }
+  },
+}
+</script>
+<style scoped>
+.tabs {
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+}
+.tab.active {
+  color: rgb(250, 191, 191);
+  background-color: rgb(137, 182, 250);
+}
+.container {
+  margin-top: 10px;
+  box-shadow: 0 -3px 3px #333;
+  padding: 10px 5px;
+  height: calc(100vh - 50px);
+  box-sizing: border-box;
+}
+</style>
+```
+:::
+::::
+## 第12节 组件通信
+:::: tabs
+::: tab label=provide/inject
+* provide：父组件向所有的子孙组件提供参数
+* inject：子孙组件需要使用祖先提供的参数时进行引入
+
+<video src="./assets/inject0.mp4" style="width:300px;" controls />
+
+>注：要让inject参数变成响应式的，需要配置`app.config`和注入`computed`
+```js{6-7}
+// main.js
+import { createApp } from 'vue'
+import App from './App.vue'
+const app = createApp(App);
+
+// 注入响应式参数配置，后续拿数据不用.value
+app.config.unwrapInjectedRef = true;
+
+app.mount('#app')
+```
+>App.vue
+```vue{3-4,19-24}
+<template>
+  <div>
+    <div>爷爷的name: {{ name }}</div>
+    <child></child>
+  </div>
+</template>
+<script>
+import child from "./components/Child";
+import { computed } from 'vue';
+export default {
+  data() {
+    return {
+      name: '爷爷'
+    }
+  },
+  components: {
+    child
+  },
+  provide() {
+    return {
+      name: computed(() => this.name),
+      changeName: this.changeName
+    }
+  },
+  methods: {
+    changeName(name) {
+      this.name = name;
+    }
+  }
+}
+</script>
+```
+>child.vue
+```vue{3-4,13}
+<template>
+  <div>
+      <div>爸爸：<button @click="changeName('爸爸')">我要修改name</button></div>
+      <grandchild></grandchild>
+  </div>
+</template>
+<script>
+import grandchild from './GrandChid.vue'
+export default {
+  components: {
+      grandchild
+  },
+  inject: [ "changeName" ],
+}
+</script>
+```
+>grandchild.vue
+```vue{9}
+<template>
+  <div>
+      孙子：我拿到了name：{{ name }}
+  </div>
+</template>
+<script>
+
+export default {
+  inject: [ 'name' ]
+}
+</script>
+```
+:::
+::: tab label=Mitt
+* [github](https://github.com/developit/mitt)
+* 取代vue2的全局事件总线
+>起步
+```shell
+npm i mitt
+```
+>初始化
+```js
+// utils/event_bus.js
+import mitt from 'mitt';
+const emitter = mitt();
+export default emitter;
+```
+>注册事件监听
+```vue{9,19-21}
+<template>
+  <div>
+    <div>父组件的name: {{ name }}</div>
+    <child></child>
+  </div>
+</template>
+<script>
+import child from "./components/Child";
+import emitter from "./utils/event_bus";
+export default {
+  data() {
+    return {
+      name: '爷爷'
+    }
+  },
+  components: {
+    child
+  },
+  created() {
+    emitter.on('changeName', (name) => this.changeName(name));
+  },
+
+  methods: {
+    changeName(name) {
+      this.name = name;
+    }
+  }
+}
+</script>
+```
+>触发事件
+```vue{7,11}
+<template>
+  <div>
+      <div>子组件的按钮：<button @click="changeName('爸爸')">我要修改name</button></div>
+  </div>
+</template>
+<script>
+import emitter from '../utils/event_bus';
+export default {
+    methods: {
+        changeName(name) {
+            emitter.emit("changeName", name);
+        }
+    }
+}
+</script>
+```
+* 监听所有事件：
+```js
+emitter.on("*", (type, ...args) => {})
+```
+* 取消
+```js
+emitter.on('change', fn);
+emitter.off('change', fn);
+
+// 取消所有
+emitter.all.clear();
+```
+:::
+::: tab label=v-model
+>父组件
+```vue{3}
+<template>
+  <div>
+    <my-input v-model="msg"></my-input>
+    {{msg}}
+  </div>
+</template>
+<script>
+import MyInput from './components/myInput.vue'
+export default {
+  data() {
+    return {
+      msg: 'hello',
+    }
+  },
+  components: {
+    MyInput
+  },
+}
+</script>
+```
+>子组件
+```vue{3,9-14}
+<template>
+  <div>
+    <input type="text" :value="modelValue" @input="change">
+  </div>
+</template>
+<script>
+
+export default {
+    props: [ 'modelValue' ],
+    methods: {
+        change(e) {
+            this.$emit('update:modelValue', e.target.value);
+        }
+    }
+}
+</script>
+```
+* 子组件简写
+```vue{3,10-20}
+<template>
+  <div>
+    <input type="text" v-model="myValue">
+  </div>
+</template>
+<script>
+
+export default {
+    props: [ 'modelValue' ],
+    emit: [ 'change' ],
+    computed: {
+        myValue: {
+            get() {
+                return this.modelValue;
+            },
+            set(newVal) {
+                this.$emit('update:modelValue', newVal)
+            }
+        }
+    }
+}
+</script>
+```
+:::
+::: tab label=v-model高级
+* 绑定多个，需要给每个`v-model`命名
+>父组件
+```vue{3}
+<template>
+  <div>
+    <my-input v-model:msg="msg" v-model:title="title"></my-input>
+    <div>{{ title }}</div>
+    <div>{{ msg }}</div>
+  </div>
+</template>
+<script>
+import MyInput from './components/myInput.vue'
+export default {
+  data() {
+    return {
+      msg: 'hello',
+      title: '这是title'
+    }
+  },
+  components: {
+    MyInput
+  },
+}
+</script>
+```
+>子组件
+```vue{3-4,10-11,13-28}
+<template>
+  <div>
+    <input type="text" v-model="myMsg">
+    <input type="text" v-model="myTitle">
+  </div>
+</template>
+<script>
+
+export default {
+    props: [ 'msg', 'title' ],
+    emit: [ 'changeMsg', 'changeTitle' ],
+    computed: {
+        myMsg: {
+            get() {
+                return this.msg;
+            },
+            set(newVal) {
+                this.$emit('update:msg', newVal)
+            }
+        },
+        myTitle: {
+            get() {
+                return this.title;
+            },
+            set(newVal) {
+                this.$emit('update:title', newVal)
+            }
+        },
+    }
+}
+</script>
+```
+:::
+::::
+## 第13节 keep-alive/生命周期
+:::: tabs
+::: tab label=介绍
+* 动态组件的缓存，内部包裹的组件即使离开也不会销毁，会在后台运行
+```vue
+<keep-alive></keep-alive>
+```
+* include：String|Array|RegExp
+* exclude：String|Array|RegExp
+* max：Number|String
+>注：include是组件的`name`属性
+```html
+<keep-alive exclude = "SongsList,Home">
+    <router-view/>
+</keep-alive>
+```
+:::
+::: tab label=异步组件
+* 异步加载的核心是Promise
+```js
+import("../utils/math.js").then(({sum}) => sum(1, 2));
+```
+>webpack通过JSONP的方式进行引入的
+
+* 优势：打包时可以分包，首屏包更小，减少白屏时间
+* Vue3中引入异步组件是通过`defineAsyncComponent`来定义
+```js
+const { defineAsyncComponent } from "vue";
+const Home = defineAsyncComponent(() => import("../components/Home.vue"))
+
+// 有参数
+const Home = defineAsyncComponent({
+    loader: () => import("../components/Home.vue"),
+    loadingComponent: Loading,
+    delay: 1000, // 多久还没加载出来就展示loadingComponent组件
+})
+```
+:::
+::: tab label=异步组件示例
+<img src="./assets/asynccomp1.png" style="height:300px">
+
+>App.vue
+```vue{8-10,16-19,24,29-32}
+<template>
+  <div>
+      <TabControl
+        :tabs="tabs"
+        @change-tab="changeTab"
+        :c-index="cIndex"
+      >
+        <keep-alive>
+          <component :is="tabs[cIndex]"></component>
+        </keep-alive>
+      </TabControl>
+  </div>
+</template>
+<script>
+import TabControl from "./components/TabControl.vue";
+import { defineAsyncComponent } from 'vue';
+const Home = defineAsyncComponent(() => import('./components/Home.vue'));
+const Categories = defineAsyncComponent(() => import('./components/Categories.vue'));
+const Me = defineAsyncComponent(() => import('./components/Me.vue'));
+
+export default {
+  data() {
+    return {
+      tabs:[ 'home', 'categories', 'me' ],
+      cIndex: 0
+    }
+  },
+  components: {
+    TabControl,
+    Home,
+    Categories,
+    Me,
+  },
+  methods: {
+    changeTab(idx) {
+      this.cIndex = idx;
+    }
+  }
+}
+</script>
+```
+>Home.vue
+```vue
+<template>
+  <div>
+    {{ msg }}
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      msg: "主页"
+    }
+  }
+}
+</script>
+```
+>Categories.vue
+```vue
+<template>
+  <div>
+    {{ msg }}
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      msg: "商品分类"
+    }
+  }
+}
+</script>
+```
+>Me.vue
+```vue
+<template>
+  <div>
+    {{ msg }}
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      msg: "我的个人信息"
+    }
+  }
+}
+</script>
+```
+>TabControl.vue（复用前面的分页Tab组件）
+```vue
+<template>
+  <div>
+    <div class="tabs">
+      <div v-for="(tab, idx) of tabs" 
+        :key="tab" 
+        @click="changeTab(idx)"
+        class="tab"
+        :class="{ 'active': +cIndex === idx }"
+      >{{ tab }}
+      </div>
+    </div>
+    <div class="container">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  emits: [ 'changeTab' ],
+  props: {
+    tabs: {
+      type: Array,
+      default: []
+    },
+    cIndex: {
+      type: Number,
+      default: 0
+    }
+  },
+  methods: {
+    changeTab(idx) {
+      if (idx !== this.cIndex) {
+        this.$emit('changeTab', idx);
+      }
+    }
+  },
+}
+</script>
+<style scoped>
+.tabs {
+  height: 30px;
+  line-height: 30px;
+  display: flex;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+}
+.tab.active {
+  color: rgb(250, 191, 191);
+  background-color: rgb(137, 182, 250);
+}
+.container {
+  margin-top: 10px;
+  box-shadow: 0 -3px 3px #333;
+  padding: 10px 5px;
+  height: calc(100vh - 50px);
+  box-sizing: border-box;
+}
+</style>
+```
+:::
+::: tab label=suspense
+* 异步组件未展示的时候的应急方案，类似loading组件
+    * 默认展示default插槽
+    * 如果插槽组件加载中或未加载成功，就展示fallback插槽
+```vue
+<suspense>
+    <template #default>
+        <home />
+    </template>
+    <template #fallback>
+        <loading />
+    </template>
+</suspense>
+```
+:::
+::: tab label=生命周期
+* keep-alive包裹的组件有`actived`和`deactived`两个生命周期
+* Vue3生命周期与Vue2相比，移除了`beforeDestroy`、`destroyed`
+    * 组件调用app.unmount()的时候，会触发`beforeUnmount`、`unmounted`
+    * 通过`emitter.on('name',fn)`注册的事件可以在`unmounted`生命周期去`emitter.off('name', fn)`卸载
+```vue{14-24,26-27}
+<template>
+  <div>
+    {{ msg }}
+  </div>
+</template>
+<script>
+
+export default {
+  data() {
+    return {
+      msg: "商品分类"
+    }
+  },
+  beforeCreate() { console.log('beforeCreate') },
+  created() { console.log('created') },
+  beforeUpdate() { console.log('beforeUpdate') },
+  updated() { console.log('updated') },
+  beforeMount() { console.log('beforeMount') },
+  mounted() { 
+    console.log('mounted');
+    setTimeout(() => this.msg = '修改分类', 100);
+  },
+  beforeUnmount() { console.log('beforeUnmount') },
+  unmounted() { console.log('unmounted') },
+
+  activated() { console.log('activated') },
+  deactivated() { console.log('deactivated') }
+}
+</script>
+```
+:::
+::: tab label=问题
+* Vue3移除了`$children`属性。以下属性还可以用
+    * `$refs`
+    * `$parent`
+    * `$root`
+:::
+::::
