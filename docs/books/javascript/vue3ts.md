@@ -2503,3 +2503,494 @@ export default {
     * `$root`
 :::
 ::::
+## 第14节 动画
+:::: tabs
+::: tab label=介绍
+* 原理：transition检测有没有相关的类名，然后在恰当的时机把对应的类名添加到元素上
+* 给单个组件/元素设置动画，可以使用transition API设置动画
+* 六个类常用管理类
+    * `name-enter-from`：进入前一帧初始化状态
+    * `name-enter-to`：进入后一帧目标状态
+    * `name-leave-from`：离开前一帧初始化状态
+    * `name-leave=to`：离开后一帧目标状态
+    * `name-enter-active`：进入的状态转变**过程**动画效果
+    * `name-leave-active`：离开的状态转变**过程**动画效果
+```vue{4-6,20-31}
+<template>
+  <div>
+    <button @click="isShow = !isShow">切换</button>
+    <transition name="hdy">
+      <div v-if="isShow">{{ msg }}</div>
+    </transition>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      msg: 'hello',
+      isShow: true,
+    }
+  },
+}
+</script>
+<style scoped>
+.hdy-enter-from,
+.hdy-leave-to {
+  opacity: 0;
+}
+.hdy-enter-to,
+.hdy-leave-from {
+  opacity: 1;
+}
+.hdy-enter-active,
+.hdy-leave-active {
+  transition: all 1s 200ms ease;
+}
+</style>
+```
+:::
+::: tab label=animation
+<video src="./assets/animation.mp4" style="width:250px" controls />
+
+```vue{5-7,29-47}
+<template>
+  <div>
+    <button @click="isShow = !isShow">切换</button>
+    <div class="box">
+      <transition name="hdy">
+        <div v-if="isShow">{{ msg }}</div>
+      </transition>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      msg: "hello",
+      isShow: true,
+    };
+  },
+};
+</script>
+<style scoped>
+.box {
+  width: 100vw;
+  text-align: center;
+}
+.box > div {
+  margin: 0 auto;
+}
+.hdy-enter-active {
+  animation: bounce 1s ease;
+}
+.hdy-leave-active {
+  animation: bounce 1s ease reverse;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
+```
+:::
+::: tab label=其他设置
+* 首屏渲染是否需要动画：`:appear="true"`
+* 如果要用生命周期调用js函数写动画，可以设置`css:false`来关闭css动画检测，以及避免css动画影响效果
+* 多个动画，animation和transion都有，那么都会生效。
+    * 可是如果多个动画时间不一样，以谁的时长为准？设置`type`来告诉vue
+```vue
+<transtion name="myName" type="animation"></transtion>
+```
+* 设置`mode`告诉vue多个动画的切换模式，如：两个元素切换展示，先进还是先出？
+    * 默认同时动画
+    * in-out：先进后出
+    * out-in：先出后进
+    
+<video src="./assets/transitionmode.mp4" style="width:250px" controls />
+
+```vue{5,12}
+<template>
+  <div>
+    <button @click="isShow = !isShow">切换</button>
+    <div class="box">
+      <transition name="hdy">
+          <div v-if="isShow">{{ msg }}</div>
+          <div v-else>{{ msg2 }}</div>
+      </transition>
+    </div>
+    <hr>
+    <div class="box2">
+      <transition name="hdy" mode="out-in" appear>
+          <div v-if="isShow">{{ msg }}</div>
+          <div v-else>{{ msg2 }}</div>
+      </transition>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      msg: "hello!",
+      msg2: "你好~",
+      isShow: true,
+    };
+  },
+};
+</script>
+<style scoped>
+.box {
+  width: 100vw;
+  text-align: center;
+}
+.box2 {
+  position: fixed;
+  text-align: center;
+  width: 100vw;
+  top: 50%;
+}
+.box>div,.box2>div {
+  margin: 0 auto;
+}
+.hdy-enter-active {
+  animation: bounce 1s ease;
+}
+.hdy-leave-active {
+  animation: bounce 1s ease reverse;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>
+```
+:::
+::: tab label=animate.css
+* 一个第三方动画库，[动画类名查找](https://animate.style/)
+* 查找到对应的keyframes名，写进动画调用就行
+```shell
+npm i animate.css
+```
+```js
+// main.js
+import "animation.css";
+```
+```vue{28-33}
+<template>
+  <div>
+    <button @click="isShow = !isShow">切换</button>
+    <div class="box">
+      <transition name="hdy" mode="out-in">
+          <div v-if="isShow">{{ msg }}</div>
+          <div v-else>{{ msg2 }}</div>
+      </transition>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      msg: "hello!",
+      msg2: "你好~",
+      isShow: true,
+    };
+  },
+};
+</script>
+<style scoped>
+.box {
+  width: 100vw;
+  text-align: center;
+}
+.hdy-enter-active {
+  animation: fadeInDown 500ms ease;
+}
+.hdy-leave-active {
+  animation: fadeInDown 500ms ease reverse;
+}
+</style>
+```
+* 或者可以直接传入类名
+```js
+<transition
+    mode="out-in"
+    enter-active-class="animate__animated animate__rotateIn"
+    leave-active-class="animate__animated animate__rotateOut"
+>
+    <div v-if="isShow">{{ msg }}</div>
+    <div v-else>{{ msg2 }}</div>
+</transition>
+```
+:::
+::: tab label=生命周期
+* transform动画也有生命周期钩子给我们使用
+    * 默认入参：enter(el, done) {}
+```html{6-14}
+<transition
+    mode="out-in"
+    enter-active-class="animate__animated animate__rotateIn"
+    leave-active-class="animate__animated animate__rotateOut"
+
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @enter-cancelled="enterCanceled"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave"
+    @leave-cancelled="leaveCancelled"
+    :css="false"
+>
+    <div v-if="isShow">{{ msg }}</div>
+</transition>
+```
+
+:::
+::: tab label=gsap
+* [官网](https://github.com/greensock/GSAP)
+* the greensock animation platform，通过js设置css、svg、canvas等来控制动画
+```shell
+npm i gsap
+```
+```vue{7-8,26-39}
+<template>
+  <div>
+    <button @click="isShow = !isShow">切换</button>
+    <div class="box">
+      <transition
+        mode="out-in"
+        @enter="enter"
+        @leave="leave"
+        :css="false"
+      >
+          <div v-if="isShow">{{ msg }}</div>
+      </transition>
+    </div>
+  </div>
+</template>
+<script>
+import gsap from 'gsap';
+export default {
+  data() {
+    return {
+      msg: "hello!",
+      isShow: true,
+    };
+  },
+  methods: {
+    enter(el, done) {
+      gsap.from(el, {
+        scale: 0,
+        y: 200,
+        onComplete: done
+      })
+    },
+    leave(el, done) {
+      gsap.to(el, {
+        scale: 0,
+        x: 200,
+        onComplete: done
+      })
+    },
+  }
+};
+</script>
+<style scoped>
+.box {
+  width: 100vw;
+  text-align: center;
+}
+.hdy-enter-active {
+  animation: fadeInDown 500ms ease;
+}
+.hdy-leave-active {
+  animation: fadeInDown 500ms ease reverse;
+}
+</style>
+```
+:::
+::: tab label=原生动态数字
+<video src="./assets/yuanshengshuzidongtai.mp4" style="width:250px;" controls />
+
+```vue{21-33}
+<template>
+  <div>
+    <button @click="add">切换</button>
+    <div>{{ showCount }}</div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      count: 0,
+      showNum: 0
+    };
+  },
+  methods: {
+    add() {
+      this.count += 100;
+    }
+  },
+  computed: {
+    showCount() {
+      if (this.showNum === this.count) {
+        return this.showNum;
+      }
+      if(this.showNum < this.count) {
+        setTimeout(() => this.showNum++);
+        return this.showNum;
+      }
+      if(this.showNum > this.count) {
+        setTimeout(() => this.showNum--);
+        return this.showNum;
+      }
+    }
+  }
+};
+</script>
+```
+:::
+::: tab label=利用gsap实现
+```vue{19-22}
+<template>
+  <div>
+    <button @click="add">切换</button>
+    <div>{{ showNum.toFixed(0) }}</div>
+  </div>
+</template>
+<script>
+import gsap from 'gsap';
+export default {
+  data() {
+    return {
+      count: 0,
+      showNum: 0
+    };
+  },
+  methods: {
+    add() {
+      this.count += 100;
+      gsap.to(this, {
+        duration: 1,
+        showNum: this.count
+      })
+    }
+  },
+};
+</script>
+```
+:::
+::: tab label=动画组
+* transition-group来包裹一个动画组，里面的元素都可以实现相关的动画
+
+<video src="./assets/transitiongroup.mp4" style="width:300px;" controls/>
+
+```vue{11-17,43-58}
+<template>
+  <div>
+    <button @click="add">添加</button>
+    <button @click="del">删除</button>
+    <table>
+      <thead>
+        <th>id</th>
+        <th>姓名</th>
+        <th>年龄</th>
+      </thead>
+      <transition-group tag="tbody" name="hdy">
+        <tr v-for="id of nums" :key="id">
+          <td>{{ id }}</td>
+          <td>张三</td>
+          <td>{{ id + Math.floor(Math.random() * 10) }}</td>
+        </tr>
+      </transition-group>
+    </table>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      nums: [0, 1, 2, 20, 30, 11]
+    };
+  },
+  methods: {
+    add() {
+      const index = Math.floor(Math.random() * this.nums.length);
+      const num = Math.floor(Math.random() * 30);
+      this.nums.splice(index, 0, num);
+    },
+    del() {
+      const index = Math.floor(Math.random() * this.nums.length);
+      this.nums.splice(index, 1);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.hdy-enter-from,
+.hdy-leave-to {
+  opacity: 0;
+  transform: translateX(50px);
+}
+.hdy-leave-to {
+  position: absolute;
+}
+.hdy-enter-active,
+.hdy-leave-active {
+  transition: all 1s ease;
+}
+
+.hdy-move {
+  transition: all 500ms ease;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 auto;
+}
+
+tr {
+    height: 20px;
+    text-align: center;
+    vertical-align: top;
+}
+
+td, th {
+    padding: 0 10px;
+    /* border: 1px solid gray; */
+    min-width: 50px;
+}
+th {
+    background-color: rgb(238, 238, 238);
+    color:rgb(88, 88, 88);
+    line-height: 50px;
+}
+</style>
+```
+:::
+::::
+
+
