@@ -2992,5 +2992,461 @@ th {
 ```
 :::
 ::::
+## 第15节 mixin/ConpositionAPI
+:::: tabs
+::: tab label=mixin
+* 定义：
+```js
+export const mixinObj = {
+    create() {},
+    mounted() {},
+    data() {
+        return {
+            msg: ''
+        }
+    }
+}
+```
+* 组件内混入：
+```js
+mixin: [mixinObj]
+```
+* 全局混入：
+```js
+const app = createApp(App);
+app.mixin(mixinObj);
+app.mount('#app');
+```
+:::
+::: tab label=setup
+* Vue3最大的写法转变就是`optionsAPI`转化为`compositionAPI`
+* optionsAPI：同一个数据，逻辑分离，代码可读性还不够强
+* CpmpositionAPI：setup函数，将同一`逻辑关注点合并`，代码的变量函数名起的更见名知义，代码的可读性会很强。
+>**setup里不能使用this，因为在`setup`调用时，实例已经被创建，但是data/methods/等都还没有被解析**  
+>setup返回值：对象，可以在template中使用，替代原data的使用。如果data和setup中数据重了，用setup里面的。  
+>入参context: { emit, slots, attrs }  
+>数据需要用`reactive`函数将数组和对象包装成响应式数据。
+```vue{9,11-22}
+<template>
+  <div>
+    <div>{{ state.count }}</div>
+    <button @click="decre">-</button>
+    <button @click="incre">+</button>
+  </div>
+</template>
+<script>
+import { reactive } from 'vue';
+export default {
+  setup() {
+    const state = reactive({
+      count: 0
+    });
+    const incre = () => state.count++;
+    const decre = () => state.count--;
+    return {
+      state,
+      incre,
+      decre,
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=ref
+* `reactive`API只能包裹对象、数组解析成响应式数据，写起来比较麻烦
+* `ref`API可以处理值数据类型【String|Boolean|Number】，生成一个响应式对象，**值存在对象.value里面**。**在模板里面使用时模板会自动解析ref.value**
+```vue{3,9,12-14}
+<template>
+  <div>
+    <div>{{ count }}</div>
+    <button @click="decre">-</button>
+    <button @click="incre">+</button>
+  </div>
+</template>
+<script>
+import { ref } from 'vue';
+export default {
+  setup() {
+    let count = ref(0);
+    const incre = () => count.value++;
+    const decre = () => count.value--;
+    return {
+      count,
+      incre,
+      decre,
+    }
+  }
+}
+</script>
+```
+* ref模板内是`浅层解包`，如果把ref对象放到reactive对象内也可以解包，但放到一个普通对象内就不能解包，需要手动.value(一般也不这么用)。
+:::
+::: tab label=readonly
+* 值和对象的常量可以使用const修饰，但是const无法保证对象内部属性也不可变。
+```js
+const obj = { name: '张三' };
+// obj = {} // error
+obj.name = '李四'; // 可以
+```
+* readonly可以设置对象内部的值也不可变。
+>原理是通过数据劫持，set的时候不修改值。
 
+<img src="./assets/readonly.png" style="width:500px;">
 
+```vue{8,11-13}
+<template>
+  <div>
+    <div>{{ readonlyState.name }}</div>
+    <button @click="changeName">试图修改名字</button>
+  </div>
+</template>
+<script>
+import { readonly } from 'vue';
+export default {
+  setup() {
+    const readonlyState = readonly({
+      name: 'hdy'
+    });
+    const changeName = () => readonlyState.name = '张三';
+    return {
+      readonlyState,
+      changeName
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=readonly结合
+* readonly可以让后面的值无法修改这个数据
+* 本组件内部想要修改是可以的，就需要设置一个`reactive`响应式的数据作为`readonly`的入参.  
+<img src="./assets/readonly1.png" style="width:400px;">
+
+>父组件
+```vue{12-13,15-16}
+<template>
+  <div>
+    <home :readonlyMe="readonlyMe"></home>
+    <button @click="changeName">父组件改reactive数据</button>
+  </div>
+</template>
+<script>
+import { reactive, readonly } from 'vue';
+import Home from './components/Home.vue';
+export default {
+  setup() {
+    const me = reactive({ name: '父组件' });
+    const changeName = () => me.name = '爹改的';
+
+    // 给子组件的是不能改的数据，但是会接受到改变
+    const readonlyMe = readonly(me);
+    return {
+      me,
+      changeName,
+      readonlyMe
+    }
+  },
+  components: {
+    Home
+  }
+};
+</script>
+```
+>子组件
+```vue{13-14}
+<template>
+  <div>
+    <div>{{ readonlyMe.name }}</div>
+    <button @click="changeName">子组件试图修改名字</button>
+  </div>
+</template>
+<script>
+export default {
+  props: [ 'readonlyMe' ],
+  setup(props) {
+    let { readonlyMe } = props;
+
+    // 无效，因为爹给你的就是不能改的
+    const changeName = () => readonlyMe.name = '张三';
+    return {
+      readonlyMe,
+      changeName
+    }
+  }
+}
+</script>
+```
+* readonly的ref定义相同，但是改值需要注意.value
+```js
+const refName = ref("hdy");
+const myChange = () => refName.value = '张三';
+
+const readonlyName = readonly(refName);
+// 无效
+const change = () => readonlyName.value = '李四';
+```
+:::
+::::
+## 第16节 ConpositionAPI
+:::: tabs
+::: tab label=reactive相关
+* `isProxy`：是否为reactive或ref或readonly创建的proxy
+* `isReactive`：是否为reactive创建的响应式代理
+* `isReadonly`：是否是readonly创建的代理
+* `toRaw`：返回响应式对象的原始对象
+* `shallowReactive`：浅层响应式代理，只有本身一层是响应式的代理
+* `shallowReadonly`：浅层的readonly对象，深层可以修改
+:::
+::: tab label=ref相关
+* `isRef`：判断当前数据是不是ref生成的响应式数据
+* `toRefs`：将**reactive对象**进行结构，建立连接，解构后也是响应式的
+* `toRef`：将**reactive对象**解构出某一个值，而并不是整个对象
+* `unref`：将**可能是ref对象的值**解包，拿出.value
+* `shallowRef`：ref()也可能接收对象，并且也是深层响应式的，例如修改对象属性。如果只需要浅层响应式，只有修改value本身才响应式，就可以用shallowRef，性能会高一些
+* `triggerRef`：shallowRef修改不会是响应式的，可以在修改后再用triggerRef强制响应式更新对应的相关数据
+* `customRef`：自定义ref实现，例如防抖/节流
+>toRefs
+```vue{12-13,15-17}
+<template>
+  <div>
+    <div>{{ name }}</div>
+    <button @click="changeName">修改name</button>
+    <button @click="changeName2">修改name2</button>
+  </div>
+</template>
+<script>
+import { reactive, toRefs } from 'vue';
+export default {
+  setup() {
+    const me = reactive({ name: 'hdy' });
+    const { name } = toRefs(me);
+
+    // 作用相同
+    const changeName = () => name.value += 'y';
+    const changeName2 = () => me.name += 'y';
+    return {
+      name,
+      changeName,
+      changeName2
+    }
+  },
+};
+</script>
+```
+>toRef
+```vue
+<template>
+  <div>
+    <div>{{ name }}</div>
+    <button @click="changeName">修改name</button>
+  </div>
+</template>
+<script>
+import { reactive, toRef } from 'vue';
+export default {
+  setup() {
+    const me = reactive({ name: 'hdy' });
+    const name = toRef(me, 'name');
+
+    const changeName = () => name.value += 'y';
+    return {
+      name,
+      changeName,
+    }
+  },
+};
+</script>
+```
+>unref
+```vue{8-9}
+<template>
+  <div></div>
+</template>
+<script>
+import { ref, unref, toRef } from 'vue';
+export default {
+  setup() {
+    const name = ref('hdy');
+    console.log(unref(name) === unref('hdy'));  // true
+  },
+};
+</script>
+```
+:::
+::: tab label=customRef
+* 自定义防抖ref
+
+<video src="./assets/customref.mp4" style="width:300px;" controls />
+
+```vue{8,10-27,31}
+<template>
+  <div>
+    <input type="text" v-model="msg">
+    {{ msg }}
+  </div>
+</template>
+<script>
+import { customRef } from 'vue';
+
+function debounceRef(value, delay) {
+  let timer = null;
+  return customRef((track, trigger) => (
+    {
+      get() {
+        track();
+        return value;
+      },
+      set(newVal) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          value = newVal;
+          trigger();
+        }, delay)
+      }
+    }
+  ))
+}
+
+export default {
+  setup() {
+    let msg  = debounceRef('', 500);
+    return {
+      msg
+    }
+  },
+};
+</script>
+```
+:::
+::: tab label=computed
+>原理和vue2原理一样，只是写法不同。**返回值本质是ref对象，修改也要用.value**
+* 写法一：传入getter函数
+```vue{14}
+<template>
+  <div>
+    {{ dollor }}
+    <button @click="addOne">修改价格</button>
+  </div>
+</template>
+<script>
+import { ref, computed } from 'vue';
+
+export default {
+  setup() {
+    let price = ref(100);
+    const addOne = () => price.value++;
+    const dollor = computed(() => `$${ price.value }`)
+    return {
+      dollor,
+      addOne
+    }
+  },
+};
+</script>
+```
+* 写法二：传入对象包含getter/setter
+```vue{16-19}
+<template>
+  <div>
+    {{ dollor }}
+    <button @click="addOne">修改价格</button>
+    <button @click="addDollor">修改computed</button>
+  </div>
+</template>
+<script>
+import { ref, computed } from 'vue';
+
+export default {
+  setup() {
+    let price = ref(100);
+    const addOne = () => price.value++;
+
+    const dollor = computed({
+      get() { return `$${ price.value }`},
+      set() { addOne() }
+    })
+    const addDollor = () => dollor.value++;
+
+    return {
+      dollor,
+      addOne,
+      addDollor
+    }
+  },
+};
+</script>
+```
+:::
+::: tab label=watch
+* 监听数据变化
+    * `watchEffect`：自动收集响应式依赖，默认刚开始一定会调用一次，来收集依赖
+    * `watch`：需要手动收集依赖
+>watchEffect，不用告诉我监听谁，我自己知道。返回stop函数，调用就停止监听
+```vue{13-15,19-21}
+<template>
+  <div>
+    {{ num }}
+    <button @click="changeNum">加一</button>
+  </div>
+</template>
+<script>
+import { ref, watchEffect } from 'vue';
+
+export default {
+  setup() {
+    let num = ref(0);
+    const stop = watchEffect(() => {
+      console.log(num.value)
+    });
+
+    const changeNum = () => {
+      num.value++
+      if (num.value > 9) {
+        stop();
+      }
+    };
+
+  return {
+      num,
+      changeNum
+    }
+  },
+};
+</script>
+```
+>入参fn的入参可以是一个清理函数，连续监听到变化，下一次变化可以**清除上一次的侦听发起的无效操作**，例如网络请求
+
+```vue{13-20}
+<template>
+  <div>
+    {{ num }}
+    <button @click="changeNum">加一</button>
+  </div>
+</template>
+<script>
+import { ref, watchEffect } from 'vue';
+
+export default {
+  setup() {
+    let num = ref(0);
+    watchEffect((onInvalidate) => {
+      console.log(num.value);
+      const timer = setTimeout(() => console.log(`网络请求成功`), 1000);
+      onInvalidate(() => {
+        clearTimeout(timer);
+        console.log('取消上个网络请求');
+      });
+    });
+
+    const changeNum = () => num.value++;
+    return {
+      num,
+      changeNum
+    }
+  },
+};
+</script>
+```
+:::
+::::
