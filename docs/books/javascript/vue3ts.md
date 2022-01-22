@@ -2165,7 +2165,7 @@ export default {
 
 export default {
     props: [ 'modelValue' ],
-    emit: [ 'change' ],
+    emit: [ 'update:modelValue' ],
     computed: {
         myValue: {
             get() {
@@ -2279,6 +2279,7 @@ const Home = defineAsyncComponent({
     delay: 1000, // 多久还没加载出来就展示loadingComponent组件
 })
 ```
+* 大部分业务都是用路由懒加载。特殊页面内异步组件可以这样定义。
 :::
 ::: tab label=异步组件示例
 <img src="./assets/asynccomp1.png" style="height:300px">
@@ -3188,7 +3189,7 @@ const change = () => readonlyName.value = '李四';
 ```
 :::
 ::::
-## 第16节 ConpositionAPI
+## 第16节 ConpositionAPI2
 :::: tabs
 ::: tab label=reactive相关
 * `isProxy`：是否为reactive或ref或readonly创建的proxy
@@ -3378,9 +3379,11 @@ export default {
 </script>
 ```
 :::
-::: tab label=watch
+::: tab label=watchEffect
 * 监听数据变化
     * `watchEffect`：自动收集响应式依赖，默认刚开始一定会调用一次，来收集依赖
+        * 入参1：(inValidate) => {}，需要执行的函数
+        * 入参2：{ flush: 'post' }，配置项。这个配置会在DOM挂载完再执行初始化
     * `watch`：需要手动收集依赖
 >watchEffect，不用告诉我监听谁，我自己知道。返回stop函数，调用就停止监听
 ```vue{13-15,19-21}
@@ -3446,6 +3449,509 @@ export default {
     }
   },
 };
+</script>
+```
+:::
+::: tab label=ref
+* 用ref取元素/子组件
+```vue{13}
+<template>
+  <div>
+    <h2 ref="title">hdy在学习Vue3</h2>
+    <button @click="show">查看value</button>
+  </div>
+</template>
+<script>
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    const title = ref(null);
+    const show = () => console.log(title.value); // h2元素
+    return {
+      title,
+      show
+    }
+  },
+};
+</script>
+```
+:::
+::: tab label=watch
+* watch：
+    1. 可以拿到变化前后的值
+    2. 惰性，不会默认执行一次
+    3. 需要告诉侦听的是谁
+* 总结：
+    * 监听reactive/ref对象
+    ```js
+    watch(me, (newVal, oldVal) => {})
+    ```
+    * 监听reactive对象的一个值
+    ```js
+    watch(() => me.name, (newVal, oldVal) => {})
+    ```
+    * 侦听多个数据源，每个数据源改变都会触发
+    ```js
+    watch([() => me.name, age], (newVal, oldVal) => {
+      console.log('侦听到了变化');
+      console.log(newVal); // ['hdyyyy', 21]
+    })
+    ```
+    * oldValue/newValue不想拿响应式对象：解构
+    ```js
+    watch(() => ({...me}), (newVal, oldVal) => {})
+    ```
+    * 第三个参数，**深度侦听、立即执行**，`reactive`对象默认deep为true
+    ```js
+    watch(me, (newVal, oldVal) => {}, {
+      immediate: true,
+      deep: true
+    })
+    ```
+>侦听一个`ref值`
+```vue{16-19}
+<template>
+  <div>
+    <div>{{ name }}</div>
+    <button @click="changeName">改名</button>
+  </div>
+</template>
+<script>
+import { reactive, toRef, watch } from 'vue';
+
+export default {
+  setup() {
+    const me = reactive({ name: 'hdy', age: 18 });
+    let name = toRef(me, 'name');
+    const changeName = () => name.value += 'y';
+
+    watch(name, (newVal, oldVal) => {
+      console.log('侦听到了变化');
+      console.log(oldVal + '->' + newVal);
+    })
+
+    return {
+      name,
+      changeName
+    }
+  }    
+};
+</script>
+```
+>侦听一个`reactive对象的一个值`
+```vue{15-18}
+<template>
+  <div>
+    <div>{{ me.name }}</div>
+    <button @click="changeName">改名</button>
+  </div>
+</template>
+<script>
+import { reactive, toRef, watch } from 'vue';
+
+export default {
+  setup() {
+    const me = reactive({ name: 'hdy', age: 18 });
+    const changeName = () => me.name += 'y';
+
+    watch(() => me.name, (newVal, oldVal) => {
+      console.log('侦听到了变化');
+      console.log(oldVal + '->' + newVal);
+    })
+
+    return {
+      me,
+      changeName
+    }
+  }    
+};
+</script>
+```
+:::
+::::
+## 第17节 CompositionAPI3
+:::: tabs
+::: tab label=生命周期
+* setup直接取代了`beforeCreate`和`created`。`beforeDestory`和`destroyed`改为`beforeUnmount`和`unmounted`其他加一个on在setup中定义
+    * ~~beforeCreate~~ -> 使用 setup()
+    * ~~created~~ -> 使用 setup()
+    * beforeMount -> onBeforeMount
+    * mounted -> onMounted
+    * beforeUpdate -> onBeforeUpdate
+    * updated -> onUpdated
+    * beforeUnmount -> onBeforeUnmount
+    * unmounted -> onUnmounted
+    * errorCaptured -> onErrorCaptured
+    * renderTracked -> onRenderTracked
+    * renderTriggered -> onRenderTriggered
+    * activated -> onActivated
+    * deactivated -> onDeactivated
+* 并且可以同时定义多个同样的生命周期，都会按序执行
+* 可以将生命周期函数抽出到一个hook里面，setup里面调用就行
+```vue
+<template>
+  <div>
+    <div>{{ msg }}</div>
+  </div>
+</template>
+<script>
+import {
+  ref,
+  onBeforeMount,
+  onMounted,
+  onActivated,
+  onBeforeUpdate,
+  onUpdated,
+  onBeforeUnmount,
+  onUnmounted,
+} from 'vue';
+
+export default {
+  setup() {
+    const msg = ref('你好');
+    onBeforeMount(() => console.log('onBeforeMount'));
+    onMounted(() => console.log('onMounted'));
+    onActivated(() => console.log('onActivated'));
+    onBeforeUpdate(() => console.log('onBeforeUpdate'));
+    onUpdated(() => console.log('onUpdated'));
+    onBeforeUnmount(() => console.log('onBeforeUnmount'));
+    onUnmounted(() => console.log('onUnmounted'));
+    return {
+      msg,
+    }
+  }    
+};
+</script>
+```
+:::
+::: tab label=provide/inject
+* 父组件
+>注意：provide数据尽量是**单向数据流**，不让子组件进行修改。
+```vue{10,16-17}
+<template>
+  <div>
+    <div>{{ msg }}</div>
+    <button @click="change">父组件：哈</button>
+    <home></home>
+  </div>
+</template>
+<script>
+import Home from './components/Home.vue';
+import { provide, ref, readonly } from 'vue';
+export default {
+  components: {
+    Home,
+  },
+  setup() {
+    const msg = ref('哈哈哈');
+    provide('msg', readonly(msg));
+    const change = () => msg.value += '哈';
+    return {
+      msg,
+      change,
+    }
+  }    
+};
+</script>
+```
+* 子组件
+```vue{8,11-12}
+<template>
+  <div>
+    <div>{{ msg }}</div>
+    <button @click="change">子组件：哈</button>
+  </div>
+</template>
+<script>
+import { inject } from 'vue';
+export default {
+  setup() {
+    let msg = inject('msg');
+    const change = () => msg.value += '呵'; // 无效，警告
+    return {
+      msg,
+      change,
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=hook
+* 将同一代码逻辑进行抽离，一般hook名字都是`use`开头，如：useCounter
+```vue{11-22,26-31}
+<template>
+  <div>
+    <div>计数：{{ counter }}</div>
+    <div>双倍计数：{{ double }}</div>
+    <button @click="decre">-1</button>
+    <button @click="incre">+1</button>
+  </div>
+</template>
+<script>
+import { ref, computed } from 'vue';
+function useCount() {
+    let counter = ref(0);
+    let double = computed(() => counter.value * 2);
+    const incre = () => counter.value++;
+    const decre = () => counter.value--;
+    return {
+      counter,
+      double,
+      incre,
+      decre,
+    }
+}
+
+export default {
+  setup() {
+    const {
+      counter,
+      double,
+      incre,
+      decre,
+    } = useCount();
+
+    return {
+      counter,
+      double,
+      incre,
+      decre,
+    }
+  }
+};
+</script> 
+```
+* 动态改变title：useTitle
+```vue
+<template>
+  <div>
+    <div>哈哈哈</div>
+  </div>
+</template>
+<script>
+import { ref, watchEffect } from 'vue';
+
+function useTitle(text = '呵呵') {
+  let title = ref(text);
+  watchEffect(() => document.title = title.value);
+  return {
+    title
+  }
+}
+
+export default {
+  setup() {
+    let { title } = useTitle('啦啦啦');
+    setTimeout(() => title.value = "略略略", 1000);
+  }
+};
+</script> 
+```
+:::
+::: tab label=鼠标方位
+>定义计算鼠标方位的hook
+```js
+import { ref } from 'vue';
+export default function() {
+    let x = ref(0);
+    let y = ref(0);
+    const events = [
+        'mousemove',
+        'touchmove'
+    ]
+    events.forEach(event => {
+        document.body.addEventListener(event, e => {
+            x.value = e.x || e.touches[0]?.clientX || 0;
+            y.value = e.y || e.touches[0]?.clientY || 0;
+        })
+    })
+    return { x, y }
+}
+```
+>使用hook
+```vue
+<template>
+  <div class="box">
+    <div class="position">
+      <div>x:{{ x }}</div>
+      <div>y:{{ y }}</div>
+    </div>
+
+  </div>
+</template>
+<script>
+import usePosition from './utils/usePosition'
+export default {
+  setup() {
+    let { x, y } = usePosition();
+    return {
+      x,
+      y
+    }
+  }
+};
+</script> 
+<style scoped>
+.box {
+  width: 100vw;
+  height: 100vh;
+}
+.position {
+  position: fixed;
+  bottom: 10px;
+  right: 10px
+}
+</style>
+```
+:::
+::: tab label=setup标签
+* 使用`script setup`来直接编写setup函数，外部定义的`props`、`components`、`emits`可以用函数定义
+    * defineProps
+    * defineEmits
+>父组件
+```vue{12-13}
+<template>
+  <div>
+    {{ msg }}
+    <home :msg="readonlyMsg" @decre="decre"></home>
+    <button @click="change">改变</button>
+  </div>
+</template>
+
+<script setup>
+  import Home from './components/Home.vue';
+  import { defineComponent, ref, readonly } from 'vue';
+  let msg = ref('哈哈');
+  let readonlyMsg = readonly(msg);
+  const change = () => msg.value += '哈';
+  const decre = () => msg.value = msg.value.slice(0, -1)
+</script>
+```
+>子组件
+```vue{9-12}
+<template>
+  <div>
+    <div>{{ msg }}</div>
+    <button @click="decre">发射-</button>
+  </div>
+</template>
+
+<script setup>
+import { defineProps, defineEmits } from 'vue';
+let { msg } = defineProps([ 'msg' ]);
+const emit = defineEmits(['decre']);
+const decre = () => emit('decre')
+</script>
+```
+:::
+::: tab label=render函数
+* 编译流程：template -> render函数 -> vNode -> DOM节点
+* h函数创建vNode
+* 组件内可以边写render函数，render函数返回**h函数的执行**，得到vNode
+* h函数：
+    * 入参1：tagName(String|Object|function)
+    * 入参2：attributes(Object|null)
+    * 入参3：content(String|Array|Object)
+```js
+// 单个vue文件
+<script>
+import { h } from 'vue';
+export default {
+  data() {
+    return {
+      counter: 0
+    }
+  },
+  render() {
+    return h(
+      'div',
+      null,
+      [
+        h('div', null, this.counter),
+        h('button', { onClick: () =>  this.counter++ }, '+1'),
+        h('button', { onClick: () =>  this.counter-- }, '-1'),
+      ]
+    )
+  }
+}
+</script>
+```
+* 用setup替代
+```vue{7-16}
+<script>
+import { ref, h } from 'vue';
+export default {
+  setup() {
+    let counter = ref(1);
+
+    return () =>  
+    h(
+      'div',
+      null,
+      [
+        h('div', null, counter.value),
+        h('button', { onClick: () =>  counter.value++ }, '+1'),
+        h('button', { onClick: () =>  counter.value-- }, '-1'),
+      ]
+    )
+  }
+}
+</script>
+```
+:::
+::: tab label=jsx
+* vue3支持模板里面直接写jsx语法
+```vue{8-14}
+<script>
+import { ref } from 'vue';
+export default {
+  setup() {
+    let counter = ref(0);
+    const incre = () => counter.value++;
+    const decre = () => counter.value--;
+    return () => (
+      <div>
+        <div>{ counter.value }</div>
+        <button onClick={ decre }>-1</button>
+        <button onClick={ incre }>+1</button>
+      </div>
+    )
+  }
+}
+</script>
+```
+* 使用插槽
+```vue{7-8}
+<script>
+import home from './components/Home.vue';
+export default {
+  setup() {
+    return () => (
+      <div>
+        <div>父组件</div>
+        <home>{{ default: props => <div>呵呵</div>}}</home>
+      </div>
+    )
+  }
+}
+</script>
+```
+```vue{5,8-9}
+<script>
+import { useSlots } from 'vue';
+export default {
+  setup() {
+    const slots = useSlots();
+    return () => (
+      <div>
+        <div>home组件</div>
+        { slots.default ? slots.default() : <span>默认插槽</span> }
+      </div>
+    )
+  }
+}
 </script>
 ```
 :::

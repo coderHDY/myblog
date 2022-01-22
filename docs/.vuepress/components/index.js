@@ -35,5 +35,5 @@ module.exports = [
         .use(require('./myPlugin'), [options])
         .end()
     }
-  })
+  }),
 ]
