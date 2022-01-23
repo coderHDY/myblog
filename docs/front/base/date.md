@@ -715,3 +715,54 @@ const time2 = time1.map((item, index) => index !== 3 ? item : item - 8);
 const date2 = new Date(Date.UTC(...time2));
 console.log(date1.toString() == date2.toString()); // true
 ```
+## 手写格式化时间
+:::: tabs
+::: tab label=期望
+```js
+let timeStamp = +new Date();
+// let timeStamp = '32fasd'; // Error: 传入的非时间戳
+
+console.log(fmtFn(timeStamp, 'yyyy-MM-dd hh:mm:ss')); // 2022-01-23 01:07:45
+
+const str = '今年是yyyy，我很开心在MM月能够看到你，yyds，期望明年的MM月还能再看到你！';
+console.log(fmtFn(timeStamp, str)); // 今年是2022，我很开心在01月能够看到你，yyds，期望明年的01月还能再看到你！
+```
+>tip：可以用`dayjs`库实现类似效果
+:::
+::: tab label=实现
+```js
+const fmtFn = function(timeStamp, fmt) {
+    fmt = fmt ? fmt : 'yyyy-MM-dd hh:mm:ss';
+
+    const fnMap = new Map([
+        ['y', { fnName: 'getFullYear', reg: /\b[y]{2,4}\b/g }],
+        ['M', { fnName: 'getMonth', reg: /\b[M]{2}\b/g }],
+        ['d', { fnName: 'getDate', reg: /\b[d]{2}\b/g }],
+        ['h', { fnName: 'getHours', reg: /\b[h]{2}\b/g }],
+        ['m', { fnName: 'getMinutes', reg: /\b[m]{2}\b/g }],
+        ['s', { fnName: 'getSeconds', reg: /\b[s]{2}\b/g }]
+    ])
+    const date = new Date(+timeStamp);
+    if (Number.isNaN(date.getTime())) {
+        return Error('传入的非时间戳');
+    }
+
+    let isTrans = false;
+    fnMap.forEach(({fnName, reg}, key) => {
+        fmt = fmt.replace(reg, (match) => {
+            isTrans = true;
+            let len = match.length;
+            let time = key === 'M' ? date[fnName]() + 1 : date[fnName]();
+            let timeStr = time.toString();
+            return timeStr.slice(0 - len).padStart(len, '0');
+        })
+    })
+    if (!isTrans) {
+        console.error('格式化参数有误！');
+    }
+
+    return fmt;
+}
+```
+:::
+::::

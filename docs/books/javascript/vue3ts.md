@@ -3956,3 +3956,543 @@ export default {
 ```
 :::
 ::::
+## 第18节 Vue高级
+:::: tabs
+::: tab label=自定义指令
+>对DOM进行操作时使用自定义指令
+* 局部通过组件内directives定义，setup内通过resolveDirective定义
+* 全局通过app.directive定义
+* **回调函数名称和VUE2有改变**
+```vue{11-14,33}
+<template>
+  <div>
+    <input type="text" v-model="msg" v-focus.aaa.bbb:hehe="'略略略'">
+  </div>
+</template>
+<script>
+import { ref } from 'vue';
+
+const directives = {
+  focus: {
+    mounted(el, binding) {
+      console.log(binding);
+      el.focus();
+    },
+    // 在绑定元素的 attribute 或事件监听器被应用之前调用
+    created() {},
+    // 在绑定元素的父组件挂载之前调用
+    beforeMount() {},
+    // 在绑定元素的父组件挂载之后调用
+    // mounted() {},
+    // 在包含组件的 VNode 更新之前调用
+    beforeUpdate() {},
+    // 在包含组件的 VNode 及其子组件的 VNode 更新之后调用
+    updated() {},
+    // 在绑定元素的父组件卸载之前调用
+    beforeUnmount() {},
+    // 在绑定元素的父组件卸载之后调用
+    unmounted() {}
+  }
+}
+
+export default {
+  directives,
+  setup() {
+    let msg = ref('哈哈');
+    return {
+      msg
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=时间戳案例
+* 自定义`v-time`指令，解析模板中的时间字母，替换成给定时间戳的时间。
+* 也可以用相应的日期格式化库`dayjs`
+>utils/fmtTime.js
+```js{34-40}
+const fmtFn = function(timeStamp, fmt) {
+    fmt = fmt ? fmt : 'yyyy-MM-dd hh:mm:ss';
+
+    const fnMap = new Map([
+        ['y', { fnName: 'getFullYear', reg: /\b[y]{2,4}\b/g }],
+        ['M', { fnName: 'getMonth', reg: /\b[M]{2}\b/g }],
+        ['d', { fnName: 'getDate', reg: /\b[d]{2}\b/g }],
+        ['h', { fnName: 'getHours', reg: /\b[h]{2}\b/g }],
+        ['m', { fnName: 'getMinutes', reg: /\b[m]{2}\b/g }],
+        ['s', { fnName: 'getSeconds', reg: /\b[s]{2}\b/g }]
+    ])
+    const date = new Date(+timeStamp);
+    if (Number.isNaN(date.getTime())) {
+        return Error('传入的非时间戳');
+    }
+
+    let isTrans = false;
+    fnMap.forEach(({fnName, reg}, key) => {
+        fmt = fmt.replace(reg, (match) => {
+            isTrans = true;
+            let len = match.length;
+            let time = key === 'M' ? date[fnName]() + 1 : date[fnName]();
+            let timeStr = time.toString();
+            return timeStr.slice(0 - len).padStart(len, '0');
+        })
+    })
+    if (!isTrans) {
+        console.error('格式化参数有误！');
+    }
+
+    return fmt;
+}
+
+const fmtTimeDir = {
+    mounted(el, binding) {
+        const timeStamp = +binding.value;
+        const fmt = el.innerText;
+        el.innerText =  fmtFn(timeStamp, fmt);
+    }
+}
+export { fmtTimeDir }
+```
+>main.js，全局注册
+```js{6}
+import { createApp } from 'vue'
+import App from './App.vue'
+import { fmtTimeDir } from './utils/formatTime'
+const app = createApp(App);
+
+app.directive('time', fmtTimeDir);
+
+app.mount('#app')
+```
+>vue组件中使用
+```vue{3}
+<template>
+  <div>
+    <div v-time="stamp">{{ msg }}</div>
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    let msg = ref('今年是yyyy，我很开心在MM月能够看到你，yyds，期望明年的MM月还能再看到你！');
+    const stamp = ref(+new Date());
+    return {
+      stamp,
+      msg
+    }
+  }
+}
+</script>
+```
+>效果  
+<img src="./assets/timestempanli.png" style="width:300px;">
+
+:::
+::: tab label=teleport
+* 定义挂载到app元素之外的模板里面
+>组件内部定义的`teleport`标签，内容会被放到app挂载元素的外面，做一些特殊元素的展示。
+
+<img src="./assets/teleport.png" style="width:500px;">
+
+```vue{5-7}
+<template>
+  <div>
+    <div>{{ msg }}</div>
+
+    <teleport to="#hdy">
+      <div>哈哈哈，app外部</div>
+    </teleport>
+
+  </div>
+</template>
+
+<script>
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    let msg = ref('yyds');
+    return {
+      msg
+    }
+  }
+}
+</script>
+```
+:::
+::: tab label=Vue插件
+* 两种编写模式
+    * 对象：必须要有install方法，安装时执行
+    * 函数：安装插件时自动执行
+* 可以完成的功能
+    1. 全局添加properties、配置等
+    2. 全局资源：过滤器、指令、filter等
+    3. 全局mixin，合入一些组件选项
+    4. 注入自己编写的一个库，提供一些自定义的API
+```js
+export default {
+    install(app) {
+        app.config.globalProperties.$name = 'hdy';
+    }
+}
+``` 
+```js
+app.use(myPlugin);
+```
+```js
+// options组件内使用，可以拿this
+mounted() {
+    console.log(this.$name); // hdy
+}
+
+// setup组件内使用，不可以拿this
+onMounted(() => {
+    const app = getCurrentInstance();
+    console.log(app.appContext.config.globalProperties.$name);
+})
+```
+:::
+::::
+## 第19节 Vue原理
+:::: tabs
+::: tab label=架构
+* 虚拟DOM的优势：  
+    1. 对真实DOM操作性能开销很大，diff算法也麻烦。
+    2. 而用虚拟DOM，也就是JS对象进行操作性能会更高。
+    3. 虚拟DOM有跨平台能力，将虚拟DOM转化成原生的控件。canvas/ssr/native(ios、android)
+* Vue三大核心：
+    1. compiler模块：模板语法编译系统
+    2. runtime模块：renderer渲染系统
+    3. reactivity模块：响应式系统
+![](./assets/vue3yuanli.png)
+:::
+::::
+## 第20节 手写runtime模块
+:::: tabs
+::: tab label=期望
+* 经过compiler模块，可以拿到ast语法树
+* 然后就可以调用render函数，render函数调用h函数，h函数入参就是ast语法树生成的token和对应的语法
+* h函数生成虚拟DOM，也就是一个JS对象，然后调用patch变成真实DOM。就会有两种情况
+    * 首次渲染，直接转换成真实DOM并挂载到对应的$el上
+    * 非首次渲染，会有过往的旧虚拟DOM，和旧的虚拟DOM进行diff算法，对比出更改的节点，只替换掉对应的节点。
+```html
+<body>
+    <div id="app"></div>
+
+    <script type='module' >
+        import h from './h.js';
+        import mount from './mount.js'
+        const VNode = h('div', { class: 'box' }, [
+            h('span', null, '你好，h函数'),
+            h('span', null, '你好，h函数'),
+            h('span', null, '你好，h函数'),
+        ])
+
+        const app = document.querySelector('#app');
+        mount(app, VNode);
+    </script>
+</body>
+```
+:::
+::: tab label=h
+* 作用：生成VNode
+```js
+function h(tagName, props, children) {
+    return {
+        tagName,
+        props,
+        children
+    }
+}
+
+export default h;
+```
+:::
+::: tab label=mount
+* 作用：VNode首次生成真实DOM挂载到对应节点上
+```js
+function mount($el, VNode) {
+
+    // 后续diff算法patch上树需要用到真实DOM节点，先保存
+    const ele = VNode.$el = document.createElement(VNode.tagName);
+    if (VNode.props) {
+        Object.entries(VNode.props).forEach(([key, val]) => {
+            ele.setAttribute(key, val);
+        })
+    }
+
+    const { children } = VNode;
+    if (children) {
+        if (Array.isArray(children)) {
+            children.forEach(item => {
+                if (typeof item === 'object' && item != null && item.tagName != null) {
+                    mount(ele, item);
+                } else {
+                    ele.append(item);
+                }
+            })
+        } else {
+            ele.append(children);
+        }
+    }
+ 
+    $el.append(ele);
+}
+
+export default mount;
+```
+:::
+::: tab label=patch
+* 数据更新，生成新的VNode，做diff算法，再替换指定的节点
+    * tagName不同，直接替换原节点
+```js
+import mount from "./mount";
+
+function patch(n1, n2) {
+
+    // diff tagName
+    if (n1.tagName !== n2.tagName) {
+        const n1Parent = n1.$el.parentElement;
+        n1Parent.removeChild(n1.$el);
+        mount(n1Parent, n2);
+    } else {
+
+        // diff props，新旧不同，新的为准；旧有新无，删除属性
+        const el = n2.$el = n1.$el;
+        const oldProps = n1.props || {};
+        const newProps = n2.props || {};
+        Object.entries(newProps).forEach(([key, val]) => {
+            if (oldProps[key] !== val) {
+                el.setAttribute(key, val);
+            }
+        })
+        Object.entries(oldProps).forEach(([key, val]) => {
+            if (!newProps[key]) {
+                el.removeAttribute(key);
+            }
+        })
+
+        // diff children
+        const oldChildren = n1.children || [];
+        const newChildren = n2.children || [];
+        if (typeof newChildren === 'string') {
+
+            // 子节点类型不同直接替换
+            if (oldChildren !== newChildren) {
+                el.innerHTML = '';
+                el.contentText = newChildren;
+            }
+        } else if (!Array.isArray(oldChildren)) {
+            
+            // 旧节点不是数组，新节点是数组，直接挂新子节点
+            el.innerHTML = '';
+            newChildren.forEach(item => mount(el, item));
+        } else {
+
+            /**
+             *  新旧都是数组，diff算法。
+             *  * 没有key，顺序遍历，逆序遍历，拿到不同，最大程度复用DOM就行。
+             *  * 有key，用key去做新旧节点对比就行。
+             *  >拿长度较短的进行遍历，防止指针溢出。
+             */
+            const commonLength = Math.min(oldChildren.length, newChildren.length);
+            if (newChildren[0]?.props?.key == null) {
+
+                // 无key：顺序比较，性能较低
+                for (let i = 0; i < commonLength; i++) {
+                    patch(oldChildren[i], newChildren[i]);
+                }
+                if (newChildren.length > oldChildren.length) {
+                    const appendList = newChildren.slice(commonLength);
+                    appendList.forEach(item => mount(el, item));
+                } else if (newChildren.length < oldChildren.length) {
+                    const delList = oldChildren.slice(commonLength);
+                    delList.forEach(item => el.removeChild(item.$el));
+                }
+            } else {
+                console.log('有key的diff');
+            }
+        }
+    }
+}
+
+export default patch;
+```
+:::
+::::
+## 第21节 手写响应式模块
+:::: tabs
+::: tab label=理论
+* 有一个Dep类，
+    * `subscribers`副作用收集器，也就是**依赖们**，存的是**函数**，收集方式用`Set`，防止重复
+    * `depend`，收集副作用，也就是收集修改时对应的操作
+    * `notify`，数据发生改变的时候执行，通知`subscribers`里面所有的依赖的函数进行调用执行
+* 全局一个`activeEffect`变量，一个`watchEffect`收集effect
+* `targetMap`用WeakMap为target所有的key收集deps，内部用Map进行绑定。
+* 一个`reactive`函数，将原始对象转化成响应式对象返回出去。
+    * 监听操作：`proxy`或`Object.defineProperty`进行劫持，get收集依赖，set通知依赖
+:::
+::: tab label=Dep/watchEffect
+* Dep就是一个副作用收集器和触发器，watchEffect注册订阅者（副作用）的过程，就执行了一遍，也就是去取了依赖的变量，**访问了getter**
+* 同时全局的activeEffect变量记录了当前在注册的订阅者是谁，所以在dep.depend()执行的时候能够拿到正确的订阅者。
+```js
+class Dep {
+    subscribers = new Set();
+    depend() {
+        if (activeEffect) {
+            this.subscribers.add(activeEffect);
+        }
+    }
+    notify() {
+        this.subscribers.forEach(effect => effect());
+    }
+}
+
+let activeEffect = null;
+
+function watchEffect(effect) {
+    activeEffect = effect;
+    effect();
+    activeEffect = null;
+}
+```
+```js
+/**
+ * watchEffect传入函数，默认会执行一遍。访问所有执行期间会访问的变量，让他收集依赖。
+ * 此时全局activeEffect是函数自身，收集器就能够正确的收集。
+ * 告诉他如果变量有改变通知我执行。
+ */
+watchEffect(() => console.log(info.name + '哈哈哈'));
+```
+:::
+::: tab label=targetMap
+* WeakMap存储所有的对象响应式对象，对应它们的deps
+* 每个deps是一个Map，也就是响应式对象每个值对应的dep  
+<img src="./assets/targetmap.png" style="width:600px;">
+
+```js
+// 根据对象，键，获取对应的Dep实例
+const targetMap = new WeakMap();
+function getDep(target, key) {
+    let depsMap = targetMap.get(target);
+    if (!depsMap) {
+        depsMap = new Map();
+        targetMap.set(target, depsMap);
+    }
+    let dep = depsMap.get(key);
+    if (!dep) {
+        dep = new Dep();
+        depsMap.set(key, dep);
+    }
+    return dep;
+}
+```
+:::
+::: tab label=defineProperty
+* 注：defineProperty是一次性注册，也就是如果对象新增属性是没有响应式的。
+>所以Vue2新增属性要用`Vue.$set(obj, key, val)`
+```js
+// 将原生数据对象的所有数据做成响应式的
+function reactive(raw) {
+    for (let key in raw) {
+        const dep = getDep(raw, key);
+        let val = raw[key];
+        Object.defineProperty(raw, key, {
+            get() {
+                dep.depend();
+                return val;
+            },
+            set(newVal) {
+                if (newVal != val) {
+                    val = newVal;
+                    dep.notify();
+                }
+            }
+        })
+    }
+    return raw;
+}
+```
+:::
+::: tab label=集合测试
+```js
+// 生成响应式对象
+let info = reactive({name: 'hdy', age: 18});
+
+// 注册订阅者
+watchEffect(() => console.log(info.name + '哈哈哈')); // hdy哈哈哈
+watchEffect(() => console.log(info.name + '略略略')); // hdy略略略
+watchEffect(() => console.log(info.name + '好多依赖啊')); // hdy好多依赖啊
+watchEffect(() => console.log(info.age * 100)); // 1800
+
+// 响应式测试
+info.name = '张三会响应式了';
+/**
+ * 张三会响应式了哈哈哈
+ * 张三会响应式了略略略
+ * 张三会响应式了好多依赖啊
+ */
+```
+:::
+::: tab label=proxy
+* 原理相同，只不过原生对象新增属性时，proxy也能做到响应式，而defineProperty不行。
+    * 因为proxy本质上是设置代理
+    * defineProperty本质上是给每个属性配置一遍dep
+```js
+function reactive(raw) {
+    const proxy = new Proxy(raw, {
+        get(target,key) {
+
+            // 深度监听
+            if (typeof target[key] === 'object' && target[key] != null) {
+                target[key] = reactive(target[key]);
+            }
+
+            const dep = getDep(raw, key);
+            dep.depend();
+            return target[key];
+        },
+        set(target, key, val) {
+            if (target[key] !== val) {
+                target[key] = val;
+                const dep = getDep(raw, key);
+                dep.notify();
+            }
+
+            // MDN上说proxy的setter必须返回一个布尔值代表赋值成功或失败
+            return true;
+        }
+    });
+    return proxy;
+}
+```
+:::
+::: tab label=新增属性测试
+* proxy优势：新增属性也能响应式
+```js
+let info = reactive({name: 'hdy', age: 18});
+
+// 新增属性，以及依赖
+info.book = '张三会响应式了';
+watchEffect(() => console.log(info.book + '啦啦啦')); // 张三会响应式了啦啦啦
+
+info.book = '你能监听？'; // 你能监听？啦啦啦
+```
+:::
+::: tab label=数组测试
+```js
+// 监听数组
+let info = reactive([0, 1, 10, 20]);
+
+// 新增
+info.push(3);
+watchEffect(() => console.log(info[4])); // 3
+
+info[4] = '深度友谊iii~'; // 深度友谊iii~
+```
+:::
+::::
