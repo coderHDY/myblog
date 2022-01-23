@@ -687,7 +687,7 @@ app.get('/byby', (req, res) => {
 
 <video src="./assets/csrf1.mp4" style="width:400px;" controls />
 
-```html{82-85}
+```html{78-81}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -752,12 +752,8 @@ app.get('/byby', (req, res) => {
                         }
                     })
                     .then(res => {
-                        console.log(this.name);
                         this.songs = res.songs;
                         this.admin = this.name;
-                        console.log(this.admin);
-                        console.log(this.name);
-                        console.log(this.admin);
                         this.name = '';
                         this.pwd = '';
                     })
@@ -773,7 +769,6 @@ app.get('/byby', (req, res) => {
                     fetch('/byby')
                     .then(res => this.admin = '');
                 },
-                
             }
         })
     </script>

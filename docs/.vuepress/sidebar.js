@@ -105,6 +105,7 @@ const front = {
         '',
         'props',
         'router',
+        'reactive',
     ],
     '/front/node/': [
         '',
