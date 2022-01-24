@@ -4,9 +4,9 @@ module.exports = {
       name   : "docs server",
       script : "./app.js"
     },
-    {
-      name   : "update shell",
-      script : "./update.sh"
-    }
+    // {
+    //   name   : "update shell",
+    //   script : "./update.sh"
+    // }
   ]
 }

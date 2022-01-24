@@ -1,6 +1,6 @@
 ---
 title: 《js设计模式》
-date: 2021-12-8
+date: 2021-12-08
 categories: 
  - 读书笔记
 ---
