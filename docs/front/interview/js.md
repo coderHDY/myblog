@@ -782,6 +782,87 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 ```
 :::
 ::::
+## 百度搜索原理
+:::: tabs
+::: tab label=效果
+* 电脑搜索输入框输入文字即发送请求，继续输入就取消上次请求，发送新的请求
+
+<video src="./assets/watcheffectanli.mp4" style="width:500px;" controls />
+
+:::
+::: tab label=server
+```js
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+app.listen('8888', () => console.log('listen 8888'));
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    const url = path.join(__dirname, './test.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+})
+
+app.get('/search', (req, res) => {
+    const query = req.query.s;
+    console.log(query);
+    setTimeout(() => res.send({data: query}), 1000);
+})
+```
+:::
+::: tab label=test.html
+* 核心：
+    * 用`keyup`事件监听用户实时输入事件，实时发送网络请求。（v-model监听的是input事件，用输入法会有惰性触发）
+    * 用`watch`或`watchEffect`来监听数据变化，同时可以拿到一个取消的函数，也就是用户再次输入，就取消上册的请求，用`AbortController`API
+```html
+<body>
+    <div id="app">
+        <div><input type="text" @keyup="change"></div>
+        <h2>{{ search }}</h2>
+        <div>
+            <div v-for="ans of res" :key="ans">{{ans}}</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const { createApp, reactive, ref, watchEffect } = Vue;
+        const app = createApp({
+            setup() {
+                let search = ref('');
+                let res = ref([]);
+                watchEffect((onInvalidate) => {
+                    let controller = new AbortController();
+                    const { signal } = controller;
+                    fetch(`http://localhost:8888/search?s=${search.value}`, { signal })
+                    .then(res => res.json())
+                    .then(response => {
+                        console.log()
+                        res.value.push(response.data)
+                    });
+                    onInvalidate(() => controller.abort());
+                })
+
+                const change = (e) => {
+                    if (e.key != 'enter') {
+                        search.value = e.target.value;
+                    }
+                }
+                return {
+                    search,
+                    res,
+                    change
+                }
+            }
+        })
+        app.mount("#app");
+    </script>
+</body>
+```
+:::
+::::
 ## 连环log
 :::: tabs
 ::: tab label=期望

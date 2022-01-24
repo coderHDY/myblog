@@ -3569,6 +3569,79 @@ export default {
 </script>
 ```
 :::
+::: tab label=watchEffect参数
+* 基于watchEffect实现百度搜索的实时请求/取消请求
+* 假如服务器响应时间是1s，那么在请求过程中用户继续输入关键字，就取消原先请求
+
+<video src="./assets/watcheffectanli.mp4" style="width:400px;" controls />
+
+>server.js
+```js
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+app.listen('8888', () => console.log('listen 8888'));
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    const url = path.join(__dirname, './test.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+})
+
+app.get('/search', (req, res) => {
+    const query = req.query.s;
+    console.log(query);
+    setTimeout(() => res.send({data: query}), 1000);
+})
+```
+>test.html  
+>不用v-model的原因是v-model监听的是input事件，中文输入法拼音时并不会触发，监听事件keyup就能很好的实时触发。
+```html{3,17-27,29-31}
+<body>
+    <div id="app">
+        <div><input type="text" @keyup="change"></div>
+        <h2>{{ search }}</h2>
+        <div>
+            <div v-for="ans of res" :key="ans">{{ans}}</div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const { createApp, reactive, ref, watchEffect } = Vue;
+        const app = createApp({
+            setup() {
+                let search = ref('');
+                let res = ref([]);
+                watchEffect((onInvalidate) => {
+                    let controller = new AbortController();
+                    const { signal } = controller;
+                    fetch(`http://localhost:8888/search?s=${search.value}`, { signal })
+                    .then(res => res.json())
+                    .then(response => {
+                        console.log()
+                        res.value.push(response.data)
+                    });
+                    onInvalidate(() => controller.abort());
+                })
+
+                const change = (e) => {
+                    search.value = e.target.value;
+                }
+                return {
+                    search,
+                    res,
+                    change
+                }
+            }
+        })
+        app.mount("#app");
+    </script>
+</body>
+```
+:::
 ::::
 ## 第17节 CompositionAPI3
 :::: tabs

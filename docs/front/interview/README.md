@@ -1,6 +1,6 @@
 ---
 title: 理论相关
-date: 2021-11-07
+date: 2021-12-07 21:30:00
 tags:
  - 面试题
 ---
@@ -50,6 +50,17 @@ console.log(me); // ['红宝书', '蝴蝶书']
  * 2. me = me.books;      ['红宝书', '蝴蝶书']
  */
 ```
+:::
+::::
+### Vue3
+:::: tabs
+::: tab label=性能
+* Vue3做了哪些性能上的提升？
+    * defineProperty改proxy，新增属性也有响应式
+    * 对虚拟DOM提升：将不依赖响应式数据的VNode进行作用域提升，第二次调用render时，直接复用旧的VNode
+    * diff算法的提升：提升作用域的VNode也不做diff算法，因为不依赖响应式数据的DOM不会因为数据的改变而变化
+        * blockTree：生成一个`dynamicChildren`数组，将引用动态数据的元素收集起来。
+        * Vue是以组件为粒度更新数据的，所以每个组件有一个dynamicChildren数组，更新时只diff这一部分的VNode
 :::
 ::::
 ## 操作系统相关

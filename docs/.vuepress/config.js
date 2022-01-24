@@ -61,6 +61,6 @@ module.exports = {
     markdown: {
         lineNumbers: true
     },
-    plugins: require('./components/index.js'),
-    clientRootMixin: path.resolve(__dirname, './components/mixins/index.js'),
+    plugins: require('./plugins/index.js'),
+    clientRootMixin: path.resolve(__dirname, './plugins/mixins/index.js'),
 }
