@@ -7,6 +7,14 @@ module.exports = {
     head: [
         ['link', { rel: 'icon', href: '/assets/icons/book128.png' }],
         ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1,user-scalable=no' }],
+        ['link', { rel: 'manifest', href: '/manifest.json' }],
+        ['meta', { name: 'theme-color', content: '#ceffa0' }],
+        ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
+        ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
+        ['link', { rel: 'apple-touch-icon', href: '/assets/icons/book128.png' }],
+        ['link', { rel: 'mask-icon', href: '/assets/icons/book128.svg', color: '#ceffa0' }],
+        ['meta', { name: 'msapplication-TileImage', content: '/assets/icons/book128.png' }],
+        ['meta', { name: 'msapplication-TileColor', content: '#000000' }]
     ],
     locales: {
         '/': {
