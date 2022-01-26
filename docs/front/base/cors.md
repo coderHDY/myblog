@@ -777,3 +777,9 @@ wsServer.on('connection', function (ws) {
 |document.domain + iframe|可以让同一个基础域名的网页进行相互操作，如：【id.qq.com】和【qq.com】可以互相嵌套iframe进行跨域通信操作，只要把他们都设置【document.domain = 'qq.com'】|
 |浏览器关闭跨域限制|启动增加参数【--disable-web-security --user-data-dir】|
 :::
+:::: tabs
+::: tab label=iframe
+* iframe嵌套的是跨域的网站时，会隔离外层DOM的事件，也就是说外层的事件传不进DOM去。例如iframe内部点击，不会传播到iframe外层的div上。
+
+:::
+::::
