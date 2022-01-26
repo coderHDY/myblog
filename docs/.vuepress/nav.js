@@ -84,9 +84,17 @@ const books = {
         },
     ]
 }
+
+const timeline = {
+    text: '时间线',
+    link: '/timeline/',
+    icon: 'reco-date'
+}
+
 module.exports = [
     home,
     front,
     skill,
-    books
+    books,
+    timeline,
 ]
