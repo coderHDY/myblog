@@ -109,7 +109,8 @@ tags:
 :::
 ::: tab label=嵌套路由
 * 每个路由可以设置children来配置子路径路由
-```html{6-7,15-20,24-42}
+* 动态类名：`router-link-active`会在所有匹配的元素上面加(父级路由和子级路由)，`router-link-exact-active`会在路径绝对一致的情况下加(子级路由，精准匹配)
+```html{6-7,18,23-38}
 <body>
     <div id="app">
         <h1>你好，前端路由!</h1>
@@ -126,7 +127,7 @@ tags:
     <script>
         const Home = {
             template: `
-            <div>这是首页{{ $route.params.id }}内容
+            <div>这是首页内容
                 <router-view></router-view>
             </div>`
         };
@@ -138,10 +139,6 @@ tags:
                 component: Home,
                 children: [
                     {
-                        path: '',
-                        component: Haha
-                    },
-                    {
                         path: 'haha',
                         component: Haha
                     },
@@ -150,7 +147,6 @@ tags:
                         component: Hehe
                     },
                 ]
-                
             },
         ];
         const router = new VueRouter({ routes });
@@ -164,6 +160,13 @@ tags:
 ```
 :::
 ::: tab label=路由跳转
+* Vue3的setup用
+```js
+import { useRouter } from 'vue-router';
+setup() {
+    let router = useRouter();
+}
+```
 * 两种方式：
     * < router-link to="{ name: 'user', params: { userId: 123 }}" >
     * router.`push`/`replace`/`go`
@@ -505,6 +508,12 @@ export default {
 </body>
 ```
 :::
+::: tab label=vue-router4
+* 4中导航的next参数没有了，改成了返回值
+    * return false; 取消当前导航
+    * return 一个路由;跳转路由
+    * return undefined 或返回 true，则导航是有效的
+:::
 ::::
 ## 手写history路由
 :::: tabs
@@ -723,6 +732,95 @@ class VueRouter {
         const router = new VueRouter({ routes });
     </script>
 </body>
+```
+:::
+::::
+## 补充知识点
+:::: tabs
+::: tab label=404
+* vue-router3:
+```js
+// 放在最下边，表示匹配所有
+path: '*'
+```
+* vuerouter4:
+```js
+const routes = [
+  { path: '/:pathMatch(.*)', name: 'NotFound', component: NotFound },
+  // 加*会把params解析成一个数组
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+]
+```
+:::
+::: tab label=slot
+* vue-router4:删除了router-link里面的tag属性，用slot重写，可以自定义跳转组件
+* 用`v-slot`传过来了router-link原生能力的一些数据和方法
+```html
+<router-link
+  to="/about"
+  custom
+  v-slot="{ href, route, navigate, isActive, isExactActive }"
+>
+  <NavLink :active="isActive" :href="href" @click="navigate">
+    {{ route.fullPath }}
+  </NavLink>
+</router-link>
+```
+:::
+::: tab label=跳转动画
+* vue-router3
+```vue
+<transition>
+  <router-view></router-view>
+</transition>
+```
+* vue-router4:也是用slot重写了，将当前展示的组件用v-slot的形式回传，再用transition包裹
+```vue
+<router-view v-slot="{ Component }">
+  <transition name="hdy">
+    <keep-alive>
+      <component :is="Component" />
+    </keep-alive>
+  </transition>
+</router-view>
+
+<style>
+.hdy-enter-from,
+.hdy-leave-to {
+    opacity: 0;
+}
+
+.hdy-enter-to,
+.hdy-leave-from {
+    opacity: 1;
+}
+
+.hdy-enter-active,
+.hdy-leave-active {
+    transition: all 1s ease;
+}
+</style>
+```
+:::
+::: tab label=动态修改路由
+* 例如：鉴权类操作，是管理员才能有某按钮，点击按钮才能进入管理员界面，那么管理员界面的路由最开始也不应该被注册。因为如果非管理员用户手动修改了路由，进入的也是管理员界面。
+```js
+router.addRoute({ path: '/about', component: About })
+```
+* 二级路由
+```js
+router.addRoute({ name: 'admin', path: '/admin', component: Admin })
+router.addRoute('admin', { path: 'settings', component: AdminSettings })
+```
+* 删除
+```js
+const removeRoute = router.addRoute(routeRecord)
+removeRoute() // 删除路由如果存在的话
+```
+```js
+router.addRoute({ path: '/about', name: 'about', component: About })
+// 删除路由
+router.removeRoute('about')
 ```
 :::
 ::::

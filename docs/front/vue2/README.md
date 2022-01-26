@@ -373,7 +373,8 @@ date: 2021-11-10
 :::: tabs
 ::: tab label=全局组件
 * 注册组件分为`全局组件`和`局部组件`，Vue.component是注册的全局组件
-* **每个组件必须只有一个根元素**
+* **每个组件必须只有一个根元素** (vue3没有这个限制)
+
 <img src="./assets/zizujian.png" style="width:200px;">
 
 ```html{5-9,14-27}
@@ -810,6 +811,95 @@ date: 2021-11-10
                 setTimeout(() => this.path = 'about', 2000);
             }
         })
+    </script>
+</body>
+```
+:::
+::: tab label=nextTick
+* Vue的响应式原理有一个性能优化：在每次数据更新后会并不会立即执行render，而是在将更新放入一个更新队列里面去，并且保证每个数据只会被推入一次，**从而保证最终的DOM只会被更新一次**。
+* 本轮事件循环执行完毕后，响应式系统才会被执行，也就是说**真正的数据改变触发的响应是在本轮事件轮询结束以后**。需要更新的组件的render被推入微任务队列执行。
+>证明：
+```html{15-19}
+<body>
+    <div id="app">
+        <div>{{ counter }}</div>
+        <button @click="change">添加</button>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const { ref, createApp, nextTick, watchEffect } = Vue;
+        const app = createApp({
+            setup(props, ctx) {
+                let counter = ref(0);
+                watchEffect(() => console.log(counter.value));
+
+                /**
+                 * counter是响应式数据，有对应的watchEffect。
+                 * 一次事件循环修改了counter100次，
+                 * 但是watchEffect只被执行了一次
+                 */
+                const change = () => {
+                    for (let i = 0; i < 100; i++) {
+                        counter.value++;
+                    }
+                };
+
+                return {
+                    counter,
+                    change,
+                }
+            }
+        });
+        app.mount('#app');
+    </script>
+</body>
+```
+* 以组件为粒度重新执行对应的render方法，render调h函数，生成组件粒度的虚拟DOM，新旧虚拟DOM进行比较，diff算法发现更新的虚拟节点调用patch函数渲染出真实DOM。
+* 所以在更新完变量的时候，立即去操作DOM拿到的并不是更新以后的结果，需要等待到DOM更新队列更新完以后拿到的才是更新完以后的效果。所以又有一个新的回调钩子`nextTick`就是本轮DOM更新完成后的`Promise回调`
+```html{26-34}
+<body>
+    <div id="app">
+        <div class='container'>
+            <span ref="span">{{msg}}</span>
+        </div>
+        <button @click="change">添加</button>
+    </div>
+
+    <style>
+        .container {
+            border: 20px #333 solid;
+            padding: 10px;
+            width: 100px;
+            height: 100px;
+            overflow-y:scroll;
+        }
+    </style>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const { ref, createApp, nextTick } = Vue;
+        const app = createApp({
+            setup(props, ctx) {
+                const span = ref(null);
+                const msg = ref('');
+                const change = () => {
+                    msg.value += `
+                    我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，
+                    我会滚动，我会滚动，我会滚动，`
+                    console.log(span.value.offsetHeight); // 0
+                    nextTick(() => {
+                        console.log(span.value.offsetHeight); // 220
+                    })
+                };
+                return {
+                    span,
+                    msg,
+                    change,
+                }
+            }
+        });
+        app.mount('#app');
     </script>
 </body>
 ```
