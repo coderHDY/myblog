@@ -18,7 +18,7 @@ function mountWangyiyun() {
     placeholder.id = 'wangyiyun-holder';
     contener.appendChild(placeholder);
     new Vue({
-        render: (h) => h('wangyiyun',{
+        render: (h) => h('wangyiyun2',{
             style: 'margin-top: 60px;',
             props:{ src }
         }),
