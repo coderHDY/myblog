@@ -603,7 +603,7 @@ date: 2021-12-16
 ### createElement
 ::: tip
 * 作用：创建指定标签的元素
-* 调用：document.querySelector(tag[, options])
+* 调用：document.createElement(tag[, options])
 :::
 ### removeChild
 ::: tip
