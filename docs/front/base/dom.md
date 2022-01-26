@@ -1215,6 +1215,7 @@ date: 2021-12-16
 ### clientXXX
 ::: tip clientHeight/clientWidth
 * 作用：包括【padding】，【不包括scroll部分和hidden部分】的实际占位大小
+* 行内元素只有`offsetHeight/offsetWidth`,`clientHeight/clientWidth为0`
 :::
 ::: tip clientTop/clientLeft
 * 作用：border-top/border-left 的值
@@ -1333,8 +1334,9 @@ date: 2021-12-16
 :::
 :::: tabs
 ::: tab label=offsetHeight
-* border-top + 
-```html{19-20}
+* **行内元素只有offsetHeight,clientHeight为0**
+* border + clientHeight
+```html{19-21}
 <body>
     <div class='container'>
         我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，我会滚动，
@@ -1355,6 +1357,7 @@ date: 2021-12-16
 
         // 20 + 10 + 100 + 10 + 20 = 160
         console.log(container.offsetHeight); // 160
+        console.log(container.clientHeight); // 120
     </script>
 </body>
 ```

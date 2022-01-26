@@ -715,7 +715,8 @@ const time2 = time1.map((item, index) => index !== 3 ? item : item - 8);
 const date2 = new Date(Date.UTC(...time2));
 console.log(date1.toString() == date2.toString()); // true
 ```
-## 手写格式化时间
+## 其他问题
+### 手写格式化时间
 :::: tabs
 ::: tab label=期望
 ```js
@@ -762,6 +763,24 @@ const fmtFn = function(timeStamp, fmt) {
     }
 
     return fmt;
+}
+```
+:::
+::::
+
+### 判断无效时间
+:::: tabs
+::: tab label=无效时间
+* 无效时间instanceof无法判断
+```js
+const a = 'FASFA'
+const date = new Date(a);
+console.log(date instanceof Date); // true
+```
+* 再次调用getTime()，可以拿到NaN
+```JS
+function isValiDate(date) {
+    return !Number.isNaN(date.getTime());
 }
 ```
 :::
