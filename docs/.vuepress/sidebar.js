@@ -107,6 +107,9 @@ const front = {
         'router',
         'reactive',
     ],
+    '/front/vue3/': [
+        '',
+    ],
     '/front/node/': [
         '',
     ],
