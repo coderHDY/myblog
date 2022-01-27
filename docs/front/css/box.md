@@ -488,5 +488,14 @@ date: 2021-12-27
 </body>
 ```
 :::
-
 ::::
+## 问题总结
+### 移动端盒子点击阴影问题
+```css
+div,a,img {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select:none;
+}
+```

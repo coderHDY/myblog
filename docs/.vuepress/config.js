@@ -51,6 +51,10 @@ module.exports = {
                 location: 2, // 在导航栏菜单中所占的位置，默认3
                 text: 'Tag' // 默认 “标签”
             },
+            category: {
+                location: 5, // 在导航栏菜单中所占的位置，默认3
+                text: '分类' // 默认 “标签”
+            },
             socialLinks: [     // 信息栏展示社交信息
                 { icon: 'reco-github', link: 'https://github.com/coderHDY' },
             ]
