@@ -89,6 +89,12 @@ export default {
     background-position: center;
     background-color: rgb(202, 231, 250);
 }
+div,a,img {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select:none;
+}
 .stopStyle {
     background-image: url("/assets/img/musicstop.svg");
     animation-play-state: paused;
