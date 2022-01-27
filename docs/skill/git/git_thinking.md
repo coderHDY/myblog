@@ -16,3 +16,10 @@ tag应该是一个静态的重要的版本，一旦打上就不应该去更改�
 ::: tip branch
 branch应该是动态的，他就是为了动态修改才创建的
 ::: 
+## 查看github仓库大小
+* api.github.com/repos，里面的size，单位kb
+```shell
+github.com/coderHDY/myblog
+# 对应
+api.github.com/repos/coderHDY/myblog
+```

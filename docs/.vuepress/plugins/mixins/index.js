@@ -1,14 +1,14 @@
 // 插件的入口
 import bubbles from './bubble/bubble.js';
-import { mountWangyiyun } from './utils/mountComp';
+import { modifyRawPage } from './utils/mountComp';
 
 // 客户端生命周期做的事: clientRootMixin
 export default {
-    create() {},
+    created() {},
     mounted() {
         new bubbles();
     },
     beforeRouteEnter(to, from, next) {
-        next(mountWangyiyun);
+        next(modifyRawPage);
     },
 }

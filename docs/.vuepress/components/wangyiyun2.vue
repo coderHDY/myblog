@@ -30,8 +30,8 @@ export default {
 <style scoped>
 .content-box {
   position: fixed;
-  right: 10px;
-  bottom: 160px;
+  right: 4px;
+  bottom: 25px;
   width: 64px;
   height: 64px;
   border-radius: 50%;

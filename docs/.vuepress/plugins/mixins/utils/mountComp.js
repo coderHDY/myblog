@@ -1,30 +1,14 @@
-import Vue from 'vue';
-import { mixinMap } from './mixinMusicMap';
+import { callbacksMap } from './mixinMusicMap';
 
-
-// 某些原生页面组件挂载网抑云
-function mountWangyiyun() {
+function modifyRawPage() {
     const pathname = location.pathname;
-    if (!mixinMap.has(pathname)) {
+    if (!callbacksMap.has(pathname)) {
         return;
     }
-    const  { src, selector } = mixinMap.get(pathname) || {};
-
-    const contener = document.querySelector(selector);
-    if (!contener) {
-        return;
-    }
-    const placeholder = document.createElement('div');
-    placeholder.id = 'wangyiyun-holder';
-    contener.appendChild(placeholder);
-    new Vue({
-        render: (h) => h('wangyiyun2',{
-            style: 'margin-top: 60px;',
-            props:{ src }
-        }),
-    }).$mount('#wangyiyun-holder');
+    const callbacks = callbacksMap.get(pathname);
+    callbacks.forEach(fn => fn());
 }
 
 export {
-    mountWangyiyun,
+    modifyRawPage
 }
