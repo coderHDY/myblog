@@ -1579,3 +1579,46 @@ getOffsetBody(el) {
 * chrome除了顶部对齐其他对齐跳转比较混乱：[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scrollIntoView)
 :::
 ::::
+## 其他
+### audio
+:::: tabs
+::: tab label=属性
+|属性|意思|
+|---|---|
+|autoplay|自动播放，不过谷歌浏览器已禁止，可以在元素挂载后手动触发play()事件|
+|loop|循环|
+|currentTime|当前播放的时间|
+|preload|预加载auto/none|
+
+|触发事件|时间节点|
+|---|---|
+|ended|播放结束|
+|play|开始播放时|
+|pause|暂停播放时|
+
+|方法|作用|
+|---|---|
+|play|手动开始|
+|pause|手动暂停|
+
+* 经验：在DOM上刚挂上去的src是不能立即播放的，因为音乐文件没有下载下来。
+* 可以等到nextTick再手动ele.play()调用开始
+* 监听停止切歌可以这么写
+```js
+// music 是 audio元素
+this.$refs.music.addEventListener('ended' ,() => {
+
+    // 结束手动停止
+    this.isPlay = false;
+    let idx = this.playingIdx;
+
+    // 下一首/从头播放
+    this.playingIdx = idx < this.src.length - 1 ? idx + 1 : 0;
+    this.playingSrc = this.src[this.playingIdx];
+
+    // 换上src后一个tick再触发播放
+    this.$nextTick(() => this.isPlay = true);
+})
+```
+:::
+::::
