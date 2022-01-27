@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="musicFlag">
     <div 
         class="control"
         :class="{ stopStyle: !isPlay }"
@@ -47,11 +47,10 @@ export default {
           this.playingIdx = Math.floor(Math.random() * this.src.length);
           this.playingSrc = this.src[this.playingIdx];
           this.$refs.music.addEventListener('ended' ,() => {
-              this.isPlay = false;
-              let idx = this.playingIdx;
-              this.playingIdx = idx < this.src.length - 1 ? idx + 1 : 0;
-              this.playingSrc = this.src[this.playingIdx];
-              this.$nextTick(() => this.isPlay = true)
+              this.next();
+          })
+          this.$refs.music.addEventListener('error' ,() => {
+              this.next();
           })
       }
 
@@ -62,6 +61,15 @@ export default {
           })
       }
   },
+  methods: {
+      next() {
+        this.isPlay = false;
+        let idx = this.playingIdx;
+        this.playingIdx = idx < this.src.length - 1 ? idx + 1 : 0;
+        this.playingSrc = this.src[this.playingIdx];
+        this.$nextTick(() => this.isPlay = true);
+      }
+  }
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="musicFlag">
     <div class="content-box">
       <div class="music-box">
         <iframe

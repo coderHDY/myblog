@@ -1,5 +1,5 @@
 <template>
-  <div class="box" id='wangyiyun'>
+  <div class="box" id="musicFlag">
     <div :style="hdBtn" @click="isShrink = !isShrink"></div>
     <iframe
       :class="{ shrink: isShrink }"
