@@ -1,6 +1,6 @@
 <template>
-  <div class="box" id="musicFlag">
-    <div :style="hdBtn" @click="isShrink = !isShrink" class="shrink-box"></div>
+  <div class="box" id='wangyiyun'>
+    <div :style="hdBtn" @click="isShrink = !isShrink"></div>
     <iframe
       :class="{ shrink: isShrink }"
       frameborder="no"
@@ -45,9 +45,6 @@ export default {
 </script>
 
 <style scoped>
-.shrink-box:active {
-  box-shadow: 0 0;
-}
 .box {
   position: fixed;
   display: flex;

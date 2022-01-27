@@ -1,5 +1,5 @@
 <template>
-  <div id="musicFlag">
+  <div>
     <div 
         class="control"
         :class="{ stopStyle: !isPlay }"
