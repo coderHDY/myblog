@@ -6,7 +6,7 @@
         @click="isPlay = !isPlay"
     >
     </div>
-    <audio :src="playingSrc" ref="music"></audio>
+    <audio :src="playingSrc" ref="music" preload></audio>
   </div>
 </template>
 <script>
@@ -47,9 +47,11 @@ export default {
           this.playingIdx = Math.floor(Math.random() * this.src.length);
           this.playingSrc = this.src[this.playingIdx];
           this.$refs.music.addEventListener('ended' ,() => {
+              this.isPlay = false;
               let idx = this.playingIdx;
               this.playingIdx = idx < this.src.length - 1 ? idx + 1 : 0;
               this.playingSrc = this.src[this.playingIdx];
+              this.$nextTick(() => this.isPlay = true)
           })
       }
 
