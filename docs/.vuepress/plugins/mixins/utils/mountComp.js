@@ -1,4 +1,4 @@
-import { callbacksMap } from './mixinMusicMap';
+import { callbacksMap } from './mixinMap';
 
 function modifyRawPage() {
     const pathname = location.pathname;
