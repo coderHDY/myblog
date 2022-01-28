@@ -45,6 +45,12 @@ export default {
 </script>
 
 <style scoped>
+.box>div {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
 .box {
   position: fixed;
   display: flex;
