@@ -19,9 +19,7 @@ export default {
   },
   props: {
     src: {
-      type: String | Array,
-      default:
-        "https://sharefs.ali.kugou.com/202201271618/9d5c4c2490bd4c9a1b5bec149658ea32/G205/M0B/12/0D/bYcBAF509u6AFkBFAEEkaj4GJEQ717.mp3",
+      type: String | Array
     },
   },
   watch: {

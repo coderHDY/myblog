@@ -195,6 +195,7 @@ const books = {
                 '',
                 'design',
                 'vue3ts',
+                'ts',
             ]
         },
 
