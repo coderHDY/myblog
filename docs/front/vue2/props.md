@@ -957,6 +957,24 @@ const store = new Vuex.Store({
 store.state.a // -> moduleA 的状态
 store.state.b // -> moduleB 的状态
 ```
+* 所有module的getters/actions默认会合并到$store里面去
+```js
+this.$store.getters.counter
+```
+>想区分模块，模块内就要开一个namespace属性
+```js
+const homeModule = {
+    namespaced: true,
+    getters: {
+        counter(state) {
+            reutrn state.counter + '个'
+        }
+    }
+}
+```
+```js
+this.$store.getters['/home/counter']
+```
 :::
 ::: tab label=v-model
 * 如果需要用到双向绑定的位置

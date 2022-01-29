@@ -1,5 +1,5 @@
 ---
-title: 《vue3ts进阶》
+title: 《vue3进阶》
 date: 2022-01-14
 sticky: 3
 ---
@@ -4566,6 +4566,272 @@ info.push(3);
 watchEffect(() => console.log(info[4])); // 3
 
 info[4] = '深度友谊iii~'; // 深度友谊iii~
+```
+:::
+::::
+## 第22解 VueX使用
+:::: tabs
+::: tab label=useStore
+* setup里面拿不到this，可以使用`useStore`去拿store实例
+```vue{8-12}
+<template>
+  <div>
+    {{ counter }}
+    <button @click="incre">app按钮</button>
+  </div>
+</template>
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex'
+const store = useStore();
+let counter = computed(() => store.state.counter);
+const incre = () => store.commit('addcounter');
+</script>
+```
+:::
+::: tab label=mapState
+* store对象里面可以用mapState定义computed属性
+```js{7}
+import vuex, { mapState } from 'vuex';
+const store = new vuex.Store({
+    state: {
+        counter: 0,
+        age: 18,
+    },
+    computed: mapState(['counter', 'age'])
+});
+export default store;
+```
+* setup里面可以用mapState拿到一堆**计算属性的函数**
+```js{4}
+import { mapState } from 'vuex';
+setup() {
+  const storeStateFns = mapState(['counter', 'age']);
+  // storeStateFns:  { counter: () => this.$store.state.counter }
+}
+```
+* setup里面是拿不到this的，所以可以这么做：
+```js{7-9}
+import { mapState, useStore } from 'vuex';
+import { computed } from 'vue';
+export default {
+    setup() {
+      const $store = useStore();
+      const storeState = {};
+      Object.entries(mapState(['counter', 'age'])).forEach(([key, fn]) => {
+        storeState[key] = computed(fn.bind({ $store })); // 重要：绑定this为store对象才能正确取值
+      })
+      return {
+        ...storeState,
+      }
+  }
+}
+```
+* 封装：src/hooks/useState
+```js
+import { useStore, mapState } from 'vuex';
+import { computed } from 'vue';
+function useState(names) {
+  const $store = useStore();
+  if (typeof names === 'string') {
+    return computed(() => $store.state[names]);
+  } else if (typeof names === 'object' && names != null) {
+    const states = {};
+    Object.entries(mapState(names)).forEach(([key, fn]) => {
+      states[key] = computed(fn.bind({ $store }));
+    })
+    return states;
+  } else {
+    console.warn('useState接收数组或字符串');
+    return {}
+  }
+}
+export default useState;
+```
+>使用hook封装
+```js
+import useState from './hooks/useState'
+export default {
+    setup() {
+      const {counter, age} = useState(['counter', 'age']);
+      // 还可以使用改名
+      // let {sCounter, sAge} = useState({
+      //   sCounter: state => state.counter,
+      //   sAge: state => state.age,
+      // });
+
+      return {
+        counter,
+        age
+      }
+  }
+}
+```
+:::
+::: tab label=getters
+* 定义
+```JS{11-15}
+import vuex from 'vuex';
+const store = new vuex.Store({
+    state: {
+        age: 18,
+    },
+    mutations: {
+        addAge(ctx) {
+            ctx.age++;
+        }
+    },
+    getters: {
+        myAge(state) {
+            return state.age + '岁'
+        }
+    }
+});
+export default store;
+```
+* 普通使用
+```js{7}
+import { computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+import useState from './hooks/useState'
+export default {
+    setup() {
+      const store = useStore();
+      const age = computed(() => store.getters.myAge);
+      setTimeout(() => store.commit('addAge'), 2000)
+      return {
+        age
+      }
+  }
+}
+```
+* `mapGetters`将store定义的getters暴露出去。组件内用mapGetters去拿回来
+```js{16}
+import vuex, { mapGetters } from 'vuex';
+const store = new vuex.Store({
+    state: {
+        age: 18,
+    },
+    mutations: {
+        addAge(ctx) {
+            ctx.age++;
+        }
+    },
+    getters: {
+        myAge(state) {
+            return state.age + '岁'
+        }
+    },
+    computed: mapGetters(['myAge'])
+});
+export default store;
+```
+>组件内mapGetters拿到的也是`{myAge: function() { return this.$store.getters.myAge}}`的形式  
+>所以需要绑定this并用computed做成响应式的
+```js{4}
+import { mapGetters, useStore } from 'vuex';
+setup() {
+  const store = useStore();
+  const age = computed(() => mapGetters(['myAge']).myAge.bind({$store: store})());
+  setTimeout(() => store.commit('addAge'), 2000)
+  return {
+    age
+  }
+}
+```
+* 封装hook：接收参数直接获取store的数据
+```js
+import { computed } from 'vue';
+import { mapGetters, useStore } from 'vuex';
+function useGetters(keys) {
+    const $store = useStore();
+    if (typeof keys === 'object' && keys != null) {
+        const getters = {};
+        Object.entries(mapGetters(keys)).forEach(([key, fn]) => {
+            getters[key] = computed(fn.bind({ $store }));
+        })
+        return getters;
+    } else if (typeof keys === 'string') {
+        return $store.getters[keys].bind({ $store });
+    } else {
+        console.warn('useGetters接收参数错误');
+        return {};
+    }
+}
+export default useGetters;
+```
+>使用
+```js
+import useGetters from './hooks/useGetters';
+setup() {
+  const store = useStore();
+  
+  const { age } = useGetters({
+    age: 'myAge'
+  });
+  // 或者
+  // const { myAge } = useGetters(['myAge']);
+  // const myAge = useGetters('myAge');
+  setTimeout(() => store.commit('addAge'), 2000)
+  return {
+    age
+  }
+}
+```
+:::
+::: tab label=mutations
+* 使用commit调用
+```js
+const store = useStore();
+store.commit('addCounter');
+```
+* `mapMutations`可以直接将mutations拿到组件中直接使用。
+* 带参数写法：mutation需要入参的话，可以作commit的第二个参数，或者mapMutation拿到的第一个参数
+```js{7-9,18}
+import vuex, { mapGetters, mapMutations } from 'vuex';
+const store = new vuex.Store({
+    state: {
+        age: 18,
+    },
+    mutations: {
+        increateN(ctx, n) {
+            ctx.age += n;
+        }
+    },
+    getters: {
+        myAge(state) {
+            return (str) => state.age + str;
+        }
+    },
+    computed: {
+        ...mapGetters(['myAge']),
+        ...mapMutations(['increateN']),
+    }
+});
+export default store;
+```
+```vue
+<script>
+import useGetters from './hooks/useGetters';
+import { mapMutations } from 'vuex';
+export default {
+  setup() {
+    const myAge = useGetters('myAge');
+    const storeMmutations = mapMutations(['increateN']);
+    return {
+      myAge,
+      ...storeMmutations
+    }
+  }
+}
+</script>
+
+<template>
+  <div>
+    {{ myAge('岁') }}
+    <button @click="increateN(10)">+1</button>
+  </div>
+</template>
 ```
 :::
 ::::
