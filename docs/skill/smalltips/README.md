@@ -100,3 +100,6 @@ console.log('test');
 * mac打开safari
 * safari -> 偏好设置 -> 高级 -> 显示开发菜单
 * 手机safari打开网页，苹果电脑就能看调试页面。
+
+### mac直达文件
+* 访达 -> shift + command + G
