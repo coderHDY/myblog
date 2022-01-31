@@ -27,29 +27,15 @@ console.log(arr[Symbol.iterator]().next()); // { value: 1, done: false }
 
 * Object不是可迭代对象，改写成可迭代对象(按照可迭代协议给对象增加迭代器)
 >遍历自身所有可枚举属性
-```js{4,18-24}
+```js{4,13-15}
 const obj = {
     name: 'hdy',
     age: 18,
     [Symbol.iterator]() {
-        Object.defineProperties(this, {
-            'values': {
-                value: Object.values(this),
-                writable: true,
-                enumerable: false
-            },
-            'index': {
-                value: 0,
-                writable: true,
-                enumerable: false
-            },
-        })
-
-        const _this = this;
+        let vals = Object.values(this);
+        let idx = 0;
         return {
-            next() {
-                return _this.index < _this.values.length ? {value: _this.values[_this.index++], done: false} : {value: undefined, done: true}
-            }
+            next:() => idx < vals.length ? {value: vals[idx++], done: false} : {value: undefined, done: true}
         }
     }
 };
@@ -58,8 +44,25 @@ for (let value of obj) {
     console.log(value); // hdy 18
 }
 
+
 for (let value of obj) {
     console.log(value); // hdy 18
+}
+```
+>利用`生成器`函数
+```js{4-9}
+const obj = {
+    name: 'hdy',
+    age: 18,
+    *[Symbol.iterator]() {
+        const vals = Object.values(this);
+        for (let val of vals) {
+            yield val;
+        }
+    }
+}
+for (let value of obj) {
+    console.log(value);
 }
 ```
 ## function*
