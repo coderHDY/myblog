@@ -14,7 +14,7 @@ date: 2021-11-01
 6. "function"
 7. symbol
 :::
-* 注：typeof 会把 null 和 object 和 Array类型都判断为 **object**，所以 [深浅拷贝](../sourcecode/#深浅拷贝)函数需要再次判断类型
+* 注：typeof 会把 null 和 object 和 Array类型都判断为 **object**，所以 [深浅拷贝](../interview/js.html#深浅拷贝)函数需要再次判断类型
 
 ## 全等===
 * 原生的 '==' 符号有一些缺陷，所以引入了全等 '==='
@@ -148,7 +148,22 @@ Object.is(+0, -0); // false
 +0 === -0; // true
 
 ```
+## in
+* 判断某个属性在不在对象的原型链上
+```ts{9-11}
+type fish = {
+    swiming: () => void;
+}
+type dog = {
+    run: () => void;
+}
 
+function fn(a: fish | dog) {
+    if ('swiming' in a) {
+        a.swiming();
+    }
+}
+```
 ## 判断数组
 ### Array.isArray
 ```js
