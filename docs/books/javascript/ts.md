@@ -577,10 +577,10 @@ class People implements Info {
 |功能|interface|type|
 |---|---|---|
 |&/extends继承|允许|允许|
+|implements实现|可以|可以|
 |基本类型别名、联合类型、元组|不可以|可以|
 |typeof关键字赋值|不可以|可以|
 |同名合并|可以|不可以|
-|implements实现|可以|不可以|
 
 ```ts
 /// typeof赋值type
@@ -632,7 +632,7 @@ fn(Direction.DOWN); // 3
 :::: tabs
 ::: tab label=类型查找
 * ts类型声明查找范围
-    1. 内置声明文件(HTMLElement)
+    1. 内置声明文件(例：HTMLElement)
     2. 外部定义类型声明
     3. 自己定义类型声明
 * 所以如果引用第三方库，如果提示错误，代表第三方库没有类型声明。

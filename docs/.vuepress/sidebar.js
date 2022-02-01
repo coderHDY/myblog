@@ -109,6 +109,7 @@ const front = {
     ],
     '/front/vue3/': [
         '',
+        'project',
     ],
     '/front/node/': [
         '',
