@@ -191,6 +191,7 @@ npx cz
 * [vue.config.js](https://cli.vuejs.org/zh/config/#vue-config-js)可以增加webpack的配置，和默认配置进行合并
 ```js
 module.exports = {
+    // publicPath: './', // 开发测试打包引用成相对路径
     outputDir: './build',
     configureWebpack: {
         resolve: {
@@ -332,6 +333,190 @@ export default defineComponent({
 </script>
 
 <style scoped></style>
+```
+:::
+::::
+## Element-plus
+:::: tabs
+::: tab label=介绍
+* [Element-plus](https://element-plus.org/zh-CN/)为vue3定制的桌面端组件库
+```shell
+npm i element-plus
+```
+* 全局引用
+```ts
+// main.ts
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
+app.use(ElementPlus);
+```
+:::
+::: tab label=按需引用
+* 按序引用需要引用`组件`、`组件样式`、`base样式`
+* 可以用`babel-plugin-import`来帮助引入
+```shell
+npm i unplugin-vue-components unplugin-auto-import -D
+```
+```js
+// main.ts
+import 'element-plus/dist/index.css';
+```
+```js
+// vue.config.js
+const AutoImport = require('unplugin-auto-import/webpack');
+const Components = require('unplugin-vue-components/webpack');
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+
+module.exports = {
+    configureWebpack: {
+        plugins: [
+            AutoImport({
+                resolvers: [ElementPlusResolver()],
+            }),
+            Components({
+                resolvers: [ElementPlusResolver()],
+            }),
+        ],
+    },
+}
+```
+>全局内引入了样式，**组件内无需任何导入**，直接使用需要的组件就可以。
+:::
+::::
+## axios
+:::: tabs
+::: tab label=入门
+* [axios](https://axios-http.com/docs/intro)：将ajax基于promise封装出来的网络请求库
+```shell
+npm i axios
+```
+```js
+axios({
+  method: 'get',
+  url: 'http://bit.ly/2mTM3nY',
+  responseType: 'stream'
+})
+.then(res => console.log(res.data));
+
+axios.request(config)
+axios.get(url[, config])
+axios.delete(url[, config])
+axios.head(url[, config])
+axios.options(url[, config])
+axios.post(url[, data[, config]])
+axios.put(url[, data[, config]])
+axios.patch(url[, data[, config]])
+axios.all(
+    [
+        axios.get(url),
+        axios.get(url),
+        axios.get(url),
+    ]
+)
+```
+:::
+::: tab label=常用配置
+```ts
+axios.defaults.baseURL = 'https://api.example.com';
+axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+instance.defaults.timeout = 2500;
+```
+* 创建实例进行二次配置能力
+```ts
+const instance = axios.create();
+instance.defaults.baseURL = 'https://api.example.com';
+instance.defaults.timeout = 2500;
+
+instance.get('/longRequest', {
+    timeout: 5000,
+    // `withCredentials` 表示跨域请求时是否需要使用凭证
+    withCredentials: false, // default
+});
+```
+* 拦截取消
+```js{5}
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+axios.get('https://httpbin.org/get');
+
+source.cancel('Operation canceled by the user.');
+```
+* 拦截器
+```ts
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+        // Do something before request is sent
+        return config;
+    }, function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+    }
+);
+
+// Add a response interceptor
+axios.interceptors.response.use(function (response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        return response;
+    }, function (error) {
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        return Promise.reject(error);
+    }
+);
+```
+:::
+::: tab label=二次封装
+```js
+
+```
+:::
+::::
+## 区分环境
+:::: tabs
+::: tab label=环境
+* 常见三种环境：
+    * 开发环境
+    * 生产环境
+    * 测试环境
+* 常见三种根据环境区分变量的方式：
+    * 手动修改
+    * process.env.NODE_ENV进行读取
+    * 编写不同环境的配置文件
+:::
+::: tab label=NODE_ENV
+* webpack的definePlugin插件会在不同的环境下注入不同的值
+```js
+let BASE_URL = "";
+if (process.env.NODE_ENV === 'production') {
+    BASE_URL = '生产环境url';
+} else if (process.env.NODE_ENV === 'development') {
+    BASE_URL = '开发环境url';
+} else {
+    BASE_URL = '测试环境url';
+}
+```
+:::
+::: tab label=配置文件
+* 根目录下编写对应的文件，在不同的执行环境下会自动注入不同的环境变量
+>定义
+```shell
+# .env.production
+BASE_URL=生产环境
+```
+```shell
+# .env.production
+BASE_URL=开发环境
+```
+```shell
+# .env.production
+BASE_URL=测试环境
+```
+>使用
+```js
+// 项目内
+console.log(process.env.VUE_APP_BASE_URL);
 ```
 :::
 ::::

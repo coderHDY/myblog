@@ -607,7 +607,7 @@ const me: Info = {
 ```
 :::
 ::::
-## 第五章 枚举
+## 第五章 枚举/promise
 :::: tabs
 ::: tab label=枚举
 * 优势：让代码可读性更强
@@ -625,6 +625,14 @@ fn(Direction.LEFT); // 0
 fn(Direction.RIGHT); // 1
 fn(Direction.UP); // 2
 fn(Direction.DOWN); // 3
+```
+:::
+::: tab label=promise
+* promise声明时可以传入泛型，告诉resolve该传入什么类型。
+```ts
+new Promise<string>((resolve, reject) => {
+    resolve('111');
+}).then(res => console.log(res.length));
 ```
 :::
 ::::
