@@ -103,3 +103,5 @@ console.log('test');
 
 ### mac直达文件
 * 访达 -> shift + command + G
+### vscode配置文件
+* commond + shift + p -> default settings

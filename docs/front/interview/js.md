@@ -839,7 +839,6 @@ app.get('/search', (req, res) => {
                     fetch(`http://localhost:8888/search?s=${search.value}`, { signal })
                     .then(res => res.json())
                     .then(response => {
-                        console.log()
                         res.value.push(response.data)
                     });
                     onInvalidate(() => controller.abort());
@@ -1487,6 +1486,61 @@ class MyEventTarget {
         })()
     </script>
 </body>
+```
+:::
+::::
+## 手写promise.all
+:::: tabs
+::: tab label=实现
+```js{8-12}
+function promiseAll(promiseArr) {
+    return new Promise((allResolve, allCatch) => {
+        const ans = [];
+        let done = 0;
+        let total = promiseArr.length;
+        promiseArr.forEach((promise, idx) => {
+            promise.then(res => {
+                ans[idx] = res;
+                done++;
+                if (total === done) {
+                    allResolve(ans);
+                }
+            }).catch(err => allCatch(err))
+        });
+    })
+}
+```
+:::
+::: tab label=测试
+```js
+function promiseAll(promiseArr) {
+    return new Promise((allResolve, allCatch) => {
+        const ans = [];
+        let done = 0;
+        let total = promiseArr.length;
+        promiseArr.forEach((promise, idx) => {
+            promise.then(res => {
+                ans[idx] = res;
+                done++;
+                if (total === done) {
+                    allResolve(ans);
+                }
+            }).catch(err => allCatch(err))
+        });
+    })
+}
+
+const p1 = new Promise(resolve => setTimeout(() => resolve(1), 100));
+const p2 = new Promise((resolve, reject) => setTimeout(() => reject(2), 100));
+const p3 = new Promise(resolve => setTimeout(() => resolve(3), 100));
+
+promiseAll([p1, p2, p3])
+.then(res => console.log(res))
+.catch(err => console.log(err));
+
+// Promise.all([p1, p2, p3])
+// .then(res => console.log(res))
+// .catch(err => console.log(err));
 ```
 :::
 ::::
