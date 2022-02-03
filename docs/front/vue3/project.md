@@ -65,7 +65,8 @@ npm i prettier -D
     // 箭头函数参数括号 默认avoid 可选 avoid| always
     // avoid 能省略括号的时候就省略 例如x => x
     // always 总是有括号
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "printWidth": 120
 }
 ```
 >`.prettierignore`文件说明哪些文件是忽略的
@@ -468,8 +469,148 @@ axios.interceptors.response.use(function (response) {
 ```
 :::
 ::: tab label=二次封装
-```js
+```txt
+src
+ |-service
+ |   |-login
+ |   |    |-login.ts
+ |   |-request
+ |   |    |-type.ts
+ |   |    |-request.ts
+ |   |    |-config.ts
+ |   |-index.ts
+ ```
+:::
+::: tab label=config.ts
+* 根据环境导出一些对应的配置，如`baseUrl`
+```ts
+let BASE_URL = '';
+const TIME_OUT = 2000;
+if (process.env.NODE_ENV === 'production') {
+    BASE_URL = '生产环境url';
+} else if (process.env.NODE_ENV === 'development') {
+    BASE_URL = 'http://localhost:8888';
+} else {
+    BASE_URL = '测试环境url';
+}
 
+export { BASE_URL, TIME_OUT };
+
+```
+:::
+::: tab label=request.ts
+* 将axios进行二次封装
+    1. 可以提高代码复用性
+    2. 可以降低代码对第三方库的耦合性
+```ts
+import axios from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInterceptorConfig, Interceptor } from './type';
+
+class MyRequest {
+    instance: AxiosInstance;
+    interceptor: Interceptor | undefined;
+    constructor(config: AxiosInterceptorConfig) {
+        this.instance = axios.create(config);
+        this.interceptor = config.interceptor;
+        this.initInterceptors();
+    }
+    initInterceptors(): void {
+        this.instance.interceptors.request.use(
+            this.interceptor?.requestSuccessInterceptor,
+            this.interceptor?.requestErrorInterceptor
+        );
+        this.instance.interceptors.response.use(
+            this.interceptor?.responseSuccessInterceptor,
+            this.interceptor?.responseErrorInterceptor
+        );
+    }
+    request(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return new Promise((resolve, reject) => {
+            this.instance
+                .request(config)
+                .then(res => resolve(res.data))
+                .catch(err => reject(err));
+        });
+    }
+
+    get(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return this.request({ ...config, method: 'GET' });
+    }
+    post(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return this.request({ ...config, method: 'POST' });
+    }
+    put(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return this.request({ ...config, method: 'PUT' });
+    }
+    delete(config: AxiosRequestConfig): Promise<AxiosResponse> {
+        return this.request({ ...config, method: 'DELETE' });
+    }
+}
+
+export default MyRequest;
+
+```
+:::
+::: tab label=type.ts
+* 将自定义ts类型抽出来，提高代码可读性
+```ts
+import { AxiosRequestConfig } from 'axios';
+
+export interface Interceptor {
+    requestSuccessInterceptor?: (config: AxiosInterceptorConfig) => AxiosInterceptorConfig;
+    requestErrorInterceptor?: (config: AxiosInterceptorConfig) => AxiosInterceptorConfig;
+    responseSuccessInterceptor?: (config: AxiosInterceptorConfig) => AxiosInterceptorConfig;
+    responseErrorInterceptor?: (config: AxiosInterceptorConfig) => AxiosInterceptorConfig;
+}
+
+export interface AxiosInterceptorConfig extends AxiosRequestConfig {
+    interceptor?: Interceptor;
+}
+
+```
+:::
+::: tab label=index.ts
+* 导出请求实例对象。如果有多种请求，请求不同baseUrl的数据，则可以创建多个请求对象
+```ts
+import MyRequest from './request/request';
+import { BASE_URL, TIME_OUT } from './request/config';
+
+export default new MyRequest({
+    baseURL: BASE_URL,
+    timeout: TIME_OUT,
+});
+
+```
+:::
+::: tab label=使用
+```ts
+// login/login.ts
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import requestIst from '../';
+
+export function login(config: AxiosRequestConfig): Promise<AxiosResponse> {
+    config.url = '/login';
+    return requestIst.post(config);
+}
+
+```
+```html{3,6-11}
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import { login } from '@/service/login/login';
+export default defineComponent({
+    setup() {
+        let data = ref({});
+        login({
+            data: {
+                name: 'ls',
+            },
+        }).then(res => (data.value = res));
+        return { data };
+    },
+});
+</script>
 ```
 :::
 ::::
