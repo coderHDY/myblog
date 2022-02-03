@@ -298,18 +298,30 @@ fn('aaa');
 :::
 ::: tab label=【??】
 * ECMA2020新特性
-* 与`||`操作符不同点：处理0和空字符串的不同。
-```ts
-// const n = 0;
-const n = '';
+* 与`||`操作符不同点：【||】会转化成布尔值判断，【??】就是判断有没有
+    * 处理0和空字符串。
+    ```ts
+    // const n = 0;
+    const n = '';
 
-const msg = n ?? '你好~';
-console.log(msg); // ''
+    const msg = n ?? '你好~';
+    console.log(msg); // ''
 
-const msg2 = n || '你好~';
-console.log(msg2); // '你好~'
+    const msg2 = n || '你好~';
+    console.log(msg2); // '你好~'
+    ```
+    * 处理字段不存在
+    ```ts
+    const config = {
+        showLoading: false,
+    }
 
-```
+    const showloading = config.showLoading || true;
+    const showloading2 = config.showLoading ?? true;
+
+    console.log(showloading); // true
+    console.log(showloading2); // false
+    ```
 :::
 ::: tab label=字面量类型
 * 字符串常量
