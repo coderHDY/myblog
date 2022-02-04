@@ -1,7 +1,6 @@
 ---
 title: 《深入理解TypeScript》
 date: 2022-01-29
-sticky: 2
 ---
 ## 第一章 入门配置
 :::: tabs

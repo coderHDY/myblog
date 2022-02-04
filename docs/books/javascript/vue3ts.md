@@ -4569,7 +4569,7 @@ info[4] = '深度友谊iii~'; // 深度友谊iii~
 ```
 :::
 ::::
-## 第22解 VueX使用
+## 第22节 setup使用VueX
 :::: tabs
 ::: tab label=useStore
 * setup里面拿不到this，可以使用`useStore`去拿store实例
