@@ -661,3 +661,26 @@ console.log(process.env.VUE_APP_BASE_URL);
 ```
 :::
 ::::
+## 其他技巧
+:::: tabs
+::: tab label=css工具
+* [normalize.css](https://github.com/necolas/normalize.css)
+```shell
+npm i normalize-css
+```
+```ts
+// main.ts
+import 'normalize-css';
+```
+:::
+::: tab label=子组件类型
+* ref获取子组件时定义类型，如何准确的定义typescript类型
+```ts
+import ChildCompnent from './comp/ChildCompnent';
+setup() {
+    const child = ref<InstanceType<typeof ChildCompnent>>();
+    child.value?.fn();
+}
+```
+:::
+::::

@@ -199,6 +199,13 @@ const books = {
                 'ts',
             ]
         },
+        {
+            title: '编程思想',
+            collapsable: false,
+            children: [
+                'principle',
+            ]
+        },
 
     ],
 }
