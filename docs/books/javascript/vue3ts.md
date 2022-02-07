@@ -2207,7 +2207,7 @@ export default {
 </script>
 ```
 >子组件
-```vue{3-4,10-11,13-28}
+```vue{3-4,10,12-27}
 <template>
   <div>
     <input type="text" v-model="myMsg">
@@ -2218,7 +2218,6 @@ export default {
 
 export default {
     props: [ 'msg', 'title' ],
-    emit: [ 'changeMsg', 'changeTitle' ],
     computed: {
         myMsg: {
             get() {
