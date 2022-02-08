@@ -119,6 +119,7 @@ const front = {
     ],
     '/front/technique/': [
         '',
+        'vue3hooks',
     ],
 }
 
