@@ -97,6 +97,8 @@ setup() {
 :::
 ::: tab label=data
 * data：`reactive`、`ref`定义
+  * reactive包装复杂的数据结构
+  * ref包装基本的数据结构（也能包装对象）
 
 |reactive指令|作用|
 |---|---|
@@ -166,5 +168,24 @@ setup() {
 |activated|	onActivated|
 |deactivated|	onDeactivated|
 
+:::
+::: tab label=全局配置
+* 所有全局配置都放到app上
+
+|2.x 全局 API|	3.x 实例 API (app)|
+|---|---|
+|Vue.config| app.config|
+|Vue.config.productionTip|	removed 已移除|
+|Vue.config.ignoredElements|	app.config.isCustomElement|
+|Vue.component|	app.component|
+|Vue.directive|	app.directive|
+|Vue.mixin|	app.mixin|
+|Vue.use|	app.use|
+:::
+::: tab label=hooks
+* 对比`mixin`优势：
+  1. 较清晰的数据/方法来源
+  2. 名称、空间冲突，自己引入时定义好了返回值变量名，不易发生冲突
+  3. 隐式的多个混入间交流。使用hooks能很好的进行变量传递，多个空间数据通过变量进行互相交流
 :::
 ::::

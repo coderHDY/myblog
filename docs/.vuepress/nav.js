@@ -41,7 +41,7 @@ const front = {
             link: '/front/react/'
         },
         {
-            text: '代码技巧',
+            text: '工具封装',
             link: '/front/technique/'
         },
     ]
