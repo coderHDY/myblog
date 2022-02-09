@@ -7,7 +7,7 @@ date: 2021-11-13
 ::: tip 特性
 1. 可换行
 2. 可替换
-3. [手写模板字符串](../sourcecode/#模板字符串)
+3. [手写模板字符串](../interview/js.html#手写模板字符串)
 :::
 :::: tabs
 ::: tab label=可换行
@@ -238,7 +238,6 @@ console.log(str.myStartsWith('hdy', 6)); // true
 String.prototype.myStartsWith = function (str, from = 0) {
     const len = str.length;
     const startsStr = this.substr(from, len);
-    console.log(startsStr);
     return str === startsStr;
 }
 ```
@@ -267,11 +266,11 @@ console.log(str1 + str2); // hello world!
 * 调用：parseInt(str)
 * 入参：String
 * 返回：number
-* tip：如果不能转化成数字的会被变成NaN
+* tip：如果**首字符**不能转化成数字的会被变成NaN
 :::
 ```js
 let a = '1';
-let b = '不是数字';
+let b = '哈111';
 
 console.log(parseInt(a)); // 1
 console.log(parseInt(b)); // NaN
@@ -360,7 +359,7 @@ console.log(a.replace(reg2, (matchs, index, input) => {
 ```
 :::
 ::: tab label=正则有分组
-* 经典算法题：[手写模板字符串](../sourcecode/#模板字符串)
+* 经典算法题：[手写模板字符串](../interview/js.html#手写模板字符串)
 ```js
 let a = 'hello world!';
 let reg3 = /l(.*?)w/;
@@ -581,12 +580,6 @@ console.log(String.fromCharCode(...codeArr)); // ABC
 * tip：ES6语法
 :::
 ```js
-const str = 'abc';
-const codeArr = str.split('').map(item => {
-    let code = item.charCodeAt(0);
-    return code - 32;
-})
-
 // 对比
 console.log(String.fromCharCode(9731, 9733, 9842, 0x2F804)); // ☃★♲
 console.log(String.fromCodePoint(9731, 9733, 9842, 0x2F804)); // ☃★♲你

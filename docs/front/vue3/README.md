@@ -188,4 +188,109 @@ setup() {
   2. 名称、空间冲突，自己引入时定义好了返回值变量名，不易发生冲突
   3. 隐式的多个混入间交流。使用hooks能很好的进行变量传递，多个空间数据通过变量进行互相交流
 :::
+::: tab label=异步组件
+```js
+import { defineAsyncComponent } from 'vue'
+import ErrorComponent from './components/ErrorComponent.vue'
+import LoadingComponent from './components/LoadingComponent.vue'
+
+// 不带选项的异步组件
+const asyncPage = defineAsyncComponent(() => import('./NextPage.vue'))
+
+// 带选项的异步组件
+const asyncPageWithOptions = defineAsyncComponent({
+  loader: () => import('./NextPage.vue'),
+  delay: 200,
+  timeout: 3000,
+  errorComponent: ErrorComponent,
+  loadingComponent: LoadingComponent
+})
+```
+:::
+::::
+## watchEffect
+::: tip
+* 调用：watchEffect((invalidateFn) => { }, options)
+* 入参：function, Object
+* 返回：stop函数
+* options:
+  * flush?: 'pre' | 'post' | 'sync' // 默认：'pre'
+  * onTrack?: (event: DebuggerEvent) => void
+  * onTrigger?: (event: DebuggerEvent) => void
+:::
+:::: tabs
+::: tab label=使用
+* 特点：会立即执行一次，来收集依赖，必须是同步执行到的变量才会被收集做依赖。进行后续响应式触发。
+```html{7}
+<script>
+import { ref, watchEffect,  } from 'vue';
+export default {
+  setup() {
+    let msg = ref(0);
+    setInterval(() => msg.value++, 1000);
+    watchEffect(() => console.log(msg.value));
+    return {
+      msg
+    }
+  },
+}
+</script>
+
+<template>
+  <div>{{msg}}</div>
+</template>
+```
+:::
+::: tab label=取消
+* 返回值是取消函数
+```html{7,8}
+<script>
+import { ref, watchEffect,  } from 'vue';
+export default {
+  setup() {
+    let msg = ref(0);
+    setInterval(() => msg.value++, 1000);
+    const stopfn = watchEffect(() => console.log(msg.value));
+    setTimeout(stopfn, 4000);
+    return {
+      msg
+    }
+  },
+}
+</script>
+
+<template>
+  <div>{{msg}}</div>
+</template>
+```
+:::
+::: tab label=清除副作用
+* 下次触发可以清除上次的副作用
+>例：每1S用户触发一次网络请求，网络请求回来之前如果发起了下次网络请求，就取消上次网络请求。
+```html{6,8-12}
+<script>
+import { ref, watchEffect  } from 'vue';
+export default {
+  setup() {
+    let msg = ref(0);
+    setInterval(() => msg.value++, 1000);
+
+    const stopfn = watchEffect((invalidateFn) => {
+      console.log(msg.value);
+      const timer = setTimeout(() => console.log('本次网络请求'), 1000); // 500 就不会被清除，因为网络请求回来了才进行的下次触发
+      invalidateFn(() => clearTimeout(timer));
+    });
+    setTimeout(stopfn, 4000);
+    return {
+      msg
+    }
+  },
+}
+</script>
+
+<template>
+  <div>{{msg}}</div>
+</template>
+```
+:::
 ::::
