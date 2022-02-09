@@ -127,8 +127,8 @@ console.log([].shift()); // undefined
 * 作用：向数组头添加项
 * 调用：arr.unshift(item[, item...])
 * 入参：any[, any...]
-* 返回：any
-* tip：插入的顺序就是入参顺序，返回的是第一个参数
+* 返回：Number(length)
+* tip：插入的顺序就是入参顺序，返回的是插入后的长度
 :::
 :::: tabs
 ::: tab label=使用
@@ -153,7 +153,7 @@ Array.prototype.myUnshift = function(...args) {
         // 注：this不能单独作为左赋值，this = xxx; 所以只能逐个改属性
         this[index] = value;
     }
-    return args[0];
+    return arr.length;
 }
 ```
 :::
@@ -210,7 +210,7 @@ console.log(arr.includes(1, 4)); // false
 ### every
 ::: tip
 * 作用：查看数组是否**所有项**都满足条件
-* 调用：arr.every((item, index, arr) => boolean, obj)
+* 调用：arr.every((item, index, arr) => boolean, thisArg)
 * 入参：Function[, Object]
 * 返回：Boolean
 * tip：要使用this就**不能使用箭头函数**
@@ -511,6 +511,12 @@ const arr2 = [4, 5, 6];
 console.log(concat(arr, arr2)); // [1, 2, 3, 4, 5, 6]
 console.log(concat(arr, 6, 6, 6, arr2)); // [1, 2, 3, 6, 6, 6, 4, 5, 6]
 ```
+* 巧用flat
+```js
+function concat(...arrs) {
+    return arrs.flat();
+}
+```
 :::
 ::::
 ### copyWithin
@@ -618,7 +624,7 @@ console.log(sortIt(names)); // [ 'alpha', 'bravo', 'CHARLIE', 'Delta' ]
 ```
 ```js
 function sortIt(names) {
-    const lower = names.map((name, index) => ({index, name:name.toLowerCase()}));
+    const lower = names.map((item, index) => ({idx: index, name: item.toLowerCase()}));
     lower.sort((a, b) => {
         return +(a.name > b.name) || +(a.name === b.name) - 1;
 
@@ -629,8 +635,8 @@ function sortIt(names) {
         // } else {
         //     return -1;
         // }
-    })
-    const ans = lower.map((item) => names[item.index]);
+    });
+    const ans = lower.map(({ idx }) => names[idx]);
     return ans;
 }
 ```
@@ -1170,7 +1176,7 @@ console.log(Object.keys(arr)); // ['0', '1', '3']
 ```
 ### entries
 ::: tip
-* 作用：将数组以`迭代器`**`的形式返回
+* 作用：将数组以`迭代器`的形式返回
 * 调用：arr.entries()
 * 返回：数组的迭代器
 :::
