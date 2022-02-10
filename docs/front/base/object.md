@@ -745,7 +745,7 @@ arr.forEach((item, index) => {
             writable: true
         },
         // 暴露属性做劫持
-        [`${index}`]: {
+        [index]: {
             get() {
                 console.log(`劫持get操作：下标${index}的值是${this['_' + index]}`);
                 return this[`_${index}`];

@@ -22,10 +22,12 @@ console.log(JSON.parse(json)); // { a: 0.1 }
 ## stringify
 ::: tip stringify
 * 作用：将对象转化成json形式字符串
-* 调用：JSON.stringify(obj)
-* 入参：Object
+* 调用：JSON.stringify(obj[, replacer [, space]])
+* 入参：Object, Function | Array, String
 * 返回：String
 :::
+:::: tabs
+::: tab label=使用
 ```js
 const obj = {
     'name': 'hdy',
@@ -40,6 +42,33 @@ const obj = {
 console.log(JSON.stringify(obj));
 // {"name":"hdy","age":18,"books":["蝴蝶书","红宝书"]}
 ```
+:::
+::: tab label=replacer
+* 函数：处理入参并决定是否需要添加进JSON：(key, val) => {}
+* 数组：需要包含的属性名
+```js
+const obj = {
+    name: 'hdy',
+    age: 18,
+    books: [
+        '红宝书',
+        '你不知道的JS',
+    ]
+}
+
+function replacer(key, val) {
+    if (typeof val === 'number') {
+        return undefined;
+    }
+    return val;
+}
+
+console.log(JSON.stringify(obj));            // {"name":"hdy","age":18,"books":["红宝书","你不知道的JS"]}
+console.log(JSON.stringify(obj, ['books'])); // {"books":["红宝书","你不知道的JS"]}
+console.log(JSON.stringify(obj, replacer));  // {"name":"hdy","books":["红宝书","你不知道的JS"]}
+```
+:::
+::::
 ## 深浅拷贝
 * Object等是引用类型，所以存在深浅拷贝的问题，就是引用类型拷贝的时候关系没有断干净
 * String是值类型，拷贝就是深拷贝

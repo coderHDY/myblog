@@ -327,6 +327,7 @@ Object.prototype.myAddEventListener = function(type, callback) {
 </body>
 
 ```
+>默认是false:冒泡
 :::
 ::: tab label=hideBox
 * 有一个遮罩层遮住了按钮，且他们不在一个dom事件触发的线路上，怎样点击box也能触发按钮的点击

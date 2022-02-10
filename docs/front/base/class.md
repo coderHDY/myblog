@@ -238,18 +238,21 @@ console.log(Object.keys(a)); // ['name']  方法go不在实例上，在原型上
 * class内有三种this
     1. 实例身上的函数this指向实例本身
     2. 原型对象上的函数this指向调用的实例
-    3. 类上的静态方法谁调用指向谁
+    3. 类上的静态方法谁调用指向谁，一般就是类本身
 :::
-```js{2-3,5-6,8-9}
+>另外，class内的this是有值的，因为class本质是function的封装，由于new调用的方式，会给作用域绑定上this值，所以箭头函数也能拿到正确的this
+```js{2-3,6-7,9-11}
 class A {
     // 实例方法
-    a = () => console.log(this);
+    a = function() { console.log(this) };
+    // a = () => console.log(this);
     
     // 原型函数
     b() { console.log(this) }
 
     // 静态方法
-    static  c = () => { console.log(this) }
+    static  c = function() { console.log(this) }
+    static  d = () => console.log(this)
 }
 
 const obj = new A();
