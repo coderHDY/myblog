@@ -25,6 +25,28 @@ console.log(stringify(obj) === JSON.stringify(obj)); // true
 ```
 :::
 ::: tab label=深浅拷贝实现
+```js
+function stringify(obj) {
+    if (typeof obj === 'object' && obj != null) {
+        if (Array.isArray(obj)) {
+            let ans = `[${
+                obj.map(item => typeof item === 'object'? stringify(item) : `"${item}"`)
+            }]`
+            return ans;
+        } else {
+            let ans = `{${
+                Object.entries(obj).map(([key, item]) => typeof item === 'object'? `"${key}":${stringify(item)}` : `"${key}":"${item}"`)
+            }}`
+            return ans;
+        }
+    } else {
+        return `"${obj.toString()}"`;
+    }
+}
+```
+>注意，数组转化成字符串的时候不带中括号
+:::
+::: tab label=代码优化
 * 主要就是判断类型，然后拼接对应的效果
 * 需要注意的是【typeof null === 'object'】
 ```js{2}

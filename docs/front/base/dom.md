@@ -816,6 +816,7 @@ date: 2021-12-16
 ```
 ### insertAdjacentElement
 ::: tip
+* adjacent：附属品
 * 作用：指定位置插入节点
 * 调用：node.insertAdjacentElement(position, node)
 :::
