@@ -297,3 +297,39 @@ console.log(num.toFixed(4));     // 1.1100
 const num = 1.3;
 console.log(num.toString(4)); // 1.10303030303030303030303031
 ```
+### toLocaleString
+::: tip
+* 作用：将数字转化成字符串
+* 调用：num.toLocaleString(locales[, options])
+* 入参：String(语言代码或编号系统)[, Object]
+* 返回：String
+:::
+:::: tabs
+::: tab label=使用
+* 千分位分隔符
+```js
+const num = 123456789;
+console.log(num.toLocaleString('en-US')); // 123,456,789
+```
+* 美元
+```js
+const num = 123456789;
+console.log(num.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD'
+})); // $123,456,789.00
+```
+* 汉字
+```js
+const num = 123456789;
+console.log(num.toLocaleString('zh-Hans-CN-u-nu-hanidec', {
+    useGrouping: false
+})); // 一二三四五六七八九
+```
+* 人民币
+```js
+const num = 123456789;
+console.log(num.toLocaleString('zh-CN', { style: 'currency', currency: 'CNY' })); // ¥123,456,789.00
+```
+:::
+::::

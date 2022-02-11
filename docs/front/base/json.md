@@ -11,14 +11,23 @@ date: 2021-12-18
 ## parse
 ::: tip parse
 * 作用：将json字符串解析成对象
-* 调用：JSON.parse(JSON)
-* 入参：String
+* 调用：JSON.parse(JSON[, replacer])
+* 入参：String[, Function]
 * 返回：Object
 :::
+:::: tabs
+::: tab label=使用
 ```js
 const json = '{"a": 0.1}';
 console.log(JSON.parse(json)); // { a: 0.1 }
 ```
+:::
+::: tab label=replacer
+```js
+
+```
+:::
+::::
 ## stringify
 ::: tip stringify
 * 作用：将对象转化成json形式字符串
@@ -66,6 +75,32 @@ function replacer(key, val) {
 console.log(JSON.stringify(obj));            // {"name":"hdy","age":18,"books":["红宝书","你不知道的JS"]}
 console.log(JSON.stringify(obj, ['books'])); // {"books":["红宝书","你不知道的JS"]}
 console.log(JSON.stringify(obj, replacer));  // {"name":"hdy","books":["红宝书","你不知道的JS"]}
+```
+:::
+::: tab label=space
+* 决定与上级相比的空格。
+```js
+const obj = {
+    name: 'hdy',
+    age: 18,
+    books: [
+        'js高程',
+        'js蝴蝶书',
+    ]
+}
+const fs = require('fs');
+fs.writeFileSync('./data.json', JSON.stringify(obj, null, '\t'));
+```
+>结果文件:data.json
+```json
+{
+	"name": "hdy",
+	"age": 18,
+	"books": [
+		"js高程",
+		"js蝴蝶书"
+	]
+}
 ```
 :::
 ::::
