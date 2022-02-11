@@ -1,7 +1,6 @@
 ---
 title: 《vue3进阶》
 date: 2022-01-14
-sticky: 3
 ---
 ## 第1节 介绍
 :::: tabs
