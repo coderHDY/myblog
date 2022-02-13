@@ -63,6 +63,81 @@ console.log(me); // ['红宝书', '蝴蝶书']
         * Vue是以组件为粒度更新数据的，所以每个组件有一个dynamicChildren数组，更新时只diff这一部分的VNode
 :::
 ::::
+### JSONP原理
+:::: tabs
+::: tab label=原理
+* 前后端约定一个函数名。
+* **前端定义函数**，并制造一个script标签去请求跨域数据。
+* **后端返回函数的调用代码**，并将数据以参数的形式传入。
+:::
+::: tab label=server.js
+```js{14-16,18-20}
+const express = require('express');
+const app = new express();
+app.listen(8888,() => {
+    console.log('listen 8888');
+});
+
+app.get('/', (req, res) => res.send(`
+<body>
+    <div>首页</div>
+
+    <script>
+        const name = 'hdy'
+        let user;
+        function getUser(userData) {
+            user = userData;
+        }
+        setTimeout(() => {
+            const script = document.createElement('script');
+            script.src = 'http://localhost:8889?name=' + name
+            document.body.appendChild(script);
+
+            // 请求回来后本地user读取正确
+            setTimeout(() => console.log(user), 2000);
+            // {"name":"hdy","age":18,"major":"软件工程"}
+        }, 2000);
+    </script>
+</body>
+`));
+```
+:::
+::: tab label=跨域服务器
+```js{25}
+const express = require('express');
+const app = new express();
+app.listen(8889, () => {
+    console.log('listen 8889');
+});
+
+const database = {
+    hdy: {
+        name: 'hdy',
+        age: 18,
+        major: '软件工程'
+    },
+    zs: {
+        name: '张三',
+        age: 20,
+        major: '法律'
+    }
+}
+
+app.get('/', function(req, res) {
+    const name = req.query.name;
+    const data = database[name] ? JSON.stringify(database[name]) : '{}';
+
+    // 入参到前端会直接解析成对象，因为这是script标签返回内容字段
+    res.send(`getUser(${data})`);
+});
+```
+:::
+::::
+### async/defer
+* 相同点: 异步加载 (fetch)
+* 不同点:
+    * async 加载(fetch)完成后立即执行 (execution)，因此可能会阻塞 DOM 解析；
+    * defer 加载(fetch)完成后延迟到 DOM 解析完成后才会执行(execution)，但会在事件 DomContentLoaded 之前
 ## 操作系统相关
 ### 线程和进程
 :::tip
@@ -800,3 +875,14 @@ app.get('/byby', (req, res) => {
 ```
 :::
 ::::
+## 浏览器相关
+### 浏览器关键渲染路径
+::: tip
+1. 生成 DOM 会从远程下载 Byte，并根据相应的编码 (如 utf8) 转化为字符串，通过 AST 解析为 Token，生成 Node 及最后的 DOM。
+2. 当解析 CSS 文件时，最终会生成 CSSOM
+3. DOM 与 CSSOM 会一起生成 Render Tree，只包含渲染网页所需的节点。
+4. 计算每一个元素在设备视口内的确切位置和大小
+5. 将渲染树中的每个节点转换成屏幕上的实际像素，这一步通常称为绘制或栅格化
+>浏览器元素大小发生变化，**使周围元素布局也要发生变化**，就要从4`重排`开始，性能开销大  
+>如果只是本元素发生变化，不会影响整体的布局，如背景颜色、字体颜色、盒子内容时，就只会触发5`重绘`，性能开销小
+:::

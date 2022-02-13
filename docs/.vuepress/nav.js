@@ -41,6 +41,10 @@ const front = {
             link: '/front/react/'
         },
         {
+            text: 'webpack',
+            link: '/front/webpack/'
+        },
+        {
             text: '工具封装',
             link: '/front/technique/'
         },

@@ -4,7 +4,7 @@ date: 2022-01-07
 tags:
  - 面试题
 ---
-## 手写stringify
+## 1.手写stringify
 
 :::: tabs
 ::: tab label=期望
@@ -63,7 +63,7 @@ function stringify(obj) {
 ```
 :::
 ::::
-## 深浅拷贝
+## 2.深浅拷贝
 :::: tabs
 ::: tab label=期望
 ```js
@@ -85,7 +85,7 @@ function deepClone(obj) {
 ```
 :::
 ::::
-## 事件轮询
+## 3.事件轮询
 :::: tabs
 ::: tab label=问题1
 * [事件轮询知识点](../base/promise.html#宏任务-微任务)
@@ -312,7 +312,7 @@ console.log('script end');
 ```
 :::
 ::::
-## 手写instanceof
+## 4.手写instanceof
 :::: tabs
 ::: tab label=期望
 * [原型链知识点](../base/object.html#原型链)
@@ -340,7 +340,7 @@ function instanceOf(obj, fn) {
 ```
 :::
 ::::
-## 对象flatten扁平化
+## 5.对象flatten扁平化
 :::: tabs
 ::: tab label=期望
 ```js
@@ -416,7 +416,7 @@ function flatten(obj, cKey, ans = {}) {
 ```
 :::
 ::::
-## 手写模板字符串
+## 6.手写模板字符串
 :::: tabs
 ::: tab label=期望
 ```js
@@ -552,7 +552,7 @@ obj['parents']['father']
 ```
 :::
 ::::
-## 简易promise
+## 7.简易promise
 :::: tabs
 ::: tab label=期望
 ```js
@@ -638,7 +638,7 @@ class MyPromise {
 ```
 :::
 ::::
-## 手写filter/reduce
+## 8.手写filter/reduce
 :::: tabs
 ::: tab label=filter
 * 期望
@@ -676,7 +676,7 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 ```
 :::
 ::::
-## 防抖/节流
+## 9.防抖/节流
 :::: tabs
 ::: tab label=防抖要求
 * 说明：连续触发一个函数，只有最后一次触发有效
@@ -804,7 +804,7 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 ```
 :::
 ::::
-## 百度搜索原理
+## 10.百度搜索原理
 :::: tabs
 ::: tab label=效果
 * 电脑搜索输入框输入文字即发送请求，继续输入就取消上次请求，发送新的请求
@@ -884,7 +884,7 @@ app.get('/search', (req, res) => {
 ```
 :::
 ::::
-## 连环log
+## 11.连环log
 :::: tabs
 ::: tab label=期望
 * 一个打印机，可连续调用。wait(3)停三秒，log(1)打印1
@@ -937,7 +937,7 @@ class Printer {
 ```
 :::
 ::::
-## 先发后置
+## 12.先发后置
 :::: tabs
 ::: tab label=问题描述
 * 一个函数多次请求数据，填写进dom里，需要考虑网络因素，后发的请求要放上面
@@ -1075,7 +1075,7 @@ app.post('/data', (req, res) => {
 ```
 :::
 ::::
-## 手写bind
+## 13.手写bind
 :::: tabs
 ::: tab label=期望
 >难点：需要考虑函数式调用和new调用，new调用可以用`instanceof`或`new.target`来判断
@@ -1125,7 +1125,7 @@ Function.prototype.myBind = function(obj, ...args) {
 ```
 :::
 ::::
-## this
+## 14.this
 :::: tabs
 ::: tab label=问题1
 * 注：浏览器和node结果不一样，**node没有全局的window，默认也找不到**
@@ -1263,7 +1263,7 @@ person1.obj.foo2().call(person2); // obj
 ```
 :::
 ::::
-## 手写require
+## 15.手写require
 :::: tabs
 ::: tab label=原理
 * commonJS原理是require的时候将源文件包装成函数执行一遍，module.exports的数据作为返回值
@@ -1310,7 +1310,7 @@ console.log(a); // 0
 ```
 :::
 ::::
-## es6模块化原理
+## 16.es6模块化原理
 :::: tabs
 ::: tab label=ES6
 * ES6模块化会先生成一个依赖关系图，然后根据依赖顺序进行反向执行
@@ -1370,7 +1370,7 @@ export { a, add }
 ```
 :::
 ::::
-## 事件代理
+## 17.事件代理
 :::: tabs
 ::: tab label=代理机制
 * 一个列表每一项都要设置同一个事件的不同效果
@@ -1432,7 +1432,7 @@ export { a, add }
 ```
 :::
 ::::
-## 手写EventTarget
+## 18.手写EventTarget
 :::: tabs
 ::: tab label=期望
 ```js
@@ -1490,7 +1490,7 @@ class MyEventTarget {
 ```
 :::
 ::::
-## 每天自动问好
+## 19.每天自动问好
 :::: tabs
 ::: tab label=localStorage实现
 * 一个网页每天自动问好，使用localStorage
@@ -1511,7 +1511,7 @@ class MyEventTarget {
 ```
 :::
 ::::
-## 手写promise.all
+## 20.手写promise.all
 :::: tabs
 ::: tab label=实现
 ```js{8-12}
@@ -1563,6 +1563,444 @@ promiseAll([p1, p2, p3])
 // Promise.all([p1, p2, p3])
 // .then(res => console.log(res))
 // .catch(err => console.log(err));
+```
+:::
+::::
+## 21.promise.race
+:::: tabs
+::: tab label=问题
+```js
+const p1 = new Promise(resolve => setTimeout(() => resolve('1'), 1000));
+const p2 = new Promise((_, reject) => setTimeout(() => reject('2'), 2000));
+const p3 = new Promise(resolve => setTimeout(() => resolve('3'), 3000));
+
+Promise.race([p1, p2, p3]).then(res => console.log(res)).catch(err => console.log(err));
+Promise.myRace([p1, p2, p3]).then(res => console.log(res)).catch(err => console.log(err));
+```
+:::
+::: tab label=解
+```js
+Promise.myRace = (promiseArr) => {
+    return new Promise((resolve, reject) => {
+        promiseArr.forEach(item => item.then(res => resolve(res)).catch(err => reject(err)))
+    })
+}
+```
+:::
+::::
+## 22.Array(100).map(x => 1)
+* Array(n)会创建一个稀疏数组，稀疏数组内含非真实元素，在控制台上将以 empty 显示
+```js
+console.log(Array(100).map(x => 1)); // [ <100 empty items> ]
+
+console.log(Array(100).fill(null).map(x => 1)); // [1, 1, ....]
+
+console.log(Array.from(Array(100), x => 1)); // [1, 1, ....]
+```
+
+## 23.类数组转化数组
+```html
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <script>
+        const divs = document.querySelectorAll('div');
+        console.log(divs);
+
+        console.log([...divs]);
+        console.log(Array.from(divs));
+        console.log(Array.prototype.slice.call(divs));
+    </script>
+</body>
+```
+
+## 24.如何将数组转化成Iterator对象
+```js
+const arr = [1, 2, 3];
+
+const iterator = arr[Symbol.iterator]();
+console.log(iterator);
+```
+## 25.js实现继承
+```js
+function A() {
+    this.name = 'hdy';
+}
+function B(...args) {
+    A.call(this, ...args)
+    this.age = 18;
+}
+B.prototype = Object.create(A.prototype);
+B.prototype.constructor = B;
+
+const b = new B();
+console.log(b); // B { name: 'hdy', age: 18 }
+```
+## 26.once函数
+:::: tabs
+::: tab label=问题
+* 实现一个函数，让代码只被执行一次，结果有缓存机制
+```js
+function fn(age) {
+    console.log(age);
+    return age * 10;
+}
+
+const onceFn = once(fn);
+console.log(onceFn(1)); // 1 10
+
+// 只执行了一遍，其他结果用缓存
+console.log(onceFn(1)); // 10
+```
+:::
+::: tab label=解
+```js
+function once(fn) {
+    let result;
+    let finish = false;
+    return function(...args) {
+        if(finish) {
+            return result;
+        }
+        result = fn.call(this, ...args);
+        finish = true;
+        return result;
+    }
+}
+```
+:::
+::: tab label=升级
+* 接收纯函数，记录执行结果，避免重复计算
+```js
+function fn(num) {
+    const end = +new Date() + num * 1000;
+    console.log('wait');
+    while (+new Date() < end) {}
+    return num * 1000;
+}
+
+const cacheFn = once(fn);
+console.log(cacheFn(1)); // wait 1000
+console.log(cacheFn(1)); // 1000
+
+console.log(cacheFn(2)); // wait 2000
+
+console.log(cacheFn(1)); // 1000
+console.log(cacheFn(2)); // 2000
+```
+:::
+::: tab label=解
+```js
+function once(fn) {
+    const ansMap = new Map();
+    return function(...args) {
+        const str = args.toString();
+        let ans = ansMap.get(str);
+        if (ans) {
+            return ans;
+        } else {
+            ans = fn.call(this, ...args);
+            ansMap.set(str, ans);
+        }
+        return ans;
+    }
+}
+```
+:::
+::::
+
+## 27.无限累加的sum函数
+:::: tabs
+::: tab label=题
+```js
+sum(1)(2).valueOf(); // 3
+console.log(sum(1)(2)(3)(4).valueOf()); // 10
+```
+:::
+::: tab label=解
+```js
+function sum(num) {
+    let value = num;
+    let fn2 = function(num2) {
+        value += num2;
+        return fn2;
+    }
+    fn2.valueOf = () => value;
+    return fn2;
+}
+```
+:::
+::::
+## 28.解析queryString
+:::: tabs
+::: tab label=问题
+```js
+const url = "https://shanyue.tech?name=%E5%B1%B1%E6%9C%88&a=3&a=4";
+
+console.log(qs(url));
+// {name: '山月', a: [3, 4]}
+```
+* 测试
+```js
+// {}
+"https://shanyue.tech";
+
+// {a: ''}
+"https://shanyue.tech?a";
+
+// {name: '山月'}
+"https://shanyue.tech?name=%E5%B1%B1%E6%9C%88";
+
+// {name: '山月', a: 3}
+"https://shanyue.tech?name=%E5%B1%B1%E6%9C%88&a=3";
+
+// {name: '山月', a: [3, 4]}
+"https://shanyue.tech?name=%E5%B1%B1%E6%9C%88&a=3&a=4";
+
+// {name: '山月', a: 3}
+"https://shanyue.tech?name=%E5%B1%B1%E6%9C%88&a=3#hash";
+
+// {name: '1+1=2'}
+"https://shanyue.tech?name=1%2B1%3D2";
+```
+:::
+::: tab label=解
+```js
+function qs(url) {
+    const reg1 = /(?<=[\.\/]\w+?\?)[^#]+/g;
+    const match = url.match(reg1);
+    if (!match) {
+        return {};
+    }
+    const queryStr = match[0];
+    const queryEntries = queryStr.split('&').map(item => item.split('=').map(item => decodeURIComponent(item)));
+    const queryMap = new Map();
+    queryEntries.forEach(([key, val]) => {
+        if (queryMap.has(key)) {
+            let oldValue = queryMap.get(key);
+            let newValue = Array.isArray(oldValue) ? oldValue.push(val) : [oldValue, val];
+            queryMap.set(key, newValue);
+        } else {
+            queryMap.set(key, val);
+        }
+    })
+    const queryObj = Object.fromEntries(queryMap.entries());
+    return queryObj;
+}
+```
+:::
+::::
+## 29.随机抽数组
+:::: tabs
+::: tab label=题
+```js
+const arr = [1, 2, 3, 4];
+console.log(simple(arr)); // 随机
+```
+:::
+::: tab label=解
+```js
+function simple(arr) {
+    const len = arr.length;
+    const idx = Math.floor(Math.random() * len);
+    return arr[idx];
+}
+```
+:::
+::::
+## 30.监听复制事件
+:::: tabs
+::: tab label=事件侦听
+```html
+<body>
+    <div id="content">1233523423423423</div>
+    <div class="tip hide">禁止复制</div>
+    <script>
+        ;(function() {
+            const content = document.querySelector('#content');
+            function noCopy() {
+                const tip = document.querySelector('.tip');
+                tip.classList.remove('hide');
+            }
+            content.addEventListener('copy', e => {
+                console.log(e);
+                noCopy();
+                e.preventDefault();
+            })
+        })();
+    </script>
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</body>
+```
+:::
+::::
+## 31.翻转字符串
+```js
+const str = 'abcdefg ';
+console.log(reverse(str)); // ' gfedcba'
+```
+```js
+const reverse = str => str.split('').reverse().join('');
+```
+```js
+const reverse = str => [...str].reverse().join('');
+```
+```js
+const reverse = str => [...str].reduceRight((pre, item) => pre + item, '');
+```
+## 32.文件上传
+* [Blob](https://developer.mozilla.org/zh-CN/docs/Web/API/Blob)
+## 33.过滤falsy value
+::: tip
+* falsy: `false`, `null`, `0`, `""`, `undefined`, `NaN`
+:::
+```js
+const filterFalsy = (arr) => arr.filter(Boolean);
+```
+## 33.洗牌函数
+:::: tabs
+::: tab label=题
+```js
+const arr = [1, 2, 3, 4, 5];
+
+shuffle(arr);
+console.log(arr); // 乱序
+```
+:::
+::: tab label=解
+```js
+const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+```
+:::
+::::
+## 34.辅助触发事件
+:::: tabs
+::: tab label=题
+* 一个元素触发另一个元素的事件
+```html{10-12}
+<body>
+    <button id="login">登录按钮</button>
+    <script>
+        const login = document.querySelector("#login");
+        const helper = document.querySelector("#helper");
+        login.addEventListener('click', () => {
+            console.log("登录");
+        });
+
+        document.body.addEventListener('click', () => {
+            login.dispatchEvent(new Event('click'));
+        });
+
+    </script>
+</body>
+```
+:::
+::::
+## 35.取消http请求
+:::: tabs
+::: tab label=服务器
+```js
+const express = require('express');
+const app = new express();
+app.listen(8888,() => {
+    console.log('listen 8888');
+});
+const fs = require('fs');
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    const url = path.join(__dirname, './test.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+});
+
+app.get('/data', (req, res) => res.send({
+    data: '异步请求'
+}));
+```
+:::
+::: tab label=xhr
+```html{16}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        setTimeout(() => {
+            const xhr = new XMLHttpRequest();
+            xhr.addEventListener('load', res => console.log(xhr.response));
+            xhr.open('GET', '/data');
+            xhr.send();
+            xhr.abort();
+        }, 2000);
+    </script>
+</body>
+</html>
+```
+:::
+::: tab label=fetch
+```html{12-14,17}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        setTimeout(() => {
+            const controller = new AbortController();
+            const { signal } = controller;
+            fetch('/data', {signal})
+            .then(res => res.json())
+            .then(res => console.log(res));
+            controller.abort();
+        }, 2000);
+    </script>
+</body>
+</html>
+```
+:::
+::: tab label=axios
+```html{15-16,18,21}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        setTimeout(() => {
+            var CancelToken = axios.CancelToken;
+            var source = CancelToken.source();
+
+            axios.get('/data', { cancelToken: source.token })
+            .then(res => console.log(res.data));
+
+            source.cancel()
+        }, 2000);
+    </script>
+</body>
+
+</html>
 ```
 :::
 ::::

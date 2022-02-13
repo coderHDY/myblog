@@ -406,7 +406,7 @@ tags:
 :::
 :::: tabs
 ::: tab label=等比收缩
-* 只有flex盒子空间不够时才会发生收缩，此参数才会生效
+* 只有flex盒子空间不够时才会发生收缩，此参数才会生效  
 <img src="./assets/flexshrink.png" style="width:400px;">
 
 ```html{21}

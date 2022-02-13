@@ -118,6 +118,9 @@ const front = {
     '/front/react/': [
         '',
     ],
+    '/front/webpack/': [
+        '',
+    ],
     '/front/technique/': [
         '',
         'vue3hooks',
