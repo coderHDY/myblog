@@ -2,7 +2,7 @@
 title: 算法题
 date: 2022-02-10
 ---
-## 移动*
+## 1.移动*
 :::: tabs
 ::: tab label=期望
 * 将数组的*号移动到最前面，不能改变数字顺序。
@@ -54,7 +54,7 @@ function moveStart(arr) {
 :::
 ::::
 
-## 千位分隔符
+## 2.千位分隔符
 :::: tabs
 ::: tab label=题
 ```js
@@ -82,7 +82,7 @@ function split(num) {
 :::
 ::::
 
-## 比较版本号
+## 3.比较版本号
 :::: tabs
 ::: tab label=题
 ```js
@@ -123,7 +123,7 @@ function compare(ver1, ver2) {
 ```
 :::
 ::::
-## 手写getElementById
+## 4.手写getElementById
 :::: tabs
 ::: tab label=题
 ```html
