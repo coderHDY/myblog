@@ -14,6 +14,7 @@ const callbacksMap = new Map([
                         'https://freetyst.nf.migu.cn/public%2Fringmaker01%2Fn16%2F2016%2F11%2F2013%E5%B9%B404%E6%9C%8816%E6%97%A5%E7%8B%AC%E7%AB%8B%E9%9F%B3%E4%B9%90%E4%BA%BA%E5%BC%95%E5%85%A5%E6%9D%8E%E8%8D%A3%E6%B5%A9%E5%86%85%E5%AE%B9%E5%87%86%E5%85%A52%E9%A6%96%2F%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC%2FMp3_64_22_16%2F%E8%80%81%E8%A1%97-%E6%9D%8E%E8%8D%A3%E6%B5%A9.mp3?Key=f17e3de98ff177ed&Tim=1643296347833&channelid=01&msisdn=3b0a2d3ed06f4e9e821fa22c83e64aa5',
                         'https://freetyst.nf.migu.cn/public%2Fproduct5th%2Fproduct27%2F2018%2F12%2F27%2F2015%E5%B9%B41%E6%9C%8823%E6%97%A5%E7%B4%A7%E6%80%A5%E5%87%86%E5%85%A5%E5%BF%97%E8%88%AA%E9%A2%84%E7%95%998%E9%A6%96%2F%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC%2FMp3_64_22_16%2F69539200025.mp3?Key=3a2b8912bd8c8541&Tim=1643280510725&channelid=01&msisdn=938d7b91f5144235a4ab4a9901487275',
                         '/assets/music/sailiya1.mp3',
+                        '/assets/music/lovesmenot.mp3',
                     ],
                     comp: 'mymusic',
                 }

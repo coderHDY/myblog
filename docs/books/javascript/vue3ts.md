@@ -148,15 +148,6 @@ date: 2022-01-14
 ::::
 ## 第2节 class/style绑定
 :::: tabs
-::: tab label=vscode自定义代码片段
-* [生成网址](https://snippet-generator.app/)，填入名称、片段、快捷键。生成代码  
-<img src="./assets/vscodezidingyi.png" style="width:400px;">
-
-* vscode->首选项->用户片段->html，填入代码  
-<img src="./assets/vscodezidingyi2.png" style="width:300px;">
-
-* html文件内输入快捷键即可拿到片段
-:::
 ::: tab label=动态class
 * 动态绑定`class名`和`展示判断`
 ```html{5,20-21}
