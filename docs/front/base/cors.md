@@ -581,6 +581,28 @@ export default {
 ::: tab label=效果
 ![](./assets/vueproxy.png)
 :::
+::: tab label=react
+* 安装插件
+```shell
+npm i http-proxy-middleware
+```
+* src目录下创建文件，名字固定，react脚手架会调用
+* 可以创建多个代理
+```js
+// src/setupProxy.js
+const proxy = require('http-proxy-middleware')
+
+module.exports = function(app) {
+  app.use(
+    proxy.createProxyMiddleware('/api1', {
+      target: 'http://localhost:8888',
+      changeOrigin: true,
+      pathRewrite: {'^/api1': ''}
+    })
+  )
+}
+```
+:::
 ::::
 ### Nginx
 ::: tip

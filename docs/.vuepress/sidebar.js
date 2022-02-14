@@ -189,6 +189,7 @@ const skill = {
     '/skill/smalltips/': [
         '',
         'vuepress',
+        'vscode',
     ]
 }
 
