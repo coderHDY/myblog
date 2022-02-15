@@ -65,3 +65,7 @@ app.listen(port, () => {
 ```shell
 npm config set registry https://registry.npm.taobao.org
 ```
+* 检查
+```shell
+npm get config registry
+```

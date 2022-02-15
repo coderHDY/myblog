@@ -212,6 +212,8 @@ function sortArray(arr) {
                 break;
             }
         }
+
+        // 比最后一个大，插到最后去
         if (len === ans.length) {
             ans.splice(len, 0, arr[i]);
         }

@@ -117,6 +117,7 @@ const front = {
     ],
     '/front/react/': [
         '',
+        'cli',
     ],
     '/front/webpack/': [
         '',
