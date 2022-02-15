@@ -521,19 +521,6 @@ class MyInput extends React.Component {
 }
 ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ```
-* 函数式组件：useRef
-```js{2,3,6}
-function MyInput() {
-    const input1 = React.useRef(null);
-    const show = () => console.log(input1.current.value);
-    return (
-        <div>
-            <input type="text" ref={input1} onBlur={show}/>
-        </div>
-    )
-}
-ReactDOM.render(<MyInput/>, document.getElementById('root'));
-```
 :::
 ::: tab label=event
 >React的自定义事件能做出更好的兼容性（IE9）
@@ -547,6 +534,11 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ## 函数式组件
 :::: tabs
 ::: tab label=state
+>根本问题：组件内不能用this
+* 函数式组件只能使用简单组件（无状态组件），只接收props进行展示。
+* 可以用hooks解决：
+    1. useState
+    2. useRef
 ```js{2-3,7-8}
 function Login() {
     const [account, setAccount] = React.useState('');
@@ -561,6 +553,21 @@ function Login() {
     )
 }
 ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
+::: tab label=useRef
+* 函数式组件使用ref：useRef
+```js{2,3,6}
+function MyInput() {
+    const input1 = React.useRef(null);
+    const show = () => console.log(input1.current.value);
+    return (
+        <div>
+            <input type="text" ref={input1} onBlur={show}/>
+        </div>
+    )
+}
+ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ```
 :::
 ::::
