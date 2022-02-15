@@ -283,6 +283,30 @@ class MyComponent extends React.Component {
 ReactDOM.render(<MyComponent />, document.getElementById('root'));
 ```
 :::
+::: tab label=科里化
+* 利用科里化，减少函数入参，达到一个函数双向绑定多个input输入框的效果
+```js{7,12-13}
+class Login extends React.Component {
+    state = {
+        account: '',
+        pwd: ''
+    }
+    login = () => console.log(`用户名：${this.state.account}，密码：${this.state.pwd}`);
+    saveState = (key) => (e) => this.setState({[key]: e.target.value});
+    render() {
+        const {account, pwd} = this.state;
+        return (
+            <div>
+                <input type="text" value={account} onChange={this.saveState('account')} />
+                <input type="text" value={pwd} onChange={this.saveState('pwd')} />
+                <button onClick={this.login}>登录</button>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
 ::: tab label=props
 * props使用注意事项：
     * props是只读属性，如果要做操作，先解构出来。
@@ -512,9 +536,297 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ```
 :::
 ::: tab label=event
+>React的自定义事件能做出更好的兼容性（IE9）
 * React组件上声明的事件最终绑定到了`document`这个DOM节点上，而不是React组件对应的DOM节点。故只有document这个节点上面才绑定了DOM原生事件，其他节点没有绑定事件。这样简化了DOM原生事件，减少了内存开销
-* React以队列的方式，从触发事件的组件向父组件回溯，调用它们在JSX中声明的callback。也就是**React自身实现了一套事件冒泡机制**。我们没办法用event.stopPropagation()来停止事件传播，**应该使用event.preventDefault()**
+* React以队列的方式，从触发事件的组件向父组件回溯，调用它们在JSX中声明的callback。也就是**React自身实现了一套事件冒泡机制**。event.stopPropagation()停止事件传播
 * React有一套自己的`合成事件SyntheticEvent`，不同类型的事件会构造不同的SyntheticEvent
 * React使用对象池来管理合成事件对象的创建和销毁，这样减少了垃圾的生成和新对象内存的分配，大大提高了性能
+>例：document内有100个onClick事件，但是统一收集在document上，事件冒泡机制，event.target又能拿到对应的元素，绑定的一个对应的方法，进行触发。完成事件代理。
+:::
+::::
+## 函数式组件
+:::: tabs
+::: tab label=state
+```js{2-3,7-8}
+function Login() {
+    const [account, setAccount] = React.useState('');
+    const [pwd, setPwd] = React.useState('');
+    const login = () => console.log(`用户名：${account}，密码：${pwd}`);
+    return (
+        <div>
+            <input type="text" value={account.value} onChange={(e) => setAccount(e.target.value)} />
+            <input type="text" value={pwd.value} onChange={(e) => setPwd(e.target.value)} />
+            <button onClick={login}>登录</button>
+        </div>
+    )
+}
+ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
+::::
+## 生命周期
+:::: tabs
+::: tab label=概览
+>挂载
+* `constructor`：(props) => void
+* static getDerivedStateFromProps：(props, state) => overwriteState
+* render
+* `componentDidMount`
+>更新
+* static getDerivedStateFromProps：(props, state) => overwriteState
+* `shouldComponentUpdate`: (nextProps, nextState) => boolean
+* render
+* `getSnapshotBeforeUpdate`
+* `componentDidUpdate`
+>卸载
+* `componentWillUnmount`
+>错误处理
+* static getDerivedStateFromError
+* `componentDidCatch`
+
+:::
+::: tab label=旧钩子
+* componentWillReceiveProps:在父组件更新props的时候调用
+![](./assets/jiugouzi.jpeg)
+:::
+::: tab label=新钩子
+* [官网图](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+* 删除：
+    1. ~~componentWillMount~~
+    2. ~~componentWillUpdate~~
+    3. ~~componentWillReceiveProps~~
+* 新增(很少用)：
+    1. static getDerivedStateFromProps
+    2. getSnapshotBeforeUpdate
+
+![](./assets/xingouzi.png)
+
+>主要`8个`钩子:5个常用的（粗体），三个不常用的
+:::
+::: tab label=更新
+* 触发更新：`setState`、`props`更新
+* 强制更新：`forceUpdate`
+>注：强制更新不触发`shouldComponentUpdate`
+* `shouldComponentUpdate`: (nextProps, nextState) => boolean
+* `getSnapshotBeforeUpdate`: (props, state) => payload
+* `componentDidUpdate`: (props, state, payload) => void
+>`getSnapshotBeforeUpdate`能够拿到改变前的状态快照，必须有返回值，传给`componentDidUpdate`的第三个参数。  
+>要用`getSnapshotBeforeUpdate`必须要用`componentDidUpdate`。
+```js{12-13,15-20}
+class Login extends React.Component {
+    state = { num: 0 }
+    render() {
+        return (
+            <div>
+                <button onClick={this.addOne}>+1</button>
+                {this.state.num}
+            </div>
+        )
+    }
+
+    // 每次点击依次触发：shouldComponentUpdate -> componentDidUpdate
+    addOne = () => this.setState({num: this.state.num + 1});
+
+    componentDidMount() {
+        // 只触发 componentDidUpdate
+        setInterval(() => {
+            this.forceUpdate();
+        }, 2000)
+    }
+
+    shouldComponentUpdate() {
+        console.log('shouldComponentUpdate');
+        return true;
+    }
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+    }
+}
+ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
+::: tab label=更新阀门
+* `shouleComponentUpdate`:(nextProps, nextState) => boolean
+* 返回boolean来确定是否更新
+* forceUpdate可以绕过这个阀门强制更新
+```js
+class Login extends React.Component {
+    state = { num: 0 }
+    render() {
+        return (
+            <div>
+                <button onClick={this.addOne}>+1</button>
+                <button onClick={this.updateView}>更新视图</button>
+                {this.state.num}
+            </div>
+        )
+    }
+
+    // 点击状态+1了，但阀门阻止了视图更新
+    addOne = () => this.setState({num: this.state.num + 1});
+    shouldComponentUpdate(...args) {
+        return false;
+    }
+
+    // 绕过阀门强制更新
+    updateView = () => this.forceUpdate()
+}
+ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
+::: tab label=卸载
+```js{11,14}
+class Login extends React.Component {
+    render() {
+        return (
+            <div>
+                拜拜您嘞！
+            </div>
+        )
+    }
+    componentDidMount() {
+        setTimeout(() => {
+            ReactDOM.unmountComponentAtNode(document.getElementById('root'));
+        }, 2000)
+    }
+    componentWillUnmount() {
+        console.log('unmount');
+    }
+}
+ReactDOM.render(<Login/>, document.getElementById('root'));
+```
+:::
+::: tab label=getDerivedStateFromProps
+* Derived：衍生
+* 本组件某个state完全依赖于外部props
+```html{32-34}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="./react/packages/react.development.js" crossorigin></script>
+    <script src="./react/packages/react-dom.development.js" crossorigin></script>
+    <script src="./react/packages/babel.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="root"></div>
+
+<script type="text/babel">
+class Father extends React.Component {
+    state = {
+        num: 0
+    }
+    addOne = () => this.setState({num: this.state.num + 1});
+    render() {
+        const { num } = this.state;
+        return (
+            <div>
+                爹: <button onClick={this.addOne}>+1</button>
+                <Child num={num}/>
+            </div>
+        )
+    }
+}
+class Child extends React.Component {
+    static getDerivedStateFromProps(props, state) {
+        return {money: props.num};
+    }
+    state = {
+        money: 0
+    }
+    render() {
+        return (
+            <div>
+                钱：{this.state.money}
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(<Father/>, document.getElementById('root'));
+</script>
+</body>
+
+</html>
+```
+:::
+::: tab label=getSnapshotBeforeUpdate
+>案例：不断地从上往下出新闻，同时保持当前阅读位置不变，就要在`getSnapshotBeforeUpdate`拿到当前看的位置距离底部的距离，传给`componentDidMount`，让更新后这个数字保持不变
+```html{48-51,56-65}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="./react/packages/react.development.js" crossorigin></script>
+    <script src="./react/packages/react-dom.development.js" crossorigin></script>
+    <script src="./react/packages/babel.min.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    .container {
+        width: 100px;
+        height: 150px;
+        background-color: rgb(250, 180, 134);
+        overflow: auto;
+    }
+    .news {
+        width: 100px;
+        height: 30px;
+        background-color: rgb(134, 204, 250);
+        margin-bottom: 3px;
+    }
+</style>
+<body>
+    <div id="root"></div>
+
+<script type="text/babel">
+class News extends React.Component {
+    state = {
+        newsArr: [],
+    }
+    render() {
+        const { newsArr } = this.state;
+        return (
+            <div className="container" ref="container">
+                {newsArr.map(item => <div className="news" key={item}>{item}</div>)}
+            </div>
+        )
+    }
+    addNews = () => {
+        const { newsArr } = this.state;
+        const news = `新闻${newsArr.length + 1}`;
+        this.setState({
+            newsArr: [news, ...newsArr]
+        })
+    }
+    componentDidMount() {
+        // 不断地从上向下出新闻
+        this.timer = setInterval(this.addNews, 1000);
+    }
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
+    getSnapshotBeforeUpdate() {
+        const container = this.refs.container;
+        const scrollBottom = container.scrollHeight - container.scrollTop;
+        return scrollBottom;
+    }
+    componentDidUpdate(_, __, oldscrollBottom) {
+        // 更新后保持距离底部距离不变
+        const { container } = this.refs;
+        container.scrollTop = container.scrollHeight - oldscrollBottom;
+    }
+}
+ReactDOM.render(<News/>, document.getElementById('root'));
+</script>
+</body>
+
+</html>
+```
 :::
 ::::
