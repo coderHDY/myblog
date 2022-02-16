@@ -205,3 +205,47 @@ function getElementById(id) {
 ```
 :::
 ::::
+## 5.合并对象
+:::: tabs
+::: tab label=题
+```js
+const obj1 = {a: 1, b: 2, c: {d: 3}, j: 7};
+const obj2 = {a: 4, b: {e: 5}, c: {f: 6}};
+
+console.log(merge(obj1, obj2));
+// { a: 4, b: {e: 5}, c: {d: 3, f: 6}, j: 7 }
+```
+:::
+::: tab label=解
+* 规则：
+    1. o1 / o2 都是对象就深度合并比较
+    2. o1 / o2 都是非引用对象就o2覆盖
+    3. o1普通/ o2引用 用o2覆盖
+```js{7-15}
+const obj1 = {a: 1, b: 2, c: {d: 3}, j: 7};
+const obj2 = {a: 4, b: {e: 5}, c: {f: 6}};
+
+function merge(obj1, obj2) {
+    const ans = JSON.parse(JSON.stringify(obj1));
+
+    const mergeSamePro = (o1, o2, key) => {
+        if (typeof o1[key] === 'object'  && o1[key] != null && typeof o2[key] === 'object' && o2[key] != null) {
+            Object.entries(o2[key]).forEach(([k, val]) => mergeSamePro(o1[key], o2[key], k));
+        } else if (typeof o2[key] === 'object') {
+            o1[key] = o2[key] === null ? o1[key] : o2[key];
+        } else {
+            o1[key] = o2[key];
+        }
+    }
+
+    Object.entries(obj2).forEach(([key, val]) => {
+        mergeSamePro(ans, obj2, key);
+    })
+    return ans;
+}
+
+console.log(merge(obj1, obj2));
+// { a: 4, b: {e: 5}, c: {d: 3, f: 6}, j: 7 }
+```
+:::
+::::

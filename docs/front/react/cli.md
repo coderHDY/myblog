@@ -35,5 +35,6 @@ create-react-app demo
 :::
 ::: tab label=插件
 * vscode语法提示：ES7+ React/Redux/React-Native snippets
+* uuid：生成唯一序列码
 :::
 ::::
