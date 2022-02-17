@@ -533,7 +533,7 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ::::
 ## 函数式组件
 :::: tabs
-::: tab label=state
+::: tab label=useState
 >根本问题：组件内不能用this
 * 函数式组件只能使用简单组件（无状态组件），只接收props进行展示。
 * 可以用hooks解决：

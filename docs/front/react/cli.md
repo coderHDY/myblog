@@ -38,3 +38,221 @@ create-react-app demo
 * uuid：生成唯一序列码
 :::
 ::::
+## 使用hook
+:::: tabs
+::: tab label=使用hook
+* 函数式组件，需要使用useState/useRef/useEffect来填补没有this/生命周期的缺陷。
+* 同时，也可以利用hook将数据及操作数据的方法进行封装，暴露出对应的数据及方法，在组件内直接调用，组件代码更清晰。
+```jsx
+export default function TodoList() {
+    const {
+        jobs,
+        addJob,
+        deleteJob,
+        toggleDone,
+        clear
+    } = useJobs();
+    return (
+        <div>
+            <Add addJob={addJob} />
+            <List jobs={jobs} deleteJob={deleteJob} toggleDone={toggleDone}/>
+            <Footer clear={clear} jobs={jobs}/>
+        </div>
+    )
+}
+```
+:::
+::: tab label=useJobs
+```js
+import React, { useState } from 'react';
+function useJobs() {
+    const [jobs, setJobs] = useState([])
+    const addJob = (job) => {
+        const item = {
+            id: uuid(),
+            done: false,
+            job
+        }
+        setJobs( [item, ...jobs] );
+    }
+    const deleteJob = (id) => {
+        const newJobs = jobs.filter(item => item.id !== id);
+        setJobs(newJobs);
+    }
+    const toggleDone = (id) => {
+        const newJobs = jobs.map(item => {
+            if (item.id === id) {
+                item.done = !item.done;
+            }
+            return item;
+        })
+        setJobs(newJobs);
+    }
+    const clear = () => setJobs([]);
+    return {
+        jobs,
+        addJob,
+        deleteJob,
+        toggleDone,
+        clear
+    }
+}
+```
+:::
+::::
+## 跨域
+:::: tabs
+::: tab label=setupProxy
+* [文档](https://create-react-app.dev/docs/proxying-api-requests-in-development)
+* 在src同级目录下配置setupProxy.js文件
+* app.use可以接收多个proxy代理
+```js
+const proxy = require('http-proxy-middleware')
+
+module.exports = function(app) {
+  app.use(
+    proxy.createProxyMiddleware('/api1', {
+      target: 'http://localhost:8888',
+      changeOrigin: true,
+      pathRewrite: {'^/api1': ''}
+    })
+  )
+}
+```
+:::
+::: tab label=请求
+* 开头用指定好的url开头段，就会进行node代理发送
+```jsx{6}
+import React, { Component } from 'react'
+
+export default class TodoList extends Component {
+  componentDidMount() {
+    console.log('fetch...');
+    fetch('/api1/info', {
+      method: 'GET'
+    }).then(res => res.json())
+    .then(res => console.log(res));
+  }
+  render() {
+    return (
+      <div>TodoList</div>
+    )
+  }
+}
+
+```
+:::
+::: tab label=package.json
+* 请求源服务器资源不存在时，再转发请求
+* 劣势：只能配置一个跨域服务器，有多个跨域服务器就要用setupProxy
+```json
+"proxy": "http://localhost:8888"
+```
+* 对应请求
+```js
+fetch('/info', {
+    method: 'GET'
+}).then(res => res.json())
+.then(res => console.log(res));
+```
+>react-scripts模块中从2开始改变了proxy的配置方式，只能使用字符串配置，要复杂配置就用setupProxy
+:::
+::::
+
+
+## pubsub
+:::: tabs
+::: tab label=使用
+```shell
+npm i pubsub-js
+```
+* 订阅
+>注：有一个多余参数，是本事件的type
+```js{4}
+import PubSub from "pubsub-js";
+
+const [isLoading, setIsLoading] = useState(false);
+PubSub.subscribe('setIsLoading', (_, state) => setIsLoading(state));
+```
+:::
+::: tab label=发布
+```js{3,7}
+const [data, setData] = useState([]);
+const searchData = (_, tip) => {
+    PubSub.publish('setIsLoading', true);
+    fetch(`/api/search/users?q=${tip}`)
+        .then(res => res.json())
+        .then(res => {
+            PubSub.publish('setIsLoading', false);
+            setData(res.items)
+        })
+        .catch(rea => PubSub.publish('setIsErr', true))
+}
+```
+:::
+::: tab label=卸载
+```js
+const token = PubSub.subscribe('setIsLoading', fn);
+PubSub.unsubscribe(token);
+```
+:::
+::::
+## antd
+:::: tabs
+::: tab label=安装
+* [官网](https://ant.design/components/button-cn/)
+>文档不够完整可以看3.x版本的文档
+```js
+// app.js
+import 'antd/dist/antd.css';
+```
+* 组件内直接引入使用
+```jsx
+import React from 'react'
+import { Button } from 'antd';
+export default function Test() {
+    return (
+        <>
+            <Button type="primary">Primary Button</Button>
+            <Button>Default Button</Button>
+            <Button type="dashed">Dashed Button</Button>
+            <br />
+            <Button type="text">Text Button</Button>
+            <Button type="link">Link Button</Button>
+        </>
+    )
+}
+```
+:::
+::: tab label=按序引入
+* css原本还是全部引入，有60KB，按序引入可以减少项目大小
+* [react-app-rewired](https://github.com/timarney/react-app-rewired)
+```shell
+npm i react-app-rewired customize-cra babel-plugin-import
+```
+```json
+// package.json
+"scripts": {
+   "start": "react-app-rewired start",
+   "build": "react-app-rewired build",
+   "test": "react-app-rewired test",
+}
+```
+```js
+// config-overrides.js
+const { override, fixBabelImports } = require('customize-cra');
+
+module.exports = override(
+  fixBabelImports('import', {
+    libraryName: 'antd',
+    libraryDirectory: 'es',
+    style: 'css',
+  }),
+);
+```
+* 组件引入
+```js
+import { Button } from 'antd';
+```
+:::
+::::

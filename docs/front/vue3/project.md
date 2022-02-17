@@ -26,9 +26,14 @@ trim_trailing_whitespace = false # md文件关闭尾部去空格
 max_line_length = off # md文件关闭尾部去空格
 ```
 >vscode需要安装插件才能读取该文件的风格`EditorConfig for VS Code`
+* vscode的settings.json文件加两行，即可在保存时自动格式化
+```json
+"eslint.autoFixOnSave": true,
+"editor.formatOnSave": true
+```
 :::
 ::: tab label=prettier
-* 让代码风格更好看的格式化工具，自动调整一些细节代码风格
+* 自动调整一些细节代码风格。能够一次性格式化所有文件代码
 >vscode 有`Prettier - Code formatter`插件，安装才会生效
 * 项目内安装
 ```shell
@@ -80,11 +85,6 @@ npm i prettier -D
 **/*.sh
 
 /public/*
-```
-* vscode的settings.json文件加两行
-```json
-"eslint.autoFixOnSave": true,
-"editor.formatOnSave": true
 ```
 * package.json文件新建脚本，自动格式化所有文件
 ```shell

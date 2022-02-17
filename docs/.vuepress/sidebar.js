@@ -191,6 +191,7 @@ const skill = {
         '',
         'vuepress',
         'vscode',
+        'tools',
     ]
 }
 
