@@ -224,9 +224,10 @@ export default function Test() {
 }
 ```
 :::
-::: tab label=按序引入
+::: tab label=按需引入
 * css原本还是全部引入，有60KB，按序引入可以减少项目大小
 * [react-app-rewired](https://github.com/timarney/react-app-rewired)
+* 按需引入库：[ babel-plugin-import]
 ```shell
 npm i react-app-rewired customize-cra babel-plugin-import
 ```
@@ -253,6 +254,186 @@ module.exports = override(
 * 组件引入
 ```js
 import { Button } from 'antd';
+```
+:::
+::: tab label=自定义主题
+* 自定义主题暂时不能按需加载css文件
+```shell
+npm i @craco/craco craco-less
+```
+```js
+// craco.config.js
+const CracoLessPlugin = require('craco-less');
+
+module.exports = {
+    plugins: [
+        {
+            plugin: CracoLessPlugin,
+            options: {
+                lessLoaderOptions: {
+                    lessOptions: {
+                        modifyVars: { '@primary-color': '#1DA57A' },
+                        javascriptEnabled: true,
+                    },
+                },
+            },
+        },
+    ],
+};
+
+```
+```js
+// index.js
+import 'antd/dist/antd.less';
+```
+:::
+::::
+## antd mobile
+:::: tabs
+::: tab label=使用
+```shell
+npm install --save antd-mobile@next
+```
+```js
+import React from 'react'
+import { Button } from 'antd-mobile';
+export default function Test() {
+    return (
+        <>
+            <Button block color='primary' size='large'>
+                Block Button
+            </Button>
+        </>
+    )
+}
+
+```
+:::
+::: tab label=主体色
+```css
+/* index.css */
+:root:root {
+    --adm-color-primary: #a062d4;
+}
+```
+```js
+// index.js
+import './index.css';
+```
+:::
+::::
+## 样式适配
+:::: tabs
+::: tab label=pm2rem
+* pm2rem
+```shell
+npm i postcss-px2rem customize-cra react-app-rewired
+```
+```js
+// config-overrides.js
+const { override, addPostcssPlugins } = require('customize-cra');
+module.exports = override(
+    addPostcssPlugins([require('postcss-px2rem')({ remUnit: 375 / 10 })])
+);
+```
+```json
+// package.json
+"scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test"
+},
+```
+:::
+::: tab label=字体适配方案
+* 通过计算文档宽度，得出根文件的font-size，从而控制整个文件的rem大小
+```js
+function adaptor() {
+    const width = document.documentElement.clientWidth;
+    const size = width / 10;
+    document.documentElement.style.fontSize = size + 'px';
+}
+adaptor()
+window.onresize = adaptor;
+```
+:::
+::: tab label=样式重置
+```css
+/* reset.css */
+html,
+body,
+p,
+ol,
+ul,
+li,
+dl,
+dt,
+dd,
+blockquote,
+figure,
+fieldset,
+legend,
+textarea,
+pre,
+iframe,
+hr,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+ul {
+  list-style: none;
+}
+
+button,
+input,
+select {
+  margin: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+img,
+video {
+  height: auto;
+  max-width: 100%;
+}
+
+iframe {
+  border: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
 ```
 :::
 ::::

@@ -15,8 +15,8 @@ categories:
 * 把f(n)拆分为f(1),f(2)....f(n-1)
 * 如何把f(1)...f(n-1)的解转化为f(n)的解，就是状态转移方程
 :::
-## 做题
-### 爬楼梯
+
+## 70.爬楼梯
 ::: tip 
 * 需要爬n阶楼梯
 * 一次爬1阶或两阶
@@ -101,7 +101,7 @@ function climbStairs(n) {
 ```
 :::
 ::::
-### 最大子数组和
+## 53.最大子数组和
 ::: tip
 * 给一个整数数组（可能有负数）
 * 求最大子数组的和
@@ -167,7 +167,7 @@ function maxSubArray(num) {
 ```
 :::
 ::::
-### 最长递增子序列
+## 300.最长递增子序列
 ::: tip
 * 给一个整数数组
 * 找到最长严格递增子序列
@@ -196,6 +196,45 @@ function lengthOfLIS(nums) {
         dp[i] = max;
     }
     return Math.max(...dp);
+}
+```
+:::
+::::
+## 509 斐波那契数
+:::: tabs
+::: tab label=题
+```js
+// F(0) = 0，F(1) = 1
+// F(n) = F(n - 1) + F(n - 2)，其中 n > 1
+const n = 2;
+console.log(fib(n))
+// 输出：1
+// 解释：F(2) = F(1) + F(0) = 1 + 0 = 1
+```
+:::
+::: tab label=暴力解
+>时间：40.88%  
+>空间：14.16%
+```js
+function fib(n) {
+    return n === 0 || n === 1 ? n : fib(n - 1) + fib(n - 2)
+}
+```
+:::
+::: tab label=动态规划
+>时间：91.79%  
+>空间：10.56%
+```js
+function fib(n) {
+    if (n < 2) return n;
+    let one = 0;
+    let two = 1;
+    for(let i = 2; i < n; i++) {
+        const temp = one;
+        one = two;
+        two = temp + two;
+    }
+    return one + two;
 }
 ```
 :::

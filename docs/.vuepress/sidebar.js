@@ -71,6 +71,7 @@ const front = {
                 'greedy',
                 'dynamic',
                 'tree',
+                'leetcode',
             ]
         }
     ],
@@ -118,6 +119,7 @@ const front = {
     '/front/react/': [
         '',
         'cli',
+        'router',
     ],
     '/front/webpack/': [
         '',

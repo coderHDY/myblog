@@ -533,6 +533,11 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ::::
 ## 函数式组件
 :::: tabs
+::: tab label=优势
+* 16.8开始支持
+* 复用性强，class组件逻辑复用性不强
+* 逻辑整合，将相关的逻辑整合到一起，
+:::
 ::: tab label=useState
 >根本问题：组件内不能用this
 * 函数式组件只能使用简单组件（无状态组件），只接收props进行展示。
