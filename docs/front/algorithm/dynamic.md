@@ -239,3 +239,132 @@ function fib(n) {
 ```
 :::
 ::::
+##  1137.第 N 个泰波那契数
+:::: tabs
+::: tab label=题
+* [题](https://leetcode-cn.com/problems/n-th-tribonacci-number/):T0 = 0, T1 = 1, T2 = 1,Tn+3 = Tn + Tn+1 + Tn+2
+```js
+const n = 4;
+console.log(tribonacci(n));
+// 输出：4
+// 解释：
+// T_3 = 0 + 1 + 1 = 2
+// T_4 = 1 + 1 + 2 = 4
+```
+:::
+::: tab label=动态规划
+>时间：80.42%　　
+>空间：11.51%
+```js
+function tribonacci(n) {
+    const arr = [0, 1, 1];
+    for(let i = 3; i <= n; i++) {
+        arr[i] = arr[i - 1] + arr[i - 2] + arr[i - 3];
+    }
+    return arr[n];
+}
+```
+:::
+::: tab label=三指针优化
+* 已经用过的数组实际上用不到，只会用到最后的几个数字。注意把控好几个数字的加减关系
+>时间：96.68%  
+>空间：13.68%
+```js
+function tribonacci(n) {
+    if (n < 2) return n;
+    if (n === 2) return 1;
+    let one = 0;
+    let two = 1;
+    let three = 1;
+    for (let i = 4; i <= n; i++) {
+        const temp = one;
+        one = two;
+        two = three;
+        three = temp + one + two;
+    }
+    return one + two + three;
+}
+```
+:::
+::::
+## 64.最小路径和
+:::: tabs
+::: tab label=题
+* 给一个n*n的表格，从左上到右下的最小路径和
+```js
+const grid = [[1,3,1],[1,5,1],[4,2,1]];
+console.log(minPathSum(grid));
+// 输出：7
+// 解释：因为路径 1→3→1→1→1 的总和最小。
+```
+:::
+::: tab label=动态规划
+* 动态规划：制作一个一样的表格，每个位置存储当前最短路径，返回右下数字，即为最短路径。
+>时间：96.41%  
+>空间：19.01%
+```js
+function minPathSum(grid) {
+    const row = grid.length;
+    const col = grid[0].length;
+    const ans = Array(row).fill(null);
+    ans.forEach((item, idx) => ans[idx] = []);
+    const setMinPath = (i, j) => {
+        if (i > 0 && j > 0) {
+            ans[i][j] = Math.min(ans[i - 1][j], ans[i][j - 1]) + grid[i][j];
+        } else if (i > 0) {
+            ans[i][j] = ans[i - 1][j] + grid[i][j];
+        } else if (j > 0) {
+            ans[i][j] = ans[i][j - 1] + grid[i][j];
+        } else {
+            ans[i][j] = grid[i][j];
+        }
+    }
+    for (let i = 0; i < row; i++) {
+        for (let j = 0; j < col; j++) {
+            setMinPath(i, j);
+        }
+    }
+    return ans[row - 1][col - 1];
+}
+```
+:::
+::::
+## 17.电话
+:::: tabs
+::: tab label=题
+* 九宫格电话输入后有多少种排列方式
+```js
+const digits = "23"
+console.log(letterCombinations(digits));
+// ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+```
+:::
+::: tab label=解
+>时间：95.72%  
+>空间：11.18%
+* 二层遍历，做二维数组，然后再打平。
+```js{14-20}
+function letterCombinations(digits) {
+    if (digits === '') return [];
+    const deps = {
+        [2]: ['a', 'b', 'c'],
+        [3]: ['d', 'e', 'f'],
+        [4]: ['g', 'h', 'i'],
+        [5]: ['j', 'k', 'l'],
+        [6]: ['m', 'n', 'o'],
+        [7]: ['p', 'q', 'r', 's'],
+        [8]: ['t', 'u', 'v'],
+        [9]: ['w', 'x', 'y', 'z'],
+    };
+    const digitArr = digits.split('').map(item => +item);
+    return digitArr.reduce((pre, item) => {
+        let dep = deps[item];
+        if (!pre) {
+            return [...dep];
+        }
+        return dep.map(item => pre.map(i => i + item)).flat(2);
+    }, null)
+}
+```
+:::
+::::

@@ -67,7 +67,6 @@ const front = {
             collapsable: false,
             children: [
                 'sort',
-                'string',
                 'greedy',
                 'dynamic',
                 'tree',
