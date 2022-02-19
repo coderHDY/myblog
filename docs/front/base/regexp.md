@@ -289,6 +289,8 @@ console.log(str.match(reg2)); // [ 'Hello', 'world', '!' ]
 * 【\B】**字母**间的间距。
 * 【\w】匹配所有字母数字下划线。相当于：[a-zA-Z0-9_]
 * 【\W】匹配所有非字母数字下划线。相当于：[^a-zA-Z0-9_]
+* 【\d】匹配一个数字
+* 【\D】匹配一个非数字
 ```js
 const str = '1万_1W';
 const reg1 = /\w/g;
@@ -302,6 +304,14 @@ const reg4 = /[^a-zA-Z0-9_]/g;
 
 console.log(str.match(reg3)); // [ '万' ]
 console.log(str.match(reg4)); // [ '万' ]
+```
+```js
+const str = '123sf';
+const reg = /\d/g;
+const reg2 = /\D/g;
+
+console.log(str.match(reg)); // [ '1', '2', '3' ]
+console.log(str.match(reg2)); // [ 's', 'f' ]
 ```
 :::
 ::: tab label=位置限定
