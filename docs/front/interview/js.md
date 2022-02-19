@@ -1768,25 +1768,27 @@ console.log(qs(url));
 ::: tab label=解
 ```js
 function qs(url) {
-    const reg1 = /(?<=[\.\/]\w+?\?)[^#]+/g;
-    const match = url.match(reg1);
+    const reg = /(?<=[\.\/]\w+\?)[^#]+/g;
+    const match = url.match(reg)[0];
     if (!match) {
         return {};
     }
-    const queryStr = match[0];
-    const queryEntries = queryStr.split('&').map(item => item.split('=').map(item => decodeURIComponent(item)));
-    const queryMap = new Map();
-    queryEntries.forEach(([key, val]) => {
-        if (queryMap.has(key)) {
-            let oldValue = queryMap.get(key);
-            let newValue = Array.isArray(oldValue) ? oldValue.push(val) : [oldValue, val];
-            queryMap.set(key, newValue);
+
+    const entries = match.split('&').map(item => item.split('='));
+    const qMap = new Map();
+    entries.forEach(([key, val]) => {
+        val = decodeURIComponent(val);
+        if (qMap.has(key)) {
+            if (Array.isArray(qMap.get(key))) {
+                qMap.get(key).push(val);
+            } else {
+                qMap.set(key, [qMap.get(key), val]);
+            }
         } else {
-            queryMap.set(key, val);
+            qMap.set(key, val);
         }
     })
-    const queryObj = Object.fromEntries(queryMap.entries());
-    return queryObj;
+    return Object.fromEntries(qMap.entries());
 }
 ```
 :::
@@ -1812,7 +1814,7 @@ function simple(arr) {
 ## 30.监听复制事件
 :::: tabs
 ::: tab label=事件侦听
-```html
+```html{11-15}
 <body>
     <div id="content">1233523423423423</div>
     <div class="tip hide">禁止复制</div>

@@ -368,3 +368,179 @@ function letterCombinations(digits) {
 ```
 :::
 ::::
+## 746.最小花费爬楼梯
+:::: tabs
+::: tab label=题
+* 花一次钱跳1-2格，最小花费跳到结束
+```js
+const arr = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1];
+console.log(minCostClimbingStairs(arr));
+```
+```js
+const arr = [10, 15, 20];
+console.log(minCostClimbingStairs(arr));
+```
+:::
+::: tab label=动态规划
+* 思路：每一格都求出到当前格的最便宜的走法（前一格、前两格中便宜的那个 + 自己）。最后拿dp最后两个花费的小的那个值就能走出去。
+>时间：95.84%  
+>空间：10.26%
+```js
+function minCostClimbingStairs(cost) {
+    if (cost.length < 3) return Math.min(...cost);
+    const dp = [cost[0], cost[1]];
+    const setMinPay = idx => {
+        dp[idx] = Math.min(dp[idx - 1], dp[idx - 2]) + cost[idx];
+    }
+    for (let i = 2; i < cost.length; i++) {
+        setMinPay(i);
+    }
+    return Math.min(dp[dp.length - 1], dp[dp.length - 2]);
+}
+```
+:::
+::: tab label=优化
+* 一样，动态规划只用到数组的最后两个值，所以可以直接用动态变量存
+>时间：98.58%  
+>空间：20.74%
+```js
+function minCostClimbingStairs(cost) {
+    if (cost.length < 3) {
+        return Math.min(...cost);
+    }
+    let first = cost[0];
+    let second = cost[1];
+    for (let i = 2; i < cost.length; i++) {
+        const temp = first;
+        first = second;
+        second = Math.min(temp, first) + cost[i];
+    }
+    return Math.min(first, second);
+}
+```
+:::
+::::
+## 198.打家劫舍
+:::: tabs
+::: tab label=题
+* 小偷不能偷相邻的房子，求能偷得最多钱
+```js
+const i = [1,2,3,1];
+console.log(rob(i)); // 4
+
+const i2 = [2,7,9,3,1];
+console.log(rob(i2)); // 12
+```
+:::
+::: tab label=解
+* 必须隔一家，那么最多隔两家，因为隔三家就是傻子，浪费一家没偷。
+>时间：98.86%  
+>空间：5.74%
+```js
+function rob(nums) {
+    if (nums.length < 3) {
+        return Math.max(...nums);
+    }
+    const dp = [nums[0], nums[1]];
+    const setDp = idx => {
+        let first = idx > 2 ? dp[idx - 3] : 0;
+        let second = dp[idx - 2];
+        dp[idx] = Math.max(first, second) + nums[idx];
+    }
+    for (let i = 2; i < nums.length; i++) {
+        setDp(i);
+    }
+    return Math.max(dp[dp.length - 1], dp[dp.length - 2]);
+}
+```
+:::
+::: tab label=优化
+* 指针优化
+>时间：98.86%  
+>空间：19.51%
+```js
+function rob(nums) {
+    if (nums.length < 3) {
+        return Math.max(...nums);
+    }
+    let first = nums[0];
+    let second = nums[1];
+    let three = 0;
+    const setTemp = (idx) => {
+        const temp = Math.max(first, second) + nums[idx];
+        first = second;
+        second = three;
+        three = temp;
+    }
+    for (let i = 2; i < nums.length; i++) {
+        setTemp(i);
+    }
+    return Math.max(first, second);
+}
+```
+:::
+::::
+## 213.打家劫舍2
+:::: tabs
+::: tab label=题
+* 屋子围城一圈，要不偷相邻房间的情况下偷最多
+```js
+const nums = [2,3,2];
+console.log(rob(nums)); // 3
+```
+:::
+::: tab label=解
+* 环拆成两个数组，0~n-1, 1~n，动态算两遍，取出最大的
+>99.74%  
+>5.47%
+```js
+function rob(nums) {
+    if (nums.length < 4) return Math.max(...nums);
+    const dynamic = (subNums) => {
+        let one = 0;
+        let two = subNums[0];
+        let three = subNums[1];
+        const setNext = idx => {
+            const temp = Math.max(one, two) + subNums[idx];
+            one = two;
+            two = three;
+            three = temp;
+        }
+        for (let i = 0; i < subNums; i++) {
+            setNext(i);
+        }
+        return Math.max(two, three);
+    }
+    const ans1 = dynamic(nums.slice(0, -1));
+    const ans2 = dynamic(nums.slice(1));
+    return Math.max(ans1, ans2);
+}
+```
+:::
+::: tab label=再优化
+* 思路一样，环变成两个数组，然后计算选出大的值。但是空间消耗太大了，修改动态规划方程。
+>时间：100%  
+>空间：5.02  
+>??空间没变？
+```js
+function rob(nums) {
+    if (nums.length < 4) return Math.max(...nums);
+    const dynamic = (start, end) => {
+        let one = 0;
+        let two = nums[start];
+        let three = nums[start + 1];
+        for (let i = start + 2; i < end; i++) {
+            const temp = Math.max(two, three) + nums[i];
+            one = two;
+            two = three;
+            three = temp;
+        }
+        return Math.max(two, three);
+    }
+    const ans1 = dynamic(0, nums.length - 1);
+    const ans2 = dynamic(1, nums.length);
+    return Math.max(ans1, ans2);
+}
+```
+:::
+::::

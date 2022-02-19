@@ -165,27 +165,83 @@ function fn(a: fish | dog) {
 }
 ```
 ## 判断数组
-### Array.isArray
+:::: tabs
+::: tab label=Array.isArray
 ```js
 let i = [1, 2, 4];
 console.log(Array.isArray(i)); // true
 ```
-### prototype
+:::
+::: tab label=prototype
 ```js
 console.log(i instanceof Array); //true
 ```
-
-### __proto__
+:::
+::: tab label=__proto__
 ```js
 console.log(i.__proto__ === Array.prototype); // true
 ```
-
-### constructor
+:::
+::: tab label=constructor
 ```js
 console.log(i.__proto__.constructor === Array); // true
 ```
-
-### toString
+:::
+::: tab label=toString
 ```js
 console.log(Object.prototype.toString.call(i).indexOf('Array') !== -1); // true
 ```
+:::
+::::
+## 判断对象
+:::: tabs
+::: tab label=instanceof
+* 无法判断function/array
+```js
+// const obj = {};                   // true
+// const obj = function () { };      // true
+// const obj = [];                   // true
+// const obj = null;                 // false
+// class A { }; const obj = new A(); // true
+
+console.log(obj instanceof Object);
+```
+:::
+::: tab label=typeof
+* 无法判断数组、null
+```js
+// const obj = {};                   // true
+// const obj = function () { };      // false
+// const obj = [];                   // true
+// const obj = null;                 // true
+// class A { }; const obj = new A(); // true
+
+console.log(typeof obj === 'object');
+```
+:::
+::: tab label=toString
+* 正确判断
+```js
+// const obj = {};               // true
+// const obj = function () { };  // false
+// const obj = [];               // false
+// const obj = null;             // false
+// class A { }; const obj = new A(); // true
+
+console.log(Object.prototype.toString.call(obj) === '[object Object]');
+```
+:::
+::: tab label=constructor
+* new对象无法正确判断
+```js
+// const obj = {};                   // true
+// const obj = function () { };      // false
+// const obj = [];                   // false
+// const obj = null;                 // false
+
+// class A { }; const obj = new A(); // false
+
+console.log(obj?.constructor === Object);
+```
+:::
+::::
