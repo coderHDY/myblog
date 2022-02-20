@@ -531,51 +531,6 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 >例：document内有100个onClick事件，但是统一收集在document上，事件冒泡机制，event.target又能拿到对应的元素，绑定的一个对应的方法，进行触发。完成事件代理。
 :::
 ::::
-## 函数式组件
-:::: tabs
-::: tab label=优势
-* 16.8开始支持
-* 复用性强，class组件逻辑复用性不强
-* 逻辑整合，将相关的逻辑整合到一起，
-:::
-::: tab label=useState
->根本问题：组件内不能用this
-* 函数式组件只能使用简单组件（无状态组件），只接收props进行展示。
-* 可以用hooks解决：
-    1. useState
-    2. useRef
-```js{2-3,7-8}
-function Login() {
-    const [account, setAccount] = React.useState('');
-    const [pwd, setPwd] = React.useState('');
-    const login = () => console.log(`用户名：${account}，密码：${pwd}`);
-    return (
-        <div>
-            <input type="text" value={account.value} onChange={(e) => setAccount(e.target.value)} />
-            <input type="text" value={pwd.value} onChange={(e) => setPwd(e.target.value)} />
-            <button onClick={login}>登录</button>
-        </div>
-    )
-}
-ReactDOM.render(<Login/>, document.getElementById('root'));
-```
-:::
-::: tab label=useRef
-* 函数式组件使用ref：useRef
-```js{2,3,6}
-function MyInput() {
-    const input1 = React.useRef(null);
-    const show = () => console.log(input1.current.value);
-    return (
-        <div>
-            <input type="text" ref={input1} onBlur={show}/>
-        </div>
-    )
-}
-ReactDOM.render(<MyInput/>, document.getElementById('root'));
-```
-:::
-::::
 ## 生命周期
 :::: tabs
 ::: tab label=概览
@@ -839,6 +794,89 @@ ReactDOM.render(<News/>, document.getElementById('root'));
 </body>
 
 </html>
+```
+:::
+::::
+## 函数式组件
+:::: tabs
+::: tab label=优势
+* [官网](https://zh-hans.reactjs.org/docs/hooks-reference.html#usestate)
+* 16.8开始支持
+* 复用性强，class组件逻辑复用性不强
+* 逻辑整合，将相关的逻辑整合到一起，
+:::
+::: tab label=useState
+>根本问题：组件内不能用this
+* 函数式组件只能使用简单组件（无状态组件），只接收props进行展示。
+* 可以用hooks的`useState`解决类式组件的`state`：
+* 如果新的 state 需要通过使用先前的 state 计算得出，那么可以将函数传递给 setState
+```js{3,7-8}
+import { useState } from "react/cjs/react.development";
+function Counter({initialCount}) {
+  const [count, setCount] = useState(initialCount);
+  return (
+    <>
+      Count: {count}
+      <button onClick={() => setCount(initialCount)}>Reset</button>
+      <button onClick={() => setCount(prevCount => prevCount - 1)}>-</button>
+      <button onClick={() => setCount(prevCount => prevCount + 1)}>+</button>
+    </>
+  );
+}
+```
+* 对象属性:需要传入新的对象，因为react比较的方法是`Object.is`
+```js
+const [count, setCount] = useState({ a: 1, b: 2 });
+const addOne = () => setCount(pre => ({ a: pre.a + 1, b: pre.b + 1 }));
+const reset = () => setCount({a: 1, b: 4});
+```
+* 复杂初始值：传入函数，只在初始化的时候被调用
+```js
+const [count, setCount] = useState(() => 1 + 1);
+```
+:::
+::: tab label=useEffect
+* 赋值给 useEffect 的函数会在组件渲染到屏幕之后执行。
+    * 参数1：() => stopEffectFn
+    * 参数2：控制参数1执行时机，不传则每次都执行，传空数组则只执行一次，传有变量的数组则会在变量更新时执行。
+>参数1返回`清除函数`，会在组件卸载前执行，重复渲染更新时，回调也会执行
+```js
+useEffect(() => {
+    const timer = setInterval(() => addOne(), 1000);
+    return () => {
+        console.log('清除函数执行'); // 一秒执行一次，因为重复渲染。组件卸载前也会执行
+        clearInterval(timer)
+    };
+});
+```
+* 参数2控制执行时机，同时也能够演变组件的生命周期
+```js
+useEffect(() => {
+    console.log('count发生变化啦！');
+}, [count]);
+```
+>替代`conponentDidMount`，空依赖只在挂载的时候执行一次
+```js
+useEffect(() => console.log('---'), []);
+```
+>替代`componentWillUnMount`，参数一的返回值会在组件卸载的时候触发，同时参数二传空依赖，平时也不会执行
+```js
+useEffect(() => () => {console.log('unMount')}, []);
+```
+:::
+::: tab label=useRef
+* 函数式组件使用ref：useRef
+```js{2,3,6}
+function MyInput() {
+    const input1 = React.useRef(null);
+    const show = () => console.log(input1.current.value);
+    return (
+        <div>
+            <input type="text" ref={input1} onBlur={show}/>
+        </div>
+    )
+}
+ReactDOM.render(<MyInput/>, document.getElementById('root'));
 ```
 :::
 ::::
