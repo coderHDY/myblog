@@ -9,45 +9,36 @@ date: 2022-02-10
 ```js
 const arr = ['*', '*', '1', '2', '*', '4', '*', '*', '7', '3'];
 
-moveStart(arr);
-console.log(arr); // ['*', '*', '*', '*', '1', '2', '4',  '7', '3']
+moveStar(arr);
+console.log(arr); // ['*', '*', '*', '*', '*', '1', '2', '4',  '7', '3']
 ```
 :::
-::: tab label=暴力删除
+::: tab label=遍历移动
 ```js
-function moveStart(arr) {
-    let lastIndex = arr.lastIndexOf('*');
-    let numOfStart = 0;
-    const deleteStart = () => {
-        numOfStart++;
-        arr.splice(lastIndex, 1);
-        lastIndex = arr.lastIndexOf('*');
+function moveStar(arr) {
+    let idx = arr.findIndex(item => item !== '*');
+    idx = arr.indexOf('*', idx);
+    while (idx !== -1) {
+        arr.splice(idx, 1);
+        arr.unshift('*');
+        idx = arr.indexOf('*', idx + 1);
     }
-    const unshiftStart = () => {
-        for (let i = 0; i < numOfStart; i++) {
-            arr.unshift('*');
-        }
-    }
-    while (lastIndex != -1) {
-        deleteStart();
-    }
-    unshiftStart();
 }
 ```
 :::
 ::: tab label=双指针
 ```js
-function moveStart(arr) {
-    let first = -1;
-    let last = arr.lastIndexOf('*');
-    const helper = () => {
-        arr.splice(last, 1);
+function moveStar(arr) {
+    let start = arr.findIndex(item => item !== '*');
+    let end = arr.lastIndexOf('*');
+    const replace = () => {
+        arr.splice(end, 1);
         arr.unshift('*');
-        last = arr.lastIndexOf('*', last);
-        first++;
+        end = arr.lastIndexOf('*');
+        start++;
     }
-    while (last != first) {
-        helper();
+    while (end > start) {
+        replace();
     }
 }
 ```
@@ -103,22 +94,18 @@ console.log(compare(ver1, ver2)); // 1
 ::: tab label=解
 ```js
 function compare(ver1, ver2) {
-    if (ver1 === ver2) {
-        return 0;
-    }
-    const ver1Arr = ver1.split('.');
-    const ver2Arr = ver2.split('.');
-    let ver1Greater = true;
-    for (let i = 0; i < ver1Arr.length; i++) {
-        const maxLen = Math.max(ver1Arr[i].length, ver2Arr[i].length);
-        const padver1 = ver1Arr[i].padEnd(maxLen, '0');
-        const padver2 = ver2Arr[i].padEnd(maxLen, '0');
-        if(padver1 !== padver2) {
-            ver1Greater = padver1 > padver2;
-            break;
+    if (ver1 === ver2) return 0;
+    const arr1 = ver1.split('.').map(item => +item.padEnd(2, 0));
+    const arr2 = ver2.split('.').map(item => +item.padEnd(2, 0));
+    const arr1Max = () => {
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return arr1[i] > arr2[i];
+            }
         }
-    }
-    return ver1Greater ? 1 : -1;
+        return true;
+    };
+    return arr1Max() ? 1 : 2;
 }
 ```
 :::

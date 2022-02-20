@@ -62,16 +62,11 @@ function climbStairs(n, map = new Map([[1, 1],[2, 2]])) {
 :::
 ::: tab label=动态规划
 * 根据状态转移方程，存储状态解，并用方程拿到f(n)的解
->时间O(n)：95.29%  
->空间O(n)：89.28%
-```js{9}
+>时间O(n)：95.35%  
+>空间O(n)：15.81%
+```js
 function climbStairs(n) {
-    if (n < 2) {
-        return n
-    }
-    const dp = [];
-    dp[1] = 1;
-    dp[2] = 2;
+    const dp = [0, 1, 2];
     for (let i = 3; i <= n; i++) {
         dp[i] = dp[i - 1] + dp[i - 2];
     }
@@ -85,18 +80,13 @@ function climbStairs(n) {
 >空间O(1)：94.10%
 ```js
 function climbStairs(n) {
-    if (n < 3) {
-        return n;
-    }
+    if (n < 3) return n;
     let first = 1;
     let second = 2;
-    let ans;
-    for (let i = 3; i <= n; i++) {
-        ans = first + second;
-        first = second;
-        second = ans;
+    for (let i = 3; i < n; i++) {
+        [first, second] = [second, first + second];
     }
-    return ans;
+    return first + second;
 }
 ```
 :::
@@ -134,11 +124,10 @@ function maxSubArray(num) {
 :::
 ::: tab label=动态写法优化
 * 只最后求一次最大值，减少一个变量存储，以及中间赋值过程。
+>tip:`forEach`时间上比`for`循环慢，这是底层实现问题。但是写起来优雅。
 ```js{3,5}
 function maxSubArray(num) {
-    for (let i = 1; i < num.length; i++) {
-        num[i] = num[i - 1] > 0 ? num[i] + num[i - 1] : num[i];
-    }
+    num.forEach((item, i) => num[i] = num[i - 1] > 0 ? item + num[i - 1] : item)
     return Math.max(...num);
 }
 ```
@@ -540,6 +529,34 @@ function rob(nums) {
     const ans1 = dynamic(0, nums.length - 1);
     const ans2 = dynamic(1, nums.length);
     return Math.max(ans1, ans2);
+}
+```
+:::
+::::
+## 740. 删除并获得点数
+:::: tabs
+::: tab label=题
+* 获取点数n，删除所有n-1, n+1，求最大值
+```js
+const nums = [2,2,3,3,3,4];
+console.log(deleteAndEarn(nums)); // 9
+```
+:::
+::: tab label=解
+* 思路：做一个最大数作为长度的数组。数组第i项的值代表nums里面所有i的和。再对应这个数组做dp。
+>时间：99.06%    
+>空间：27.63%
+```js
+function deleteAndEarn(nums) {
+    const max = Math.max(...nums);
+    const sum = Array(max + 1).fill(0);
+    const dp = Array(max + 1).fill(0);
+    nums.forEach(i => sum[i] += i);
+    dp[1] = sum[1];
+    for (let i = 2; i < dp.length; i++) {
+        dp[i] = Math.max(dp[i - 1], sum[i] + dp[i - 2]);
+    }
+    return dp[max];
 }
 ```
 :::

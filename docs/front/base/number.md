@@ -329,7 +329,10 @@ console.log(num.toLocaleString('zh-Hans-CN-u-nu-hanidec', {
 * 人民币
 ```js
 const num = 123456789;
-console.log(num.toLocaleString('zh-CN', { style: 'currency', currency: 'CNY' })); // ¥123,456,789.00
+console.log(num.toLocaleString('zh-CN', {
+    style: 'currency',
+    currency: 'CNY'
+})); // ¥123,456,789.00
 ```
 :::
 ::::
