@@ -417,3 +417,137 @@ tags:
 ```
 :::
 ::::
+## 9.制作扇形
+:::: tabs
+::: tab label=思路1
+* 思路1：外层div，`radius`控制弧形，内层div控制两个直角边，进行移动拼接成扇形
+```html
+<body>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+    <style>
+        .outer {
+            width: 100px;
+            height: 100px;
+            /* background-color: red; */
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .inner {
+            width: 100px;
+            height: 100px;
+            background-color: rgb(94, 137, 230);
+            transform: rotate(45deg) translate(50px, 50px);
+        }
+    </style>
+</body>
+```
+:::
+::: tab label=思路2
+* 一个div盒子，
+```html
+<body>
+    <div class="container">
+    </div>
+    <style>
+        .container {
+            width: 0px;
+            border-top: 100px solid red;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+        }
+    </style>
+</body>
+```
+:::
+::::
+## 10.transform顺序
+:::: tabs
+::: tab label=题
+* 下面两个`transform`有什么区别
+```html
+<body>
+    <div class="container"></div>
+    <style>
+        .container {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            /* transform: translateY(100px) rotate(45deg); */
+            transform: rotate(45deg) translateY(100px);
+        }
+
+    </style>
+</body>
+```
+:::
+::: tab label=解
+* 有区别，因为translate变换有参照点，是盒子的左边和上边。
+>rotate旋转后他的**参照边也发生了旋转**，所以移动的方位会发生改变
+:::
+::::
+## 11.transform原理
+:::: tabs
+::: tab label=题
+* `transform`元素会不会对周围影响布局造成影响？
+```html
+<body>
+    <div class="other"></div>
+    <div class="container"></div>
+    <div class="other"></div>
+    <style>
+        .other {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+
+        .container {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transform: rotate(45deg) translateY(100px);
+        }
+
+    </style>
+</body>
+```
+:::
+::: tab label=解
+* 作用：CSStransform属性允许你旋转，缩放，倾斜或平移给定元素。这是通过**修改CSS视觉格式化模型的坐标空间来实现的**。
+* 原理：是通过`矩阵变换`做出来的，**矩阵记录一个css盒子的几个坐标**，然后通过这个矩阵给盒子定位、定绘制大小。transform通过变换这个矩阵的值来进行计算，得到目标位置的新矩阵，进行绘制
+* 计算厚的矩阵变换**不会影响原文档的绘制布局**，因为他是`新建的图层`进行的动画展示
+    <img src="./assets/csslayer.png" style="width:300px">
+
+```html
+<body>
+    <div class="other"></div>
+    <div class="container"></div>
+    <div class="other"></div>
+    <style>
+        .other {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+        }
+
+        .container {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            transition: all 1s ease;
+        }
+
+        .container:hover {
+            transform: rotate(-45deg) translateY(100px);
+        }
+
+    </style>
+</body>
+
+```
+:::
+::::

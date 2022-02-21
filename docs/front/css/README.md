@@ -688,7 +688,7 @@ tags:
 |---|---|
 |stretch|【默认】弹性子盒子被拉伸到flex盒子相同的交叉轴长度|
 |flex-start|交叉轴起点对齐|
-|flex-start|交叉轴终点对齐|
+|flex-end|交叉轴终点对齐|
 |center|居中|
 :::
 :::: tabs
