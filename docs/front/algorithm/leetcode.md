@@ -174,7 +174,6 @@ function longestPalindrome(s) {
 ```
 :::
 ::::
-
 ## 10.正则匹配
 :::: tabs
 ::: tab label=模拟正则匹配
@@ -638,6 +637,116 @@ function generateParenthesis(n) {
         last = s.lastIndexOf('(') + 1;
     }
     return ans;
+}
+```
+:::
+::::
+## 25. K 个一组翻转链表
+:::: tabs
+::: tab label=题
+* 给一个链表，以及指定要翻转的位数。
+```js
+const head = [1,2,3,4,5], k = 2
+console.log(reverseKGroup(head, k)); // 链表形式
+// 输出：[2,1,4,3,5]
+```
+:::
+::: tab label=解
+* 思路：翻转固定长度，用一个栈，先进后出，进行翻转赋值。
+    * 遍历链表的同时用一个for循环给栈赋值，满了就翻转一次
+    * 由于是单向链表，所以翻转函数要注意preNode的传入
+    * 由于反转后head会变，而我们需要返回新的head，所以用一个ListNode（指针）保存返回值head
+>时间：96.20%  
+>空间：5.04%
+```js
+var reverseKGroup = function (head, k) {
+
+    // 翻转函数
+    const reverse = (preNode) => {
+        let nextTemp = stack[stack.length - 1].next;
+        preNode.next = stack.pop();
+        let c = preNode.next;
+        while (stack.length) {
+            c.next = stack.pop();
+            c = c.next;
+        }
+        c.next = nextTemp;
+        preTemp = c;
+    }
+    let cNode = head;
+    let stack = [];
+    let headPre = new ListNode(null, head);
+
+    // 下一次翻转的上一个节点预存
+    let preTemp = headPre;
+    while (cNode) {
+        for (let i = 0; i < k; i++) {
+            if (!cNode) break;
+            stack.push(cNode);
+            cNode = cNode.next;
+        }
+        if (stack.length < k) break;
+        reverse(preTemp);
+        stack = [];
+    }
+    return headPre.next;
+};
+```
+:::
+::::
+## 27.移除元素
+:::: tabs
+::: tab label=题
+* 不用额外的数组空间，在原数组进行删除指定元素
+```js
+const nums = [3,2,2,3], val = 3;
+console.log(removeElement(nums, val));
+// 输出：2, nums = [2,2]
+```
+:::
+::: tab label=解
+>时间：96.40%  
+>空间：16.33%
+```js
+function removeElement(nums, val) {
+    let idx = nums.indexof(val);
+    while (idx !== -1) {
+        nums.splice(idx, 1);
+        idx = nums.indexOf(val);
+    }
+}
+```
+:::
+::::
+
+## 24.两两交换链表
+:::: tabs
+::: tab label=题
+* 链表两两交换
+```js
+const head = [1,2,3,4]
+console.log(swapPairs(head));
+// 输出：[2,1,4,3]
+```
+:::
+::: tab label=解
+>时间：99.55%  
+>空间：6.52%
+```js
+function swapPairs(head) {
+    const headPre = new ListNode(null, head);
+    let cPre = headPre;
+    const reverse = () => {
+        let temp = cPre.next;
+        cPre.next = cPre.next.next;
+        temp.next = cPre.next.next;
+        cPre.next.next = temp;
+        cPre = temp;
+    }
+    while (cPre.next?.next) {
+        reverse();
+    }
+    return headPre.next;
 }
 ```
 :::

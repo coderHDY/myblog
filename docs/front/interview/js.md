@@ -2071,3 +2071,66 @@ factorial();
 ```
 :::
 ::::
+## 37.手写render函数
+:::: tabs
+::: tab label=题
+* 手写el函数
+```js
+
+const ulVDom = el('ul', { id: 'container' }, [
+    el('li', { class: 'box1' }, '选项1'),
+    el('li', { class: 'box2' }, '选项2'),
+    el('li', { class: 'box3' }, '选项3'),
+]);
+
+const ul = ulVDom.render();
+
+document.getElementById('root').appendChild(ul);
+
+/**
+
+<ul id="container">
+    <li class="box1">选项1</li>
+    <li class="box2">选项2</li>
+    <li class="box3">选项3</li>
+</ul>
+
+ */
+```
+:::
+::: tab label=解
+```html
+<body>
+    <div id="root"></div>
+    <script>
+        function el(tagName, attrs, children) {
+            const render = () => {
+                const ele = document.createElement(tagName);
+                Object.entries(attrs).forEach(([key, val]) => ele.setAttribute(key, val));
+
+                children.forEach(item => {
+                    if (typeof item === 'string') {
+                        ele.innerText = item;
+                    } else {
+                        ele.appendChild(item.render());
+                    }
+                });
+                return ele;
+            }
+            return { render }
+        }
+
+        const ulVDom = el('ul', { id: 'container' }, [
+            el('li', { class: 'box1' }, ['选项1']),
+            el('li', { class: 'box2' }, ['选项2']),
+            el('li', { class: 'box3' }, ['选项3']),
+        ]);
+
+        const ul = ulVDom.render();
+        document.getElementById('root').appendChild(ul);
+    </script>
+</body>
+
+```
+:::
+::::
