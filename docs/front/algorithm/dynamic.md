@@ -211,19 +211,34 @@ function fib(n) {
 ```
 :::
 ::: tab label=动态规划
+```js
+function tribonacci(n) {
+    const dp = [];
+    dp[0] = 0;
+    dp[1] = 1;
+    dp[2] = 1;
+    for (let i = 3; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+    }
+    return dp[n]
+}
+```
+:::
+::: tab label=动态规划优化
 >时间：91.79%  
 >空间：10.56%
 ```js
-function fib(n) {
-    if (n < 2) return n;
+function tribonacci(n) {
+    if (n < 4) {
+        return n < 2 ? n : n - 1;
+    }
     let one = 0;
     let two = 1;
-    for(let i = 2; i < n; i++) {
-        const temp = one;
-        one = two;
-        two = temp + two;
+    let three = 1;
+    for (let i = 3; i <= n; i++) {
+        [one, two, three] = [two, three, one + two + three];
     }
-    return one + two;
+    return three;
 }
 ```
 :::
@@ -375,16 +390,16 @@ console.log(minCostClimbingStairs(arr));
 >时间：95.84%  
 >空间：10.26%
 ```js
-function minCostClimbingStairs(cost) {
-    if (cost.length < 3) return Math.min(...cost);
-    const dp = [cost[0], cost[1]];
-    const setMinPay = idx => {
-        dp[idx] = Math.min(dp[idx - 1], dp[idx - 2]) + cost[idx];
+function minCostClimbingStairs(arr) {
+    if (arr.length < 3) {
+        return Math.min(...arr);
     }
-    for (let i = 2; i < cost.length; i++) {
-        setMinPay(i);
+    const dp = [arr[0], arr[1]];
+    const len = arr.length;
+    for (let i = 2; i < len; i++) {
+        dp[i] = Math.min(dp[i - 1], dp[i - 2]) + arr[i];
     }
-    return Math.min(dp[dp.length - 1], dp[dp.length - 2]);
+    return Math.min(dp[len - 1], dp[len - 2])
 }
 ```
 :::
@@ -557,6 +572,70 @@ function deleteAndEarn(nums) {
         dp[i] = Math.max(dp[i - 1], sum[i] + dp[i - 2]);
     }
     return dp[max];
+}
+```
+:::
+::::
+## 55. 跳跃游戏
+:::: tabs
+::: tab label=题
+* 从左跳到右，每一格代表能跳的步数，看是否能到右边
+```js
+const nums = [3,2,1,0,4]
+console.log(canJump(nums));
+// 输出：false
+```
+:::
+::: tab label=解
+>时间：99.14%  
+>空间：5.02%
+```js
+function canJump(nums) {
+    const dp = [...nums];
+    for (let i = 1; i < dp.length - 1; i++) {
+        dp[i] = Math.max(dp[i - 1] - 1, dp[i]);
+    }
+    return !dp.slice(0, -1).includes(0);
+}
+```
+:::
+::::
+## 45. 跳跃游戏 II
+:::: tabs
+::: tab label=题
+* 你的目标是使用最少的跳跃次数到达数组的最后一个位置。
+* 假设你总是可以到达数组的最后一个位置。
+```js
+const nums = [2,3,1,1,4];
+console.log(jump(nums));
+// 输出: 2
+```
+:::
+::: tab label=解
+>时间：92.96%  
+>空间：21.48%
+```js
+function jump(arr) {
+    let maxPosition = 0;
+    let end = 0;
+    let step = 0;
+
+    // len - 1，因为要少遍历一次，到最后一个点就可以了
+    for (let i = 0; i < arr.length - 1; i++) {
+
+        // 核心：总是记录当前步数内下一步能到达的最远位置
+        maxPosition = Math.max(maxPosition, i + arr[i]);
+
+        // 到达上个最远位置了，加一个step换上当前能到的最远值，如果达标就返回。
+        if (i === end) {
+            step++;
+            end = maxPosition;
+            if (end > arr.length) {
+                return step;
+            }
+        }
+    }
+    return step;
 }
 ```
 :::
