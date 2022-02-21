@@ -352,3 +352,293 @@ function maxNoRepeatLen(str) {
 ```
 :::
 ::::
+## 20.括号匹配
+:::: tabs
+::: tab label=题
+* 左右括号匹配且出现顺序正确
+* s 仅由括号 '()[]{}' 组成
+```js
+const s = "()[]{}"
+console.log(isValid(s));
+// 输出：true
+```
+```js
+const s = "([)]"
+console.log(isValid(s));
+// 输出：false
+```
+:::
+::: tab label=栈解
+* 利用栈存储左括号，遇到对应的右括号要出栈
+>时间：99.78%  
+>空间：30.14%
+```js
+function isValid(str) {
+    const stack = [];
+    const arr = str.split('');
+    let left = /[\(\[\{]/;
+    const map = new Map([[')', '(',], [']', '[',], ['}', '{']]);
+    return arr.every(item => {
+        if (left.test(item)) {
+            stack.push(item);
+            return true;
+        } else {
+            return stack.pop() === map.get(item);
+        }
+    }) && stack.length === 0;
+}
+
+```
+:::
+::: tab label=巧用括号
+* 要正确匹配，那么无论怎么嵌套，中间的括号一定是配对的
+>时间：
+>空间：
+```js
+function isValid(str) {
+    const time = str.length / 2;
+    if (!Number.isInteger(time)) return false;
+    const reg = /(\(\))|(\[\])|(\{\})/g;
+    for (let i = 0; i < time; i++) {
+        str = str.replace(reg, '');
+    }
+    return str.length === 0;
+}
+```
+:::
+::::
+## 9.回文整数
+:::: tabs
+::: tab label=题
+* 一个数字是回文
+```js
+const x = 121;
+console.log(isPalindrome(x));
+// 输出：true
+```
+:::
+::: tab label=双指针解
+>时间：94.67%  
+>空间：18.38%
+```js
+function isPalindrome(x) {
+    let left = 0;
+    let right = `${x}`.length - 1;
+    while (left <= right) {
+        if (`${x}`[left] !== `${x}`[right]) {
+            return false;
+        }
+        left++;
+        right--;
+    }
+    return true;
+}
+```
+:::
+::: tab label=正则
+>时间：88.60%  
+>空间：5.62%
+```js
+function isPalindrome(x) {
+    let str = `${x}`;
+    let time = Math.ceil(str.length / 2);
+    const reg = /^(\d)(\d*)\1$/g;
+    while (time--) {
+        str = str.replace(reg, '$2');
+    }
+    return str.length === 0 || str.length === 1;
+}
+```
+:::
+::::
+## 12.整数转罗马数字
+:::: tabs
+::: tab label=题
+* 罗马数字包含以下七种字符： I， V， X， L，C，D 和 M。
+```js
+/*  字符          数值
+    I             1
+    V             5
+    X             10
+    L             50
+    C             100
+    D             500
+    M             1000
+
+I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。
+X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。 
+C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
+    IV            4
+    IX            9
+    XL            40
+    XC            90
+    CD            400
+    CM            900
+/*
+```
+* 小的在大的左边代表减多少
+```js
+const num = 4
+console.log(intToRoman(num));
+// 输出: "IV"
+```
+:::
+::: tab label=贪心解
+* 做一个索引表，贪心算法倒序查
+>时间：93.15%  
+>空间：15.74%
+```js
+const map = new Map([
+    [1000, 'M'],
+    [900, 'CM'],
+    [500, 'D'],
+    [400, 'CD'],
+    [100, 'C'],
+    [90, 'XC'],
+    [50, 'L'],
+    [40, 'XL'],
+    [10, 'X'],
+    [9, 'IX'],
+    [5, 'V'],
+    [4, 'IV'],
+    [1, 'I'],
+])
+function intToRoman(num) {
+    const keys = [...map.keys()];
+    return keys.reduce((pre, item) => {
+        const times = Math.floor(num / item);
+        num = num - times * item;
+        const padStr = map.get(item)
+        return pre.padEnd(pre.length + times * padStr.length, padStr);
+    }, '')
+}
+```
+:::
+::::
+## 13.罗马转数字
+:::: tabs
+::: tab label=题
+* 同上，倒过来而已
+```js
+const s = "III";
+console.log(romanToInt(s));
+// 输出: 3
+```
+:::
+::: tab label=解
+* 反过来字符串由于单双号可能会重叠，引发匹配错误，所以单双号飞开匹配计算
+>时间：78.76%  
+>空间：5.05%
+```js
+const map = new Map([
+    ['M', 1000],
+    ['D', 500],
+    ['C', 100],
+    ['L', 50],
+    ['X', 10],
+    ['V', 5],
+    ['I', 1],
+])
+const dbMap = new Map([
+    ['CM', 900],
+    ['CD', 400],
+    ['XC', 90],
+    ['XL', 40],
+    ['IX', 9],
+    ['IV', 4],
+])
+function romanToInt(s) {
+    let ans = 0;
+    const replace = (map) => {
+        const keys = [...map.keys()];
+        keys.forEach(item => {
+            const reg = new RegExp(`${item}`, 'g');
+            let time = 0;
+            s = s.replace(reg, () => {
+                time++;
+                return '';
+            });
+            ans += map.get(item) * time;
+        })
+    }
+    replace(dbMap);
+    replace(map);
+    return ans;
+}
+```
+:::
+::: tab label=巧用倒序
+* 左边是小于的就减，否则就加
+>时间：95.11%  
+>空间：31.77%
+```js
+const map = new Map([
+    ['M', 1000],
+    ['D', 500],
+    ['C', 100],
+    ['L', 50],
+    ['X', 10],
+    ['V', 5],
+    ['I', 1],
+])
+function romanToInt(s) {
+    let len = s.length;
+    let ans = 0;
+    const calc = (i) => {
+        if (i < len - 1) {
+            const cVal = map.get(s[i]);
+            const prev = map.get(s[i + 1])
+            ans += cVal >= prev ? cVal : -cVal;
+        } else {
+            ans += map.get(s[i]);
+        }
+    }
+    for (let i = len - 1; i >= 0; i--) {
+        calc(i);
+    }
+    return ans;
+}
+```
+:::
+::::
+## 22.括号生成
+:::: tabs
+::: tab label=题
+* 给一个数字i，生成i个括号，并且要符合规范的所有组合方式
+```js
+const n = 3
+console.log(generateParenthesis(n));
+// 输出：["((()))","(()())","(())()","()(())","()()()"]
+```
+:::
+::: tab label=解
+* 冒泡，先做出一个左右左右的，然后右边的依次冒泡到左边
+```js
+// 还有问题！
+function generateParenthesis(n) {
+    let ans = [];
+    let s = '';
+    const add = (str) => s += str;
+    for (let i = 0; i < n; i++) {
+        add('(');
+        add(')');
+    }
+    ans.push(s);
+    let first = s.indexOf(')');
+    let last = s.lastIndexOf('(') + 1;
+    while (first < last) {
+        const arr = s.split('');
+        arr.splice(first, 1);
+        const next = arr.indexOf('(', first) + 1;
+        arr.splice(next, 0, ')');
+        s = arr.join('');
+        console.log(s);
+        ans.push(s);
+        first = s.indexOf(')');
+        last = s.lastIndexOf('(') + 1;
+    }
+    return ans;
+}
+```
+:::
+::::
