@@ -159,14 +159,10 @@ class BST {
 > 空间【O(n)】：56.10%  
 
 ```js
-var maxDepth = function(root, deep = 0) {
-    if (!root) {
-        return deep;
-    }
-    deep += 1;
-    deep = Math.max(maxDepth(root.left, deep), maxDepth(root.right, deep));
-    return deep;
-};
+function maxDepth(root, max = 0) {
+    if (!root) return max;
+    return Math.max(maxDepth(root.left, max + 1), maxDepth(root.right, max + 1))
+}
 ```
 :::
 ::: tab label=广度优先
@@ -205,7 +201,7 @@ var maxDepth = function(root) {
 * 给定节点看是否是二叉搜索树
     1. 左子树小于当前节点
     2. 右字树大于当前节点
-    3. 字树也是二叉搜索树
+    3. 子树也是二叉搜索树
 :::
 ::: tab label=递归
 >时间：44.32%    

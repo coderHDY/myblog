@@ -2006,3 +2006,68 @@ app.get('/data', (req, res) => res.send({
 ```
 :::
 ::::
+## 36.递归爆栈解决
+:::: tabs
+::: tab label=问题
+* js执行爆栈
+```js
+const list = Array(10000).fill(1);
+function factorial() {
+    const item = list.pop();
+    if (item) {
+        console.log(item);
+        factorial();
+    }
+}
+factorial(); // 爆栈错误
+```
+:::
+::: tab label=解决1
+* 加setTimeout将事件推入`宿主环境的延迟列表`里面，延迟时间到了又推入`宏任务队列`里面，然后在那一轮事件轮询才执行，就不会引发当前调用栈爆栈
+```js
+const list = Array(10000).fill(1);
+function factorial() {
+    const item = list.pop();
+    if (item) {
+        console.log(item);
+        // factorial();
+        setTimeout(() => factorial());
+    }
+}
+factorial();
+```
+:::
+::: tab label=微任务
+* 同样，推入到微任务队列里面去，不在当前的调用栈执行，所以不会触发爆栈
+>微任务队列优先级高，会比setTimeout快
+```js
+const list = Array(10000).fill(1);
+function factorial() {
+    const item = list.pop();
+    if (item) {
+        console.log(item);
+        // factorial();
+        Promise.resolve().then(() => factorial());
+    }
+}
+factorial();
+```
+:::
+::: tab label=同步优化
+* 用while循环干掉递归，速度最快
+```js
+const list = Array(10000).fill(1);
+function factorial() {
+    let item = list.pop();
+    const handler = () => {
+        console.log(item)
+        item = list.pop();
+    };
+    while (item) {
+        handler();
+    }
+}
+factorial();
+```
+:::
+::::

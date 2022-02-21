@@ -556,8 +556,8 @@ console.log(str); // abc
 ### fromCharCode
 ::: warning 静态方法
 * 作用：将utf-16编码转回字符串
-* 调用：String.fromCharCode(code)
-* 入参：Number
+* 调用：String.fromCharCode(code, code...)
+* 入参：Number[, Number...]
 * 返回：String
 * tip：处理的最大编码为FFFF(16进制)，要更完善的要用`fromCodePoint`
 :::

@@ -185,11 +185,15 @@ console.log(i.__proto__ === Array.prototype); // true
 ::: tab label=constructor
 ```js
 console.log(i.__proto__.constructor === Array); // true
+
+console.log(i.constructor === Array);
 ```
 :::
 ::: tab label=toString
 ```js
 console.log(Object.prototype.toString.call(i).indexOf('Array') !== -1); // true
+
+console.log(Object.prototype.toString.call(i) === '[object Array]');// true
 ```
 :::
 ::::
