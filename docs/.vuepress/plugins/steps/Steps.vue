@@ -74,6 +74,12 @@ export default {
       this.backToTop();
     },
     backToTop() {
+      // 当前内容超过屏幕3/2就返回顶部
+      const offsetHeight = this.$el.offsetHeight;
+      const bodyHeight = window.screen.height;
+      if (bodyHeight / 1.5 > offsetHeight) {
+        return;
+      }
       let topBar = document.querySelector(`#${this.hashId}`);
       setTimeout(() => {
         topBar.scrollIntoView({
@@ -87,15 +93,15 @@ export default {
       // 四舍五入计算出应该跳转的步数
       const stepLength = e.currentTarget.clientWidth / (this.steps - 1);
       const jump = Math.round(
-        (e.x - this.getOffsetBody(e.currentTarget)) / stepLength
+        (e.x - this.getOffsetBody(e.currentTarget, 'offsetLeft')) / stepLength
       );
       this.active = jump;
     },
-    getOffsetBody(el) {
-      let ans = el.offsetLeft;
+    getOffsetBody(el, position) {
+      let ans = el[position];
       let parent = el.offsetParent;
       while (parent) {
-        ans += parent.offsetLeft;
+        ans += parent[position];
         parent = parent.offsetParent;
       }
       return ans;
@@ -127,7 +133,7 @@ export default {
 }
 .el-container {
   margin-bottom: 10px;
-  padding-top: 60px;
+  padding-top: 20px;
 }
 .el-header {
   height: 35px !important;
