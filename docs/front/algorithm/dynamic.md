@@ -640,34 +640,3 @@ function jump(arr) {
 ```
 :::
 ::::
-## 918. 环形子数组的最大和
-:::: tabs
-::: tab label=题
-* 环状数组，求最大连续数组和
-```js
-const nums = [5,-3,5];
-console.log(maxSubarraySumCircular(nums));
-// 输出：10
-```
-:::
-::: tab label=解
-```js
-// 思路：环状数组分开求两边??
-function maxSubarraySumCircular(nums) {
-    const getMax = (arr) => arr.reduce((pre, item, i) => {
-        pre[i] = pre[i - 1] > 0 ? pre[i - 1] + item : item;
-        return pre;
-    })
-    const dp1 = getMax(nums);
-    if (dp1[dp1.length - 1] > 0) {
-        const lastActive = dp1.findLastIndex(item => item <= 0) + 1;
-        const nums2 = [...nums.slice(lastActive), ...nums.slice(0, lastActive)]
-        const dp2 = getMax(nums2);
-        return Math.max(...dp1, ...dp2);
-    } else {
-        return Math.max(...dp1);
-    }
-}
-```
-:::
-::::
