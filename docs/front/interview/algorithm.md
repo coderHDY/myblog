@@ -236,3 +236,155 @@ console.log(merge(obj1, obj2));
 ```
 :::
 ::::
+## 6.数据流清理
+:::: tabs
+::: tab label=题
+<img src="./assets/dataflow.png" style="width:400px"/>
+
+* node: 节点,string
+```js
+const node = 'NODE_1';
+```
+* columns: 节点排列，二维数组
+```js
+const columns = [
+    ['NODE_2', 'NODE_3'],
+    ['NODE_1', 'NODE_4', 'NODE_1'],
+    ['NODE_5', 'NODE_3'],
+];
+```
+* links: 错误的/冗余的连接数据。
+```js
+const rawLinks = [
+    { source: 'NODE_2', target: 'NODE_1', value: 3 },
+    { source: 'NODE_2', target: 'NODE_1', value: 23 },
+    { source: 'NODE_3', target: 'NODE_1', value: 11 },
+    { source: 'NODE_1', target: 'NODE_5', value: 53 },
+    { source: 'NODE_1', target: 'NODE_5', value: 6 },
+    { source: 'NODE_3', target: 'NODE_3', value: 20 },
+]
+```
+* 要求生成正确的连接数据
+```js
+// 1.左侧列节点和右侧列节点必须有连接
+// 2.如果原来没有这个连接，新建并且value设置成0
+// 3.如果原来有多个这条路径的连接，加起来
+// 4.计算出每个node的出入度
+console.log(getRightLinks(rawLinks, columns));
+```
+:::
+::: tab label=解：架构思路
+```js
+function getRightLinks(rawLinks, columns) {
+    // 初始化所有需要的连接，值设置成 { source-target:0 }
+    const initNeedLinks = () => { }
+    const initLinksObj = initNeedLinks();
+
+    // 如果原生路径的连接，重复的加起来生成一个【hasLinks】对象
+    // {source-target:value，source-target:value}
+    const mergeRawLinks = () => { }
+    const hasLinks = mergeRawLinks();
+
+    // 遍历hasLinks给initLinksObj赋值，替换掉原来的0
+    Object.entries(hasLinks).forEach(([key, val]) => { })
+
+    // 将initLinksObj转换成
+    // links：[{source, target, value},{...}]
+    const links = Object.entries(initLinksObj).map(([key, value]) => { })
+
+    // 根据links生成新的对象，拿到所有node的出入度，
+    // {'NODE_1': 10, ...}
+    const getSumNodeValue = () => {}
+    const nodes = getSumNodeValue();
+
+    return {
+        links,
+        nodes
+    }
+}
+```
+```js
+// 测试数据
+const columns = [
+    ['NODE_2', 'NODE_3'],
+    ['NODE_1', 'NODE_4', 'NODE_1'],
+    ['NODE_5', 'NODE_3'],
+];
+
+const rawLinks = [
+    { source: 'NODE_2', target: 'NODE_1', value: 3 },
+    { source: 'NODE_2', target: 'NODE_1', value: 23 },
+    { source: 'NODE_3', target: 'NODE_1', value: 11 },
+    { source: 'NODE_1', target: 'NODE_5', value: 53 },
+    { source: 'NODE_1', target: 'NODE_5', value: 6 },
+    { source: 'NODE_3', target: 'NODE_3', value: 20 },
+]
+
+console.log(getRightLinks(rawLinks, columns));
+```
+:::
+::: tab label=解
+```js
+function getRightLinks(rawLinks, columns) {
+    // 初始化所有需要的连接，值设置成 { source-target:0 }
+    const initNeedLinks = () => {
+        const ans = {}
+        for (let i = 0; i < columns.length - 1; i++) {
+            const sources = columns[i];
+            sources.forEach(source => {
+                for (let j = 0; j < columns[i + 1].length; j++) {
+                    const target = columns[i + 1][j];
+                    const key = source + '-' + target;
+                    ans[key] = 0;
+                }
+            })
+        }
+        return ans;
+    }
+    const initLinksObj = initNeedLinks();
+
+    // 如果原来路径的连接，加起来生成一个source-target:value的值的对象
+    const mergeRawLinks = () => {
+        const ans = {};
+        for (let i = 0; i < rawLinks.length; i++) {
+            const source = rawLinks[i].source;
+            const target = rawLinks[i].target;
+            const key = source + '-' + target;
+            const value = rawLinks[i].value;
+            ans[key] = ans.hasOwnProperty(key) ? ans[key] + value : value;
+        }
+        return ans;
+    }
+    const hasLinks = mergeRawLinks();
+
+    // 遍历hasLinks给initLinksObj赋值
+    Object.entries(hasLinks).forEach(([key, val]) => {
+        if (initLinksObj.hasOwnProperty(key)) {
+            initLinksObj[key] = val;
+        }
+    })
+
+    // 将links转换成[{source, target, value},{...}]形式
+    const links = Object.entries(initLinksObj).map(([key, value]) => {
+        const [source, target] = key.split('-');
+        return { source, target, value }
+    })
+
+    // 根据links生成新的对象，拿到所有node的出入度
+    const getMaxNodeValue = () => {
+        return links.reduce((pre, { source, target, value }) => {
+            pre[source] = pre.hasOwnProperty(source) ? pre[source] + value : value;
+            pre[target] = pre.hasOwnProperty(target) ? pre[target] + value : value;
+            return pre;
+        }, {});
+    }
+    const nodes = getMaxNodeValue();
+
+    return {
+        links,
+        nodes
+    }
+}
+```
+:::
+::::

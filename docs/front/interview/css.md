@@ -311,11 +311,14 @@ tags:
 ## 8.隐藏元素
 :::: tabs
 ::: tab label=opacity
+* 占位layout
 ```html
 <body>
+    <div></div>
     <div class="hide"></div>
+    <div></div>
     <style>
-        div{
+        div {
             height: 100px;
             width: 100px;
             background-color: red;
@@ -325,9 +328,11 @@ tags:
         }
     </style>
 </body>
+
 ```
 :::
 ::: tab label=display
+* 不占位layout
 ```html
 <body>
     <div class="hide"></div>
@@ -363,11 +368,14 @@ tags:
 ```
 :::
 ::: tab label=visibility
+* 占位layout
 ```html
 <body>
+    <div></div>
     <div class="hide">asdfasdfasdf</div>
+    <div></div>
     <style>
-        div{
+        div {
             height: 100px;
             width: 100px;
             background-color: red;
@@ -549,5 +557,22 @@ tags:
 </body>
 
 ```
+:::
+::::
+## 12.css合成层
+:::: tabs
+::: tab label=渲染层
+>有以下属性的元素会新开一个层
+1. 有明确的定位属性（relative、fixed、sticky、absolute）
+2. opacity < 1
+3. 有 CSS fliter 属性
+4. 有 CSS mask 属性
+5. 有 CSS mix-blend-mode 属性且值不为 normal
+6. 有 CSS transform 属性且值不为 none（**有动画**）
+7. backface-visibility 属性为 hidden
+8. 有 CSS reflection 属性
+9. 有 CSS column-count 属性且值不为 auto或者有 CSS column-width 属性且值不为 auto
+10. 当前有对于 opacity、transform、fliter、backdrop-filter 应用动画
+11. overflow 不为 visible
 :::
 ::::

@@ -13,8 +13,7 @@ categories:
 
 >js的sort的排序时间：O(mlogm)
 :::
-## 题目
-### 发饼干
+## 455.发饼干
 ::: tip
 * 每个孩子 i，想吃饼干大小 g[i]
 * 并且每块饼干 j，都有一个尺寸 s[j]
@@ -74,7 +73,7 @@ function findContentChildren(needs, have) {
 ```
 :::
 ::::
-### 找零
+## 860.找零
 ::: tip
 * 我卖柠檬水，一杯五元，我最开始没钱
 * 别人来买柠檬水，给我的钱我能否交易（钱够不够？零钱能不能找？）
@@ -162,7 +161,7 @@ function lemonadeChange(custom) {
 }
 ```
 ::::
-### 不重叠区间
+## 435.不重叠区间
 ::: tip
 * 给二维数组，内部每个数组代表一个区间
 * 求让所有区间不重叠的最小移除数量
@@ -199,7 +198,7 @@ function eraseOverlapIntervals(intervals) {
 ```
 :::
 ::::
-### 引爆气球最少箭
+## 452.引爆气球最少箭
 ::: tip
 * 我要射穿一排气球，他的坐标以二维数组给我
 * 我要射最少的箭让他们全部爆炸
@@ -239,7 +238,7 @@ function findMinArrowShots(points) {
 :::
 
 ::::
-### 合并区间
+## 56.合并区间
 ::: tip
 * 给定一个二维数组区间，把所有重叠的区间进行合并
 ```js
@@ -277,7 +276,7 @@ function merge(intervals) {
 ```
 :::
 ::::
-### 跳跃问题
+## 55.跳跃问题
 ::: tip
 * 一个正整数数组
 * 每个数字代表能跳跃的步数
@@ -298,25 +297,16 @@ console.log(canJump(arr2)); // false
 >时间O(n)：82.97%  
 >空间O(1)：82.07%
 ```js{9-15}
-function canJump(arr) {
-    let jumpSize = arr[0];
-    if (jumpSize === 0 && arr.length > 1) {
-        return false;
-    }
-
-    // 边界是length - 1，因为最后一位不用判断
-    for (let i = 1; i < arr.length - 1; i++) {
-        jumpSize--;
-        if (arr[i] > jumpSize) {
-            jumpSize = arr[i];
-        }
-        if (jumpSize <= 0) {
+function canJump(nums) {
+    let maxJump = 0;
+    for (let i = 0; i < nums.length; i++) {
+        maxJump = Math.max(nums[i], --maxJump);
+        if (maxJump < 1 && i !== nums.length - 1) {
             return false;
         }
     }
     return true;
 }
-
 ```
 :::
 ::: tab label=贪心优化
@@ -348,7 +338,7 @@ function canJump(arr) {
 ```
 :::
 ::::
-### 跳跃游戏2
+## 45.跳跃游戏2
 ::: tip
 * 正整数数组
 * 最少跳跃次数到最后
@@ -406,7 +396,7 @@ function jump(arr) {
 ```
 :::
 ::::
-### 判断子序列
+## 392.判断子序列
 ::: tip
 * 给两个字符串
 * 一个字符串是另一个字符串的子集，且出现的顺序是正确的
@@ -438,7 +428,7 @@ function isSubsequence(child, father) {
 ```
 :::
 ::::
-### 买卖股票
+## 122.买卖股票
 ::: tip
 * 一个数组是股票一个时间段的涨跌
 * 求能获取最大的利润

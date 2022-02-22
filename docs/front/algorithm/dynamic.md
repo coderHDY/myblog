@@ -125,7 +125,7 @@ function maxSubArray(num) {
 ::: tab label=动态写法优化
 * 只最后求一次最大值，减少一个变量存储，以及中间赋值过程。
 >tip:`forEach`时间上比`for`循环慢，这是底层实现问题。但是写起来优雅。
-```js{3,5}
+```js
 function maxSubArray(num) {
     num.forEach((item, i) => num[i] = num[i - 1] > 0 ? item + num[i - 1] : item)
     return Math.max(...num);
@@ -636,6 +636,37 @@ function jump(arr) {
         }
     }
     return step;
+}
+```
+:::
+::::
+## 918. 环形子数组的最大和
+:::: tabs
+::: tab label=题
+* 环状数组，求最大连续数组和
+```js
+const nums = [5,-3,5];
+console.log(maxSubarraySumCircular(nums));
+// 输出：10
+```
+:::
+::: tab label=解
+```js
+// 思路：环状数组分开求两边??
+function maxSubarraySumCircular(nums) {
+    const getMax = (arr) => arr.reduce((pre, item, i) => {
+        pre[i] = pre[i - 1] > 0 ? pre[i - 1] + item : item;
+        return pre;
+    })
+    const dp1 = getMax(nums);
+    if (dp1[dp1.length - 1] > 0) {
+        const lastActive = dp1.findLastIndex(item => item <= 0) + 1;
+        const nums2 = [...nums.slice(lastActive), ...nums.slice(0, lastActive)]
+        const dp2 = getMax(nums2);
+        return Math.max(...dp1, ...dp2);
+    } else {
+        return Math.max(...dp1);
+    }
 }
 ```
 :::
