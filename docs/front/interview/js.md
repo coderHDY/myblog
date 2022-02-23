@@ -1274,6 +1274,35 @@ person1.obj.foo2().call(person2); // obj
 |- main.js
 ```
 :::
+::: tab label=原生理解
+```js
+// a.js
+const a = { money: 10000 }
+const add = () => a.money += 11111;
+setTimeout(() => add(), 300);
+
+module.exports = { a }
+```
+```js
+// main.js
+const { a } = require('./a');
+console.log(a); // { money: 10000 }
+setTimeout(() => console.log(a), 2000); // { money: 21111 }
+```
+>执行时
+```js
+// main.js
+// const a = require('./a');
+const { a } = (function () {
+    const a = { money: 10000 }
+    const add = () => a.money += 11111;
+    setTimeout(() => add(), 300);
+    return { a }
+})()
+console.log(a); // { money: 10000 }
+setTimeout(() => console.log(a), 2000); // { money: 21111 }
+```
+:::
 ::: tab label=a.js
 ```js
 let a = 0;
@@ -1285,6 +1314,7 @@ _module.exports = {
     a
 }
 ```
+
 :::
 ::: tab label=main.js
 ```js{4-14,16}
@@ -2165,5 +2195,62 @@ document.getElementById('root').appendChild(ul);
 </body>
 
 ```
+:::
+::::
+## 39.执行环境、上下文、作用域
+:::: tabs
+::: tab label=执行环境
+* `执行环境`可以分为创建和执行两个阶段。
+    * 在创建阶段，解析器首先会创建一个`变量对象`（variable object，也称为`活动对象` activation object）， **它由定义在执行环境中的变量、函数声明、和参数组成**。在这个阶段，`作用域链`会被初始化，`this`的值也会被最终确定。 
+    * 在执行阶段，代码被解释执行。
+    * 每个函数都有自己的执行环境
+    * 每个执行环境都有一个与之关联的`变量对象`
+* **当执行流进入一个函数时，函数的环境就会被推入一个`调用栈`中（execution stack）。在函数执行完后，栈将其环境弹出， 把控制权返回给之前的执行环境。ECMAScript程序中的执行流正是由这个机制控制着。**
+```js{5,10}
+const c = '全局c';
+function a() {
+    const d = '环境a的d';
+    console.log(e);
+    b();
+}
+function b() {
+    const c = '环境b的c';
+    console.log(c);
+    // console.log(d); // 报错，因为b执行环境的活动对象以及作用域链都找不到d
+}
+
+a();
+var e = '全局变量e';
+a();
+```
+![](./assets/scope.png)
+:::
+::: tab label=作用域
+* `作用域`，也叫变量作用域，定义了一个变量的可访问范围。
+* ES6之前，只有`全局作用域`和`函数作用域`，ES6之后新增`块级作用域`
+* 每个函数执行的`活动对象`上找不到变量，就会去函数**定义位置的上层作用域**去找，这就是**作用域链查找**
+```js{4-5,9-10}
+const c = '全局c';
+function a() {
+    const d = '环境a的d';
+    console.log(e); // 首次执行输出undefined，因为作用域链上找来的e还没有被赋值
+    b(); // 能执行因为作用域链上能找到 b函数
+}
+function b() {
+    const c = '环境b的c';
+    console.log(c); // 本活动对象找到了 c， 所以就不去作用域链上找了
+    // console.log(d); // 报错，因为b执行环境的活动对象以及作用域链都找不到d
+}
+
+a();
+var e = '全局变量e';
+a();
+```
+:::
+::: tab label=上下文
+* `上下文`，也叫this上下文，定义了一个函数执行时的**this绑定是哪一个对象**
+    * 一个`function`被调用时他的上下文是调用者，如果没有调用者上下文是window，严格模式是undefined
+    * 一个`箭头函数`被调用时，他的上下文是他定义时就确定好的上下文，也就是说**箭头函数的this是固定的**
+* `bind`/`call`/`apply`可以改变this指向
 :::
 ::::
