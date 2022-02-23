@@ -79,6 +79,7 @@ const front = {
         'js',
         'css',
         'algorithm',
+        'project',
     ],
     '/front/css/': [
         {
@@ -119,6 +120,7 @@ const front = {
         '',
         'cli',
         'router',
+        'redux',
     ],
     '/front/webpack/': [
         '',
