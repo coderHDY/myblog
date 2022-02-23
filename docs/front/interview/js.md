@@ -1615,7 +1615,7 @@ console.log(Array.from(Array(100), x => 1)); // [1, 1, ....]
 </body>
 ```
 
-## 24.如何将数组转化成Iterator对象
+## 24.将数组转化成Iterator对象
 ```js
 const arr = [1, 2, 3];
 
@@ -1696,14 +1696,13 @@ function once(fn) {
     const ansMap = new Map();
     return function(...args) {
         const str = args.toString();
-        let ans = ansMap.get(str);
-        if (ans) {
-            return ans;
+        if (ansMap.has(str)) {
+            return ansMap.get(str);
         } else {
-            ans = fn.call(this, ...args);
+            let ans = fn.call(this, ...args);
             ansMap.set(str, ans);
+            return ans;
         }
-        return ans;
     }
 }
 ```
@@ -1889,7 +1888,6 @@ const shuffle = arr => arr.sort(() => Math.random() - 0.5);
     <button id="login">登录按钮</button>
     <script>
         const login = document.querySelector("#login");
-        const helper = document.querySelector("#helper");
         login.addEventListener('click', () => {
             console.log("登录");
         });
@@ -2128,6 +2126,41 @@ document.getElementById('root').appendChild(ul);
 
         const ul = ulVDom.render();
         document.getElementById('root').appendChild(ul);
+    </script>
+</body>
+
+```
+:::
+::::
+## 38.监听页面离开
+:::: tabs
+::: tab label=效果
+* 监听页面离开事件，进行对应的触发
+* 事件：`visibilitychange`
+* 可见性：`document.visibilityState`
+:::
+::: tab label=实现
+```html
+<body>
+    <div></div>
+    <div class="hide">asdfasdfasdf</div>
+    <div></div>
+    <script>
+        document.addEventListener('visibilitychange', (function () {
+            let title = document.title;
+            return (e) => {
+                // 用户离开了当前页面
+                if (document.visibilityState === 'hidden') {
+                    document.title = '😤跑去干嘛了？';
+                }
+                // 用户打开或回到页面
+                if (document.visibilityState === 'visible') {
+                    document.title = '😄嘿嘿，欢迎回来';
+                    setTimeout(() => document.title = title, 2000);
+                }
+            }
+        })());
+
     </script>
 </body>
 
