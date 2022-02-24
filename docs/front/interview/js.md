@@ -2197,7 +2197,7 @@ document.getElementById('root').appendChild(ul);
 ```
 :::
 ::::
-## 39.执行环境、上下文、作用域
+## 39.执行环境、调用栈、作用域、上下文、闭包
 :::: tabs
 ::: tab label=执行环境
 * `执行环境`可以分为创建和执行两个阶段。
@@ -2249,8 +2249,83 @@ a();
 :::
 ::: tab label=上下文
 * `上下文`，也叫this上下文，定义了一个函数执行时的**this绑定是哪一个对象**
-    * 一个`function`被调用时他的上下文是调用者，如果没有调用者上下文是window，严格模式是undefined
+    * 一个`function`被调用时他的上下文是调用者，如果没有调用者上下文是window，严格模式或模块中是undefined
     * 一个`箭头函数`被调用时，他的上下文是他定义时就确定好的上下文，也就是说**箭头函数的this是固定的**
 * `bind`/`call`/`apply`可以改变this指向
+* **this上下文的属性查找路径是`原型链`**
+:::
+::: tab label=闭包
+* 闭包是一个函数能够访问另一个作用域上变量的函数
+```js{11,13}
+function useAge() {
+    let age = 0;
+    const setAge = (val) => age = parseInt(val) > 0 && parseInt(val) < 100 ? val : age;
+    const getAge = () => age;
+    return {
+        setAge,
+        getAge
+    }
+}
+const me = useAge();
+console.log(me.age); // undefined me对象的《上下文(this、原型链)》上找不到age属性
+
+console.log(me.getAge()); // 0 // getAge的《作用域链》能够查找到age属性
+me.setAge(18);
+console.log(me.getAge()); // 18
+```
+![](./assets/closure.png)
+:::
+::: tab label=IIFE
+* `IIFE`:立即执行函数
+* 闭包的实用场景之一
+```html{5,8-9}
+<body>
+    <script>
+        const arr = [{}, {}, {}];
+
+        // var关键字实际是没有块级作用域的，所以这里就是定义在了全局
+        for (var i = 0; i < arr.length; i++) {
+
+            // 这个IIFE执行完《活动对象并没有被销毁》，
+            // 因为arr[i].fn内保存着对活动对象i的引用
+            ((i) => arr[i].fn = function () {
+                console.log(i)
+            })(i);
+        }
+
+        console.log(i); // 3
+
+        arr.forEach(item => item.fn());
+    </script>
+</body>
+```
+:::
+::: tab label=运用例子
+* at关键字是Array.prototype的新方法，但需要node环境16.6.0，chrome环境92，不确定用户环境能不能使用以下代码
+```js
+const arr = [1, 10, 100, 1000, 9999];
+console.log(arr.at(-1)); // 9999 高级环境能执行，低级环境不能执行
+```
+>解决，用IIFE向原型链添加此方法
+```js
+(function () {
+    if (!Array.prototype.hasOwnProperty('at')) {
+        console.log('手动添加'); // 低级环境会执行，高级环境不会执行
+
+        // IIFE内，无全局变量污染，只有Array.prototype能访问到
+        function at(i) {
+            if (+i < 0) {
+                i = +i + this.length;
+            }
+            return this[i];
+        }
+        Array.prototype.at = at;
+    }
+})()
+
+
+const arr = [1, 10, 100, 1000, 9999];
+console.log(arr.at('-1')); // 9999
+```
 :::
 ::::
