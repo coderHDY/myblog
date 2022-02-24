@@ -387,4 +387,39 @@ function getRightLinks(rawLinks, columns) {
 }
 ```
 :::
+::: tab label=结果
+```js
+// 测试数据
+const columns = [
+    ['NODE_2', 'NODE_3'],
+    ['NODE_1', 'NODE_4', 'NODE_1'],
+    ['NODE_5', 'NODE_3'],
+];
+
+const rawLinks = [
+    { source: 'NODE_2', target: 'NODE_1', value: 3 },
+    { source: 'NODE_2', target: 'NODE_1', value: 23 },
+    { source: 'NODE_3', target: 'NODE_1', value: 11 },
+    { source: 'NODE_1', target: 'NODE_5', value: 53 },
+    { source: 'NODE_1', target: 'NODE_5', value: 6 },
+    { source: 'NODE_3', target: 'NODE_3', value: 20 },
+]
+
+console.log(getRightLinks(rawLinks, columns));
+
+// {
+//     links: [
+//       { source: 'NODE_2', target: 'NODE_1', value: 26 },
+//       { source: 'NODE_2', target: 'NODE_4', value: 0 },
+//       { source: 'NODE_3', target: 'NODE_1', value: 11 },
+//       { source: 'NODE_3', target: 'NODE_4', value: 0 },
+//       { source: 'NODE_1', target: 'NODE_5', value: 59 },
+//       { source: 'NODE_1', target: 'NODE_3', value: 0 },
+//       { source: 'NODE_4', target: 'NODE_5', value: 0 },
+//       { source: 'NODE_4', target: 'NODE_3', value: 0 }
+//     ],
+//     nodes: { NODE_2: 26, NODE_1: 96, NODE_4: 0, NODE_3: 11, NODE_5: 59 }
+// }
+```
+:::
 ::::
