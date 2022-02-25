@@ -262,5 +262,222 @@ export default function applyMiddleware(...middlewares) {
     * 操作开始时，送出一个 Action，触发 State 更新为"正在操作"状态，View 重新渲染
     * 操作结束后，再送出一个 Action，触发 State 更新为"操作结束"状态，View 再一次重新渲染    
 
+>产生问题：`store.dispatch`只能接收`action`作为参数，不是函数，所以需要用`redux-thunk`
+:::
+::: tab label=redux-thunk
+* 作用：让store.dispatch可以接收函数作为参数
+>store接受到这个参数发现是函数以后会去执行这个函数。
+```js
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import reducer from './reducers';
+
+// Note: this API requires redux@>=3.1.0
+const store = createStore(
+  reducer,
+  applyMiddleware(thunk)
+);
+```
+* `actionCreator`定义：`actionCreator`返回的是正常的`action对象`或**一个函数**
+```js{4-6}
+// actionCreator
+const incre = (num = 1) => ({ type: ADD_ONE, num })
+const decre = (num = 1) => ({ type: DEL_ONE, num })
+const increAsync = (num, timer) => (dispatch, getState) =>
+    new Promise(resolve => setTimeout(() => resolve(), timer))
+        .then(res => dispatch({ type: ADD_ONE, num }))
+```
+* 组件使用
+```jsx{3-6}
+<button onClick={() => store.dispatch(decre())}>-1</button>
+<button onClick={() => store.dispatch(incre())}>+1</button>
+<button onClick={
+    () => store.dispatch(increAsync(100, 1000))
+        .then(() => console.log(store.getState()))
+}>异步+100</button>
+```
+:::
+::: tab label=redux-promise
+* 作用：让redux的dispatch接收函数，返回`Promise`对象，可以链式操作异步请求
+```js
+import { createStore, applyMiddleware } from 'redux';
+import promiseMiddleware from 'redux-promise';
+import reducer from './reducers';
+
+const store = createStore(
+  reducer,
+  applyMiddleware(promiseMiddleware)
+); 
+```
+```js
+const fetchPosts = 
+  (dispatch, postTitle) => new Promise(function (resolve, reject) {
+     dispatch(requestPosts(postTitle));
+     return fetch(`/some/API/${postTitle}.json`)
+       .then(response => {
+         type: 'FETCH_POSTS',
+         payload: response.json()
+       });
+});
+```
+* 使用
+```js
+store.dispatch(fetchPosts('reactjs')).then(() =>
+  console.log(store.getState())
+);
+```
+:::
+::: tab label=createAction
+```js
+import { createAction } from 'redux-actions';
+
+class AsyncApp extends Component {
+  componentDidMount() {
+    const { dispatch, selectedPost } = this.props
+    // 发出同步 Action
+    dispatch(requestPosts(selectedPost));
+    // 发出异步 Action
+    dispatch(createAction(
+      'FETCH_POSTS', 
+      fetch(`/some/API/${postTitle}.json`)
+        .then(response => response.json())
+    ));
+}
+```
+* 第二个dispatch方法发出的是异步 Action，只有等到操作结束，这个 Action 才会实际发出。注意，createAction的第二个参数必须是一个 Promise 对象。
+:::
+::::
+## react-redux
+:::: tabs
+::: tab label=介绍
+* react-redux是专门为react将redux进行封装。
+* UI组件不能有自身状态，容器组件由connect生成
+```js{4,14,19,26-27}
+import { incre, decre, increAsync } from "../store"; // 引入 actionCreator
+import { connect } from 'react-redux';
+
+// UI组件
+let TestUI = (props) => (
+    <>
+        <div>{props.count}</div>
+        <button onClick={props.decre}>-1</button>
+        <button onClick={props.incre}>+1</button>
+        <button onClick={props.increAsync}>异步+100</button>
+    </>
+)
+
+// store 里面的 state 映射成容器组件的 props
+const mapStateToProps = state => ({
+    count: state
+})
+
+// 将dispatch映射成容器组件的props
+const mapDispatchToProps = dispatch => ({
+    incre: () => dispatch(incre()),
+    decre: () => dispatch(decre()),
+    increAsync: () => dispatch(increAsync(100, 1000)),
+})
+
+// 用UI组件以及store的规则创建《容器组件》
+const Test = connect(mapStateToProps, mapDispatchToProps)(TestUI)
+
+export default Test;
+```
+:::
+::: tab label=简写
+* `mapDispatchToProps`可以简写为对象形式，值为actionCreator或函数，调用的返回值会被`dispatch`调用
+```js
+// 不同的actionCreator
+const incre = (num = 1) => ({ type: ADD_ONE, num })
+const decre = (num = 1) => ({ type: DEL_ONE, num })
+const increAsync = (num = 100, timer = 1000) => (dispatch) =>
+    new Promise(resolve => setTimeout(() => resolve(), timer))
+        .then(res => dispatch({ type: ADD_ONE, num }))
+```
+```js{1-6}
+// mapDispatchToProps 对象形式简写
+const mapDispatchToProps = {
+    incre,
+    decre,
+    increAsync,  // 返回的是函数，但是也会被dispatch调用，内部又因为有 redux-thunk，所以可以被正确解析
+}
+
+// 用UI组件以及store的规则创建《容器组件》
+const Test = connect(mapStateToProps, mapDispatchToProps)(TestUI)
+```
+* UI组件调用
+```jsx
+<>
+    <div>{props.count}</div>
+    <button onClick={() => props.decre(1)}>-1</button>
+    <button onClick={() => props.incre(1)}>+1</button>
+    <button onClick={() => props.increAsync(100, 1000)}>异步+100</button>
+</>
+```
+:::
+::: tab label=简写整合
+```js
+import { connect } from 'react-redux'
+import { incre, decre, increAsync } from '../store/action-creator'
+import React from 'react';
+
+const Computer = (props) => (
+    <div>
+        <div>{props.count}</div>
+        <button onClick={() => props.decre(1)}>-1</button>
+        <button onClick={() => props.incre(1)}>+1</button>
+        <button onClick={() => props.increAsync(11, 1000)}>异步+11</button>
+    </div>
+)
+
+export default connect(
+    state => ({ count: state }),
+    {
+        incre,
+        decre,
+        increAsync
+    }
+)(Computer)
+```
+:::
+::: tab label=Provider
+* 顶层通过`Provider`组件传入store对象
+    1. 每个通过connect生成的容器组件的props都会被注入`mapStateToProps`/`mapDispatchToProps`定义的store
+    2. store更新，内部直接调用组件render，不用再用`subscribe`监听了
+```js
+// index.js
+import React from "react";
+import ReactDOM from "react-dom";
+import App from './app';
+import { Provider } from 'react-redux';
+import store from './store';
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
+)
+```
+:::
+::: tab label=combineReducers
+* 如果有多个reducer，就需要用`combineReducers`进行合并，再进行store创建
+```js
+const reducers = combineReducers({ count, person });
+const store = createStore(reducers, applyMiddleware(thunk));
+```
+>组件取状态就要对应的取
+```js{3}
+// 容器组件创建
+export default connect(
+    state => ({ count: state.count }),
+    {
+        incre,
+        decre,
+        increAsync
+    }
+)(Computer)
+```
+>注：即使是多个组件，一个`dispatch`还是会触发所有的`reducer`，所以**action的type不能重名**
 :::
 ::::

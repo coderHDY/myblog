@@ -2301,7 +2301,7 @@ console.log(me.getAge()); // 18
 ```
 :::
 ::: tab label=运用例子
-* at关键字是Array.prototype的新方法，但需要node环境16.6.0，chrome环境92，不确定用户环境能不能使用以下代码
+* `at`关键字是Array.prototype的新方法，但需要node环境16.6.0，chrome环境92，不确定用户环境能不能使用以下代码
 ```js
 const arr = [1, 10, 100, 1000, 9999];
 console.log(arr.at(-1)); // 9999 高级环境能执行，低级环境不能执行
