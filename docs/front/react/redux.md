@@ -480,4 +480,23 @@ export default connect(
 ```
 >注：即使是多个组件，一个`dispatch`还是会触发所有的`reducer`，所以**action的type不能重名**
 :::
+::: tab label=推荐目录
+* 将reducers集中管理，actions集中管理
+```txt
+src
+|-redux
+|   |-reducers
+|   |   |-person.js
+|   |   |-count
+|   |-actions
+|   |   |-person.js
+|   |   |-count
+|   |-constans.js
+|   |-index.js
+|-components
+|-app.js
+|-index.js
+```
+>`constans.js`集中定义常量，actions-type
+:::
 ::::

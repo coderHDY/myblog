@@ -98,22 +98,16 @@ tags:
 <img src="./assets/triangle.png" style="width:300px;">
 
 ---
-```html{13-15}
+```html{7-9}
 <body>
-    <div class="father">
-        <div class="child"></div>
-    </div>
-
+    <div></div>
     <style>
-        .father {
-            width: 100px;
-            height: 100px;
-            background-color: #fff;
-        }
-        .child {
-            border-bottom:  solid #333 100px;
-            border-left: solid transparent 50px;
-            border-right: solid transparent 50px;
+        div {
+            width: 0;
+            height: 0;
+            border-bottom: #333 solid 100px;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
         }
     </style>
 </body>
@@ -574,5 +568,129 @@ tags:
 9. 有 CSS column-count 属性且值不为 auto或者有 CSS column-width 属性且值不为 auto
 10. 当前有对于 opacity、transform、fliter、backdrop-filter 应用动画
 11. overflow 不为 visible
+:::
+::::
+## 13.js实现sticky效果
+:::: tabs
+::: tab label=css实现
+```html
+<body>
+        <div id="app">
+        <div class="other"></div>
+        <div class="other">
+            <div class="top">吸顶盒子</div>
+        </div>
+    </div>
+    <style>
+        #app {
+            height: 10000px;
+            width: 100%;
+            background-color: rgb(218, 53, 53);
+        }
+
+        .other {
+            height: 300px;
+            width: 100px;
+            background-color: rgb(140, 206, 233);
+        }
+
+        .top {
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</body>
+```
+:::
+::: tab label=js实现
+```html{22-25,40-41,64-72}
+<body>
+    <div id="app">
+        <div class="other"></div>
+        <div class="other">
+            <div ref="sticky">吸顶盒子</div>
+        </div>
+    </div>
+    <style>
+        #app {
+            height: 10000px;
+            width: 100%;
+            background-color: rgb(218, 53, 53);
+        }
+
+        .other {
+            position: relative;
+            height: 300px;
+            width: 100px;
+            background-color: rgb(140, 206, 233);
+        }
+
+        .sticky {
+            position: fixed;
+            top: 0;
+        }
+    </style>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const app = Vue.createApp({
+            el: '#app',
+            data() {
+                return {
+                    offsetTop: null,
+                    stickyListener: null,
+                }
+            },
+            methods: {
+
+                // 1. 节流实现
+                // 2. 计算body滚动高度 >= 吸顶盒子.offsetTop
+                stickyTopThrottle(time) {
+                    let timer = null;
+                    let isFirst = true;
+                    const stickyDiv = this.$refs.sticky;
+                    return () => {
+                        if (timer && !isFirst) {
+                            return;
+                        }
+                        isFirst = false;
+                        timer = setTimeout(() => {
+                            const scrollTop = document.body.scrollTop;
+                            if (this.offsetTop <= scrollTop) {
+                                stickyDiv.classList.add('sticky');
+                            } else if (stickyDiv.classList.contains('sticky')) {
+                                stickyDiv.classList.remove('sticky');
+                                isFirst = true;
+                            }
+                            timer = null;
+                        }, time)
+                    }
+                },
+
+                // 获取元素到body最外层的 offsetTop 距离
+                getOffsetTop(el) {
+                    let ans = el.offsetTop;
+                    while (el.offsetParent) {
+                        el = el.offsetParent;
+                        ans += el.offsetTop;
+                    }
+                    return ans;
+                }
+            },
+            mounted() {
+                this.offsetTop = this.getOffsetTop(this.$refs.sticky);
+                this.stickyListener = this.stickyTopThrottle(200);
+                document.addEventListener('scroll', this.stickyListener)
+            },
+
+            // 性能：移除监听器
+            beforeUnmount() {
+                document.removeEventListener('scroll', this.stickyListener);
+            }
+        });
+        app.mount("#app")
+    </script>
+</body>
+```
 :::
 ::::

@@ -164,6 +164,47 @@ function fn(a: fish | dog) {
     }
 }
 ```
+## 可选链
+* 表达式取值：左边有才继续取值，左边没有就直接返回undefined
+```js
+const o = {}
+console.log(o.a?.name); // undefined
+
+if (!o.a?.name) {
+    console.log('没有名字'); // 没有名字
+}
+```
+>取代写法
+```js
+const o = {}
+const name = o.a && o.a.name;
+const name2 = o.a?.name;
+```
+## 空值判断
+:::: tabs
+::: tab label=取代写法
+* 赋值写法取代：左边有值就赋值，没有再用右边默认值
+```js
+const str = '你好';
+const s = str ?? '默认值';
+const s2 = str ? str : '默认值';
+
+console.log(s); // 你好
+console.log(s2); // 你好
+```
+:::
+::: tab label=区别
+* 左边有值，无论是否判断为空，都取左边
+```js
+const str = '';
+const s = str ?? '默认值';
+const s2 = str ? str : '默认值';
+
+console.log(s); // 
+console.log(s2); // 你好
+```
+:::
+::::
 ## 判断数组
 :::: tabs
 ::: tab label=Array.isArray
