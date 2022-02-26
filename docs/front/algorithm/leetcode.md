@@ -751,3 +751,59 @@ function swapPairs(head) {
 ```
 :::
 ::::
+## 504. 七进制数
+:::: tabs
+::: tab label=题
+```js
+const num = 100;
+console.log(convertToBase7(num));
+// 输出: "202"
+```
+:::
+::: tab label=解
+>时间：79.15%  
+>空间：13.90%
+```js
+function convertToBase7(num) {
+    if (num === 0) {
+        return '0'
+    }
+    let ans = '';
+    const positive = num >= 0;
+    if (!positive) {
+        num = 0 - num;
+    }
+    let c = num;
+
+    while (c / 7 >= 1) {
+
+        // 余数放最后面
+        const a = Math.floor(c / 7);
+
+        // 商替换下一轮计算
+        const b = c - a * 7;
+        ans = b + ans;
+        c = a;
+    }
+
+    // 推入最后一个商
+    if (c != 0) {
+        ans = c + ans;
+    }
+    if (!positive) {
+        ans = '-' + ans;
+    }
+    return ans;
+}
+```
+:::
+::: tab label=原生计算
+>时间：89.58%  
+>空间：5.41%
+```js
+function convertToBase7(num) {
+    return num.toString(7);
+}
+```
+:::
+::::

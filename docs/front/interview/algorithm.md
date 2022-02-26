@@ -423,3 +423,37 @@ console.log(getRightLinks(rawLinks, columns));
 ```
 :::
 ::::
+## 7.八进制加法
+:::: tabs
+::: tab label=题
+```js
+console.log(add('12343234', '42343234')); // 54786478
+```
+:::
+::: tab label=解
+* 按竖式思路进行求解
+```js
+function add(num1, num2) {
+    const arr1 = num1.split('').reverse();
+    const arr2 = num2.split('').reverse();
+    let ans = [];
+    let addOne = 0;
+    const maxLen = Math.max(num1.length, num2.length);
+    for (let i = 0; i < maxLen; i++) {
+        const n1 = arr1[i] != undefined ? +arr1[i] : 0;
+        const n2 = arr2[i] != undefined ? +arr2[i] : 0;
+        let sum;
+        if (n1 + n2 + addOne > 7) {
+            sum = n1 + n2 + addOne % 8;
+            addOne = 1;
+        } else {
+            sum = n1 + n2 + addOne;
+            addOne = 0;
+        }
+        ans.push(sum);
+    }
+    return ans.reverse().join('');
+}
+```
+:::
+::::
