@@ -803,6 +803,51 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 </body>
 ```
 :::
+::: tab label=防抖、节流有多重要
+* 触发事件的频率越高，防抖和节流的作用体现就越明显。
+>监听窗口滚动，计算一秒钟内的滚动事件触发回调的次数。可以发现浏览器每秒一个事件触发100-150次，节流频率随计时器长短定。性能提升幅度很大。
+```html{24-34}
+<body>
+    <div></div>
+    <style>
+        div {
+            width: 100px;
+            height: 10000px;
+            background-color: rgb(250, 145, 145);
+        }
+    </style>
+    <script>
+        function throttle(fn, delay) {
+            let timer;
+            return function (...args) {
+                if (timer) {
+                    return;
+                }
+                timer = setTimeout(() => {
+                    fn.call(null, ...args)
+                    timer = null;
+                }, delay)
+            }
+        }
+
+        // 只监听一秒做对比
+        let end;
+        const callback1 = () => {
+            if (!end) {
+                end = Date.now() + 1000;
+            } else if (Date.now() > end) {
+                return;
+            }
+            console.log('e');
+        };
+        const callback2 = throttle(callback1, 100);
+
+        document.addEventListener('scroll', callback1); // 103次
+        // document.addEventListener('scroll', callback2); // 10次
+    </script>
+</body>
+```
+:::
 ::::
 ## 10.百度搜索原理
 :::: tabs
@@ -2326,6 +2371,37 @@ console.log(arr.at(-1)); // 9999 高级环境能执行，低级环境不能执�
 
 const arr = [1, 10, 100, 1000, 9999];
 console.log(arr.at('-1')); // 9999
+```
+:::
+::::
+## 40.闭包连续和
+:::: tabs
+::: tab label=题
+* 实现函数
+```js
+const f1 = sum(1, 2, 3);
+console.log(f1.getValue()); // 6
+
+const f2 = sum(1)(2, 3);
+console.log(f1.getValue()); // 6
+
+const f3 = sum(1)(2)(3)(4);
+console.log(f1.getValue()); // 10
+```
+:::
+::: tab label=解
+* function身上也可以加属性
+```js
+function sum(...args) {
+    let ans = 0
+    const add = (...args2) => {
+        ans = args2.reduce((pre, item) => pre + item, ans);
+        return add;
+    };
+    add.getValue = () => ans;
+    add(...args);
+    return add;
+}
 ```
 :::
 ::::

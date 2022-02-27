@@ -220,6 +220,8 @@ tags:
 * 长宽固定比例的盒子
 :::
 ::: tab label=padding/margin
+* padding/margin用百分比表示时，是通过width做基准的。
+>不过padding有背景色，margin没有背景色
 ```html
 <body>
     <div></div>
@@ -573,7 +575,7 @@ tags:
 ## 13.js实现sticky效果
 :::: tabs
 ::: tab label=css实现
-```html
+```html{22-23}
 <body>
         <div id="app">
         <div class="other"></div>
