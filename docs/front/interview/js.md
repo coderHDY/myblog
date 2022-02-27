@@ -2383,10 +2383,10 @@ const f1 = sum(1, 2, 3);
 console.log(f1.getValue()); // 6
 
 const f2 = sum(1)(2, 3);
-console.log(f1.getValue()); // 6
+console.log(f2.getValue()); // 6
 
 const f3 = sum(1)(2)(3)(4);
-console.log(f1.getValue()); // 10
+console.log(f3.getValue()); // 10
 ```
 :::
 ::: tab label=解
