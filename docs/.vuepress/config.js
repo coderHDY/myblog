@@ -18,7 +18,7 @@ module.exports = {
     ],
     locales: {
         '/': {
-          lang: 'zh-CN',
+            lang: 'zh-CN',
         },
     },
     themeConfig: {
@@ -44,6 +44,12 @@ module.exports = {
                 logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/reco.png',
                 link: 'https://www.recoluan.com'
             },
+            {
+                title: '小紫念沁',
+                desc: '不积跬步,无以至千里.不积小流,无以成江海',
+                logo: 'https://anyfork.gitee.io/blog-docs/images/user.jpg',
+                link: 'https://anyfork.gitee.io/blog-docs/'
+            }
         ],
         // 博客设置
         blogConfig: {
