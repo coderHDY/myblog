@@ -640,3 +640,52 @@ function jump(arr) {
 ```
 :::
 ::::
+## 152.最大乘积子数组
+:::: tabs
+::: tab label=题
+* 连续的，最大乘积的，子数组
+```js
+const nums = [2,3,-2,4]
+console.log(maxProduct(nums));
+// 输出: 6
+// 解释: 子数组 [2,3] 有最大乘积 6。
+```
+:::
+::: tab label=解1
+* 重点：动态规划要考虑两个负数相隔很远的情况
+>用两个动态规划数组分别存储最大值最小值  
+>时间：96.48%  
+>空间：8.73%
+```js
+function maxProduct(nums) {
+    const maxDp = [nums[0]];
+    const minDp = [nums[0]];
+    for (let i = 1; i < nums.length; i++) {
+        maxDp[i] = Math.max(nums[i], nums[i] * maxDp[i - 1], nums[i] * minDp[i - 1]);
+        minDp[i] = Math.min(nums[i], nums[i] * maxDp[i - 1], nums[i] * minDp[i - 1]);
+    }
+    return Math.max(...maxDp);
+}
+```
+:::
+::: tab label=指针优化
+>时间：96.48%  
+>空间：19.12%
+```js
+function maxProduct(nums) {
+    let max = nums[0];
+    let min = nums[0];
+    let ans = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+
+        // 因为下面就要赋值，所以先暂存上次的最大/小值
+        const [mx, mn] = [max, min];
+        max = Math.max(nums[i] * mx, nums[i] * mn, nums[i]);
+        min = Math.min(nums[i] * mx, nums[i] * mn, nums[i]);
+        ans = Math.max(max, ans);
+    }
+    return ans;
+}
+```
+:::
+::::
