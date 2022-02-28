@@ -351,7 +351,7 @@ class AsyncApp extends Component {
 :::: tabs
 ::: tab label=介绍
 * react-redux是专门为react将redux进行封装。
-* UI组件不能有自身状态，容器组件由connect生成
+* UI组件不能读取或设置redux状态，要通过容器组件和redux进行连接，连接的方式是props，容器组件由connect生成
 ```js{4,14,19,26-27}
 import { incre, decre, increAsync } from "../store"; // 引入 actionCreator
 import { connect } from 'react-redux';
@@ -487,16 +487,78 @@ src
 |-redux
 |   |-reducers
 |   |   |-person.js
-|   |   |-count
+|   |   |-count.js
+|   |   |-index.js
 |   |-actions
 |   |   |-person.js
-|   |   |-count
+|   |   |-count.js
 |   |-constans.js
 |   |-index.js
 |-components
 |-app.js
 |-index.js
 ```
->`constans.js`集中定义常量，actions-type
+>`redux/constans.js`集中定义常量，actions-type
+```js
+const INCRE = '+1';
+const DECRE = '-1';
+const INCRE_ASYNC = '异步+1';
+
+const ADD_PERSON = '加一个人';
+
+export {
+    INCRE,
+    DECRE,
+    INCRE_ASYNC,
+    ADD_PERSON,
+}
+```
+>`redux/reducers/index.js`集中`combineReducers`，这样store目录更清晰
+```js
+import count from './count';
+import person from './person';
+import { combineReducers } from 'redux';
+
+export default combineReducers({
+    count,
+    person
+});
+```
+>`redux/index.js`开发中尽量不做改动
+```js
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import reducers from './reducers';
+import thunk from 'redux-thunk';
+
+const store = createStore(reducers,
+    composeWithDevTools(applyMiddleware(thunk))
+);
+
+export default store;
+```
+:::
+::::
+## redux-devtools
+:::: tabs
+::: tab label=安装
+* 谷歌商店安装/解压包安装
+* 项目安装库
+```js
+npm i redux-devtools-extension
+```
+```js{3,7-10}
+// redux/index.js 
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from '@redux-devtools/extension';
+
+const store = createStore(
+  reducer,
+  composeWithDevTools(
+    applyMiddleware(...middleware)
+    // other store enhancers if any
+  )
+);
+```
 :::
 ::::

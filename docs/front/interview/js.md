@@ -2405,3 +2405,21 @@ function sum(...args) {
 ```
 :::
 ::::
+## 41.正则1
+:::: tabs
+::: tab label=题
+```js
+// 返回以空格分割的含有a的字符串
+const str = 'b ab abc abbcc abcdd bbadd ffee';
+console.log(getHasA(str));
+```
+:::
+::: tab label=解
+```js
+function getHasA(str) {
+    const reg = /\S*a\S*/g;
+    return str.match(reg);
+}
+```
+:::
+::::
