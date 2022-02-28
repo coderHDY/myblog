@@ -2423,3 +2423,41 @@ function getHasA(str) {
 ```
 :::
 ::::
+## 42.不使用运算符计算
+:::: tabs
+::: tab label=题
+* 不使用加减乘除运算符，求两个数相乘
+```js
+const num = 7;
+const times = 8;
+console.log(getVal(times)(num)); // 56
+```
+:::
+::: tab label=解1
+* 制作等长字符串
+```js
+function getVal(times) {
+    return num => ''.padEnd(num, 0).repeat(times).length;
+}
+```
+:::
+::: tab label=解2
+* 同理，制作等长数组
+```js
+function getVal(times) {
+    return num => Array(times).fill().reduce(pre => pre.concat(Array(num)), []).length
+}
+```
+:::
+::: tab label=解3
+* 位运算向左移动一位，就是乘以当前进制
+>2进制下： 1 -> 10 ， 相当于 1 -> 2  
+>8进制下： 7 -> 70 ， 相当于 7 -> 56  
+```js
+function getVal(times) {
+    return num => parseInt(`${num.toString(times)}0`, times)
+}
+``` 
+>限制：js中，进制必须在[2-36]之间
+:::
+::::

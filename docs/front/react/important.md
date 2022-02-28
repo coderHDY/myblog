@@ -255,3 +255,24 @@ export default class App extends Component {
 ```
 :::
 ::::
+## Fragment
+:::: tabs
+::: tab label=使用
+* 作用与空标签相同，避免创造无用根标签
+>区别：Fragment可以写`key`/`children`值，空标签不能写属性。
+```jsx{7-9}
+import React, { createRef, Fragment } from 'react'
+
+export default function Test() {
+    const p = ['张三', '李四', '王五', 'hdy']
+    return (
+        p.map(item => (
+            <Fragment key={item}>
+                <div>{item}</div>
+            </Fragment>
+        ))
+    )
+}
+```
+:::
+::::
