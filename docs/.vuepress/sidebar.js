@@ -121,6 +121,7 @@ const front = {
         'cli',
         'router',
         'redux',
+        'important',
     ],
     '/front/webpack/': [
         '',
