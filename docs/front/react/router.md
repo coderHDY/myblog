@@ -50,8 +50,67 @@ export default function Test() {
 
 ```
 :::
-::::
+::: tab label=活动导航
+* 可以将当前正在展示的路由导航加上`active`的class
+```jsx{15-16}
+import React, { Component, lazy, Suspense } from 'react'
+import { Route, Routes, NavLink } from 'react-router-dom'
+import Home from './components/Home';
+import About from './components/About';
 
+export default class App extends Component {
+    render() {
+        return (
+            <>
+                <Routes>
+                    <Route path="/home" element={<Home />}></Route>
+                    <Route path="/about" element={<About />}></Route>
+                </Routes>
+                <div>
+                    <NavLink to="/home">home</NavLink>
+                    <NavLink to="/about">about</NavLink>
+                </div>
+            </>
+        )
+    }
+}
+```
+:::
+::::
+## 懒加载
+:::: tabs
+::: tab label=懒加载配置
+* `lazy`：定义懒加载组件
+* `Suspense`：定义加载时的Loading组件【必须】
+```jsx{1,5-6,12-17}
+import React, { Component, lazy, Suspense } from 'react'
+import { Route, Routes, Link } from 'react-router-dom'
+import Loading from './components/Loading';
+
+const Home = lazy(() => import('./components/Home'));
+const About = lazy(() => import('./components/About'));
+
+export default class App extends Component {
+    render() {
+        return (
+            <>
+                <Suspense fallback={<Loading />}>
+                    <Routes>
+                        <Route path="/home" element={<Home />}></Route>
+                        <Route path="/about" element={<About />}></Route>
+                    </Routes>
+                </Suspense>
+                <div>
+                    <Link to="/home">home</Link>
+                    <Link to="/about">about</Link>
+                </div>
+            </>
+        )
+    }
+}
+```
+:::
+::::
 ## 集中配置
 :::: tabs
 ::: tab label=config

@@ -118,6 +118,7 @@ const front = {
     ],
     '/front/react/': [
         '',
+        'hooks',
         'cli',
         'router',
         'redux',
