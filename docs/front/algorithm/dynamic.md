@@ -74,8 +74,12 @@ function climbStairs(n) {
 }
 ```
 :::
-::: tab label=动态规划优化
-* 动态规划是从f(1)求到f(n)，但是每次使用的只是前面两个数的解，剩下的用不到，就可以把空间复杂度优化成O(1)
+::: tab label=状态转移方程
+```js
+dp[i] = dp[i - 1] + dp[i - 2]
+// 所以总是留 前两个值就行
+```
+* 空间复杂度优化成O(1)
 >时间O(n)：98.91%  
 >空间O(1)：94.10%
 ```js
@@ -105,36 +109,43 @@ console.log(maxSubArray(nums)); // 6
 ::: tab label=动态规划思想
 * (从 i=1 开始)，num[i -1] 如果大于0，num[i]就变成num[i - 1] + num[i]
 * 遍历一遍求出最大值
->时间O(n)：99.83%  
->空间O(1)：64.00%
-```js{4-9}
+>时间O(n)：94.75%  
+>空间O(1)：8.30%
+```js{4-7}
 function maxSubArray(num) {
+    const dp = [num[0]];
     let max = num[0];
     for (let i = 1; i < num.length; i++) {
-        if (num[i - 1] > 0) {
-            num[i] = num[i] + num[i - 1];
-        }
-        if (num[i] > max) {
-            max = num[i];
-        }
+        dp[i] = dp[i - 1] > 0 ? dp[i - 1] + num[i] : num[i];
+        max =dp[i] > max ? dp[i] : max;
     }
     return max;
 }
 ```
 :::
-::: tab label=动态写法优化
-* 只最后求一次最大值，减少一个变量存储，以及中间赋值过程。
->tip:`forEach`时间上比`for`循环慢，这是底层实现问题。但是写起来优雅。
+::: tab label=状态转移方程
+```js
+// 总是要连续当前最大和，也就是说上一位是正数就可以加他
+dp[i] = dp[i - 1] > 0 ? dp[i - 1] + nums[i] : num[i]
+// 所以只要存动态规划数组前一个值供后一位使用就行
+```
+>时间：94.75%  
+>空间：39.35%
 ```js
 function maxSubArray(num) {
-    num.forEach((item, i) => num[i] = num[i - 1] > 0 ? item + num[i - 1] : item)
-    return Math.max(...num);
+    let pre = num[0];
+    let max = num[0];
+    for (let i = 1; i < num.length; i++) {
+        pre = pre > 0 ? pre + num[i] : num[i];
+        max = Math.max(pre, max);
+    }
+    return max;
 }
 ```
 :::
 ::: tab label=贪心
-* 一个指针保存当前最大和
-* 一个指针保存当前连续和
+* 一个变量保存当前最大和
+* 一个变量保存当前连续和
 * 当前连续和小于0则丢弃
 * 当前连续和大于最大和则替换最大和
 >时间O(n)：99.83%  
@@ -173,16 +184,15 @@ console.log(lengthOfLIS(nums)); // 4 【2，5，7，101】
 >空间O(n)：65.08%
 ```js{5-11}
 function lengthOfLIS(nums) {
-    const dp = [];
-    dp[0] = 1;
+    const dp = [1];
     for (let i = 1; i < nums.length; i++) {
-        let max = 1;
+        let cMax = 1;
         for (let j = 0; j < i; j++) {
-            if (nums[i] > nums[j]) {
-                max = Math.max(dp[j] + 1, max);
+            if (nums[i] > nums[j] && dp[j] + 1 > cMax) {
+                cMax = dp[j] + 1;
             }
         }
-        dp[i] = max;
+        dp[i] = cMax;
     }
     return Math.max(...dp);
 }
@@ -685,6 +695,102 @@ function maxProduct(nums) {
         ans = Math.max(max, ans);
     }
     return ans;
+}
+```
+:::
+::::
+## 1567. 积为正数子数组长度
+:::: tabs
+::: tab label=题
+* 连续相乘，积为正数，最长子数组长度
+```js
+const nums = [1, -2, -3, 4]; // 4
+// const nums = [0, 1, -2, -3, -4]; // 3
+// const nums = [1, 2, 3, 5, -6, 4, 0, 10]; // 4
+// const nums = [-1, 2]; // 1
+console.log(getMaxLen(nums));
+```
+:::
+::: tab label=解
+* 一个正数长度，一个负数长度，一起向前加，遇到负数正负互换
+>时间：95.60%  
+>空间：39.60%
+```js
+function getMaxLen(nums) {
+    let max = 0;
+    let z = 0;
+    let f = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 0) {
+            z = 0;
+            f = 0;
+        } else if (nums[i] > 0) {
+            z++;
+            f += f > 0 ? 1 : 0; // 细节判断，负数有才让他加
+            max = Math.max(z, max);
+        } else {
+            [z, f] = [f, z];
+            f++;
+            z += z > 0 ? 1 : 0; // 细节判断，正数有才让他加
+            max = Math.max(z, max);
+        }
+    }
+    return max;
+}
+```
+:::
+::::
+## 1014. 最佳观光组合
+:::: tabs
+::: tab label=题
+* 一对景点（i < j）组成的观光组合的得分为 `values[i] + values[j] + i - j` ，也就是景点的评分之和 减去 它们两者之间的距离。
+* 求最大值
+```js
+const values = [8,1,5,2,6];
+console.log(maxScoreSightseeingPair(nums));
+// 输出：11
+```
+:::
+
+::: tab label=解
+* 常规动态规划，时间太长O(n^2)
+>时间：7.14%  
+>空间：6.83%
+```js
+function maxScoreSightseeingPair(values) {
+    const dp = [values[0]];
+    for (let i = 1; i < values.length; i++) {
+        let cMax = 0;
+        for (let j = 0; j < i; j++) {
+            const cVal = values[i] + values[j] - (i - j);
+            cMax = Math.max(cVal, cMax);
+        }
+        dp[i] = cMax;
+    }
+    return Math.max(...dp);
+}
+```
+:::
+::: tab label=状态转移方程
+```js
+// 状态转移方程：
+dp[i] = val[i] + val[j] - (i - j)
+// 变形：
+dp[i] = val[i] - i + (j + val[j])
+// 要最大值，所以 j + val[j] 留最大
+```
+>时间：90.06%  
+>空间：21.74%
+```js
+function maxScoreSightseeingPair(val) {
+    let maxLeft = val[0] + 0;
+    let max = 0;
+    for (let i = 1; i < val.length; i++) {
+        const cVal = val[i] - i + maxLeft;
+        max = Math.max(max, cVal);
+        maxLeft = Math.max(val[i] + i, maxLeft);
+    }
+    return max;
 }
 ```
 :::
