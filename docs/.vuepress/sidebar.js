@@ -90,6 +90,7 @@ const front = {
                 'selector',
                 'box',
                 'text',
+                'responsive',
             ]
         },
         {

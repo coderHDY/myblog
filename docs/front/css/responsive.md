@@ -40,6 +40,7 @@ date: 2022-03-04
 :::
 ::: tab label=dpr限定
 * dpr: 物理像素/设备像素
+* 修改属性值用`content`
 ```html
 <body>
     <img src="https://www.baidu.com/img/flexible/logo/pc/result@2.png">
