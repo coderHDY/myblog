@@ -530,6 +530,58 @@ ReactDOM.render(<MyInput/>, document.getElementById('root'));
 * React使用对象池来管理合成事件对象的创建和销毁，这样减少了垃圾的生成和新对象内存的分配，大大提高了性能
 >例：document内有100个onClick事件，但是统一收集在document上，事件冒泡机制，event.target又能拿到对应的元素，绑定的一个对应的方法，进行触发。完成事件代理。
 :::
+::: tab label=context
+* `createContext`得到一个声明上下文的对象，祖先组件`Provider`进行向下**穿透传递**
+* 后代组件中需要使用的时候添加静态属性`contextType`进行接收
+>开发一般不用，一般用来封装库
+```jsx{3-4,7,15-18,27-28}
+import React, { createContext } from 'react'
+
+//声明context
+const InfoCtx = createContext();
+
+export default function Test() {
+    const { Provider } = InfoCtx;
+    const state = {
+        name: '爷爷给孙子',
+        age: 18
+    };
+    return (
+        <>
+            爷爷:{state.name}
+            <Provider value={state}>
+                <B />
+            </Provider>
+        </>
+    )
+}
+
+class B extends React.Component {
+    render() { return (<C />) }
+}
+
+class C extends React.Component {
+    static contextType = InfoCtx;
+    render() { return (<div>孙子：{this.context.name} - {this.context.age}</div>) }
+}
+```
+* 函数式组件：从ctx对象拿出`Consumer`，里面可以写函数，获得父组件传递的value
+```jsx{3-4,9-11}
+import React, { createContext } from 'react'
+
+const InfoCtx = createContext();
+const { Provider, Consumer } = InfoCtx;
+// ...
+
+function C() {
+    return (
+        <Consumer>
+            {val => <div>孙子：{val.name} - {val.age}</div>}
+        </Consumer>
+    )
+}
+```
+:::
 ::::
 ## 生命周期
 :::: tabs

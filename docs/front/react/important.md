@@ -276,3 +276,104 @@ export default function Test() {
 ```
 :::
 ::::
+## 组件间通信方式总结
+:::: tabs
+::: tab label=父子
+* `props`传递事件与状态
+* 子传父可以通过`props`传递函数给子组件修改父组件状态
+```jsx
+import React, { useState } from 'react';
+
+export default function Test() {
+    const [count, setCount] = useState(0);
+    const addOne = () => setCount(n => n + 1);
+    return (
+        <>
+            <B count={count} addOne={addOne} />
+        </>
+    )
+}
+
+function B(props) {
+    const { count, addOne } = props;
+    return (
+        <>
+            <div>
+                count: {count}
+            </div>
+            <button onClick={addOne}>+1</button>
+        </>
+    )
+}
+```
+:::
+::: tab label=祖孙
+* `context` 祖先传递，后代组件想用自取
+```jsx{3,9-11,20}
+import React, { createContext, useContext, useState } from 'react';
+
+const CountCtx = createContext();
+export default function Test() {
+    const [count, setCount] = useState(0);
+    const addOne = () => setCount(n => n + 1);
+    return (
+        <>
+            <CountCtx.Provider value={{ count, addOne }}>
+                <B />
+            </CountCtx.Provider>
+        </>
+    )
+}
+
+function B() {
+    return (<C />)
+}
+function C() {
+    const { count, addOne } = useContext(CountCtx);
+    return (
+        <>
+            <div>count: {count}</div>
+            <button onClick={addOne}>+1</button>
+        </>
+    )
+}
+```
+:::
+::: tab label=兄弟
+* `pubsub`/`event`事件订阅发布
+* `redux`/`dva`集中状态管理
+```shell
+npm i pubsub-js
+```
+```jsx{6-9,12,22}
+import React, { useState, useEffect } from 'react';
+import PubSub from 'pubsub-js';
+
+export default function Test() {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+        const token = PubSub.subscribe('addOne', () => setCount(n => n + 1));
+        return () => PubSub.unsubscribe(token);
+    }, []);
+    return (
+        <>
+            <div>count: {count}</div>
+            <B />
+        </>
+    )
+}
+
+function B() {
+    return (<C />)
+}
+function C() {
+    const addOne = () => PubSub.publish('addOne');
+    return (
+        <>
+            <button onClick={addOne}>+1</button>
+        </>
+    )
+}
+```
+:::
+::::

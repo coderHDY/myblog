@@ -51,3 +51,6 @@ date: 2022-02-17
 * merge-images 一个将多张图片合并成一张图的js插件
 * cropperjs 一款强大的图片裁切库, 支持灵活的图片裁切方式
 * Grade 一个基于图像中的前2种主要颜色生成互补渐变背景的库
+
+## 屏幕dpr自查
+* [屏幕尺寸大全](https://uiiiuiii.com/screen/)
