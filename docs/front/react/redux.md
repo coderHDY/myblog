@@ -107,8 +107,10 @@ const chatReducer = (state = defaultState, action = {}) => {
 };
 // 每一个属性，又对应一个更小的 reducer，这样整体的reducer就会更清晰
 ```
+>state是一个对象，有chatLog、statusMessage、userName等属性，然后**属性值又是一个个更小的reducer函数的返回值**，每次调用整体的reducer，就会调用重新计算计算更小的reducer，同时整个对象又作为整体新state返回，更新store
 :::
 ::: tab label=combineReducers
+* 另一种拆分方式，通过`combineReducers`将多个reducer进行合并，作为整体reducer输出
 ```js
 import { combineReducers } from 'redux';
 
