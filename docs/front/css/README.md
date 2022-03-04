@@ -1191,8 +1191,10 @@ tags:
 </body>
 ```
 :::
-::: tab label=伪元素解决
-* 需要计算出伪元素占主轴的长度  
+::: tab label=伪元素
+* 父元素留伪元素解决
+* 需要计算出伪元素占主轴的长度，**缺点：不够动态，css不能够预知最后一行有几个元素**
+
 <img src="./assets/spacebetween2.png" style="width:300px;">
 
 ```html{31-34}
@@ -1233,4 +1235,198 @@ tags:
     </style>
 </body>
 ```
+:::
+::: tab label=伪元素升级
+* 除了最后一个，都带上margin-right，伪元素设置`flex:auto`自动填充
+```html{34-39,41-44}
+<body>
+    <div id='container'>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>古</span>
+
+    </div>
+
+    <style>
+        #container {
+            display: flex;
+            background-color: rgb(241, 149, 149);
+            width: 160px;
+            height: 100px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .child {
+            background-color: rgb(98, 133, 231);
+            margin-bottom: 1px;
+            width: 30px;
+        }
+
+        .child:nth-child(5n - 1),
+        .child:nth-child(5n - 2),
+        .child:nth-child(5n - 3),
+        .child:nth-child(5n - 4) {
+            margin-right: 2.3px;
+        }
+
+        #container::after {
+            content: '';
+            flex: auto;
+        }
+
+    </style>
+</body>
+```
+:::
+::: tab label=计算margin
+* 不使用`justify-content`，并且除了最后一列元素，都赋予计算好的margin值
+```html{20-21,33-36}
+<body>
+    <div id="container">
+        <span class="child">中</span>
+        <span class="child">国</span>
+        <span class="child">古</span>
+        <span class="child">代</span>
+        <span class="child">中</span>
+        <span class="child">国</span>
+        <span class="child">古</span>
+        <span class="child">代</span>
+        <span class="child">中</span>
+        <span class="child">国</span>
+        <span class="child">古</span>
+    </div>
+
+    <style>
+        #container {
+            display: flex;
+            background-color: rgb(241, 149, 149);
+            /* 直接预留的就是间距2px */
+            width: 158px;
+            height: 100px;
+            flex-wrap: wrap;
+            /* justify-content: space-between; */
+        }
+
+        .child {
+            background-color: rgb(98, 133, 231);
+            margin-bottom: 1px;
+            width: 30px;
+        }
+
+        /* 重点：除了最后一个，都有自己的 margin-right */
+        .child:not(:nth-child(5n)) {
+            margin-right: 2px;
+        }
+
+    </style>
+</body>
+```
+:::
+::: tab label=计算margin
+* 还使用`justify-content`，通过选择器计算出最后一个元素是最后一行第几个，再分别赋予margin值
+
+```html{34-36,38-40,42-44}
+<body>
+    <div id='container'>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>代</span>
+    </div>
+
+    <style>
+        #container {
+            display: flex;
+            background-color: rgb(241, 149, 149);
+            width: 160px;
+            height: 100px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .child {
+            background-color: rgb(98, 133, 231);
+            margin-bottom: 1px;
+            width: 30px;
+        }
+
+        .child:last-child:nth-child(5n - 1) {
+            margin-right: calc(30px + 2.3px);
+        }
+
+        .child:last-child:nth-child(5n - 2) {
+            margin-right: calc(30px + 2.3px + 30px + 2.3px);
+        }
+
+        .child:last-child:nth-child(5n - 3) {
+            margin-right: calc(30px + 2.3px + 30px + 2.3px + 30px + 2.3px);
+        }
+
+    </style>
+</body>
+```
+:::
+::: tab label=不固定列数
+* 使用`无高度占位元素`改变了html解构，**且最后一列会有margin-right**
+```html{15,33-36}
+<body>
+    <div id='container'>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>代</span>
+        <span class='child'>中</span>
+        <span class='child'>国</span>
+        <span class='child'>古</span>
+        <span class='child'>古</span>
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+
+    <style>
+        #container {
+            display: flex;
+            background-color: rgb(241, 149, 149);
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .child {
+            background-color: rgb(98, 133, 231);
+            margin-bottom: 1px;
+            width: 30px;
+            margin-right: 2.3px;
+        }
+
+        #container>i {
+            width: 30px;
+            margin-right: 2.3px;
+        }
+
+    </style>
+</body>
+```
+:::
 ::::
