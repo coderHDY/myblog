@@ -187,3 +187,139 @@ window.innerWidth
 |viewport-fit|针对刘海屏的网页适配，一般都加|cover|
 :::
 ::::
+## 移动端适配
+:::: tabs
+::: tab label=需求
+* 做一个：
+    * iphone6标准：375*667
+    * 盒子：345*150
+    * 居中，上左右边距15px
+    * 背景蓝
+* **无论采用什么方式做移动端适配，中心原则是`等比`**
+:::
+::: tab label=viewport
+* **直接将布局容器宽度变成设计稿的宽度**，不禁止伸缩放，那么会视觉视口自动伸缩至布局视口大小，展示对应的宽高。
+* 问题：
+    1. 某些安卓机不支持，兼容性不好
+    2. 不希望进行伸缩适配的值，例如边框或阴影，也参与了伸缩适配，ipad横向字体会很大
+```html{6,20-22}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=375">
+    <title>Document</title>
+</head>
+
+<body>
+    <div></div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            margin: 0 auto;
+            margin-top: 15px;
+            width: 345px;
+            height: 150px;
+            background-color: blue;
+        }
+
+    </style>
+</body>
+
+</html>
+```
+:::
+::: tab label=rem【1】
+* **未来主流方式，百度，淘宝都是这种方式**
+* em
+    * 子元素字体大小的em是相对于父元素字体大小
+    * 元素的width/height/padding/margin用em的话是相对于该元素的font-size
+* rem：根据根元素`font-size`设置比例:
+    * iphone6:375px的设备独立像素，根元素font-size设置为100px;
+    * 其他设备根元素font-size加载后重新设置：`??? / dpi = 100 / 375`
+    * `dpi`为设备`独立像素宽度`，设备独立像素在meta标签内设置为等于布局视口宽度，所以直接拿`布局视口宽度`
+```html{6,18-20,24-26,32-41}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
+    <title>Document</title>
+</head>
+
+<body>
+    <div></div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            font-size: 100px;
+        }
+
+        div {
+            margin: 0 auto;
+            margin-top: 0.15rem;
+            width: 3.45rem;
+            height: 1.5rem;
+            background-color: blue;
+        }
+
+    </style>
+    <script>
+        (function () {
+            const setRootFontSize = () => {
+                const dpi = document.documentElement.clientWidth;
+                console.log(dpi);
+                const fontSize = dpi * 100 / 375;
+                document.documentElement.style.fontSize = fontSize + 'px';
+            }
+            setRootFontSize();
+            window.addEventListener('resize', setRootFontSize);
+        })()
+    </script>
+</body>
+</html>
+```
+:::
+::: tab label=vw百分比
+```html{20-22}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div></div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        div {
+            margin: 0 auto;
+            margin-top: 4vw;
+            width: 92vw;
+            height: 40vw;
+            background-color: blue;
+        }
+
+    </style>
+</body>
+</html>
+```
+:::
+::::
