@@ -343,7 +343,7 @@ const people = {
 ReactDOM.render(<People {...people}/>, document.getElementById('root'));
 ```
 :::
-::: tab label=props类型限制
+::: tab label=props限制
 * [官网](https://zh-hans.reactjs.org/docs/typechecking-with-proptypes.html#gatsby-focus-wrapper)
 * 引入`prop-types`库
 * 类`静态属性`设置属性`propTypes`，限制类型
@@ -443,7 +443,7 @@ MyComponent.propTypes = {
 
 ```
 :::
-::: tab label=props限制例子
+::: tab label=props例子
 ```html{8,17-21,23-25}
 <!DOCTYPE html>
 <html lang="en">
@@ -580,6 +580,25 @@ function C() {
         </Consumer>
     )
 }
+```
+:::
+::: tab label=children
+* 标签体内容，类似vue的`slot`
+```jsx
+import React from 'react'
+import { NavLink } from 'react-router-dom'
+
+export default function MyNavLink(props) {
+    const { children } = props;
+    return (
+        <NavLink activeClassName='haha' className="nav-class" {...props}>{children}</NavLink>
+    )
+}
+```
+* 使用
+```jsx
+<MyNavLink to="/about">关于页面</MyNavLink>
+<MyNavLink to="/test" children="测试页面" />
 ```
 :::
 ::::
