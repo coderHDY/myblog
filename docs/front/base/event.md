@@ -746,3 +746,121 @@ Object.prototype.myAddEventListener = function(type, callback) {
     </script>
 </body>
 ```
+## 移动端事件
+:::: tabs
+::: tab label=移动端
+|type|场景|
+|---|---|
+|touchstart|触摸交互，tab切换，链接跳转|
+|touchmove|画板、拖动、滑动特效、签名|
+|touchend|主要跟touchmove结合使用：滑动结束|
+|touchcancel|很少使用，touch被打断时触发：(电量不足)|
+>如果没开理想视口，click延迟会在300ms左右，开启理想视口会快一些。**尽量在移动端使用 touchstart / touchend**
+* 触发顺序：touchstart => (touchmove) => touchend => `click`(捕获冒泡都在这儿开始)
+>`touchmove`手不离开屏幕会一直触发，即使离开了监听区域
+:::
+::: tab label=示例
+* touch事件结束了才开始点击事件的捕获冒泡
+* touch事件被alert打断了才会触发touchcancel
+* touchmove后不会触发click
+```html
+<body>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vw;
+            background-color: yellow;
+        }
+    </style>
+    <script>
+        document.body.addEventListener('touchstart', () => {
+            console.log('开始触摸');
+        })
+        document.body.addEventListener('touchmove', () => {
+            console.log('触摸移动');
+        })
+        document.body.addEventListener('touchend', () => {
+            console.log('触摸停止');
+        })
+        document.body.addEventListener('touchcancel', () => {
+            console.log('触摸被打断');
+        })
+        document.body.addEventListener('click', () => {
+            console.log('捕获点击');
+        }, true);
+        document.body.addEventListener('click', () => {
+            console.log('冒泡点击');
+        })
+        setTimeout(() => alert('打断了你的触摸'), 4000);
+    </script>
+</body>
+```
+:::
+::: tab label=点击穿透
+* touchstart事件让eventTarget消失，之后会在原位置触发click事件。
+>穿透演示：移动端点击button，遮罩层消失，下层的盒子接受到了click事件。**说明click是在touch结束后才在`原位置`触发**
+```html{8,16-19}
+<head>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
+</head>
+
+<body>
+    <div class="wrapper">
+        <a href="https://www.bytedance.com">点我去字节</a>
+        <div id="shape">
+            <h1>恭喜你被字节录取了</h1>
+            <button>确定</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('button').addEventListener('touchend', e => {
+            document.querySelector('#shape').style.display = 'none';
+            // e.preventDefault(); // 解决点击穿透方案
+        })
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            width: 100%;
+            height: 100vw;
+        }
+
+        a {
+            display: block;
+            width: 100%;
+            height: 20vh;
+            background-color: pink;
+        }
+
+        #shape {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            padding-top: 10vw;
+        }
+    </style>
+</body>
+```
+* 解决：
+    1. `e.preventDefault()`
+    2. 背后的click改成`touch`事件
+    3. 让背后元素暂时不响应事件
+    ```js
+    document.querySelector('a').style.pointerEvents = 'none';
+    setTimeout(() => {
+        document.querySelector('a').style.pointerEvents = 'auto';
+    }, 300)
+    ```
+:::
+::::

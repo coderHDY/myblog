@@ -5,7 +5,7 @@ const home = {
 };
 
 const front = {
-    text: '前端基础',
+    text: '前端',
     ariaLabel: 'front base',
     items: [
         {
