@@ -96,11 +96,25 @@ new Vconsole();
 console.log('test');
 ```
 ### 调试手机网页
+:::: tabs
+::: tab label=苹果手机
 * 苹果电脑连接mac
 * mac打开safari
 * safari -> 偏好设置 -> 高级 -> 显示开发菜单
 * 手机safari打开网页，苹果电脑就能看调试页面。
-
+:::
+::: tab label=内网穿透
+* 方式1：花生壳 / ngrok网穿透，进行公网服务器映射
+* 方式2：局域网内开启服务器（nginx、webpack devserver、vite等），局域网可以访问
+:::
+::::
+### chrome插件下载
+::: tip
+1. [极简插件：](https://chrome.zzzmh.cn/)
+2. [Extfans](https://www.extfans.com/)
+3. [Crx4Chrome](http://www.crx4.com/)
+* 下载 -> chrome开发者模式 -> 安装
+:::
 ### mac直达文件
 * 访达 -> shift + command + G
 ### vscode配置文件

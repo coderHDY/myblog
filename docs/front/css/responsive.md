@@ -75,6 +75,7 @@ date: 2022-03-04
 </body>
 
 ```
+>越高清屏幕显示越高清的图片，让图片不失真，**每个物理像素都能对上一个位图的一个像素**。
 :::
 ::::
 ## 视口常用值
@@ -234,23 +235,23 @@ window.innerWidth
 ```
 :::
 ::: tab label=rem【1】
+>rem适配核心：**元素rem值与根元素font-size比例固定，动态设置根元素font-size**
 * **当前主流方式，百度，淘宝都是这种方式**
-* em
-    * 子元素字体大小的em是相对于父元素字体大小
-    * 元素的width/height/padding/margin用em的话是相对于该元素的font-size
-* rem：根据根元素`font-size`设置比例:
-    * iphone6:375px的设备独立像素，根元素font-size设置为100px;
-    * 其他设备根元素font-size加载后重新设置：`??? / dpi = 100 / 375`(??? 为新设备根元素的font-size)
-    * `dpi`为设备`独立像素宽度`，设备独立像素在meta标签内设置为等于布局视口宽度，所以直接拿`布局视口宽度`
+    1. 设：iphone6:375px的设备独立像素，根元素font-size设置为100px;
+    2. 得：每个元素与100px的比值
+    3. 公式求：其他设备根元素font-size加载后重新设置：`??? / dpi = 100 / 375`(??? 为新设备根元素的font-size)
+* `dpi`为设备`独立像素宽度`，**设备独立像素在meta标签内设置为等于布局视口宽度，所以直接拿`布局视口宽度`**
 >思想：375下根元素是100，其他px转rem值也好算，就是除以100。  
 已知标准iphone6的font-size和设备独立像素比例，拿到新的设备独立像素，就能计算出新的根元素font-size
-```html{6,18-20,24-26,31-39}
+```html{22-24,29-37}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
     <title>Document</title>
 </head>
 
@@ -260,10 +261,6 @@ window.innerWidth
         * {
             margin: 0;
             padding: 0;
-        }
-
-        :root {
-            font-size: 100px;
         }
 
         div {
@@ -278,7 +275,7 @@ window.innerWidth
         (function () {
             const setRootFontSize = () => {
                 const dpi = document.documentElement.clientWidth;
-                const fontSize = dpi * 100 / 375;
+                const fontSize = dpi * 100 / 375; // iphone6上是 100
                 document.documentElement.style.fontSize = fontSize + 'px';
             }
             setRootFontSize();
@@ -286,18 +283,23 @@ window.innerWidth
         })()
     </script>
 </body>
+
 </html>
 ```
+* em
+    * 子元素字体大小的em是相对于父元素字体大小
+    * 元素的 width / height / padding / margin 用em的话是相对于该元素的font-size
+* rem：根据根元素`font-size`设置比例:
 :::
 ::: tab label=rem【2】
 * 搜狐、唯品会使用方式
 * rem配合less计算：
-    1. 根元素字体设置为`设备独立像素/10`
-    2. less按照iphone6设置一个变量`@font:375/10rem;`
-    3. **所有响应式数据直接根据设计稿/@font计算得出rem值**
+    1. 设：less按照iphone6设计稿设置一个变量`@font:375/10rem;`
+    2. 得：**所有响应式数据直接根据`设计稿px/@font`计算得出rem值**
+    3. 求：动态设置根元素字体设置为`设备独立像素/10`
 >思想：这样每个响应式数据存的只是响应式数据对应根元素大小的比例，实时变换根元素为设备独立像素的0.1倍，则不用计算就可以做适配。
 ```less{1,10-12}
-@font:375/10rem;
+@font: 375/10rem;
 
 * {
     margin: 0;
@@ -343,7 +345,7 @@ div {
 ```
 :::
 ::: tab label=vw百分比
-* 未来主流方式。
+* 未来主流方式。当前兼容性不好。
 * 想响应式的数据就除以375(设计稿的宽度)做vw的百分比，因为**vw变化是视口要做响应式的直接原因**。
 ```html{20-22}
 <!DOCTYPE html>
