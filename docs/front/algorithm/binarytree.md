@@ -138,8 +138,7 @@ class BST {
 ```
 :::
 ::::
-## 做题
-### 最大深度
+## 最大深度
 :::: tabs
 ::: tab label=题目
 * [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xnd69e/)
@@ -194,7 +193,7 @@ var maxDepth = function(root) {
 ```
 :::
 ::::
-### 验证二叉搜索树
+## 验证二叉搜索树
 :::: tabs
 ::: tab label=题
 * [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xn08xg/)
@@ -219,7 +218,7 @@ var isValidBST = function(root, max = Number.MAX_VALUE, min = -Number.MAX_VALUE)
 ```
 :::
 ::::
-### 对称二叉树
+## 对称二叉树
 :::: tabs
 ::: tab label=题
 * [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xn7ihv/)
@@ -257,7 +256,7 @@ var isSymmetric = function(root, left = null, right = null) {
 ```
 :::
 ::::
-### 层序遍历
+## 层序遍历
 :::: tabs
 ::: tab label=题
 * [力扣](https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xnldjj/)
@@ -306,7 +305,7 @@ var levelOrder = function(root) {
 ```
 :::
 ::::
-### 中序遍历
+## 中序遍历
 :::: tabs
 ::: tab label=题
 * [力扣94](https://leetcode-cn.com/problems/binary-tree-inorder-traversal/)
@@ -356,6 +355,30 @@ var inorderTraversal = function(root) {
     deepHelper(root);
     return ans;
 }
+```
+:::
+::::
+## 897. 递增顺序搜索树
+:::: tabs
+::: tab label=题
+* 给一棵二叉树，中序遍历生成新的二叉树，只有右节点，且递增，且每个节点没有左子节点
+:::
+::: tab label=解
+>时间：95.60%  
+>空间：26.42%
+```js
+var increasingBST = function(root) {
+    const ansPre = new TreeNode();
+    let cNode = ansPre;
+    const handler = (node) => {
+        if (node.left) handler(node.left);
+        cNode.right = new TreeNode(node.val);
+        cNode = cNode.right;
+        if (node.right) handler(node.right);
+    }
+    handler(root);
+    return ansPre.right;
+};
 ```
 :::
 ::::

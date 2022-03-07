@@ -95,6 +95,46 @@ function climbStairs(n) {
 ```
 :::
 ::::
+## 674. 最长连续递增序列
+:::: tabs
+::: tab label=题
+* 求最长连续的递增子序列长度
+```js
+const nums = [1,3,5,4,7];
+console.log(findLengthOfLCIS(nums))
+// 输出：3
+```
+:::
+::: tab label=解
+>时间：96.51%  
+>空间：5.39%
+```js
+var findLengthOfLCIS = function(nums) {
+    const dp = [1];
+    let ans = 1;
+    for (let i = 1; i < nums.length; i++) {
+        dp[i] = nums[i] > nums[i - 1] ? dp[i - 1] + 1 : 1;
+    }
+     return Math.max(...dp);
+};
+```
+:::
+::: tab label=指针优化
+>时间：96.51%  
+>空间：39.91%
+```js
+var findLengthOfLCIS = function(nums) {
+    let current = 1;
+    let max = 1;
+    for (let i = 1; i < nums.length; i++) {
+        current = nums[i] > nums[i - 1] ? current + 1 : 1;
+        if (current > max) max = current;
+    }
+    return max;
+};
+```
+:::
+::::
 ## 53.最大子数组和
 ::: tip
 * 给一个整数数组（可能有负数）
