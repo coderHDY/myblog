@@ -761,45 +761,31 @@ console.log(convertToBase7(num));
 ```
 :::
 ::: tab label=解
->时间：79.15%  
->空间：13.90%
+>时间：94.76%  
+>空间：21.35%
 ```js
 function convertToBase7(num) {
-    if (num === 0) {
-        return '0'
-    }
-    let ans = '';
-    const positive = num >= 0;
-    if (!positive) {
+    let isPost = false;
+    if (num < 0) {
+        isPost = true;
         num = 0 - num;
     }
-    let c = num;
-
-    while (c / 7 >= 1) {
-
-        // 余数放最后面
-        const a = Math.floor(c / 7);
-
-        // 商替换下一轮计算
-        const b = c - a * 7;
-        ans = b + ans;
-        c = a;
+    let ans = '';
+    let x = num;
+    while(x >= 7) {
+        const temp = x % 7;
+        x = Math.floor(x / 7);
+        ans = `${temp}${ans}`;
     }
-
-    // 推入最后一个商
-    if (c != 0) {
-        ans = c + ans;
-    }
-    if (!positive) {
-        ans = '-' + ans;
-    }
+    ans = `${x}${ans}`
+    if (isPost) ans = `-${ans}`;
     return ans;
 }
 ```
 :::
 ::: tab label=原生计算
->时间：89.58%  
->空间：5.41%
+>时间：99.63%  
+>空间：33.71%
 ```js
 function convertToBase7(num) {
     return num.toString(7);
