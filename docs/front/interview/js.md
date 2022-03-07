@@ -2461,3 +2461,58 @@ function getVal(times) {
 >限制：js中，进制必须在[2-36]之间
 :::
 ::::
+## 43.await赋值时机
+:::: tabs
+::: tab label=题
+```js
+let a = 10;
+async function b() {
+    a = await sum();
+    console.log('1:', a);
+}
+function sum() {
+    return a + 10;
+}
+
+b();
+a++;
+console.log('2:', a);
+```
+:::
+::: tab label=解
+* await 封装了promise，赋值操作被推入微任务，并不是同步任务赋值的
+```js
+// 2: 11
+// 1: 20
+```
+:::
+::::
+## 44.parseInt入参陷阱
+:::: tabs
+::: tab label=题
+```js
+console.log('123'.replace(/\d/g, parseInt));
+```
+:::
+::: tab label=解
+* parseInt实际上有两个入参，第二个是决定进制的，而**replace的第二个参数函数的第二个入参是 index**
+```js
+console.log(parseInt('1', 0)); // 没有0进制，走默认的10进制
+console.log(parseInt('2', 1)); // 1进制里面没有2，所以为NaN
+console.log(parseInt('3', 2)); // 2进制里面没有3，所以为NaN
+
+// 1NaNNaN
+```
+:::
+::::
+## 45.in操作符
+:::: tabs
+::: tab label=题
+```js
+console.log(1 in [1]);
+```
+:::
+::: tab label=解
+* in 操作符是查找对象有没有此属性，也就是**key查找，而不是value查找**，所以是false
+:::
+::::
