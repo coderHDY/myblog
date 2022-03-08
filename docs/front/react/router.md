@@ -16,7 +16,7 @@ npm i react-router-dom@5
 ```
 * 基本使用
     * `BrowserRouter`、`Route`、`Switch`、`Link`
-```jsx
+```jsx{13-14}
 import React from 'react'
 import { BrowserRouter, Link, Switch, Route } from 'react-router-dom'
 import Test from './components/Test'
@@ -30,17 +30,18 @@ export default function app() {
             </div>
             <Switch>
                 <Route path="/test" component={Test}></Route>
-                <Route path="/about" component={About}></Route>
+                <Route replace path="/about" component={About}></Route>
             </Switch>
         </BrowserRouter>
     )
 }
 ```
+>主要有`push模式`和`replace模式`，跳转路由加replace就是replace模式
 :::
 ::: tab label=路由组件
 * 路由组件由`Route`匹配调用，会传入指定props
     1. **`history`：路由跳转能力对象**
-        * go / goBack / goForward / push / replace / 
+        * go / goBack / goForward / push / replace 
     2. **`location`：url解析以及跳转携带参数**
         * pathname / search / state
     3. **`match`：路径匹配、params参数**
@@ -204,31 +205,137 @@ const C2 = ({ location }) => (<div>C2:{location.state.id}-{location.state.name}<
 :::
 ::: tab label=模糊匹配
 * Route默认取的是模糊匹配，也就是**路径开头包含即匹配成功**
-```jsx
-// 匹配成功
-<NavLink to="test/a/b">测试页面</NavLink>
-<Route path="/test" component={Test}></Route>
-```
+    ```jsx
+    // 匹配成功
+    <NavLink to="test/a/b">测试页面</NavLink>
+    <Route path="/test" component={Test}></Route>
+    ```
 * 精准匹配`exact`(尽量不开)
-```jsx
-// 匹配失败
-<NavLink to="test/a/b">测试页面</NavLink>
-<Route path="/test" component={Test} exact={true}></Route>
+    ```jsx
+    // 匹配失败
+    <NavLink to="test/a/b">测试页面</NavLink>
+    <Route path="/test" component={Test} exact={true}></Route>
 
-// 或
-<Route path="/test" component={Test} exact></Route>
+    // 或
+    <Route path="/test" component={Test} exact></Route>
+    ```
+:::
+::: tab label=编程式导航
+* 手动跳转模式
+    * go / goBack / goForward / push / replace
+    ```jsx
+    const goAbout = () => props.history.push('/about')
+
+    <button onClick={goAbout}>去about</button>
+    ```
+* 传参
+    ```jsx
+    //params
+    const goAbout = (id) => () => props.history.push(`/about/${id}`)
+
+    // query
+    const goTest = (id) => () => props.history.replace(`/test/c1?id=${id}`)
+
+    // state
+    const goTest = (id, name) => () => props.history.replace({ pathname: "/test/c2", state: { name, id } })
+    const goTest = (id, name) => () => props.history.replace("/test/c2", { name, id })
+    ```
+:::
+::: tab label=withRouter
+>路由组件是由Route调用创建的，所以有相关的props，一般组件没有
+* 如果想要使用路由参数，就用`withRouter`将组件包裹传出
+```jsx
+import React from 'react'
+import { withRouter } from 'react-router-dom';
+function Header(props) {
+    const goBack = () => props.history.goBack();
+    return (
+        <>
+            <button onClick={goBack}>goBack</button>
+        </>
+    )
+}
+
+export default withRouter(Header)
+
+```
+:::
+::: tab label=HashRouter对比
+|属性|BrowserRouter|HashRouter|
+|---|---|---|
+|底层原理|html5的`historyAPI`，事件：`window.onpopstate`|锚点，哈希值。事件：`onhashchange`，属性：`location.hash`|
+|表现形式|正常的url形式|带锚点【#】的url|
+|刷新表现|所有正常，historyAPI作用下浏览器会存储state参数|**刷新后state参数会消失**|
+|优势|美观，大多数都使用|兼容性强，部署后URL也不会出现问题|
+
+:::
+::::
+### 集中配置
+:::: tabs
+::: tab label=config
+* 将路由的配置集中起来保管，遍历生成路由器
+* **react-router6直接用路由表**
+```js
+// src/config/router.js
+import About from '../components/About';
+import Home from '../components/Home';
+
+const router = [
+    {
+        path: '/home',
+        component: Home
+    },
+    {
+        path: '/about',
+        component: About
+    },
+]
+
+export default router;
+
+```
+:::
+::: tab label=使用
+```js{3,9-11}
+import React from 'react'
+import { Route, Switch, Link } from 'react-router-dom';
+import router from '../config/router';
+export default function Test() {
+    return (
+        <>
+            <h2>欢迎来到React</h2>
+            <Switch>
+                {
+                    router.map(routeObj => <Route key={routeObj.path} {...routeObj} />)
+                }
+            </Switch>
+            <div>
+                <Link to="/home">home</Link>
+                <Link to="/about">about</Link>
+            </div>
+        </>
+    )
+}
 ```
 :::
 ::::
 ## react-router6
 ### 起步
 :::: tabs
+::: tab label=改变预览
+|5|6|
+|---|---|
+|移除`Switch`、`withRouter`、`Redirect`|增加`Routes`、`Navigate`|
+|component={`About`}|`element`={`<About />`}|
+|路由组件props传参|新增hooks`useParams`、`useNavigate`，`useMatch`等|
+||嵌套路由写法改变|
+:::
 ::: tab label=安装
 * 安装
 ```shell
 npm i react-router-dom
 ```
-```js
+```jsx
 // index.js
 import React from "react"
 import ReactDOM from "react-dom"
@@ -245,7 +352,7 @@ ReactDOM.render(
 ```
 :::
 ::: tab label=定义路由
-```jsx
+```jsx{9-12}
 import React from 'react'
 import { Route, Routes, Link } from 'react-router-dom';
 import Home from './Home';
@@ -265,39 +372,281 @@ export default function Test() {
         </>
     )
 }
-
 ```
 :::
+::: tab label=重定向
+* 删除了5的`Redirect`，新增了`Navigate`
+```jsx{16}
+import React from 'react'
+import { Routes, Link, Route, Navigate } from 'react-router-dom'
+import Home from './components/Home'
+import About from './components/About'
+import Header from './components/Header'
+export default function App() {
+    return (
+        <>
+            <div>
+                <Link to="/home">Home</Link>
+                <Link to="/about">About</Link>
+            </div>
+            <Routes>
+                <Route path="/home" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/" element={<Navigate to="/home" />} />
+            </Routes>
+        </>
+    )
+}
+```
+>**Navigate组件一渲染就会引发页面的跳转**，to为必传参数，想要替换模式就加上replace属性
+:::
 ::: tab label=活动导航
-* 可以将当前正在展示的路由导航加上`active`的class
-```jsx{15-16}
-import React, { Component, lazy, Suspense } from 'react'
-import { Route, Routes, NavLink } from 'react-router-dom'
-import Home from './components/Home';
-import About from './components/About';
-
-export default class App extends Component {
-    render() {
+* `NavLink`可以将当前正在展示的路由导航加上`active`的class
+* 5 -> 6改变：**自定义类名用className函数返回值表示**
+    ```jsx
+    <NavLink className={({ isActive }) => isActive ? 'haha' : ''} to="/home">Home</NavLink>
+    <NavLink className={({ isActive }) => isActive ? 'haha' : ''} to="/about">About</NavLink>
+    ```
+* 抽取
+    ```jsx
+    export default function App() {
+        const computedClassName = ({ isActive }) => isActive ? 'haha' : '';
         return (
             <>
-                <Routes>
-                    <Route path="/home" element={<Home />}></Route>
-                    <Route path="/about" element={<About />}></Route>
-                </Routes>
-                <div>
-                    <NavLink to="/home">home</NavLink>
-                    <NavLink to="/about">about</NavLink>
-                </div>
+                <NavLink className={computedClassName} to="/home">Home</NavLink>
+                <NavLink className={computedClassName} to="/about">About</NavLink>
             </>
         )
     }
-}
+    ```
+:::
+::: tab label=嵌套路由
+* 相对于5写法有改变（类似Vue）：
+    1. 路由表**定义的时候就写好子路径的匹配及渲染组件**
+        ```js{6-15}
+        // router/index.js  路由表
+        const routerMap = [
+            {
+                path: "/home",
+                element: <Home />,
+                children: [
+                    {
+                        path: 'c1',
+                        element: <C1 />
+                    },
+                    {
+                        path: 'c2',
+                        element: <C2 />
+                    },
+                ]
+            },
+        ]
+
+        export default routerMap;
+        ```
+    2. 组件内部引入`Outlet`进行**子路由渲染占位**
+        ```jsx{1-2,9-10,12}
+        // Home组件，多一个占位符，类似Vue的 <router-view>
+        // 子链的跳转链接可以写相对路径了
+        import React from 'react'
+        import { Link, Outlet } from 'react-router-dom'
+        export default function Home() {
+            return (
+                <>
+                    <div>
+                        <Link to="c1">子链1</Link>
+                        <Link to="c2">子链2</Link>
+                    </div>
+                    <Outlet />
+                </>
+            )
+        }
+        ```
+* 如果嵌套路由的子路由也是NavLink，那么**子路由匹配时父路由的NavLink也会被触发activeClass**
+    * 可以在父路由加上`end`代表子路由匹配父路由不触发activeClass
+    ```jsx
+    <NavLink className={computedClassName} end to="/home">Home</NavLink>
+    ```
+:::
+::::
+### hooks
+:::: tabs
+::: tab label=useRoutes
+* 使用`路由表`，由hook生成路由
+    >一般将**数组移到router/index.js里面**，进行单独导出  
+
+    ```jsx
+    // router/index.js
+    import Home from "../components/Home"
+    import About from "../components/About"
+    import { Navigate } from "react-router-dom";
+    import Err from "../components/Err";
+    const routerMap = [
+        {
+            path: "/home",
+            element: <Home />,
+        },
+        {
+            path: "/about",
+            element: <About />,
+        },
+        {
+            path: "/",
+            element: <Navigate to="/home" />,
+        },
+        {
+            path: '*',
+            element: <Err />
+        }
+    ]
+
+    export default routerMap;
+    ```
+    ```jsx{4,8,15}
+    // App.js
+    import React from 'react';
+    import { NavLink, Navigate, useRoutes } from 'react-router-dom';
+    import routerMap from './router';
+    import Header from './components/Header';
+    export default function App() {
+        const computedClassName = ({ isActive }) => isActive ? 'haha' : ''
+        const elements = useRoutes(routerMap)
+        return (
+            <>
+                <div>
+                    <NavLink className={computedClassName} to="/home">Home</NavLink>
+                    <NavLink className={computedClassName} to="/about">About</NavLink>
+                </div>
+                {elements}
+            </>
+        )
+    }
+    ```
+:::
+::: tab label=useParams
+* 使用`params传参`，只有接收的时候有变化，需要用`useParams`hook
+    ```jsx
+    // 定义占位符
+    {
+        path: "/about/:id/:name",
+        element: <About />,
+    }
+
+    // 跳转传参
+    <Link to="/about/111/张三">About</Link>
+    ```
+    ```jsx{6}
+    // 接收
+    import React from 'react'
+    import { useParams } from 'react-router-dom'
+
+    export default function About() {
+        const { id, name } = useParams();
+        return (
+            <>
+                <div>About</div>
+                <div>姓名：{name}</div>
+                <div>id：{id}</div>
+            </>
+        )
+    }
+    ```
+>`useMatch`也可以使用达到功能，但是更繁琐
+```js
+const { id, name } = useMatch('/about/:id/:name').params;
+```
+:::
+::: tab label=useSearchParams
+* 使用`search传参`（query）
+    ```jsx
+    // 传参
+    <Link to="/about?id=001&name=张三">About</Link>
+    ```
+    ```jsx{5,7,12-13}
+    import React, { useEffect } from 'react'
+    import { useSearchParams } from 'react-router-dom'
+
+    export default function About() {
+        const [search, setSearch] = useSearchParams();
+        useEffect(() => {
+            setTimeout(() => setSearch('id=002&name=赵四'), 2000)
+        }, []);
+        return (
+            <>
+                <div>About</div>
+                <div>姓名：{search.get('name')}</div>
+                <div>id：{search.get('id')}</div>
+            </>
+        )
+    }
+    ```
+>`useLocation`能实现一样的效果
+```jsx
+const search = useLocation().search;
+const { id, name } = qs.parse(search.slice(1));
+```
+:::
+::: tab label=useLocation
+* 使用`state传参`
+    ```jsx
+    // 传参
+    <Link to="/about" state={{ name: '溜溜', id: 3 }}>About</Link>
+    ```
+    ```jsx{5}
+    // 接收
+    import React from 'react';
+    import { useLocation } from 'react-router-dom';
+    export default function About() {
+        const { name, id } = useLocation().state;
+        return (
+            <>
+                <div>About</div>
+                <div>姓名：{name}</div>
+                <div>id：{id}</div>
+            </>
+        )
+    }
+    ```
+:::
+::: tab label=useNavigate
+* 使用`编程式跳转`
+    ```jsx{4-15}
+    import React from 'react';
+    import { useNavigate } from 'react-router-dom';
+    export default function About() {
+        const navigate = useNavigate();
+        const goHome = () => {
+            navigate('/home',
+                {
+                    replace: false,
+                    state: {
+                        id: 1,
+                        name: '李四'
+                    }
+                }
+            )
+        }
+        return (
+            <>
+                <div>About</div>
+                <button onClick={goHome}>点我去主页</button>
+            </>
+        )
+    }
+    ```
+* 其他跳转
+```jsx
+// go(-1)  goBack()
+navigate(-1)
+
+// goForward()
+navigate(1)
 ```
 :::
 ::::
-### 懒加载
+### 其他
 :::: tabs
-::: tab label=懒加载配置
+::: tab label=懒加载
 * `lazy`：定义懒加载组件
 * `Suspense`：定义加载时的Loading组件【必须】
 ```jsx{1,5-6,12-17}
@@ -328,53 +677,44 @@ export default class App extends Component {
 }
 ```
 :::
-::::
-### 集中配置
-:::: tabs
-::: tab label=config
-* 将路由的配置集中起来保管，遍历生成路由器
-```js
-// src/config/router.js
-import About from '../components/About';
-import Home from '../components/Home';
-
-const router = [
+::: tab label=错误兜底
+* 路由表`*`匹配所有，**放在最下面**
+    ```jsx
     {
-        path: '/home',
-        element: <Home />
-    },
-    {
-        path: '/about',
-        element: <About />
-    },
-]
-
-export default router;
-
+        path: '*',
+        element: <Err />
+    }
+    ```
+:::
+::: tab label=useInRouterContext
+* 查看是否在路由包裹的上下文中
+    ```js
+    console.log(useInRouterContext()); // true / false
+    ```
+>作用：如果封装第三方组件库，或封装功能性插件，可以用此方法查看是否被`BrowserRouter`/`HashRouter`包裹
+:::
+::: tab label=useNavigationType
+* 可以查看当前页面的进入方式，如果是`POP`则是从浏览器直接打开的页面(刷新)
+```jsx
+console.log(useNavigationType()); // POP REPLACE PUSH
 ```
 :::
-::: tab label=使用
-```js{3,9-11}
-import React from 'react'
-import { Route, Routes, Link } from 'react-router-dom';
-import router from '../config/router';
-export default function Test() {
-    return (
-        <>
-            <h2>欢迎来到React</h2>
-            <Routes>
-                {
-                    router.map(routeObj => <Route key={routeObj.path} {...routeObj} />)
-                }
-            </Routes>
-            <div>
-                <Link to="/home">home</Link>
-                <Link to="/about">about</Link>
-            </div>
-        </>
-    )
-}
-
+::: tab label=useResolvedPath
+* url解析器，解析出一串url的 path / search / hash
+```jsx
+console.log(useResolvedPath('/about?id=asdf&i=aa'));
+/* { 
+    hash: ""
+    pathname: "/about"
+    search: "?id=asdf&i=aa"
+  }
+*/
+```
+:::
+::: tab label=useOutlet
+* 展示嵌套路由中**子路由渲染对象**，没有则显示null
+```jsx
+console.log(useOutlet());
 ```
 :::
 ::::
