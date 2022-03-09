@@ -382,3 +382,20 @@ var increasingBST = function(root) {
 ```
 :::
 ::::
+## 100. 相同的树
+:::: tabs
+::: tab label=题
+* 验证两棵树完全相同
+:::
+::: tab label=解
+>时间：98.10%  
+>空间：24.53%
+```js
+var isSameTree = function(p, q) {
+    if (p == null && q == null) return true;
+    if (p == null || q == null) return false;
+    return p.val === q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+};
+```
+:::
+::::

@@ -69,44 +69,6 @@ tags:
 </body>
 ```
 :::
-::: tab label=动态路由
-* 某种模式全部映射到同一个组件
-* 同时，`this.$route.params`能够拿到动态路由的参数
-```html{5-6,19,28}
-<body>
-    <div id="app">
-        <h1>你好，前端路由!</h1>
-        <p>
-          <router-link to="/home/haha">首页</router-link>
-          <router-link to="/home/heh">还是首页</router-link>
-          <router-link to="/me">我的</router-link>
-        </p>
-        <hr>
-        <router-view></router-view>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
-    <script>
-        const Home = { template: '<div>这是首页内容</div>' };
-        const Me = { template: '<div>我的空间</div>' };
-        const routes = [
-            { path: '/', component: Home },
-            { path: '/home/:id', component: Home },
-            { path: '/me', component: Me },
-        ];
-        const router = new VueRouter({routes});
-        
-        const app = new Vue({
-            el: '#app',
-            router,
-            mounted() {
-                console.log(this.$route.params); // { id: 'haha' }
-            }
-        })
-    </script>
-</body>
-```
-:::
 ::: tab label=嵌套路由
 * 每个路由可以设置children来配置子路径路由
 * 动态类名：`router-link-active`会在所有匹配的元素上面加(父级路由和子级路由)，`router-link-exact-active`会在路径绝对一致的情况下加(子级路由，精准匹配)
@@ -160,13 +122,6 @@ tags:
 ```
 :::
 ::: tab label=路由跳转
-* Vue3的setup用
-```js
-import { useRouter } from 'vue-router';
-setup() {
-    let router = useRouter();
-}
-```
 * 两种方式：
     * < router-link to="{ name: 'user', params: { userId: 123 }}" >
     * router.`push`/`replace`/`go`
@@ -370,6 +325,149 @@ export default {
     </script>
 </body>
 ```
+:::
+::::
+## Vue3中CLI使用4
+:::: tabs
+::: tab label=配置
+```js
+npm i vue-router@4
+```
+* vue3中根目录要创建运行时声明，不然`router-view`占位符无效
+```js
+// vue.config.js
+module.exports = { runtimeCompiler: true }
+```
+:::
+::: tab label=路由创建
+```js
+// router/index.ts
+import {createRouter, createWebHashHistory} from 'vue-router';
+const Home = { template: '<div>Home</div>' }
+const About = { template: '<div>About</div>' }
+
+const routes = [
+  { path: '/home', component: Home },
+  { path: '/about', component: About },
+]
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes,
+})
+export default router;
+```
+:::
+::: tab label=路由引入
+```js{3,5}
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router';
+const app = createApp(App)
+app.use(router);
+app.mount('#app')
+```
+:::
+::: tab label=路由使用
+```vue
+<template>
+  <div>
+    <div>
+      <router-link to="/home">主页</router-link>
+      <router-link to="/about">关于</router-link>
+    </div>
+    <router-view></router-view>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import {useRouter} from 'vue-router'
+</script>
+```
+:::
+::::
+## 路由传参
+:::: tabs
+::: tab label=params
+* `定义占位符` + `url拼接` + `$route.params接收`
+    * 定义占位符
+    ```js
+    const routes = [
+        { path: '/home', component: Home },
+        { path: '/about/:id/:name', component: About },
+    ]
+    ```
+    * url拼接
+    ```js
+    <router-link to="/about/11/hdy">关于</router-link>
+    ```
+    * 接收
+    ```vue{9-10}
+    <template>
+        <div>
+            <div>about</div>
+            <div>id:{{id}}</div>
+            <div>name:{{name}}</div>
+        </div>
+    </template>
+    <script lang="ts" setup>
+    import {useRoute} from 'vue-router';
+    const {id, name} = useRoute().params;
+    </script>
+
+    <style scoped></style>
+    ```
+:::
+::: tab label=props
+* params模式 + props为true
+    * params配置
+    ```js{6}
+    const routes = [
+        { path: "/home", component: Home },
+        {
+            path: "/about/:id/:name",
+            component: About,
+            props: true,
+        },
+    ];
+    ```
+    * url拼接
+    ```js
+    <router-link to="/about/11/hdy">关于</router-link>
+    ```
+    * 接收
+    ```vue{9-13}
+    <template>
+        <div>
+            <div>about</div>
+            <div>id:{{ id }}</div>
+            <div>name:{{ name }}</div>
+        </div>
+    </template>
+    <script lang="ts" setup>
+    import { defineProps } from "vue";
+    const { id, name } = defineProps({
+        id: String,
+        name: String,
+    });
+    </script>
+
+    <style scoped></style>
+    ```
+:::
+::: tab label=query
+* `query拼接` + `route.query接收`
+    * query拼接(两种方式)
+    ```JS
+    <router-link to="/about?id=22&name=hdy">关于</router-link>
+
+    <router-link :to="{ path: '/about', query: { id: 1, name: 'hdy' } }">关于</router-link>
+    ```
+    * 接收
+    ```js
+    import { useRoute } from "vue-router";
+    const { id, name } = useRoute().query;
+    ```
 :::
 ::::
 ## 路由守卫

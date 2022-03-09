@@ -690,7 +690,7 @@ new Vue({
 ```
 :::
 ::::
-## VueX
+## VueX3.x
 ::: tip
 * [VueX官网](https://vuex.vuejs.org/zh/#%E4%BB%80%E4%B9%88%E6%98%AF-%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8F)
 * 状态管理模式。它采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
@@ -707,7 +707,6 @@ new Vue({
 >常被管理的状态：用户名、头像、地理位置等信息，商品收藏、购物车等信息。
 :::
 ::: tab label=起步
-<video src="./assets/vuex.mp4" style="width:300px;" controls />
 
 ```html{9,11-20,24}
 <body>
@@ -813,9 +812,7 @@ computed: {
 * 作用：类似组件内的computed，能将store内的值进行计算制作出新的变量名，并且能够随着依赖变量的改变而改变
 * 入参：`state`
 
-<video src="./assets/vuex4.mp4" style="width:300px;" controls />
-
-```html
+```html{20-24,35}
 <body>
     <div id="app">
         {{ dollar }}
@@ -992,6 +989,57 @@ computed: {
         }
     }
 }
+```
+:::
+::::
+## Vuex4.x
+:::: tabs
+::: tab label=起步
+```shell
+npm i vuex@4
+```
+```js
+// store/index.js
+import { createStore } from 'vuex';
+const store = createStore({
+    state: {
+        count: 0,
+    },
+    mutations: {
+        add(ctx) {
+            ctx.count++;
+        }
+    }
+})
+
+export default store;
+```
+```js
+// 安装
+app.use(store);
+```
+```js
+// 组件内使用变量
+console.log(this.$store.state.count);
+```
+:::
+::: tab label=useStore
+* `useStore`可以在vue3的setup中没有this的情况下读取store实例
+* 同时数据要保持响应式特性，就要用`computed`包裹
+```vue
+<template>
+  <div>
+    <div>计数是：{{count}}</div>
+    <button @click="add">+</button>
+  </div>
+</template>
+<script setup>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore()
+let count = computed(() => store.state.count);
+const add = () => store.commit('add');
+</script>
 ```
 :::
 ::::
