@@ -834,3 +834,128 @@ function maxScoreSightseeingPair(val) {
 ```
 :::
 ::::
+## 121. 买卖股票的最佳时机
+:::: tabs
+::: tab label=题
+* 一个数组，每天的股价，只有一次买卖机会，求最大利润
+```js
+const prices = [7, 1, 5, 3, 6, 4];
+console.log(maxProfit(prices));
+```
+:::
+::: tab label=解
+* 思路：总是拿到当前能减的最小值，就能求出当前卖出的最大利润
+```js
+// 动态规划公式
+dp[i] = Math.min(dp[i - 1], nums[i]);
+// 所以只要收集最小值就行
+```
+>时间：99.59%  
+>空间：38.94%
+```js
+var maxProfit = function (prices) {
+    let cLower = prices[0];
+    let max = 0;
+    for (let i = 1; i < prices.length; i++) {
+        cLower = Math.min(cLower, prices[i]);
+        max = Math.max(prices[i] - cLower, max);
+    }
+    return max;
+};
+```
+:::
+::::
+## 122. 买卖股票的最佳时机 II
+:::: tabs
+::: tab label=题
+* 一次只能持有一只股票，随便买入卖出几次
+:::
+::: tab label=解
+* 贪心最暴力：只要是上升曲线，就吃
+>时间：91.26%  
+>空间：33.32%
+```js
+var maxProfit = function(prices) {
+    let profit = 0;
+    for (let i = 1; i < prices.length; i++) {
+        if (prices[i] > prices[i - 1]) {
+            profit += prices[i] - prices[i - 1];
+        }
+    }
+    return profit;
+};
+```
+:::
+::: tab label=解2
+* 乖乖动态规划
+```js
+// 动态公式
+dp[i] = num[i] + (dp[i - 1] > 0 ? dp[i - 1] : 0)
+// 上一个利润大于0就+
+```
+>时间：96.62%  
+>空间：8.89%
+```js
+var maxProfit = function(prices) {
+    let dp = [0];
+    const len = prices.length;
+    for (let i = 1; i < len; i++) {
+        const cProfit = prices[i] - prices[i - 1];
+        dp[i] = dp[i - 1] + (cProfit > 0 ? cProfit : 0)
+    }
+    return dp[len - 1];
+};
+```
+:::
+::: tab label=解3
+* 动态指针优化
+>时间：99.79%  
+>空间：44.00%
+```js
+var maxProfit = function(prices) {
+    let max = 0;
+    const len = prices.length;
+    for (let i = 1; i < len; i++) {
+        const cProfit = prices[i] - prices[i - 1];
+        max += cProfit > 0 ? cProfit : 0;
+    }
+    return max;
+};
+```
+:::
+::::
+## 118. 杨辉三角
+:::: tabs
+::: tab label=题
+* 生成指定长度的杨辉三角
+```js
+const numRows = 5
+console.log(generate(numRows));
+// 输出: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+```
+:::
+::: tab label=解
+```js
+// 动态公式
+dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j]; // 1 < j < cLen - 1
+dp[i][j] = 1; // [0][0] [1][0] [1][1]
+```
+>时间：98.44%  
+>空间：38.53%
+```js
+var generate = function(numRows) {
+    let ans = [[1]];
+    for (let i = 1; i < numRows; i++) {
+        let cRow = Array(i + 1).fill(1);
+        for (let j = 1; j < cRow.length - 1; j++) {
+            const first = ans[i - 1][j - 1] ? ans[i - 1][j - 1] : 0;
+            const second = ans[i - 1][j];
+            cRow[j] = first + second;
+        }
+        ans.push(cRow);
+    }
+    return ans;
+};
+```
+:::
+::::

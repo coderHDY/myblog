@@ -2516,3 +2516,42 @@ console.log(1 in [1]);
 * in 操作符是查找对象有没有此属性，也就是**key查找，而不是value查找**，所以是false
 :::
 ::::
+## 46.this查找
+:::: tabs
+::: tab label=题
+* 《你不知道的JS（上）》85页
+```js
+function foo() {
+    console.log(this.a);
+    console.log(this.b);
+}
+
+const obj1 = {
+    a: 1,
+    foo: foo,
+}
+
+const obj2 = {
+    a: 2,
+    b: 3,
+    obj1: obj1,
+}
+
+obj2.obj1.foo(); // ?
+```
+:::
+::: tab label=this规则
+|优先级⬇️|形式|值|
+|---|---|---|
+|new绑定|new foo()|内部构造出来一个新对象，this被绑定了上去|
+|显示绑定|call / apply / bind|动态绑定函数执行时this的值|
+|隐式绑定|a.b.c.foo()|最后一个调用的对象《c》|
+|默认绑定|foo()|window / undefined|
+:::
+::: tab label=解
+* 这题涉及this隐式绑定，由对象调用function时，**function的this是函数最近的调用者决定的。**
+```js
+a.b.c.d.foo(); // foo 的this为 d
+```
+:::
+::::
