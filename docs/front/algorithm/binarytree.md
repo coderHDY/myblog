@@ -399,3 +399,46 @@ var isSameTree = function(p, q) {
 ```
 :::
 ::::
+## 589. N 叉树的前序遍历
+:::: tabs
+::: tab label=题
+* 给定一个 **n叉树** 的根节点  root ，返回 其节点值的 前序遍历 。
+:::
+::: tab label=递归法
+>时间：71.10%  
+>空间：8.10%
+```js
+var preorder = function(root) {
+    const ans = [];
+    const handler = node => {
+        if (node) {
+            ans.push(node.val);
+            node.children.forEach(item => handler(item));
+        }
+    }
+    handler(root);
+    return ans;
+};
+```
+:::
+::: tab label=迭代法
+>时间：95.80%  
+>空间：22.90%
+```js
+var preorder = function(root) {
+    const ans = [];
+    const queue = [root];
+    while(queue.length) {
+        const cNode = queue.shift();
+        if (cNode) {
+            ans.push(cNode.val);
+        }
+        if (cNode?.children) {
+            queue.unshift(...cNode.children);
+        }
+    }
+    return ans;
+};
+```
+:::
+::::

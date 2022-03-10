@@ -959,3 +959,63 @@ var generate = function(numRows) {
 ```
 :::
 ::::
+## 931. 下降路径最小和
+:::: tabs
+::: tab label=题
+* 二维矩阵，只能向下或斜向下走，求最小和
+```js
+const matrix = [[2,1,3],[6,5,4],[7,8,9]];
+console.log(minFallingPathSum(matrix)); // 13
+// 输出：13
+```
+:::
+::: tab label=解
+```js
+// 状态转移方程：
+dp[i][j] = Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i - 1][j + 1]) + num[i][j];
+// 注意边界情况就行
+```
+>时间：89.67%  
+>空间：21.27%
+```js
+var minFallingPathSum = function(matrix) {
+    const n = matrix.length;
+    const dp = [matrix[0]];
+    for (let i = 1; i < n; i++) {
+        dp[i] = [];
+        for (let j = 0; j < n; j++) {
+            let first = dp[i - 1][j - 1] != undefined ? dp[i - 1][j - 1] : Infinity;
+            let second = dp[i - 1][j];
+            let thired = dp[i - 1][j + 1] != undefined ? dp[i - 1][j + 1] : Infinity;
+            const min = Math.min(first, second, thired);
+            dp[i][j] = matrix[i][j] + min;
+        }
+    }
+    return Math.min(...dp[n - 1]);
+};
+```
+:::
+::: tab label=优化
+* 只用到了上一层数组，留一层就行
+>时间：96.35%  
+>空间：35.86%
+```js
+var minFallingPathSum = function(matrix) {
+    const n = matrix.length;
+    let pre = matrix[0];
+    let ans = matrix[0];
+    for (let i = 1; i < n; i++) {
+        ans = [];
+        for (let j = 0; j < n; j++) {
+            let first = pre[j - 1] != undefined ? pre[j - 1] : Infinity;
+            let second = pre[j];
+            let thired = pre[j + 1] != undefined ? pre[j + 1] : Infinity;
+            ans[j] = matrix[i][j] + Math.min(first, second, thired);
+        }
+        pre = ans;
+    }
+    return Math.min(...ans);
+};
+```
+:::
+::::
