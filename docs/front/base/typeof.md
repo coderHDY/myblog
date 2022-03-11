@@ -2,7 +2,26 @@
 title: 类型判断
 date: 2021-11-01
 ---
-
+## falsy
+::: tip 假值
+* 假值：
+    1. false
+    2. undefined
+    3. NaN
+    4. null
+    5. ''
+    ```js
+    console.log(!!(false || undefined || NaN || null || '')); // false
+    ```
+* 除了假值都是真值
+    ```js
+    // 对象包裹 也是真值
+    const a = new Boolean(false);
+    const b = new String('');
+    const c = new Number(0);
+    console.log(!!(a && b && c)); // true
+    ```
+:::
 ## typeof
 ::: tip typeof
 > 只能识别出这些类型  
@@ -15,7 +34,6 @@ date: 2021-11-01
 7. symbol
 :::
 * 注：typeof 会把 null 和 object 和 Array类型都判断为 **object**，所以 [深浅拷贝](../interview/js.html#深浅拷贝)函数需要再次判断类型
-
 ## 全等===
 * 原生的 '==' 符号有一些缺陷，所以引入了全等 '==='
 ::: tip == 和 === 区别
@@ -28,7 +46,6 @@ undefined === null; // false
 NaN === NaN // false  
 isNaN(NaN) // true
 ::: 
-
 ## instanceof
 * instanceof 本质上是从[原型链](./object.html#原型链)上面去找对象
 * **类的继承**的本质就是在 prototype 对象加上一个__proto__属性，指向父类的prototype
@@ -135,7 +152,6 @@ function B() {
 B(); // 抛出Error
 ```
 :::
-
 ## Object.is
 ### 与===/==的区别
 ```js

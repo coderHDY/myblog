@@ -2555,3 +2555,41 @@ a.b.c.d.foo(); // foo 的this为 d
 ```
 :::
 ::::
+## 47.判断类型
+:::: tabs
+::: tab label=NaN
+```js
+const a = '33a' / 3;
+const b = 'foo';
+
+// 全局 isNaN
+console.log(isNaN(a)); // true
+console.log(isNaN(b)); // true <BUG>
+
+// Number.isNaN
+console.log(Number.isNaN(a)); // true
+console.log(Number.isNaN(b)); // false
+
+
+// Object.is
+console.log(Object.is(a, NaN)); // true
+console.log(Object.is(b, NaN)); // false
+
+// 直接判断相等：JS中只有NaN不等于自身
+function myIsNaN(n) {
+    return n !== n;
+}
+console.log(myIsNaN(a)); // true
+console.log(myIsNaN(b)); // false
+
+```
+:::
+::: tab label=包装对象
+```js
+const s1 = new String('haah');
+const s2 = 'hahah';
+console.log(typeof s1); // object
+console.log(typeof s2); // string
+```
+:::
+::::
