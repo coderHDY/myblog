@@ -71,6 +71,7 @@ const front = {
                 'dynamic',
                 'tree',
                 'leetcode',
+                'regexp',
             ]
         }
     ],
