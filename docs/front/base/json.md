@@ -104,6 +104,30 @@ fs.writeFileSync('./data.json', JSON.stringify(obj, null, '\t'));
 ```
 :::
 ::::
+## toJSON
+::: tip
+* 作用：自定义JSON转化方式
+* 调用：JSON.stringify转化时调用
+:::
+:::: tabs
+::: tab label=使用
+* 数据在定义时自己就定义了JSON格式化时的过滤方法
+```js
+const obj = {
+    name: 'hdy',
+    age: 18,
+    money: '180元',
+    toJSON() {
+        const entries = Object.entries(this).map(([key, val]) => key === 'money' ? [key, parseInt(val)] : [key, val]);
+        return Object.fromEntries(entries);
+    }
+}
+
+console.log(JSON.stringify(obj));
+// {"name":"hdy","age":18,"money":180}
+```
+:::
+::::
 ## 深浅拷贝
 * Object等是引用类型，所以存在深浅拷贝的问题，就是引用类型拷贝的时候关系没有断干净
 * String是值类型，拷贝就是深拷贝
@@ -129,7 +153,6 @@ function deepClone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 ```
-
 ## 手写JSON.stringify
 * 期望
 ```js

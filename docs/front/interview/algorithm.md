@@ -43,6 +43,19 @@ function moveStar(arr) {
 }
 ```
 :::
+::: tab label=正则
+* 转换成字符串用正则，**返回新数组**
+```js
+function moveStar(arr) {
+    const str = arr.join('');
+    const starArr = [];
+    return starArr.concat(str.replace(/\*/g, () => {
+        starArr.push('*');
+        return '';
+    }).split(''));
+}
+```
+:::
 ::::
 
 ## 2.千位分隔符
@@ -131,6 +144,7 @@ function compare(ver1, ver2) {
 ```
 :::
 ::: tab label=深度优先解
+* 实际API是深度优先
 ```js
 function getElementById(id) {
     const find = Array.prototype.find;

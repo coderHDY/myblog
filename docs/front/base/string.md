@@ -609,3 +609,76 @@ const str = 'AbCD';
 console.log(str.toUpperCase()); // ABCD
 console.log(str); // AbCD
 ```
+## 可借用数组的方法
+:::: tabs
+::: tab label=join
+* 只要底层操作是获取或遍历下标就能完成的就可以借用
+```js
+const str = 'coderhdy';
+const str2 = Array.prototype.join.call(str, '-');
+console.log(str2); // c-o-d-e-r-h-d-y
+```
+:::
+::: tab label=map
+```js
+const str = 'coderhdy';
+const str2 = Array.prototype.map.call(str, item => item.toUpperCase() + '*').join('');
+console.log(str2); // C*O*D*E*R*H*D*Y*
+```
+:::
+::: tab label=reduce
+```js
+// 计算字符串出现个数
+const str = 'coderhdy';
+const map = Array.prototype.reduce.call(str, (pre, item) => {
+    pre.set(item, pre.has(item) ? pre.get(item) + 1 : 1);
+    return pre;
+}, new Map());
+
+console.log(map);
+```
+:::
+::: tab label=forEach
+```js
+const str = 'coderhdy';
+const map = Array.prototype.forEach.call(str, (item) => {
+    console.log(item);
+});
+
+console.log(map);
+```
+:::
+::: tab label=every/some
+```js
+const str = '12354245563234';
+const str2 = Array.prototype.every.call(str, item => +item > 0);
+console.log(str2); // true
+```
+```js
+const str = '12354245563034';
+const str2 = Array.prototype.some.call(str, item => +item < 1);
+console.log(str2); // true
+```
+:::
+::: tab label=find/findIndex
+```js
+const str = '12354983445563034';
+const str2 = Array.prototype.find.call(str, item => +item > 7);
+console.log(str2); // 9
+```
+```js
+const str = '12354983445563034';
+const str2 = Array.prototype.findIndex.call(str, item => +item > 7);
+console.log(str2); // 5
+```
+:::
+::: tab label=iterator
+```js
+const str = '12354983445563034';
+const iterator = Array.prototype[Symbol.iterator].call(str);
+for (let i of iterator) {
+    console.log(i);
+}
+```
+:::
+::::
