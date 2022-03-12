@@ -230,3 +230,49 @@ var isIsomorphic = function (s, t) {
 ```
 :::
 ::::
+## 1624. 之间最长子字符串
+:::: tabs
+::: tab label=题
+* 返回 两个相同字符之间的最长子字符串的长度
+```js
+const s = "abca"
+
+// 输出：2
+```
+:::
+::: tab label=解
+* 遍历，正则贪婪匹配
+>时间：80.63%  
+>空间：5.00%
+```js
+var maxLengthBetweenEqualCharacters = function (s) {
+    const reg = /(.).*\1/g;
+    if (!reg.test(s)) {
+        return -1;
+    }
+    return Array.prototype.reduce.call(s, (pre, item, idx) => {
+        const c = s.slice(idx).match(reg);
+        if (c) return Math.max(c[0].length - 2, pre);
+        return pre;
+    }, 0);
+};
+```
+:::
+::: tab label=解2
+* 遍历双指针
+>时间：80.63%  
+>空间：48.13%
+```js
+var maxLengthBetweenEqualCharacters = function (s) {
+    let max = -1;
+    for (let i = 0; i < s.length; i++) {
+        const last = s.lastIndexOf(s[i]);
+        if (i < last) {
+            max = Math.max(last - i - 1, max);
+        }
+    }
+    return max;
+};
+```
+:::
+::::
