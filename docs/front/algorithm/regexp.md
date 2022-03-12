@@ -53,6 +53,50 @@ var convertToTitle = function (n) {
 ```
 :::
 ::::
+## 171. Excel 表列序号
+:::: tabs
+::: tab label=题
+* 上题反过来
+```js
+const n = 'AB';
+console.log(titleToNumber(n)); // 28
+```
+:::
+::: tab label=解1
+* 逆着记录倍数
+>时间：74.79%  
+>空间：47.65%
+```js
+var titleToNumber = function (n) {
+    let ans = 0;
+    let power = 1;
+    for (let i = n.length - 1; i >= 0; i--) {
+        let code = n.charCodeAt(i) - 64;
+        ans += code * power;
+        power *= 26;
+    }
+    return ans;
+};
+```
+:::
+::: tab label=解2
+* 顺着记录倍数
+* 少记录了一个pwoer，并且少做了power的乘法
+>时间：93.12%  
+>空间：41.74%
+```js
+var titleToNumber = function (n) {
+    let ans = 0;
+    for (let i = 0; i < n.length; i++) {
+        ans *= 26;
+        let code = n.charCodeAt(i) - 64;
+        ans += code;
+    }
+    return ans;
+};
+```
+:::
+::::
 ## 50. 一次的字符
 :::: tabs
 ::: tab label=题
@@ -148,6 +192,40 @@ var countCharacters = function(words, chars) {
         return pre + item.length;
     }, 0)
     return knows
+};
+```
+:::
+::::
+## 205. 同构字符串
+:::: tabs
+::: tab label=题
+* s和t字符能够一一映射，并且映射顺序不能乱
+```js
+const ：s = "egg"
+const  t = "add"
+console.log(isIsomorphic(s, t));
+// 输出：true
+```
+:::
+::: tab label=解
+* 正反双map法，正反映射都没有重复映射关系，就正确
+```js
+var isIsomorphic = function (s, t) {
+    if (s.length !== t.length) return false;
+    let isTrue = true;
+    const handler = (a, b) => {
+        Array.prototype.reduce.call(a, (pre, item, i) => {
+            if (pre.has(item) && pre.get(item) !== b[i]) {
+                isTrue = false;
+            } else {
+                pre.set(item, b[i]);
+            }
+            return pre;
+        }, new Map());
+    }
+    handler(s, t);
+    handler(t, s);
+    return isTrue;
 };
 ```
 :::
