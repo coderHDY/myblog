@@ -1958,7 +1958,7 @@ const shuffle = arr => arr.sort(() => Math.random() - 0.5);
 :::: tabs
 ::: tab label=题
 * 一个元素触发另一个元素的事件
-```html{10-12}
+```html{9-11}
 <body>
     <button id="login">登录按钮</button>
     <script>
