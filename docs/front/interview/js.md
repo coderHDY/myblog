@@ -1672,7 +1672,6 @@ console.log(Array(100).fill(null).map(x => 1)); // [1, 1, ....]
 
 console.log(Array.from(Array(100), x => 1)); // [1, 1, ....]
 ```
-
 ## 23.类数组转化数组
 ```html
 <body>
@@ -1689,7 +1688,6 @@ console.log(Array.from(Array(100), x => 1)); // [1, 1, ....]
     </script>
 </body>
 ```
-
 ## 24.将数组转化成Iterator对象
 ```js
 const arr = [1, 2, 3];
@@ -1783,7 +1781,6 @@ function once(fn) {
 ```
 :::
 ::::
-
 ## 27.无限累加的sum函数
 :::: tabs
 ::: tab label=题
@@ -2590,6 +2587,164 @@ const s1 = new String('haah');
 const s2 = 'hahah';
 console.log(typeof s1); // object
 console.log(typeof s2); // string
+```
+:::
+::::
+## 48.柯里化累加器
+:::: tabs
+::: tab label=题
+* 指定函数的参数数量传完才能执行函数返回
+```js
+function add(a, b, c, d) {
+    return a + b + c + d;
+}
+const curry = currying(add);
+// console.log(curry(1)(2)(3)(4)); // 10
+// console.log(curry(1, 2)(3)(4)); // 10
+// console.log(curry(1, 2, 3)(4)); // 10
+console.log(curry(1, 2, 3, 4)); // 10
+```
+:::
+::: tab label=解
+```JS
+function currying(fn) {
+    const args = [];
+    const fn2 = function (...arg) {
+        args.push(...arg);
+        if (args.length >= fn.length) {
+            return fn.call(null, ...args);
+        }
+        return fn2;
+    }
+    return fn2;
+}
+```
+:::
+::::
+## 49.JS常见的设计模式
+:::: tabs
+::: tab label=单例模式
+* 无论怎么调用，只会创建第一个实例
+```js
+class People {
+    constructor(name) {
+        this.name = name;
+    }
+    getName() {
+        return this.name;
+    }
+}
+
+const onePeople = (function () {
+    let p;
+    return function (name) {
+        if (!p) {
+            p = new People(name);
+        }
+        return p;
+    }
+})()
+
+console.log(onePeople('hdy').getName()); // hdy
+console.log(onePeople('张三').getName()); // hdy
+console.log(onePeople('赵四').getName()); // hdy
+```
+:::
+::: tab label=代理模式
+* 对函数的执行条件进行过滤，然后才执行对应的操作，常见`防抖`、`节流`、`参数过滤`、`结果缓存`
+>参数过滤
+```js
+function sendMsg(msg) {
+    // fetch(..)
+    return `${msg}的数据`
+}
+
+const proxy = new Proxy(sendMsg, {
+    apply(target, thisArg, args) {
+        const [msg] = args;
+        if (!msg) {
+            console.error('消息不能为空');
+            return;
+        }
+        return Reflect.apply(target, thisArg, args);
+    }
+});
+
+console.log(proxy('')); // error: 消息不能为空 undefined
+console.log(proxy('hdy')); // hdy的数据
+```
+>结果缓存
+```js
+function slowSum(...args) {
+    const end = Date.now() + 1000;
+    while (Date.now() < end) { } // 模拟复杂计算
+    return args.reduce((pre, item) => item + pre, 0);
+}
+
+const bufferFn = function (fn) {
+    const ansMap = new Map();
+    return function (...args) {
+        const key = JSON.stringify(args);
+        if (ansMap.has(key)) {
+            return ansMap.get(key);
+        } else {
+            const val = fn.apply(null, args);
+            ansMap.set(key, val);
+            return val;
+        }
+    }
+}
+
+const proxy = bufferFn(slowSum);
+console.log(slowSum(1, 2, 3)); // 【慢】6
+console.log(slowSum(1, 2, 3)); // 【慢】6
+console.log(proxy(1, 2, 3)); // 【慢】6
+console.log(proxy(1, 2, 3)); // 【快】6
+```
+:::
+::: tab label=发布订阅
+* 事件订阅，事件发布通知订阅事件的一个机制，常见：`MVVM`/`EventListener`
+```js
+class Observer {
+    eventMap = new Map();
+    getEventListener(event) {
+        let fns = this.eventMap.get(event);
+        if (fns == null) {
+            fns = [];
+            this.eventMap.set(event, fns);
+        }
+        return fns
+    }
+    subscribe(event, fn) {
+        const fns = this.getEventListener(event);
+        fns.push(fn);
+    }
+    publish(event) {
+        const fns = this.getEventListener(event);
+        fns.forEach(fn => fn.call());
+    }
+    unsubscribe(event, fn) {
+        const fns = this.getEventListener(event);
+        let idx = fns.findIndex(item => item === fn);
+        while (idx !== -1) {
+            fns.splice(idx, 1);
+            idx = fns.findIndex(item => item === fn);
+        }
+    }
+}
+
+const listener = new Observer();
+const fn1 = () => console.log('1');
+const fn2 = () => console.log('2');
+listener.subscribe('click', fn1);
+listener.subscribe('click', fn2);
+listener.subscribe('mousemove', fn1);
+
+listener.publish('click'); // 1 2
+listener.publish('mousemove'); // 1
+
+listener.unsubscribe('click', fn1);
+listener.publish('click'); // 2
 ```
 :::
 ::::
