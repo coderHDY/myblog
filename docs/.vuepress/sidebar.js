@@ -77,10 +77,11 @@ const front = {
     ],
     '/front/interview/': [
         '',
-        'js',
         'css',
         'algorithm',
         'project',
+        'js',
+        'js100',
     ],
     '/front/css/': [
         {
