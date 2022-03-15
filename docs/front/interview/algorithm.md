@@ -57,7 +57,6 @@ function moveStar(arr) {
 ```
 :::
 ::::
-
 ## 2.千位分隔符
 :::: tabs
 ::: tab label=题
@@ -85,10 +84,10 @@ function split(num) {
 ```
 :::
 ::::
-
 ## 3.比较版本号
 :::: tabs
 ::: tab label=题
+* [力扣165](https://leetcode-cn.com/problems/compare-version-numbers/)
 ```js
 
 /**
@@ -105,21 +104,29 @@ console.log(compare(ver1, ver2)); // 1
 ```
 :::
 ::: tab label=解
+* 点分割，分批比较，**`padStart`制作等长字符串**
+>时间：91.10%  
+>空间：11.91%
 ```js
-function compare(ver1, ver2) {
-    if (ver1 === ver2) return 0;
-    const arr1 = ver1.split('.').map(item => +item.padEnd(2, 0));
-    const arr2 = ver2.split('.').map(item => +item.padEnd(2, 0));
-    const arr1Max = () => {
-        for (let i = 0; i < arr1.length; i++) {
-            if (arr1[i] !== arr2[i]) {
-                return arr1[i] > arr2[i];
-            }
+var compareVersion = function (version1, version2) {
+    const v1 = version1.split('.');
+    const v2 = version2.split('.');
+    const maxLen = Math.max(v1.length, v2.length);
+    let ans;
+    for (let i = 0; i < maxLen; i++) {
+        let n1 = v1[i] === undefined ? '0' : v1[i];
+        let n2 = v2[i] === undefined ? '0' : v2[i];
+        const mLen = Math.max(n1.length, n2.length);
+        n1 = +n1.padStart(mLen, '0');
+        n2 = +n2.padStart(mLen, '0');
+        if (n1 !== n2) {
+            ans = n1 > n2 ? 1 : -1;
+            break;
         }
-        return true;
-    };
-    return arr1Max() ? 1 : 2;
-}
+    }
+    if (!ans) ans = 0
+    return ans;
+};
 ```
 :::
 ::::
@@ -441,7 +448,7 @@ console.log(getRightLinks(rawLinks, columns));
 :::: tabs
 ::: tab label=题
 ```js
-console.log(add('12343234', '42343234')); // 54786478
+console.log(add('12343234', '42343234')); // 54706470
 ```
 :::
 ::: tab label=解
@@ -458,7 +465,7 @@ function add(num1, num2) {
         const n2 = arr2[i] != undefined ? +arr2[i] : 0;
         let sum;
         if (n1 + n2 + addOne > 7) {
-            sum = n1 + n2 + addOne % 8;
+            sum = (n1 + n2 + addOne) % 8;
             addOne = 1;
         } else {
             sum = n1 + n2 + addOne;
@@ -467,6 +474,13 @@ function add(num1, num2) {
         ans.push(sum);
     }
     return ans.reverse().join('');
+}
+```
+:::
+::: tab label=原生
+```js
+function add(a, b) {
+    return (parseInt(a, 8) + parseInt(b, 8)).toString(8);
 }
 ```
 :::

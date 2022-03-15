@@ -442,3 +442,35 @@ var preorder = function(root) {
 ```
 :::
 ::::
+## 257. 二叉树的所有路径
+:::: tabs
+::: tab label=题
+```js
+// root = [1,2,3,null,5]
+const root = new TreeNode(
+    1,
+    new TreeNode(2, null, new TreeNode(5)),
+    new TreeNode(3),
+)
+console.log(binaryTreePaths(root)); // [ '1->2->5', '1->3' ]
+```
+:::
+::: tab label=解
+* 缓存当前路径关系
+>时间：96.26%  
+>空间：46.14%
+```js
+var binaryTreePaths = function (root) {
+    const ans = [];
+    const handler = (cPath, node) => {
+        cPath = `${cPath}${node.val}`;
+        if (!node.left && !node.right) ans.push(cPath);
+        if (node.left) handler(`${cPath}->`, node.left);
+        if (node.right) handler(`${cPath}->`, node.right);
+    }
+    handler('', root);
+    return ans;
+};
+```
+:::
+::::
