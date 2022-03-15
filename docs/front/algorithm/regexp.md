@@ -276,3 +276,184 @@ var maxLengthBetweenEqualCharacters = function (s) {
 ```
 :::
 ::::
+## 293. 翻转游戏
+:::: tabs
+::: tab label=题
+* 翻转两个 `+` --> `-`，求所有可能解
+```js
+const currentState = "++++"
+console.log(generatePossibleNextMoves(currentState));
+// 输出：["--++","+--+","++--"]
+```
+:::
+::: tab label=解1
+* 动态正则
+>时间：95.24%  
+>空间：14.29%
+```js{5-6}
+var generatePossibleNextMoves = function (currentState) {
+    const ans = [];
+    let idx = currentState.indexOf('++', 0);
+    const handler = () => {
+        const reg = new RegExp(`(.{${idx}})\\+\\+(.*)`, 'g');
+        const temp = currentState.replace(reg, '$1--$2');
+        ans.push(temp);
+        idx = currentState.indexOf('++', idx + 1);
+    }
+    while (idx !== -1) {
+        handler();
+    }
+    return ans;
+};
+```
+:::
+::: tab label=解2
+* slice + '--' + slice
+>时间：95.24%  
+>空间：47.62%
+```js
+var generatePossibleNextMoves = function (currentState) {
+    const ans = [];
+    let idx = currentState.indexOf('++', 0);
+    const handler = () => {
+        const temp = currentState.slice(0, idx) + '--' + currentState.slice(idx + 2);
+        ans.push(temp);
+        idx = currentState.indexOf('++', idx + 1);
+    }
+    while (idx !== -1) {
+        handler();
+    }
+    return ans;
+};
+```
+:::
+::::
+## 345. 反转元音字母
+:::: tabs
+::: tab label=题
+```js
+const s = "hello"
+console.log(reverseVowels(s));
+// 输出："holle"
+```
+:::
+::: tab label=解
+* 拿到所有的元音字母及下标，字母倒序，重新插回去
+>时间：5.75%  
+>空间：5.14%
+```js
+var reverseVowels = function (s) {
+    const idxs = [];
+    let aeiou = [];
+    const reg = /[aeiouAEIOU]/;
+    for (let i = 0; i < s.length; i++) {
+        if (reg.test(s[i])) {
+            idxs.push(i);
+            aeiou.push(s[i]);
+        }
+    }
+    aeiou = aeiou.reverse();
+    for (let i = 0; i < idxs.length; i++) {
+        s = s.slice(0, idxs[i]) + aeiou[i] + s.slice(idxs[i] + 1);
+    }
+    return s;
+};
+```
+:::
+::: tab label=解2
+* 双指针
+>时间：91.79%  
+>空间：24.44%
+```js
+var reverseVowels = function (s) {
+    const arr = s.split('');
+    let first = 0;
+    let last = s.length - 1;
+    const reg = /[aeiouAEIOU]/;
+    while (first < last) {
+        if (reg.test(arr[first]) && reg.test(arr[last])) {
+            [arr[first], arr[last]] = [arr[last], arr[first]];
+            first++;
+            last--;
+        }
+        if (!reg.test(arr[first])) first++;
+        if (!reg.test(arr[last])) last--;
+    }
+    return arr.join('');
+};
+```
+:::
+::::
+## 383. 赎金信
+:::: tabs
+::: tab label=题
+```js
+const ransomNote = "a", magazine = "b"
+console.log(canConstruct(ransomNote, magazine));
+// 输出：false
+```
+:::
+::: tab label=解
+* 两个map，第二个包括且大于第一个map的所有键值 
+>时间：35.03%  
+>空间：32.91%
+```js
+var canConstruct = function (ransomNote, magazine) {
+    const setMap = s => Array.prototype.reduce.call(s, (map, item) => {
+        map.set(item, map.has(item) ? map.get(item) + 1 : 1);
+        return map;
+    }, new Map());
+    const map1 = setMap(ransomNote);
+    const map2 = setMap(magazine);
+    const success = (m1, m2) => [...m1.entries()].every(([key, val]) => m2.get(key) >= val);
+    return success(map1, map2);
+};
+```
+:::
+::: tab label=解2
+* 动态删减参考字符串的值
+>时间：80.52%  
+>空间：5.45%
+```js
+var canConstruct = function (ransomNote, magazine) {
+    for (let i = 0; i < ransomNote.length; i++) {
+        const idx = magazine.indexOf(ransomNote[i]);
+        if (idx === -1) return false;
+        magazine = magazine.slice(0, idx) + magazine.slice(idx + 1);
+    }
+    return true;
+};
+```
+:::
+::::
+## 179.拼接最大数
+:::: tabs
+::: tab label=题
+* 一个数组，能拼接出来的最大数
+```js
+const nums = [10, 2]; // 210
+// const nums = [0, 0]; // 0
+// const nums = [111311, 1113]; // 1113111113
+console.log(largestNumber(nums));
+```
+:::
+::: tab label=解
+* 自己定义排序算法，`${a}${b}` 和 `${b}${a}` 拼接状态谁大
+* 注意排除返回0的情况
+>时间：92.45%  
+>空间：30.19%
+```js
+var largestNumber = function (nums) {
+    nums.sort((a, b) => {
+        const n1 = `${a}${b}`;
+        const n2 = `${b}${a}`;
+        return +n2 - +n1;
+    })
+    let numStr = nums.join('');
+    const noZero = Array.prototype.findIndex.call(numStr, item => item !== '0');
+    numStr = numStr.slice(noZero);
+    return numStr ? numStr : '0';
+};
+```
+:::
+::::
