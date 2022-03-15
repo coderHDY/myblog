@@ -1,5 +1,5 @@
 ---
-title: js相关
+title: js题1-50
 date: 2022-01-07
 tags:
  - 面试题
@@ -2745,6 +2745,58 @@ listener.publish('mousemove'); // 1
 
 listener.unsubscribe('click', fn1);
 listener.publish('click'); // 2
+```
+:::
+::::
+## 50.finally执行时机
+:::: tabs
+::: tab label=题
+* 《你不知道的JS（中）》117页
+```js
+Promise.resolve().then(() => console.log('异步1'));
+
+function a() {
+    try {
+        return 42;
+    }
+    finally {
+        console.log('finally');
+    }
+    console.log('after');
+}
+
+const b = a();
+console.log(b);
+
+console.log('同步');
+```
+:::
+::: tab label=解
+* try/catch/finally不是异步的
+* try执行完，return将a函数的返回值设置为42
+* 然后去执行finally
+* 然后是等于号赋值，也就是说这是一个finally的执行机制，并不是异步
+```js
+Promise.resolve().then(() => console.log('异步1'));
+
+function a() {
+    try {
+        return 42;
+    }
+    finally {
+        console.log('finally');
+    }
+    console.log('after');
+}
+
+const b = a();
+console.log(b);
+
+console.log('同步');
+// finally
+// 42
+// 同步
+// 异步1
 ```
 :::
 ::::
