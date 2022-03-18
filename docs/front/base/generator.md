@@ -19,6 +19,10 @@ console.log(obj[Symbol.iterator]); // undefined
 * 迭代器协议规定迭代器函数必须返回一个[生成器对象](./generator.html#生成器)：包含【function next()】的【对象】
 * next() 返回一个指定属性的对象： {done: bool, value: any} 
 :::
+::: warning
+* **首次执行next()的时候才开始进入执行函数，因此首次next入参无效**
+* 后续的next会作为yield表达式的值传入
+:::
 ```js
 const arr = [1, 2, 3];
 
