@@ -178,7 +178,6 @@ const fn = function(book) {
 
 fn.apply(obj, ['蝴蝶书']); // 我的名字是hdy，我今年18岁啦！我喜欢读蝴蝶书。
 ```
-
 ## length
 ::: tip length
 * 作用：拿到function的**形参数量**
@@ -211,7 +210,6 @@ console.log(Function.length); // 1
 ```
 :::
 ::::
-
 ## name
 ::: tip name
 * 作用：查看函数名称
@@ -266,7 +264,6 @@ console.log(fn.get.name); // get name
 ```
 :::
 ::::
-
 ## toString
 ::: tip toString
 * 作用：返回函数的定义代码
@@ -280,7 +277,6 @@ const b = () => {}
 console.log(a); // function a() {}
 console.log(b); // () => {}
 ```
-
 ## arguments
 ::: tip arguments
 * 作用：拿到函数实参
@@ -332,7 +328,6 @@ fn('name', 'age');
 ```
 :::
 ::::
-
 ## 箭头函数
 ::: tip 箭头函数
 * 作用：es6新增定义函数方式
@@ -472,6 +467,28 @@ B.prototype.__proto__ = A.prototype;
 
 const b = new B();
 console.log(b); // B { name: 'hdy', age: 18 }
+```
+:::
+::: tab label=继承
+* 继承也总是指向new最初被调用的函数的构造器
+```js{3,9-10}
+class A {
+    constructor() {
+        console.log(new.target);
+    }
+}
+class B extends A {
+    constructor() {
+        super();
+        console.log(new.target);
+        console.log(this.constructor);
+    }
+}
+new B();
+
+// [class B extends A]
+// [class B extends A]
+// [class B extends A]
 ```
 :::
 ::::

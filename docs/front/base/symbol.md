@@ -27,13 +27,13 @@ console.log(typeof s1); // symbol
 |键|定义时的描述符|hdy.name|
 |值|Symbol.for()的返回值|Symbol(hdy.skill)|
 :::
-
 ## 方法
 ### for
 ::: tip
-* 作用：在全局注册表中**注册或读取**Symbol
+* 作用：在`全局注册表中`**注册或读取**Symbol
 * 调用：Symbol.for(str)
 * 返回：注册好的Symbol
+* tip：查找`全局注册表`有没有相关描述的Symbol，有则返回，无则在全局注册表中创建
 :::
 ```js{3,4}
 const s1 = Symbol.for('全局标记1');
@@ -57,7 +57,6 @@ console.log(Symbol.for('hdy.name')); // Symbol(hdy.name)
 const js = Symbol.for('hdy.skill');
 console.log(Symbol.keyFor(js)); // hdy.skill
 ```
-
 ## 属性
 ### description
 ::: tip
