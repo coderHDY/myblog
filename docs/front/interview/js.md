@@ -2620,6 +2620,42 @@ function currying(fn) {
 }
 ```
 :::
+::: tab label=变形
+* 要求都能执行
+```js
+function add(a, b, c) {
+    return a + b + c;
+}
+
+const x = curry(add);
+
+console.log(x(1)(2)(3)) // 6
+
+console.log(x(1, 2)(3)) // 6
+console.log(x(1, 2, 3)) // 6
+```
+:::
+::: tab label=解
+* 执行后暂存解，然后清空args，再返回
+```js
+function curry(fn) {
+    const len = fn.length;
+    let args = [];
+
+    const fn2 = function (...arg) {
+        args.push(...arg);
+        if (args.length >= len) {
+            const ans = fn.call(null, ...args);
+            args = [];
+            return ans;
+        } else {
+            return fn2;
+        }
+    }
+    return fn2;
+}
+```
+:::
 ::::
 ## 49.JS常见的设计模式
 :::: tabs

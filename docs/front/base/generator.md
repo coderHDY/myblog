@@ -137,6 +137,42 @@ console.log(gen.next().value);
 ```
 :::
 ::::
+## yield
+:::: tabs
+::: tab label=作用
+>设置迭代器的断点
+* 首次执行生成器，返回迭代器
+* 执行迭代器`.next()`，执行到代码的下一处`yield`处
+* 第二次以后的yield可以接收入参，作为`yield处的表达式的返回值`
+```js
+function* a() {
+    const b = yield 3;
+    const c = yield b + 2;
+    return c;
+}
+
+const gen = a();
+console.log(gen.next().value); // 3 入参无效 
+console.log(gen.next(2).value); // 4 【传入的2作为 (yield 3) 这个表达式的返回值】
+console.log(gen.next(10).value); // 10 【传入的10作为 (yield b + 2) 这个表达式的返回值】
+console.log(gen.next().value); // undefined
+```
+:::
+::: tab label=yield*
+* 断点处再`以迭代器处理`
+```js
+function* a() {
+    yield* [1, 2, 3];
+}
+
+const b = a();
+console.log(b.next()); // { value: 1, done: false }
+console.log(b.next()); // { value: 2, done: false }
+console.log(b.next()); // { value: 3, done: false }
+console.log(b.next()); // { value: undefined, done: true }
+```
+:::
+::::
 ## 生成器
 ::: tip 生成器
 * 生成器对象由generator 【function*】返回，符合可迭代协议和迭代协议。
