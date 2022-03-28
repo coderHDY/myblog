@@ -76,7 +76,7 @@ console.log(arr); // [ '张三: 180', '李四: 175', '王五: 170' ]
 :::
 ::::
 ### of
-* Array.of()与new Array() 相似，都是创建新数组
+* `Array.of()`与`new Array()`/`Array()` 相似，都是创建新数组
 ```js
 console.log(Array.of(1, 2, 3)); // [1, 2, 3]
 console.log(new Array(1, 2, 3)); // [1, 2, 3]
@@ -458,7 +458,6 @@ console.log(at(arr, -2)); // 2
 ```
 :::
 ::::
-
 ## 操作数组
 ### concat
 ::: tip
@@ -569,7 +568,6 @@ console.log(arr.join('')); // 1本书true
 const str = '1,本书,true';
 console.log(str.split(',')); // ['1', '本书', 'true']
 ```
-
 ### reverse
 ::: tip
 * 作用：反转数组，**改变原数组**
@@ -698,7 +696,6 @@ console.log(deepFlat(arr)); // [ 1, 2, 10, 20, 100, 200, 1000, 2000 ]
 ```
 :::
 ::::
-
 ### toString
 ::: tip
 * 作用：将数组转化成字符串，以逗号分隔，不改变原数组
@@ -710,9 +707,7 @@ const arr = [1, 2, true, '黄']
 console.log(arr.toString()); // 1,2,true,黄
 console.log(arr); // [1, 2, true, '黄']
 ```
-
 ## 高级方法
-
 ### filter
 ::: tip
 * 作用：指定条件筛选数组项，**返回新数组，不改变原数组**
@@ -781,7 +776,6 @@ console.log(arr2);  // [10, 100]
 ```
 :::
 ::::
-
 ### forEach
 ::: tip
 * 作用：**以迭代器的形式**遍历数组
@@ -1157,7 +1151,6 @@ const arr = [1, 2, 3, 4];
 console.log(arr.reduce((pre, item, index, arr) => pre + item, '')); // 1234
 console.log(arr.reduceRight((pre, item, index, arr) => pre + item, '')); // 4321
 ```
-
 ## 迭代器
 ### keys
 ::: tip
