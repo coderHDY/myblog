@@ -182,3 +182,132 @@ app.get('/search', (req, res) => {
 * 滚动事件：防抖、节流
 :::
 ::::
+## 3.打点
+:::: tabs
+::: tab label=打点
+* 某个元素`展示`、`点击`等情况时时需要触发`数据统计`的**网络请求**
+* 需要记载：
+    * 类型：点击打点、展示打点、跳转打点、调起小程序打点、调起app打点
+    * 负载数据：承载的主要数据的id、主要标识
+    * 展示位置：同一个组件也许会在多个位置、以不同的功能进行展示，需要记录该位置
+:::
+::: tab label=img
+* 旧方法，使用`new Image`进行日志打点，动态生成src的`query`，进行打点日志制作
+* 特点：
+    * `get`请求
+    * 有可能发送不出去，因为有可能页面直接卸载了，所以一般还会加上`延迟卸载`100ms以保证打点基本能成功
+```js{15,18}
+// 服务器
+const express = require('express');
+const app = express();
+app.listen('8888', () => console.log('listen 8888'));
+const path = require('path');
+const fs = require('fs');
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    const url = path.join(__dirname, './test.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+})
+
+app.get('/log', (req, res) => {
+    const end = Date.now() + 2000;
+    while (Date.now() < end) { }
+    console.log('接收到打点' + req.query.idx);
+    res.send();
+})
+```
+```html{20-24}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <ul id="ul">
+        <li data-log="1">1</li>
+        <li data-log="2">2</li>
+        <li data-log="3">3</li>
+        <li data-log="4">4</li>
+        <li data-log="5">5</li>
+    </ul>
+    <script>
+        ul.addEventListener('click', e => {
+            const idx = e.target.getAttribute('data-log');
+            const img = new Image();
+            img.src = `/log?idx=${idx}`;
+        })
+    </script>
+</body>
+
+</html>
+```
+:::
+::: tab label=sendBeacon
+* 利用新出的API`navigator.sendBeacon`进行异步请求发送
+* 特点：
+    * 不用创建元素、专门为打点设计的api，性能有优化
+    * `post`请求
+* 优势：使用 sendBeacon() 方法会使用户代理在有机会时异步地向服务器发送数据，同时不会延迟页面的卸载或影响下一导航的载入性能，这意味着：
+    * 数据发送是可靠的。
+    * 数据异步传输。
+    * 不影响下一导航的载入。
+```js{15}
+// 服务器
+const express = require('express');
+const app = express();
+app.listen('8888', () => console.log('listen 8888'));
+const path = require('path');
+const fs = require('fs');
+
+app.get('/', (req, res) => {
+    res.setHeader('Content-Type', 'text/html')
+    const url = path.join(__dirname, './test.html');
+    const code = fs.readFileSync(url);
+    return res.send(code);
+})
+
+app.post('/log', (req, res) => {
+    const end = Date.now() + 2000;
+    while (Date.now() < end) { }
+    console.log('接收到打点' + req.query.idx);
+    res.send();
+})
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="jump">
+        <a href="https://www.baidu.com">1</a>
+        <a href="https://www.qq.com">2</a>
+        <a href="https://www.bytedance.com">3</a>
+        <a href="https://www.meituan.com">4</a>
+        <a href="https://github.com/coderHDY">5</a>
+    </div>
+    <script>
+        jump.addEventListener('click', e => {
+            const idx = e.target.getAttribute('href');
+            navigator.sendBeacon(`/log?idx=${idx}`);
+        })
+    </script>
+</body>
+
+</html>
+```
+:::
+::::
