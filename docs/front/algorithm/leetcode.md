@@ -718,7 +718,6 @@ function removeElement(nums, val) {
 ```
 :::
 ::::
-
 ## 24.两两交换链表
 :::: tabs
 ::: tab label=题
@@ -790,6 +789,58 @@ function convertToBase7(num) {
 function convertToBase7(num) {
     return num.toString(7);
 }
+```
+:::
+::::
+## 459. 重复的子字符串
+:::: tabs
+::: tab label=题
+```js
+const s = "abab"
+console.log(repeatedSubstringPattern(s));
+// 输出: true
+// 解释: 可由子串 "ab" 重复两次构成。
+```
+:::
+::: tab label=解
+* 必须要`子串w`重复2次以上，那么`(s + s)`就有4个`子串w`，那么s + s 破坏掉首尾两个子串后还能组成`原子串s`
+>时间：97.28%  
+>空间：70.37%
+```js
+var repeatedSubstringPattern = function (s) {
+    return (s + s).slice(1, s.length * 2 - 1).includes(s);
+};
+```
+:::
+::::
+## 1154.一年中的第几天
+:::: tabs
+::: tab label=题
+* 求今天是今年的第几天
+* 四年一润，百年不润，四百年再润，
+:::
+::: tab label=解
+>时间：88.97%  
+>空间：5.48%
+```js
+var dayOfYear = function(date) {
+    const arr = [0, 31,28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const [year, month, day] = date.split('-').map(item => +item);
+    let ans = 0;
+    for (let i = 1; i < month; i++) {
+        ans += arr[i];
+    }
+    ans += day;
+    return month > 2 && ((year % 4  === 0 && year % 100 !== 0) || year % 400 === 0) ? ans + 1 : ans;
+};
+```
+```js
+var dayOfYear = function(date) {
+    const arr = [0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+    const [year, month, day] = date.split('-').map(item => +item);
+    let ans = arr[month] + day;
+    return month > 2 && ((year % 4  === 0 && year % 100 !== 0) || year % 400 === 0) ? ans + 1 : ans;
+};
 ```
 :::
 ::::

@@ -7,6 +7,7 @@ date: 2022-03-29
 ::: tab label=起步
 * [官网](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D)
 * [canvas对象](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL)
+* [konva库](https://github.com/konvajs/konva)
 * canvas是一块`画布`，可以用js进行绘图
 * 画布要用`属性设置宽高`
 ```html
@@ -421,8 +422,7 @@ console.log(url);
                 i++;
                 pro.pre(i);
             }
-        }, 10)
-        
+        }, 10);
     </script>
 </body>
 
