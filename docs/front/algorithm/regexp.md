@@ -457,3 +457,49 @@ var largestNumber = function (nums) {
 ```
 :::
 ::::
+## 520.检测大写字母
+:::: tabs
+::: tab label=题
+* 全部字母都是大写，比如 "USA" 。
+* 单词中所有字母都不是大写，比如 "leetcode" 。
+* 如果单词不只含有一个字母，只有首字母大写， 比如 "Google" 。
+:::
+::: tab label=解
+* 拆解判断和利用`Array.prototype.every`
+>时间：100.00%  
+>空间：46.98%
+```js
+var detectCapitalUse = function(word) {
+    return word.slice(1).toLowerCase() === word.slice(1) || Array.prototype.every.call(word, item => item.charCodeAt(0) < 91);
+};
+```
+:::
+::: tab label=正则
+>时间：92.28%  
+>空间：38.59%
+```js
+var detectCapitalUse = function(word) {
+    const reg = /^[A-Z]+$|^[A-Za-z][a-z]{0,}$/;
+    return reg.test(word);
+};
+```
+:::
+::::
+## 551. 学生出勤记录 I
+:::: tabs
+::: tab label=题
+* 按 总出勤 计，学生缺勤（'A'）严格 少于两天。
+* 学生 不会 存在 连续 3 天或 连续 3 天以上的迟到（'L'）记录。
+:::
+::: tab label=解
+* 原生方法能解决的用原生，速度会更快
+>时间：99.58%  
+>空间：47.91%
+```js
+var checkRecord = function(s) {
+    const reg2 = /A.*?A/g;
+    return !s.includes('LLL') && !reg2.test(s);
+};
+```
+:::
+::::
