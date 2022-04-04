@@ -474,3 +474,36 @@ var binaryTreePaths = function (root) {
 ```
 :::
 ::::
+## 114. 二叉树展开为链表
+:::: tabs
+::: tab label=题
+* 按照先序遍历生成新的二叉树排序方式，所有节点只有右节点
+```js
+const root = [1,2,5,3,4,null,6]
+console.log(flatten(root));
+// 输出：[1,null,2,null,3,null,4,null,5,null,6]
+```
+:::
+::: tab label=解
+* 前序遍历：中左右
+* 前序遍历反向遍历：右左中，也就是前序遍历从最后一个往前拿
+* 反向遍历同时制作每一个节点的right，遍历完成即制作完成
+>时间：82.84%  
+>空间：34.02%
+```js
+var flatten = function(root) {
+    let last = null;
+    const handler = node => {
+        if (!node) return;
+        handler(node.right);
+        handler(node.left);
+        node.right = last;
+        node.left = null;
+        last = node;
+    };
+    handler(root);
+    return last;
+};
+```
+:::
+::::
