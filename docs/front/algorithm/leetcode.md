@@ -834,12 +834,70 @@ var dayOfYear = function(date) {
     return month > 2 && ((year % 4  === 0 && year % 100 !== 0) || year % 400 === 0) ? ans + 1 : ans;
 };
 ```
+* 优化
 ```js
 var dayOfYear = function(date) {
     const arr = [0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
     const [year, month, day] = date.split('-').map(item => +item);
     let ans = arr[month] + day;
     return month > 2 && ((year % 4  === 0 && year % 100 !== 0) || year % 400 === 0) ? ans + 1 : ans;
+};
+```
+:::
+::::
+## 75. 颜色分类
+:::: tabs
+::: tab label=题
+* 将只有[0, 1, 2] 的数组进行排序
+```js
+const nums = [2,0,2,1,1,0]
+console.log(sortColors(nums));
+// 输出：[0,0,1,1,2,2]
+```
+:::
+::: tab label=解
+* 普通冒泡排序【O(n^2)】
+>时间：15.59%  
+>空间：5.87%
+```js
+var sortColors = function(nums) {
+    for (let i = 0; i < nums.length - 1; i++) {
+        for (let j = 0; j < nums.length - 1 - i; j++) {
+            if (nums[j] > nums[j + 1]) {
+                [nums[j], nums[j + 1]] = [nums[j + 1], nums[j]];
+            }
+        }
+    }
+};
+```
+:::
+::: tab label=解2
+* 遍历两次，移动0和2，【O(n)】
+>时间：91.15%  
+>空间：38.98%
+```js
+var sortColors = function(nums) {
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 0) {
+            nums.splice(i, 1);
+            nums.unshift(0);
+        }
+    }
+    for (let i = nums.length; i >= 0 ; i--) {
+        if (nums[i] === 2) {
+            nums.splice(i, 1);
+            nums.push(2);
+        }
+    }
+};
+```
+:::
+::: tab label=原生解
+>时间：99.57%  
+>空间：42.75%
+```js
+var sortColors = function(nums) {
+    return nums.sort((a, b) => a - b);
 };
 ```
 :::
