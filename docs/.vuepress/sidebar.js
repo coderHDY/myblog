@@ -72,6 +72,7 @@ const front = {
                 'tree',
                 'leetcode',
                 'regexp',
+                'pointer',
             ]
         }
     ],

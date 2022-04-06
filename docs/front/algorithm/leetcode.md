@@ -902,3 +902,155 @@ var sortColors = function(nums) {
 ```
 :::
 ::::
+## 43. 字符串相乘
+:::: tabs
+::: tab label=题
+* 纯字符串，大数相乘
+```js
+const n1 = '123';
+const n2 = '456';
+console.log(multiply(n1, n2)); // 56088
+```
+:::
+::: tab label=解
+* 竖式，单个数按位乘，后加
+>时间：30.17%  
+>空间：18.43%
+```js
+var multiply = function (num1, num2) {
+
+    // 竖式乘法部分
+    let powArr = [];
+    for (let i = num1.length - 1; i >= 0; i--) {
+        let pluNum = '';
+        let addNum = 0;
+        for (let j = num2.length - 1; j >= 0; j--) {
+            let cPow = +num1[i] * +num2[j] + addNum;
+            if (cPow >= 10) {
+                pluNum = `${cPow}`[1] + pluNum;
+                addNum = +`${cPow}`[0];
+            } else {
+                pluNum = cPow + pluNum;
+                addNum = 0;
+            }
+        }
+        if (addNum) pluNum = addNum + pluNum;
+        pluNum += '0'.repeat(num1.length - 1 - i);
+        powArr.push(pluNum);
+    }
+
+    // 加法部分(需完全用字符串处理)
+    const maxLen = powArr.reduce((pre, item) => item.length > pre ? item.length : pre, 0);
+    let ans = '';
+    let addNum = 0;
+    for (let i = 0; i < maxLen; i++) {
+        let col = addNum + powArr.reduce((pre, item) => pre + +item[item.length - i - 1] || 0, 0);
+        addNum = col >= 10 ? +`${col}`.slice(0, -1) : 0;
+        ans = `${col}`.slice(-1) + ans;
+    }
+    if (addNum) ans = addNum + ans;
+    return ans.replace(/^0+/, '') === '' ? '0' : ans.replace(/^0+/, '');
+};
+```
+:::
+::::
+## 71. 简化路径
+:::: tabs
+::: tab label=解
+```js
+// 始终以斜杠 '/' 开头。
+// 两个目录名之间必须只有一个斜杠 '/' 。
+// 最后一个目录名（如果存在）不能 以 '/' 结尾。
+// 此外，路径仅包含从根目录到目标文件或目录的路径上的目录（即，不含 '.' 或 '..'）。
+const path = "/home/"
+console.log(simplifyPath(path));
+// 输出："/home"
+```
+:::
+::: tab label=解
+* 栈，有效路径存储，回退则出栈
+>时间：97.01%  
+>空间：8.95%
+```js
+var simplifyPath = function(path) {
+    const stack = [];
+    const pathArr = path.split('/');
+    for (p of pathArr) {
+        if (!['', '.', '..'].includes(p)) {
+            stack.push(p);
+        } else if (p === '..') {
+            stack.pop();
+        }
+    }
+    return '/' + stack.join('/');
+};
+```
+:::
+::::
+## 227. 基本计算器 II
+:::: tabs
+::: tab label=题
+* 只有加减乘除的表达式进行计算，禁止使用eval
+:::
+::: tab label=解
+>时间：30.12%  
+>空间：22.54%
+```js
+var calculate = function (s) {
+    const reg = /[\+\-\*\/]/g;
+    const nums = s.split(reg);
+    const operators = s.match(reg);
+    if (!operators) return s.trim();
+    let firstIdx = operators.findIndex(item => ['*', '/'].includes(item));
+    while (firstIdx !== -1) {
+        nums[firstIdx] = Math.floor(operators[firstIdx] === '*' ? +nums[firstIdx] * +nums[firstIdx + 1] : +nums[firstIdx] / +nums[firstIdx + 1]);
+        nums.splice(firstIdx + 1, 1);
+        operators.splice(firstIdx, 1);
+        firstIdx = operators.findIndex(item => ['*', '/'].includes(item));
+    }
+    return operators.reduce((pre, item, idx) => {
+        pre = item === '+' ? +pre + +nums[idx + 1] : +pre - +nums[idx + 1];
+        return pre;
+    }, nums[0])
+};
+```
+:::
+::::
+## 161. 相隔为 1 的编辑距离
+:::: tabs
+::: tab label=题
+* 只能操作一次，且必须操作一次，增删改一个字符
+```js
+const s = "ab";
+const t = "acd";
+console.log(isOneEditDistance(s, t));
+// 输出: true
+```
+:::
+::: tab label=解
+* 要遍历完整，就要遍历长的。不确定s和t谁是长的，就固定s为长的，遍历s。同时就只要判断删改操作。
+>时间：85.71%  
+>空间：17.86%
+```js
+var isOneEditDistance = function (s, t) {
+    [s, t] = s.length < t.length ? [t, s] : [s, t];
+    const step = s.length > t.length ? 'del' : 'edit';
+    if ((s + t).length < 2 && step !== 'edit') return true;
+    let chance = true;
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] !== t[i]) {
+            if (!chance) return false;
+            if (step === 'del') {
+                s = s.slice(0, i) + s.slice(i + 1);
+                i--;
+            } else {
+                s = s.slice(0, i) + t[i] + s.slice(i + 1);
+            }
+            chance = false;
+        }
+    }
+    return !chance;
+};
+```
+:::
+::::

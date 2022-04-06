@@ -503,3 +503,70 @@ var checkRecord = function(s) {
 ```
 :::
 ::::
+## 648. 单词替换
+:::: tabs
+::: tab label=题
+* 替换字符串的开头简写字典
+```js
+const dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"
+console.log(replaceWords(dictionary, sentence));
+// 输出："the cat was rat by the bat"
+```
+:::
+::: tab label=解
+>时间：25.89%  
+>空间：94.64%
+```js
+var replaceWords = function(dictionary, sentence) {
+    dictionary.sort((a, b) => a.length - b.length);
+    return sentence.split(' ').map(item => {
+        const match = dictionary.find(i => item.indexOf(i) === 0);
+        return match ?? item;
+    }).join(' ');
+};
+```
+:::
+::::
+## 692. 前K个高频单词（单词按ascll排序）（列表map转换）
+:::: tabs
+::: tab label=题
+* 给定一个单词列表 words 和一个整数 k ，返回前 k 个出现次数最多的单词。
+返回的答案应该按单词出现频率由高到低排序。如果不同的单词有相同出现频率， 按字典顺序 排序。
+```js
+const words = ["i", "love", "leetcode", "i", "love", "coding"], k = 2
+console.log(topKFrequent(words, k));
+// 输出: ["i", "love"]
+// 解析: "i" 和 "love" 为出现次数最多的两个单词，均为2次。
+//     注意，按字母顺序 "i" 在 "love" 之前。
+```
+:::
+::: tab label=解
+* 重点：
+    1. 单词按ascll排序
+    2. 列表map转换
+>时间：99.69%  
+>空间：69.11%
+```js{3-7,12-18}
+var topKFrequent = function (words, k) {
+
+    // array转map
+    const map = words.reduce((pre, item) => {
+        pre.set(item, (pre.get(item) ?? 0) + 1);
+        return pre;
+    }, new Map());
+    return [...map].sort((a, b) => {
+        if (b[1] !== a[1]) return b[1] - a[1];
+
+        // 单词ascll排序主要算法
+        const maxLen = Math.max(b[0].length, a[0].length);
+        for (let i = 0; i < maxLen; i++) {
+            const n1 = a[0][i] !== undefined ? a[0].charCodeAt(i) : -1;
+            const n2 = b[0][i] !== undefined ? b[0].charCodeAt(i) : -1;
+            if (n1 > n2) return 1;
+            if (n2 > n1) return -1;
+        }
+    }).slice(0, k).map(([item, _]) => item);
+};
+```
+:::
+::::
