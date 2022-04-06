@@ -172,8 +172,7 @@ window.innerWidth
     * 但也有可能造成页面重排，因为可用宽度减小，元素的css大小不变
 * 手机缩放，**视觉视口宽高变小，布局容器视口值不变**，让页面展示的css一个px占的像素点变多，布局容器也随之放大（注：px值不变），就不会造成页面的重排
     ```html
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
     ```
 
 * `viewport`：专门为手机伸缩放以及视口适配的h5标签
