@@ -507,3 +507,36 @@ var flatten = function(root) {
 ```
 :::
 ::::
+## 108. 将有序数组转换为二叉搜索树,回溯
+:::: tabs
+::: tab label=题
+* 一个整数数组 nums ，其中元素已经按 升序 排列，请你将其转换为一棵 高度平衡 二叉搜索树。
+:::
+::: tab label=解
+>时间：75.85%  
+>空间：25.07%
+```js
+var sortedArrayToBST = function(nums) {
+    if (nums.length < 2) return new TreeNode(nums[0])
+    const handler = (left, right) => {
+        if (left > right) return null;
+
+        // 搜索树，大数优先，所以用ceil
+        const mid = Math.ceil((right - left) / 2) + left;
+        return new TreeNode(
+            nums[mid],
+            handler(left, mid - 1),
+            handler(mid + 1, right)
+        );
+    }
+    const center = Math.floor(nums.length / 2);
+    const root = new TreeNode(
+        nums[center],
+        handler(0, center - 1),
+        handler(center + 1, nums.length - 1)
+    );
+    return root;
+};
+```
+:::
+::::

@@ -10,8 +10,7 @@ categories:
     * 遍历方法：前序、中序、后序、深度优先、广度优先
     * 递归求解
 :::
-## 做题
-### 前中后序遍历
+## 前中后序遍历
 ::: tip
 * 前：根 -> 左 -> 右
 * 中：左 -> 根 -> 右
@@ -72,7 +71,7 @@ function postorderTraversal(root, ans = []) {
 ```
 :::
 ::::
-### 广度优先
+## 广度优先
 ::: tip
 * 广度优先：利用队列，又叫做层序遍历
 * 深度优先：利用递归
@@ -112,7 +111,7 @@ function levelOrder(root) {
 ```
 :::
 ::::
-### 最大深度
+## 最大深度
 ::: tip
 * 给定二叉树求最大深度
 * [力扣104](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
@@ -131,7 +130,7 @@ function maxDepth(root, max = 0) {
 ```
 :::
 ::::
-### 路径总和
+## 路径总和
 ::: tip
 * 求路径总和是否等于target值
 ```js
@@ -162,7 +161,7 @@ function hasPathSum(root, targetSum) {
 ```
 :::
 ::::
-### 根据中序后序构造二叉树
+## 根据中序后序构造二叉树
 ::: tip 
 * 给定中序、后序遍历
 * 假定没有重复元素
@@ -232,7 +231,7 @@ function buildTree(inorder, postorder) {
 ```
 :::
 ::::
-### 前序中序构造二叉树
+## 前序中序构造二叉树
 ::: tip
 * 给前序中序遍历
 * 返回二叉树
@@ -269,7 +268,7 @@ function buildTree(preorder, inorder) {
 ```
 :::
 ::::
-### 填充所有节点的右侧指针
+## 填充所有节点的右侧指针
 ::: tip
 * 给完美二叉树
 * 同级的节点左边指右边，最右边指null
