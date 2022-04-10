@@ -1054,3 +1054,31 @@ var isOneEditDistance = function (s, t) {
 ```
 :::
 ::::
+## 46. 全排列，回溯，递归
+:::: tabs
+::: tab label=题
+```js
+const nums = [1,2,3];
+console.log(permute(nums));
+// 输出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+```
+:::
+::: tab label=解
+* 回溯题定好回溯条件和出口。
+>时间：81.26%  
+>空间：50.36%
+```js
+var permute = function(nums) {
+    const ans = [];
+    const handler = arr => {
+        if (arr.length === nums.length) return ans.push(arr);
+        for (let i = 0; i < nums.length; i++) {
+            if (!arr.includes(nums[i])) handler([...arr, nums[i]]);
+        }
+    }
+    handler([]);
+    return ans;
+};
+```
+:::
+::::
