@@ -4,8 +4,7 @@ date: 2021-11-22
 categories:
  - 算法
 ---
-## 手写链表
-### 单向链表
+## 单向链表
 ::: tip 规范
 * 每个节点有下一个节点的指针
 * 可以拿到链表的长度
@@ -150,7 +149,7 @@ class LinkList {
 ```
 :::
 ::::
-### 双向链表
+## 双向链表
 ::: tip 规范
 * Node节点有头指针和尾指针
 * 记录长度
@@ -225,8 +224,7 @@ class DBLinkList {
 ```
 :::
 ::::
-## 算法题
-### 206.反转链表
+## 206.反转链表
 :::: tabs
 ::: tab label=双指针法
 >时间：88.33%  
@@ -241,6 +239,70 @@ var reverseList =  function(head) {
         head = next;
     }
     return prev;
+};
+```
+:::
+::::
+## 82. 删除排序链表中的重复元素 II
+:::: tabs
+::: tab label=题
+* 有序链表，删除所有重复的元素（只留不重复的）
+```js
+const head = [1,2,3,3,4,4,5]
+console.log(deleteDuplicates(head));
+// 输出：[1,2,5]
+```
+:::
+::: tab label=解
+* 由于可能删除head自身，所以用递归思想。
+>时间：93.32%  
+>空间：66.26%
+```js
+var deleteDuplicates = function(head) {
+    if (!head?.next) return head;
+    let next = head.next;
+    if (head.val === next.val) {
+        while (head.val === next?.val) {
+            next = next?.next
+        }
+        head = deleteDuplicates(next);
+    } else {
+        head.next = deleteDuplicates(next);
+    }
+    return head;
+};
+```
+:::
+::::
+## 02.08. 双指针判断环及入口
+:::: tabs
+::: tab label=题
+* 给定链表，判定环，无则返回null
+* 有则返回环入口节点
+:::
+::: tab label=解
+>时间：84.23%  
+>空间：56.55%
+```js
+var detectCycle = function(head) {
+    // 链表环找入口
+    if (!head?.next) return null;
+    let slow = head;
+    let fast = head;
+    while (fast !== null && fast.next !== null) {
+        fast = fast.next.next;
+        slow = slow.next;
+        if (fast === slow) {
+            // 出现环，计算得环外长度为 （环 - slow走完环长） + 环长的整数倍
+            fast = head;
+            while (fast !== slow) {
+                fast = fast.next;
+                slow = slow.next;
+            }
+            return fast;
+        }
+    }
+    return null;
 };
 ```
 :::

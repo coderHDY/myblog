@@ -570,3 +570,27 @@ var topKFrequent = function (words, k) {
 ```
 :::
 ::::
+## 394. 字符串解码,解决嵌套括号
+:::: tabs
+::: tab label=题
+```js
+const s = "3[a]2[bc]";
+console.log(decodeString(s))
+// 输出："aaabcbc"
+```
+:::
+::: tab label=解
+* 解决嵌套匹配方式
+>时间：95.19%  
+>空间：75.94%
+```js
+var decodeString = function(s) {
+    const reg = /(\d+)\[([^[]+?)\]/g;
+    while (reg.test(s)) {
+        s = s.replace(reg, (_, $1, $2) => $2.repeat(+$1));
+    }
+    return s;
+};
+```
+:::
+::::
