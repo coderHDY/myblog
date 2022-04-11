@@ -594,3 +594,30 @@ var decodeString = function(s) {
 ```
 :::
 ::::
+## 1694. 重新格式化电话号码
+:::: tabs
+::: tab label=题
+* 三个一组，剩下的四个以内：
+    * 2 个数字：单个含 2 个数字的块。
+    * 3 个数字：单个含 3 个数字的块。
+    * 4 个数字：两个分别含 2 个数字的块。
+```js
+const s = '123 4-567';
+console.log(reformatNumber(s)); // 123-45-67
+```
+:::
+::: tab label=解
+>时间：100.00%  
+>空间：78.75%
+```js
+var reformatNumber = function (s) {
+    s = s.split(/[\s-]/).join('');
+    const reg1 = /(\d{3})/g;
+    const reg2 = /(\d{3})-$|(\d{3})-(\d)$/;
+    s = s.replace(reg1, '$1-');
+    s = s.replace(reg2, (_, s1, s2, s3) => s3 ? `${s2.slice(0, 2)}-${s2.slice(2)}${s3}` : s1);
+    return s;
+};
+```
+:::
+::::

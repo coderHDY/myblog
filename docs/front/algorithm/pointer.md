@@ -73,3 +73,244 @@ var search = function(nums, target) {
 ```
 :::
 ::::
+## 167. 两数之和 II
+:::: tabs
+::: tab label=题
+* 给一个有序数组，拿到唯一解 n1 + n2 === target
+* 返回[n1 + 1, n2 + 2]
+:::
+::: tab label=双循环
+* 时间复杂度O(n^2)，空间O(1)
+>时间：8.57%  
+>空间：33.68%
+```js
+var twoSum = function(numbers, target) {
+    for (let i = 0; i < numbers.length; i++) {
+        const need = target - numbers[i];
+        for (let j = i + 1; j < numbers.length; j++) {
+            if (numbers[j] === need) return [i + 1, j + 1];
+            if (numbers[j] > need) break;
+        }
+    }
+};
+```
+:::
+::: tab label=双指针
+* 双指针，（前提有序），向目标和靠近
+* 时间复杂度 O(n)，额外空间 O(1)
+>时间：96.11%  
+>空间：31.16%
+```js
+var twoSum = function(numbers, target) {
+    for (let i = 0,j = numbers.length - 1; i < j;) {
+        const sum = numbers[i] + numbers[j];
+        if (sum === target) return [i + 1, j + 1];
+        if (sum > target) {
+            j--;
+        } else {
+            i++;
+        }
+    }
+};
+```
+:::
+::::
+## 283. 移动零
+:::: tabs
+::: tab label=题
+* 将数组所有0**原地**移动到末尾，**其他相对位置不变**
+```js
+const nums = [0,1,0,3,12]
+moveZeroes(nums);
+console.log(nums);
+// 输出: [1,3,12,0,0]
+```
+::: 
+::: tab label=遍历移动
+* 直接遍历移动，需要注意splice以后i的位置，所以可以倒序遍历，避开`遍历splice陷阱`
+>时间：18.13%  
+>空间：51.12%
+```js
+var moveZeroes = function(nums) {
+    for (let i = nums.length - 1; i >= 0; i--) {
+        if (nums[i] === 0) {
+            nums.splice(i, 1);
+            nums.push(0);
+        }
+    }
+};
+```
+:::
+::: tab label=遍历赋值
+* 遍历过程中记录0出现的次数，就是本数字应该向前移动的位数
+>时间：98.25%  
+>空间：37.50%
+```js
+var moveZeroes = function(nums) {
+    let zero = 0;
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 0) {
+            zero++;
+            continue;
+        }
+        if (zero !== 0) {
+            nums[i - zero] = nums[i];
+            nums[i] = 0;
+        }
+    }
+};
+```
+:::
+::::
+## 876. 链表的中间结点
+:::: tabs
+::: tab label=题
+* 求非空单链表的中间节点
+:::
+::: tab label=解
+* 快慢指针专治链表
+>时间：95.97%  
+>空间：39.59%
+```js
+var middleNode = function(head) {
+    let slow = head;
+    let fast = head;
+    while (fast && fast.next) {
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+    return slow;
+};
+```
+:::
+::::
+## 6037. 按奇偶性交换后的最大数字，双百
+:::: tabs
+::: tab label=题
+* 一个正整数 num 。你可以交换 num 中 奇偶性 相同的任意两位数字（即，都是奇数或者偶数）。
+```js
+const num = 1234;
+console.log(largestInteger(num));
+// 输出：3412
+```
+:::
+::: tab label=双百解
+* 排序，双指针分别记录奇数和偶数的当前位置，每用一次后移一次
+>时间：100%  
+>空间：100%
+```js
+var largestInteger = function(num) {
+    const sortArr = `${num}`.split('').map(item => +item).sort((a, b) => b - a);
+    let even = sortArr.findIndex(item => item % 2 === 0);
+    let odd = sortArr.findIndex(item => item % 2 === 1);
+    return `${num}`.split('').map(item => {
+        if (+item % 2 === 0) {
+            const ans = sortArr[even];
+            while (++even < sortArr.length) {
+                if (sortArr[even] % 2 === 0) {
+                    break;
+                }
+            }
+            return ans;
+        } else {
+            const ans = sortArr[odd];
+            while (++odd < sortArr.length) {
+                if (sortArr[odd] % 2 === 1) {
+                    break;
+                }
+            }
+            return ans;
+        }
+    }).join('');
+};
+```
+:::
+::::
+## 19. 删除链表的倒数第N个结点
+:::: tabs
+::: tab label=题
+* 可能为空链表还要删除倒数第N个节点，还好N肯定是小于等于链表长度的
+::: 
+::: tab label=双指针解
+>时间：99.70%  
+>空间：50.08%
+```js
+var removeNthFromEnd = function(head, n) {
+    const newHead = new ListNode(null, head);
+    let fast = newHead;
+    let slow = newHead;
+    while (n-- > 0) {
+        fast = fast.next;
+    }
+    while (fast.next) {
+        slow = slow.next;
+        fast = fast.next;
+    }
+    slow.next = slow.next.next;
+    return newHead.next;
+};
+```
+:::
+::::
+## 3.无重复最长字符串
+:::: tabs
+::: tab label=题目
+* 力扣题号：3
+* 给一个字符串，求出最长的不重复字符
+```js
+const str = 'pwwkew';
+console.log(maxNoRepeatLen(str)); // 3
+```
+```js
+const str = 'aaa';
+console.log(maxNoRepeatLen(str)); // 1
+```
+:::
+::: tab label=实现1
+* 难点：可能前面重复了，但是连着后面的是最长的，如：'pwwkew' 中的 'w'
+* 核心思路：用数组存储，如果一个数重复了，就删除重复数和之前的数，然后再维护一个变量存储最大length
+> 时间：92.73%  
+> 空间：68.30%
+```js
+function maxNoRepeatLen(str) {
+    let arr = [];
+    let maxLen = 0;
+    for (let char of str) {
+        const index = arr.indexOf(char);
+        if (index !== -1) {
+
+            // 取本次不重复长度
+            maxLen = Math.max(maxLen, arr.length);
+            arr.splice(0, index + 1);
+        }
+        arr.push(char);
+    }
+
+    // 最后判断一次，因为可能最长不重复的在最后，for循环结束需要再取一次值
+    maxLen = Math.max(maxLen, arr.length);
+    return maxLen;
+}
+```
+:::
+::: tab label=双指针计数
+>时间：98.99%  
+>空间：80.61%
+```js
+var lengthOfLongestSubstring = function (s) {
+    let max = 0;
+    let start = 0;
+    for (let i = 0; i < s.length; i++) {
+        for (let j = start; j < i; j++) {
+            if (s[j] === s[i]) {
+                max = Math.max(max, i - start);
+                start = j + 1;
+                break;
+            }
+        }
+    }
+    max = Math.max(max, s.length - start);
+    return max;
+};
+```
+:::
+::::
