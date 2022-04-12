@@ -625,7 +625,7 @@ const router = new VueRouter({
 ```
 * 原理是利用了html5的history的api
     * history.pushState
-    * history.popState
+    * history.replaceState
     * history.go
     * history.back
     * history.forward
