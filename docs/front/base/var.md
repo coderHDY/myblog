@@ -40,6 +40,18 @@ if (true) {
 
 console.log(a); // 2 说明if 的块级作用域没有包住a
 ```
+* 经典问题
+```js
+var name = 'World!';
+(function () {
+    if (typeof name === 'undefined') {
+      var name = 'Jack'; // var 无块级作用域，会提升到本函数顶部，所以本函数活动对象访问得到 name，外层if拿的是 undefined
+      console.log('Goodbye ' + name);
+    } else {
+      console.log('Hello ' + name);
+    }
+})();
+```
 :::
 ::: tab label=4
 * var的变量声明会挂载到window上面去
