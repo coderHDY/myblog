@@ -73,6 +73,7 @@ const front = {
                 'leetcode',
                 'regexp',
                 'pointer',
+                'recall',
             ]
         }
     ],
