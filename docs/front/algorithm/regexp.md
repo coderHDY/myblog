@@ -621,3 +621,29 @@ var reformatNumber = function (s) {
 ```
 :::
 ::::
+## 859. 亲密字符串
+:::: tabs
+::: tab label=题
+* 两个字符串:s,goal
+* s对调其两个字母的位置后 === goal
+```js
+const s = "ab", goal = "ba"
+console.log(buddyStrings(s, goal));
+// 输出：true
+```
+:::
+::: tab label=解
+>时间：95.33%  
+>空间：61.21%
+```js
+var buddyStrings = function(s, goal) {
+    if (s.length !== goal.length) return false;
+        if (s === goal) return /(.).*\1/.test(s);
+        let firstDiff = Array.prototype.findIndex.call(s, (item, idx) => item !== goal[idx]);
+        let lastDiff = Array.prototype.findIndex.call(s, (item, idx) => item === goal[firstDiff] && goal[idx] === s[firstDiff]);
+        if (firstDiff === -1 || lastDiff === -1) return false;
+        return `${s.slice(0, firstDiff)}${s[lastDiff]}${s.slice(firstDiff + 1, lastDiff)}${s[firstDiff]}${s.slice(lastDiff + 1)}` === goal;
+};
+```
+:::
+::::
