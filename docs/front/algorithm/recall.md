@@ -179,3 +179,36 @@ var exist = function (board, word) {
 ```
 :::
 ::::
+## 93. 复原 IP 地址
+:::: tabs
+::: tab label=题
+* 给定一串整数字符串，制作出所有的有效ip地址
+* ip地址 每个整数位于 0 到 255 之间组成，且不能含有前导 0
+```js
+const s = "25525511135"
+console.log(restoreIpAddresses(s));
+// 输出：["255.255.11.135","255.255.111.35"]
+```
+:::
+::: tab label=解
+>时间：99.08%  
+>空间：38.18%
+```js
+function restoreIpAddresses(s) {
+    const ans = [];
+    let path = [];
+    (function handler(i = 0) {
+        if (i === s.length && path.length === 4) return ans.push(path.join('.'));
+        for (let j = i; j < s.length; j++) {
+            const str = s.slice(i, j + 1);
+            if ((str.length > 3 || +str > 255) || (str.length > 1 && str[0] === '0')) return;
+            path.push(str);
+            handler(j + 1);
+            path.pop();
+        }
+    })()
+    return ans;
+}
+```
+:::
+::::
