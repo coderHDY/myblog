@@ -83,6 +83,20 @@ function split(num) {
 }
 ```
 :::
+::: tab label=解3
+* 从末位开始splice
+>时间：98.55%  
+>空间：59.13%
+```js
+var thousandSeparator = function (n) {
+    const arr = `${n}`.split('');
+    for (let i = `${n}`.length - 3; i >= 0; i -= 3) {
+        arr.splice(i, 0, '.');
+    }
+    return arr[0] === '.' ? arr.slice(1).join('') : arr.join('');
+};
+```
+:::
 ::::
 ## 3.比较版本号
 :::: tabs
