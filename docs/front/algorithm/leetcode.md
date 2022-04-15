@@ -1041,3 +1041,27 @@ var permute = function(nums) {
 ```
 :::
 ::::
+## 441. 排列硬币
+:::: tabs
+::: tab label=题
+* 第一列需要1个硬币，第n列需要n个硬币，求给的硬币能排满几列
+```js
+const n = 5
+console.log(arrangeCoins(n));
+// 输出：2
+```
+:::
+::: tab label=解
+>时间：97.41%  
+>空间：76.53%
+```js
+var arrangeCoins = function (n) {
+    let i = 1;
+    while (n >= i) {
+        n -= i++;
+    }
+    return i - 1;
+};
+```
+:::
+::::
