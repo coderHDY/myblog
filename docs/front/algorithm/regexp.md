@@ -647,3 +647,44 @@ var buddyStrings = function(s, goal) {
 ```
 :::
 ::::
+## 1271. 十六进制魔术数字
+:::: tabs
+::: tab label=题
+1. 十进制转16进制
+2. 转换后 1 -> I, 0 -> O
+3. 只包含英文字母返回结果，否则返回ERROR
+```js
+const num = "257"
+console.log(toHexspeak(num));
+// 输出："IOI"
+```
+:::
+::: tab label=原生解
+>时间：100.00%  
+>空间：100.00%
+```js
+var toHexspeak = function (num) {
+    const str = (+num).toString(16).replace(/1/g, 'I').replace(/0/g, 'O').toUpperCase();
+    return Array.prototype.every.call(str, item => 'OIABCDEF'.includes(item)) ? str : 'ERROR';
+}
+```
+:::
+::: tab label=解
+* 转换的过程中出现数字就跳出错误，增加效率
+>时间：75.00%  
+>空间：100.00%
+```js
+var toHexspeak = function (num) {
+    const dict = 'OI23456789ABCDEF';
+    let OxNum = '';
+    while (+num !== 0) {
+        const s = dict[num % 16];
+        if ('23456789'.includes(s)) return 'ERROR';
+        OxNum = s + OxNum;
+        num = Math.floor(+num / 16);
+    }
+    return OxNum;
+};
+```
+:::
+::::
