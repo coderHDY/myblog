@@ -540,3 +540,97 @@ var sortedArrayToBST = function(nums) {
 ```
 :::
 ::::
+## 617. 合并二叉树
+:::: tabs
+::: tab label=题
+* 两个二叉树，两个对应节点都有值就相加，只有一边就使用那一边的值
+```js
+const root1 = [1,3,2,5], root2 = [2,1,3,null,4,null,7];
+console.log(mergeTrees(root1, root2));
+// 输出：[3,4,5,5,4,null,7]
+```
+:::
+::: tab label=返回新树
+>时间：86.72%  
+>空间：5.14%
+```js
+var mergeTrees = function(root1, root2) {
+    if (!root1 && !root2) return null;
+    const node = new TreeNode();
+    if (root1 && root2) {
+        node.val = root1.val + root2.val;
+        node.left = mergeTrees(root1.left, root2.left);
+        node.right = mergeTrees(root1.right, root2.right);
+    } else if(root1) {
+        node.val = root1.val;
+        node.left = mergeTrees(root1.left, null);
+        node.right = mergeTrees(root1.right, null);
+    } else {
+        node.val = root2.val;
+        node.left = mergeTrees(root2.left, null);
+        node.right = mergeTrees(root2.right, null);
+    }
+    return node;
+};
+```
+:::
+::: tab label=修改原节点
+>时间：86.72%  
+>空间：42.97%
+```js
+var mergeTrees = function(root1, root2) {
+    if (root1 && root2) {
+        root1.val = root1.val + root2.val;
+        root1.left = mergeTrees(root1.left, root2.left);
+        root1.right = mergeTrees(root1.right, root2.right);
+        return root1;
+    }
+    return root1 || root2;
+}
+```
+:::
+::::
+## 116. 填充每个节点的next指针
+:::: tabs
+::: tab label=题
+:::
+::: tab label=DFS
+* 注意判断剪枝`if (!left || left.next)`避免重复操作，优化时间效率
+>时间：88.86%  
+>空间：72.95%
+```js
+function connect(root) {
+    if (!root) return null;
+    const handler = (left, right) => {
+        if (!left || left.next) return;
+        left.next = right;
+        handler(left.left, left.right);
+        handler(left.right, right.left);
+        handler(right.left, right.right);
+    }
+    handler(root.left, root.right);
+    return root;
+}
+```
+:::
+::: tab label=BFS
+>时间：
+>空间：
+```JS
+function connect(root) {
+    if (!root) return null;
+    const queue = [root];
+    while (queue.length) {
+        let len = queue.length;
+        for (let i = 0; i < len; i++) {
+            const node = queue.shift();
+            node.next = i < len - 1 ? queue[0] : null;
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+        }
+    }
+    return root;
+}
+```
+:::
+::::
