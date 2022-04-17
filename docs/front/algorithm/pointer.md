@@ -314,3 +314,77 @@ var lengthOfLongestSubstring = function (s) {
 ```
 :::
 ::::
+## 74. 搜索二维矩阵,矩阵思维
+:::: tabs
+::: tab label=题
+* 排序矩阵内是否有目标值
+```js
+const matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3;
+console.log(searchMatrix(10)); // true
+```
+:::
+::: tab label=暴力解
+>时间：53.93%  
+>空间：40.17%
+```js
+var searchMatrix = function (matrix, target) {
+    return matrix.some(row => row.includes(target));
+};
+```
+:::
+::: tab label=双二分解
+* 垃圾思想，二分找两次
+>时间：75.61%  
+>空间：67.67%
+```js
+var searchMatrix = function (matrix, target) {
+    let firstRow = 0;
+    let lastRow = matrix.length - 1;
+    let midRow;
+    while (firstRow <= lastRow) {
+        midRow = Math.floor((lastRow - firstRow) / 2) + firstRow;
+        if (matrix[midRow][0] <= target && matrix[midRow][matrix[midRow].length - 1] >= target) break;
+        if (matrix[midRow][0] > target) {
+            lastRow = midRow - 1;
+        } else {
+            firstRow = midRow + 1;
+        }
+    }
+    if (matrix[midRow][0] > target || matrix[midRow][matrix[midRow].length - 1] < target) return false;
+    let firstCol = 0;
+    let lastCol = matrix[midRow].length - 1;
+    while (firstCol <= lastCol) {
+        const mid = Math.floor((lastCol - firstCol) / 2) + firstCol;
+        if (matrix[midRow][mid] === target) return true;
+        if (matrix[midRow][mid] > target) {
+            lastCol = mid - 1;
+        } else {
+            firstCol = mid + 1;
+        }
+    }
+    return false;
+};
+```
+:::
+::: tab label=高效解
+* 有序矩阵查找，最佳搜索起点是右上角，根据条件向左下移动
+>时间：89.16%  
+>空间：60.29%
+```js
+var searchMatrix = function (matrix, target) {
+    let row = 0;
+    let col = matrix[0].length - 1;
+    while (row < matrix.length && col >= 0) {
+        if (matrix[row][col] === target) {
+            return true;
+        } else if(matrix[row][col] > target){
+            col--;
+        } else {
+            row++;
+        }
+    }
+    return false;
+};
+```
+:::
+::::
