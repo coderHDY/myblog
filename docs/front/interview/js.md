@@ -2738,6 +2738,31 @@ console.log(proxy(1, 2, 3)); // 【慢】6
 console.log(proxy(1, 2, 3)); // 【快】6
 ```
 :::
+::: tab label=原型模式
+* 思想：多个实例共享的状态，放到原型里面去，大家都可以对其读写操作
+```js{13-15}
+const family = (() => {
+    let money = 100;
+    return {
+        set money(val) {
+            money = val;
+        },
+        get money() {
+            return money;
+        }
+    }
+})();
+
+const mother = Object.create(family);
+const father = Object.create(family);
+const son = Object.create(family);
+
+console.log(son.money);
+mother.money--;
+console.log(mother.money);
+console.log(father.money);
+```
+:::
 ::: tab label=发布订阅
 * 事件订阅，事件发布通知订阅事件的一个机制，常见：`MVVM`/`EventListener`
 ```js
@@ -2781,6 +2806,74 @@ listener.publish('mousemove'); // 1
 
 listener.unsubscribe('click', fn1);
 listener.publish('click'); // 2
+```
+:::
+::: tab label=工厂模式
+* 将一类事物的构造器进行合并成一个工厂，统一使用、校验、赋值、初始化
+```js{14-16}
+class People { say() { console.log('哈哈') } };
+class Cat { say() { console.log('喵喵') } };
+class Dog { say() { console.log('汪汪') } };
+
+function AnimalFactory(type) {
+    switch (type) {
+        case 'People': return new People();
+        case 'Cat': return new Cat();
+        case 'Dog': return new People();
+        default: return new Dog();
+    }
+}
+
+// 通过类名直接让工厂创建对应的实例
+const arr = ['People', 'Cat', 'Dog'];
+arr.map(item => AnimalFactory(item)).forEach(item => item.say());
+```
+:::
+::: tab label=策略模式
+* 常见：表单验证要用不同的验证策略
+```js{1,25,40-42}
+// 集中定义好各种应对策略
+const strategy = new Map([
+    ['qq', {
+        alowEmpty: false,
+        reg: /^\d{6,11}$/,
+        tip: '请输入正确的qq号',
+    }],
+    ['email', {
+        alowEmpty: true,
+        reg: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+        tip: '无效邮箱',
+    }],
+    ['pwd', {
+        alowEmpty: false,
+        reg: /^\w{8,12}$/,
+        tip: '请输入8-12位密码',
+    }],
+    ['phone', {
+        alowEmpty: false,
+        reg: /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/,
+        tip: '请输入正确的手机号码',
+    }],
+])
+
+// 少量代码调用对应的策略，即可完成指定策略的使用
+const testing = (type, val) => {
+    if (!strategy.has(type)) {
+        return console.warn('无效类型');
+    }
+    const regular = strategy.get(type);
+    const ans = { valid: false, tip: regular.tip };
+    if ((!regular.alowEmpty && val.length === 0) || !regular.reg.test(val)) {
+        return ans;
+    }
+    ans.valid = true;
+    ans.tip = '验证通过';
+    return ans;
+}
+
+console.log(testing('qq', '2029384j')); // { valid: false, tip: '请输入正确的qq号' }
+console.log(testing('pwd', 'lalala222年')); // { valid: false, tip: '请输入8-12位密码' }
+console.log(testing('email', '986005715@qq.com')); // { valid: true, tip: '验证通过' }
 ```
 :::
 ::::
