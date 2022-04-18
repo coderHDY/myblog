@@ -2656,6 +2656,30 @@ function curry(fn) {
 }
 ```
 :::
+::: tab label=变形2
+* 改成传空入参时执行
+```js
+console.log(sum(1)(2)(10, 11, 2)()); // 26
+console.log(sum()); // 0
+```
+```js
+const sum = (function curry() {
+    const add = (...args) => args.reduce((pre, item) => pre + item, 0);
+    let args = [];
+    const fn2 = (...arg) => {
+        if (arg.length !== 0) {
+            args.push(...arg);
+            return fn2;
+        } else {
+            const ans = add(...args);
+            args = [];
+            return ans;
+        }
+    };
+    return fn2;
+})();
+```
+:::
 ::::
 ## 49.JS常见的设计模式
 :::: tabs
