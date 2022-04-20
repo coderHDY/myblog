@@ -307,3 +307,42 @@ var detectCycle = function(head) {
 ```
 :::
 ::::
+## 92. 反转链表 II
+:::: tabs
+::: tab label=题
+* 指定起始反转和终止反转的坐标，反转这一个区域的链表段
+```js
+const head = [1,2,3,4,5], left = 2, right = 4
+console.log(reverseBetween(head, left, right));
+// 输出：[1,4,3,2,5]
+```
+:::
+::: tab label=解
+* 重点：可能从1开始反转，所以要一个哑节点，作为保存头
+* 移动到指定反转的前一个节点，两个节点都进行暂存，反转指定长度，再进行拼接
+>时间：89.35%  
+>空间：62.69%
+```js
+var reverseBetween = function(head, left, right) {
+    if (right - left < 1) return head;
+    const newHead = new ListNode(null, head);
+    let len = right - left + 1;
+
+    let pre = newHead;
+    while (left-- - 1) pre = pre.next;
+    let temp = pre;
+    let c = temp.next;
+    const tempEnd = c;
+    while (len-- && c) {
+        const next = c.next;
+        c.next = temp;
+        temp = c;
+        c = next;
+    }
+    pre.next = temp;
+    tempEnd.next = c;
+    return newHead.next;
+};
+```
+:::
+::::
