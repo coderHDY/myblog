@@ -126,20 +126,12 @@ var compareVersion = function (version1, version2) {
     const v1 = version1.split('.');
     const v2 = version2.split('.');
     const maxLen = Math.max(v1.length, v2.length);
-    let ans;
     for (let i = 0; i < maxLen; i++) {
-        let n1 = v1[i] === undefined ? '0' : v1[i];
-        let n2 = v2[i] === undefined ? '0' : v2[i];
-        const mLen = Math.max(n1.length, n2.length);
-        n1 = +n1.padStart(mLen, '0');
-        n2 = +n2.padStart(mLen, '0');
-        if (n1 !== n2) {
-            ans = n1 > n2 ? 1 : -1;
-            break;
-        }
+        const n1 = v1[i] != undefined ? +v1[i] : 0;
+        const n2 = v2[i] != undefined ? +v2[i] : 0;
+        if (n1 !== n2) return n1 > n2 ? 1 : -1;
     }
-    if (!ans) ans = 0
-    return ans;
+    return 0;
 };
 ```
 :::
@@ -191,11 +183,11 @@ function getElementById(id) {
 ```js
 function getElementById(id) {
     const handler = children => {
-        for (let i  = 0; i < children.length; i++) {
+        for (let i = 0; i < children.length; i++) {
             if (children[i].id === id) {
                 return children[i];
             }
-            ans = handler(children[i].children);
+            const ans = handler(children[i].children);
             if (ans) {
                 return ans;
             }
