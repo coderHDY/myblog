@@ -90,6 +90,10 @@ const books = {
             text: '前端相关',
             link: '/books/javascript/'
         },
+        {
+            text: '计算机',
+            link: '/books/computer/'
+        },
     ]
 }
 

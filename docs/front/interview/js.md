@@ -637,6 +637,71 @@ class MyPromise {
 }
 ```
 :::
+::: tab label=链式调用
+```js
+class MyPromise {
+    static PENDDING = 'pendding';
+    static REJECTED = 'rejected';
+    static RESOLVED = 'resolved';
+    val = null;
+    err = null;
+    resolveCallbacks = [];
+    rejectCallbacks = [];
+    constructor(fn) {
+        this.status = MyPromise.PENDDING;
+        fn.call(null, this.resolve, this.reject);
+    }
+    resolve = (val) => {
+        if (this.status !== MyPromise.PENDDING) return;
+        this.status = MyPromise.RESOLVED;
+        this.val = val;
+        process.nextTick(() => this.resolveCallbacks.forEach(cb => cb(this.val)));
+    }
+    reject = (err) => {
+        if (this.status !== MyPromise.PENDDING) return;
+        this.status = MyPromise.RESOLVED;
+        this.err = err;
+        process.nextTick(() => this.rejectCallbacks.forEach(cb => cb(err)));
+    }
+    then(resolved, rejected) {
+        if (this.status === MyPromise.PENDDING) {
+            if (typeof resolved === 'function') this.resolveCallbacks.push(resolved);
+            if (typeof rejected === 'function') this.resolveCallbacks.push(rejected);
+        }
+        let ans;
+        if (this.status === MyPromise.RESOLVED) {
+            if (typeof resolved === 'function') ans = resolved.call(null, this.val);
+        }
+        if (this.status === MyPromise.REJECTED) {
+            if (typeof rejected === 'function') ans = rejected.call(null, this.err);
+        }
+        return ans instanceof MyPromise ? ans : new MyPromise(resolve => resolve());
+    }
+}
+
+
+const p = new MyPromise((resolve, reject) => {
+    setTimeout(() => resolve(11), 1000);
+    // resolve(11);
+}).then(res => console.log(res), err => console.log(err));
+console.log(p);
+const p2 = p.then(() => new MyPromise(resolve => resolve(1)));
+
+setTimeout(() => {
+    p2.then(res => console.log(res));
+}, 1000);
+// const p = new Promise((resolve, reject) => {
+//     setTimeout(() => resolve(11), 1000);
+//     // resolve(11);
+// }).then(res => console.log(res), err => console.log(err));
+// console.log(p);
+// const p2 = p.then(() => new Promise(resolve => resolve(1)));
+
+// setTimeout(() => {
+//     p2.then(res => console.log(res));
+// }, 1000);
+```
+:::
 ::::
 ## 8.手写filter/reduce
 :::: tabs
@@ -1120,7 +1185,7 @@ app.post('/data', (req, res) => {
 ```
 :::
 ::::
-## 13.手写bind
+## 13.手写bind/call/apply
 :::: tabs
 ::: tab label=期望
 >难点：需要考虑函数式调用和new调用，new调用可以用`instanceof`或`new.target`来判断
@@ -1169,6 +1234,44 @@ Function.prototype.myBind = function(obj, ...args) {
 }
 ```
 :::
+::: tab label=call
+```js
+Function.prototype.myCall = function (thisArg, ...args) {
+    const ctx = thisArg ? thisArg : window;
+    const syb = Symbol('fn');
+    ctx[syb] = this;
+    const ans = ctx[syb](...args);
+    delete ctx[syb];
+    return ans;
+}
+
+const obj = { name: 'hdy' };
+function a(age) {
+    console.log(`${this.name} ${age}`);
+}
+
+a.myCall(obj, 14);
+```
+:::
+::: tab label=apply
+```js
+Function.prototype.myApply = function (thisArg, args) {
+    const ctx = thisArg ? thisArg : window;
+    const syb = Symbol('fn');
+    ctx[syb] = this;
+    const ans = ctx[syb](args);
+    delete ctx[syb];
+    return ans;
+}
+
+const obj = { name: 'hdy' };
+function a(age) {
+    console.log(`${this.name} ${age}`);
+}
+
+a.myApply(obj, 14);
+```
+::: 
 ::::
 ## 14.this
 :::: tabs
