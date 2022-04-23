@@ -2783,6 +2783,22 @@ const sum = (function curry() {
 })();
 ```
 :::
+::: tab label=变形2解2
+```js
+function sum(...args) {
+    if (args.length === 0) return 0;
+    const fn2 = (...arg) => {
+        if (arg.length === 0) {
+            return args.reduce((pre, item) => pre + item, 0);
+        } else {
+            args.push(...arg);
+            return fn2;
+        }
+    }
+    return fn2;
+}
+```
+:::
 ::::
 ## 49.JS常见的设计模式
 :::: tabs
