@@ -388,3 +388,131 @@ var searchMatrix = function (matrix, target) {
 ```
 :::
 ::::
+## 15. 三数之和
+:::: tabs
+::: tab label=题
+* 找到数组中三数之和等于0的结果
+```js
+const nums = [-1,0,1,2,-1,-4]
+console.log(threeSum(nums));
+// 输出：[[-1,-1,2],[-1,0,1]]
+```
+:::
+::: tab label=递归
+* 思想：记录当前和，递归拿所有排列组合做排查
+* 超时：O(n^3)
+```js
+function threeSum(nums) {
+    const ans = [];
+    nums.sort((a, b) => a - b);
+    const handler = (cArr, i, sum) => {
+        if (cArr.length === 3) {
+            if (sum === 0) ans.push([...cArr]);
+            return;
+        }
+        for (; i < nums.length; i++) {
+            cArr.push(nums[i]);
+            handler(cArr, i + 1, sum + nums[i]);
+            cArr.pop();
+            while (nums[i + 1] === nums[i]) i++;
+        }
+    };
+    handler([], 0, 0);
+    return ans;
+}
+```
+:::
+::: tab label=排序剪枝
+* 思想：排序，三层遍历，拿到左节点，拿到右节点，看**左右之间**是否有需要节点
+>时间：5.02%  
+>空间：54.02%
+```js
+function threeSum(nums) {
+    const ans = [];
+    nums.sort((a, b) => a - b);
+    for (let l = 0; l < nums.length - 2; l++) {
+        if (nums[l] > 0) break;
+        for (let r = nums.length - 1; r > l; r--) {
+            if (nums[r] < 0) break;
+            const need = 0 - nums[l] - nums[r];
+            const idx = nums.indexOf(need, l + 1);
+            if (idx !== -1 && idx < r) {
+                ans.push([nums[l], nums[r], nums[idx]]);
+            }
+            while (nums[r - 1] === nums[r]) r--;
+        }
+        while (nums[l + 1] === nums[l]) l++;
+    }
+    return ans;
+}
+```
+:::
+::: tab label=双指针
+* 思想：利用结果为0的特性。双层循环，外层取起点，里层双指针遍历，排序后可以根据差距目标0的大小来决定移动左指针还是右指针
+>时间：98.29%  
+>空间：47.34%
+```js
+function threeSum(nums) {
+    const ans = [];
+    nums.sort((a, b) => a - b);
+    for (let i = 0; i < nums.length - 2; i++) {
+        if (nums[i] > 0) break;
+        let l = i + 1;
+        let r = nums.length - 1;
+        while (l < r) {
+            const sum = nums[i] + nums[l] + nums[r];
+            if (sum < 0) {
+                l++;
+            } else if (sum > 0) {
+                r--;
+            } else {
+                ans.push([nums[i], nums[l], nums[r]]);
+                while (nums[l] === nums[++l]) {}
+                while (nums[r] === nums[--r]) {}
+            }
+        }
+        while (nums[i + 1] === nums[i]) i++;
+    }
+    return ans;
+}
+```
+:::
+::::
+## 16. 最接近的三数之和
+:::: tabs
+::: tab label=题
+* 要求如果没有指定的三数之和，就返回最接近的
+```js
+const nums = [-1,2,1,-4], target = 1
+console.log(threeSumClosest(nums, target));
+// 输出：2
+```
+:::
+::: tab label=解
+* 思路：同三数只和思路，但是判断条件要改为abs最小
+>时间：99.08%  
+>空间：48.04%
+```js
+var threeSumClosest = function(nums, target) {
+    nums.sort((a, b) => a - b);
+    let ans = nums[0] + nums[1] + nums[2];
+    for (let i = 0; i < nums.length - 2; i++) {
+        let l = i + 1;
+        let r = nums.length - 1;
+        while (l < r) {
+            const sum = nums[i] + nums[l] + nums[r];
+            if (Math.abs(sum - target) < Math.abs(ans - target)) ans = sum;
+            if (sum < target) {
+                l++;
+            } else if (sum > target) {
+                r--;
+            } else {
+                return sum;
+            }
+        }
+    }
+    return ans;
+};
+```
+:::
+::::
