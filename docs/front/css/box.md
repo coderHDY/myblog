@@ -26,7 +26,7 @@ date: 2021-12-27
 >column-span 为 all 的元素始终会创建一个新的BFC，即使该元素没有包裹在一个多列容器中（标准变更，Chrome bug）。
 :::
 :::: tabs
-::: tab label=非BFC盒子
+::: tab label=margin重叠
 * 非BFC盒子之间，内部的子盒子margin溢出且与外面别的margin重叠，说明本盒子内部布局影响到外部  
 <img src="./assets/bfc0.png" style="width:250px;">
 
@@ -49,6 +49,38 @@ date: 2021-12-27
         }
     </style>
 </body>
+```
+:::
+::: tab label=浮动塌陷
+```html{2-5}
+<body>
+    <div class="father">
+        <!-- father盒子塌陷不显示 -->
+        <div class="child">1</div>
+    </div>
+    <div class="other"></div>
+    <style>
+        .father {
+            background-color: red;
+        }
+
+        .child {
+            width: 100px;
+            height: 100px;
+            float: left;
+            margin: 10px;
+            background-color: blue;
+        }
+
+        .other {
+            height: 100px;
+            width: 200px;
+            background-color: green;
+        }
+
+    </style>
+</body>
+
 ```
 :::
 ::: tab label=BFC盒子

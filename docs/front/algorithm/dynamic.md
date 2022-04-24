@@ -1019,3 +1019,38 @@ var minFallingPathSum = function(matrix) {
 ```
 :::
 ::::
+## 42. 接雨水
+:::: tabs
+::: tab label=题
+```js
+const height = [0,1,0,2,1,0,1,3,2,1,2,1]
+console.log(trap(height));
+// 输出：6
+```
+:::
+::: tab label=解
+* 思路：
+    1. 从左往右做一个边界dp，拿到每个位置左边最大值
+    2. 从右往左做一个边界dp，拿到每个位置右边最大值
+    3. 遍历每个位置，左右边界的小值就是当前桶桶的边界，减去当前高度就是当前桶的容量。注意规避负值边界
+>时间：83.51%  
+>空间：18.27%
+```js
+var trap = function(height) {
+    const len = height.length;
+    const left = Array(len).fill(0);
+    const right = Array(len).fill(0);
+    for (let i = 1; i < len; i++) {
+        left[i] = Math.max(left[i - 1], height[i - 1]);
+    }
+    for (let i = len - 2; i >= 0; i--) {
+        right[i] = Math.max(right[i + 1], height[i + 1]);
+    }
+    return height.reduce((pre, item, i) => {
+        const c = Math.min(left[i], right[i]) - item;
+        return pre + (c > 0 ? c : 0);
+    }, 0);
+};
+```
+:::
+::::
