@@ -36,7 +36,6 @@ tags:
 </body>
 </html>
 ```
-
 ### 证明
 1. new出来的对象能够通过_ _ _proto_ _ _ 属性找到function的 prototype 对象
 2. prototype对象里又有一个constructor函数
@@ -77,9 +76,9 @@ tags:
 * 循环指向  
 ---
 <img src="./assets/previousprototype3.png" style="width: 400px">
+
 :::
 ::::
-
 ### 原型链顶层
 1. 每个**对象**的原型链顶层都是 obj._ _ _proto_ _ _ = Object.prototype
 2. 而Object._ _ _proto_ _ _ 指向的是 Function.prototype
@@ -302,7 +301,6 @@ const obj3 = Object.create(obj2);
 console.log(obj2.isPrototypeOf(obj3)); // true
 console.log(obj1.isPrototypeOf(obj3)); // true
 ```
-
 ## 迭代器
 ### for in
 ::: tip for in

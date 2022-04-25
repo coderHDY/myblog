@@ -212,3 +212,33 @@ function restoreIpAddresses(s) {
 ```
 :::
 ::::
+## 38. 字符串的排列
+:::: tabs
+::: tab label=题
+```js
+const s = "abc"
+console.log(permutation(s));
+// 输出：["abc","acb","bac","bca","cab","cba"]
+```
+:::
+::: tab label=解
+>时间：51.16%  
+>空间：50.34%
+```js
+var permutation = function(s) {
+    const set = new Set();
+    const handler = (str, usedArr) => {
+        if (str.length === s.length) return set.add(str);
+        for (let i = 0; i < s.length; i++) {
+            if (usedArr.includes(i)) continue;
+            usedArr.push(i);
+            handler(`${str}${s[i]}`, usedArr);
+            usedArr.pop();
+        }
+    };
+    handler('', []);
+    return [...set]
+};
+```
+:::
+::::

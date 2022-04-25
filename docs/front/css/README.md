@@ -1430,3 +1430,72 @@ tags:
 ```
 :::
 ::::
+## 滚动盒子/隐藏滚动条
+:::: tabs
+::: tab label=题
+* 要求：做一个横向滚动flex盒子，且隐藏滚动条
+* 类似网易云音乐的横向滚动推荐歌单
+:::
+::: tab label=解
+```html{34-41,43-46,49}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, viewport-fit=cover, user-scalable=no">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="content-box">
+        <div class="scroll-box">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>8</div>
+            <div>9</div>
+            <div>10</div>
+        </div>
+    </div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-box {
+            width: 100vw;
+            height: 120px;
+        }
+
+        /* 不换行，固定宽，子元素拒绝压缩，就会形成滚动 */
+        .scroll-box {
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+            height: 120px;
+            overflow-x: auto;
+        }
+
+        /* 隐藏scroll-bar */
+        .scroll-box::-webkit-scrollbar {
+            display: none
+        }
+
+        .scroll-box>div {
+            flex-shrink: 0;
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            background-color: red;
+        }
+
+    </style>
+
+</body>
+```
+:::
+::::

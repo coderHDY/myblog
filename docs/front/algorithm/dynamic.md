@@ -1054,3 +1054,58 @@ var trap = function(height) {
 ```
 :::
 ::::
+## 1143. 最长公共子序列
+:::: tabs
+::: tab label=题
+```js
+text1 = "abcde", text2 = "ace" 
+console.log(longestCommonSubsequence(text1, text2));
+// 输出：3  
+```
+:::
+::: tab label=解
+* 思想：
+    1. 制作二维表，因为可以删除，所以要一层一层往下推，每两个数字之间都要进行比较
+    2. 判断相等的时候，要`dp[i - 1][j - 1] + 1`，因为不能是上一个比较过的数字，向下推进的过程中才不会复用计数
+    3. 判断不想等的时候，要根据动态规划思想，继承上一层的最大值，可能在左边，也可能在上面，推到右下角才能是正确的最大值
+>时间：17.45%  
+>空间：22.90%
+```js
+const longestCommonSubsequence = (text1, text2) => {
+    const dp = Array(text1.length).fill().map(() => Array(text2.length).fill(0));
+    for (let i = 0; i < text1.length; i++) {
+        for (let j = 0; j < text2.length; j++) {
+            if (text1[i] === text2[j]) {
+                dp[i][j] = (dp[i - 1]?.[j - 1] ?? 0) + 1;
+            } else {
+                dp[i][j] = Math.max((dp[i - 1]?.[j] ?? 0), (dp[i][j - 1] ?? 0));
+            }
+        }
+    }
+    return dp[text1.length - 1][text2.length - 1];
+};
+```
+:::
+::: tab label=优化
+* 思路：在原基础上进行优化：每层计算只需要使用到上一层的结果，那么只需要保存上一层的结果就可以
+>时间：71.36%  
+>空间：97.88%
+```js
+const longestCommonSubsequence = (text1, text2) => {
+    let dp = Array(text1.length).fill(0);
+    for (let i = 0; i < text2.length; i++) {
+        let newDp = [];
+        for (let j = 0; j < text1.length; j++) {
+            if (text2[i] === text1[j]) {
+                newDp[j] = (dp[j - 1] ?? 0) + 1;
+            } else {
+                newDp[j] = Math.max((newDp[j - 1] ?? 0), (dp[j] ?? 0));
+            }
+        }
+        dp = newDp;
+    }
+    return dp[dp.length - 1];
+};
+```
+:::
+::::

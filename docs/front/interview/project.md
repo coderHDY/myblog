@@ -79,6 +79,67 @@ app.get('/search', (req, res) => {
 </body>
 ```
 :::
+::: tab label=hook实现
+```html{22-37}
+<head>
+    <meta charset="UTF-8">
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" :value="val" @input="inputChange">
+        <ul @click="clickChange">
+            <li v-for="item of success" :data-val="item">{{item}}</li>
+        </ul>
+    </div>
+    <script>
+        const {
+            createApp,
+            ref,
+            watchEffect,
+            watch,
+        } = Vue;
+
+        function useThrottleReq(callback, defaultVal = '', daley = 2000) {
+            let val = ref(defaultVal);
+            let timer;
+            const setVal = (v) => {
+                val.value = v;
+                if (timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(() => {
+                    fetch(`/search?s=${v}`)
+                        .then(res => res.json())
+                        .then(res => callback(res));
+                }, daley)
+            }
+            return [val, setVal];
+        }
+        const app = createApp({
+            setup() {
+                const success = ['aaa', 'bbb', 'ccc']
+                const callback = (val) => console.log('哈哈哈', val);
+                const [val, setVal] = useThrottleReq(callback);
+                const clickChange = (e) => setVal(e.target.getAttribute('data-val'));
+                const inputChange = (e) => setVal(e.target.value);
+                return {
+                    val,
+                    setVal,
+                    clickChange,
+                    inputChange,
+                    success
+                }
+            }
+        });
+        app.mount('#app');
+
+    </script>
+</body>
+```
+:::
 ::::
 ## 2.性能优化
 :::: tabs
