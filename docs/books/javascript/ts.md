@@ -333,7 +333,7 @@ type Name = 'hdy' | '张三' | '李四';
 const name: Name = 'hdy';
 ```
 * 字面量推理
->原本options推理出来methods是`string`类型，但是需要强制变为字面量类型`RequestMethods`，就需要用congst让他内部也推理出字面量类型
+>原本options推理出来methods是`string`类型，但是需要强制变为字面量类型`RequestMethods`，就需要用const让他内部也推理出字面量类型
 ```ts
 type RequestMethods = 'GET' | 'POST';
 

@@ -634,3 +634,58 @@ function connect(root) {
 ```
 :::
 ::::
+## 124. 二叉树中的最大路径和
+:::: tabs
+::: tab label=题
+* 求最大和的`路径`，路径起点可以是任意节点
+```js
+const root = [1,2,3]
+console.log(maxPathSum(root));
+// 输出：6
+```
+:::
+::: tab label=解
+>时间：76.52%  
+>空间：62.85%
+```js
+var maxPathSum = function(root) {
+    let ans = -Infinity;
+    const handler = (node) => {
+        if (!node) return 0;
+        let c = node.val;
+        let left = handler(node.left);
+        let right = handler(node.right);
+        left = left > 0 ? left : 0;
+        right = right > 0 ? right : 0;
+        const sum = c + left + right;
+        if (sum > ans) ans = sum;
+       return Math.max(left, right) + c;
+    }
+    handler(root);
+    return ans;
+};
+```
+:::
+::::
+## 236. 二叉树的最近公共祖先
+:::: tabs
+::: tab label=题
+* 给定一个二叉树和两个节点，寻找这两个节点的最近的公共祖先（必定存在）（有可能是自身）
+:::
+::: tab label=解
+* 常见递归，递归结束条件是`本节点 === 指定节点或null`
+>时间：80.74%  
+>空间：80.08%
+```js
+var lowestCommonAncestor = function(root, p, q) {
+    if (root === null || root === p || root === q) return root;
+    const l = lowestCommonAncestor(root.left, p, q);
+    const r = lowestCommonAncestor(root.right, p, q);
+    if (l !== null && r !== null) { return root; }
+    else if (l !== null) { return l; }
+    else if (r !== null) { return r; }
+    else { return null; }
+};
+```
+:::
+::::
