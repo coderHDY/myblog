@@ -74,6 +74,7 @@ const front = {
                 'regexp',
                 'pointer',
                 'recall',
+                'chart',
             ]
         }
     ],
