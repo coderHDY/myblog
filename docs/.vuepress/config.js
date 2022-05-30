@@ -74,13 +74,13 @@ module.exports = {
         sidebarDepth: 2,
         displayAllHeaders: false,
         //valine
-        valineConfig: {
-            appId: 'XDwlSXS2pD137bPrPpwQaqqD-gzGzoHsz', // your appId
-            appKey: 'CQ8FKrMUP76LwycPcKlDoRqV', // your appKey
-            placeholder: '说说你的看法~',
-            avatar: 'wavatar',
-            serverUrl: 'https://brhdq5vq.lc-cn-n1-shared.com'
-        }
+        // valineConfig: {
+        //     appId: 'XDwlSXS2pD137bPrPpwQaqqD-gzGzoHsz', // your appId
+        //     appKey: 'CQ8FKrMUP76LwycPcKlDoRqV', // your appKey
+        //     placeholder: '说说你的看法~',
+        //     avatar: 'wavatar',
+        //     serverUrl: 'https://brhdq5vq.lc-cn-n1-shared.com'
+        // }
     },
     markdown: {
         lineNumbers: true
