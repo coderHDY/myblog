@@ -53,7 +53,7 @@ date: 2022-02-12
 :::
 ::: tab label=井字棋案例
 ```shell
-npm create-react-app my-app
+npx create-react-app my-app
 ```
 * 用到知识点：
     * 类组件
