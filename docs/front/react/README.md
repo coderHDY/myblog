@@ -187,7 +187,6 @@ ReactDOM.render(
 ```
 :::
 ::::
-
 ## jsx规则
 :::: tabs
 ::: tab label=基本规则
@@ -223,9 +222,53 @@ ReactDOM.render(
     ```
 :::
 ::::
-## 列表
+## 条件渲染
 :::: tabs
-::: tab label=列表
+::: tab label=条件渲染
+* jsx语句返回`false`会被忽略
+* 所以可以用 **&& 表达式做条件渲染**
+>`false`不是`falsy`，`falsy`会返回`<div>0</div>`
+```js{12,14-15}
+const { useState, useEffect } = React;
+function MyApp() {
+    const [time, setTime] = useState(new Date());
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000);
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+    return (
+        <div>
+            {time.getSeconds() % 2 === 0 && time.toLocaleTimeString()}
+
+            {/* 以下的falsy会显示 0 */}
+            {/* time.getSeconds() % 2 && time.toLocaleTimeString() */}
+        </div>
+    )
+}
+```
+:::
+::: tab label=阻止渲染
+* 组件render方法直接返回null会不渲染此组件
+```jsx{2}
+const { useState, useEffect } = React;
+const Child = props => props.show ? (<div>子组件</div>) : null;
+function MyApp() {
+    const [show, setShow] = useState(true);
+    return (
+        <div>
+            <button onClick={() => setShow(!show)}>toggle</button>
+            <Child show={show} />
+        </div>
+    )
+}
+```
+:::
+::::
+## 循环渲染
+:::: tabs
+::: tab label=循环渲染
 * 列表用map等将数据转化成jsx模板语法
 * 列表需要加一个唯一的key值，帮助diff算法优化速率
 ```jsx{4}
@@ -237,6 +280,107 @@ const VDOM = (
 );
 ReactDOM.render(VDOM, document.getElementById('app'));
 ```
+:::
+::: tab label=增删改查
+* 用setState时应该操作**新的数组**，不能修改原数组
+* 删除传参可以用`箭头函数`和`bind`
+```jsx{10,21-22}
+class MyApp extends React.Component {
+    state = {
+        friends: [
+            '小黄',
+            '小张',
+            '小李',
+        ]
+    }
+    delete = idx => {
+        const newFriends = this.state.friends.slice(0, idx).concat(this.state.friends.slice(idx + 1));
+        this.setState({ friends: newFriends });
+    }
+    render() {
+        return (
+            <ul>
+                {
+                    this.state.friends.map((item, idx) => {
+                        return (
+                            <li key={item}>
+                                <span>姓名：{item}</span>
+                                <button onClick={this.delete.bind(this, idx)}>删除</button>
+                                {/* <button onClick={() => this.delete(idx)}>删除</button> */}
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+        )
+    }
+}
+```
+:::
+::::
+## 表单控制
+:::: tabs
+::: tab label=受控组件
+* 在处理表单数据时，通过`state`来关联表单数据的方式叫做`受控组件`
+* 通过`ref`来获取DOM元素的情况叫做`非受控组件`
+:::
+::: tab label=select
+* select组件的value可以接收数组，作为多个值
+```jsx{9-14,17-19}
+const { useState, useEffect } = React;
+function MyApp() {
+    const selection = [
+        '北京',
+        '上海',
+        '广州',
+        '深圳',
+    ];
+    const [val, setVal] = useState([]);
+    const changeVal = e => {
+        setVal(val.includes(e.target.value) ?
+            val.filter(item => item !== e.target.value)
+            : val.concat(e.target.value));
+    };
+    return (
+        <div>
+            <select value={val} onChange={changeVal} multiple={true}>
+                {selection.map(item => <option value={item} key={item}>{item}</option>)}
+            </select>
+        </div>
+    )
+}
+```
+:::
+::: tab label=多个input
+* 可以用一个name属性来区分，然后用同一个函数来处理数据变化
+```jsx{8,13-14}
+function MyApp() {
+    const [data, setData] = useState({
+        account: '',
+        pwd: '',
+    });
+    const changeVal = e => {
+        setData(Object.assign({}, data, {
+            [e.target.name]: e.target.value
+        }))
+    }
+    return (
+        <div>
+            <input type="text" value={data.account} onChange={changeVal} name="account" />
+            <input type="text" value={data.pwd} onChange={changeVal} name="pwd" />
+            <div>账号：{data.account}</div>
+            <div>密码：{data.pwd}</div>
+        </div>
+    )
+}
+```
+:::
+::: tab label=文件控制
+* 在 React 中，`<input type="file" />` 始终是一个非受控组件，因为它的值只能由用户设置，而不能通过代码控制。
+```html
+<input type="file" />
+```
+[js web file API](https://developer.mozilla.org/zh-CN/docs/Web/API/File_API/Using_files_from_web_applications)
 :::
 ::::
 ## 类式组件
@@ -600,6 +744,10 @@ export default function MyNavLink(props) {
 <MyNavLink to="/about">关于页面</MyNavLink>
 <MyNavLink to="/test" children="测试页面" />
 ```
+* 多个slot可以自定义名称，但只能以属性的方式传
+```jsx
+<MyNavLink to="/test" left={<Back />} center={<Title />} right={<Selector />}/>
+```
 :::
 ::::
 ## 生命周期
@@ -868,3 +1016,7 @@ ReactDOM.render(<News/>, document.getElementById('root'));
 ```
 :::
 ::::
+## 使用规则
+::: tip
+1. props不可变
+:::

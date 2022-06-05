@@ -129,6 +129,7 @@ const front = {
         'router',
         'redux',
         'important',
+        'react18',
     ],
     '/front/webpack/': [
         '',

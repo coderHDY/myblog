@@ -1269,7 +1269,7 @@ console.log(Object.isExtensible(obj)); // false
 * 返回：Object
 * tip：浅拷贝
 * tip：相同属性以后来的为准
-* tip：不支持es5就没有的Symbols
+* tip：不支持es6就没有的Symbols
 :::
 :::: tabs
 ::: tab label=使用
