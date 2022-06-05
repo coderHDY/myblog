@@ -113,6 +113,11 @@ export default class App extends Component {
             { count },
             () => console.log(this.state.count) // 1 1 1
         );
+
+        // this.setState(
+        //     (state) => ({ count: state.count + 1 }),
+        //     () => console.log(this.state.count) // 3 3 3
+        // );
     }
     addThree = () => {
         this.add();
@@ -252,6 +257,77 @@ export default class App extends Component {
     }
 }
 
+```
+:::
+::::
+## 事件绑定
+:::: tabs
+::: tab label=概览
+* 总共有三种方式绑定事件的this，**尤其注意第三种可能导致性能问题**
+```jsx{5-9,11-12,17,23}
+class Comp extends React.Component {
+    // class组件constructor绑定
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+        console.log('单击', this);
+    }
+
+    // 箭头函数绑定
+    handleTouchStart = () => console.log('双击', this);
+
+    handleTouchMove() {
+        console.log('touchmove', this);
+    }
+    // 传事件用箭头函数传(不推荐)，因为作为参数传给子组件的时候，父组件更新会被视为子组件参数改变，导致重新渲染子组件
+    render() {
+        return (
+            <button
+                onClick={this.handleClick}
+                onTouchStart={this.handleTouchStart}
+                onTouchMove={() => this.handleTouchMove()}
+            >按钮</button>
+        )
+    }
+}
+```
+:::
+::: tab label=循环传参
+* 循环渲染内传参可以用`箭头函数`和`bind`
+```jsx{10,22-23}
+class MyApp extends React.Component {
+    state = {
+        friends: [
+            '小黄',
+            '小张',
+            '小李',
+        ]
+    }
+    delete = idx => {
+        const newFriends = this.state.friends.slice(0, idx).concat(this.state.friends.slice(idx + 1));
+        console.log(newFriends);
+        this.setState({ friends: newFriends });
+    }
+    render() {
+        return (
+            <ul>
+                {
+                    this.state.friends.map((item, idx) => {
+                        return (
+                            <li key={item}>
+                                <span>姓名：{item}</span>
+                                <button onClick={this.delete.bind(this, idx)}>删除</button>
+                                {/* <button onClick={() => this.delete(idx)}>删除</button> */}
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+        )
+    }
+}
 ```
 :::
 ::::
