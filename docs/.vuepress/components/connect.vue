@@ -16,16 +16,22 @@ export default {
           "/assets/img/leetcode.png",
           "/assets/img/github.jpeg",
       ],
-      showIdx: 0
+      showIdx: -1
     }
   },
   methods: {
       toggle(e) {
-          if (e.target.hasAttribute('data-id')) {
-            this.showIdx = +e.target.getAttribute('data-id');
-          }
+          console.log(this);
+          this.showIdx = !e.target.hasAttribute('data-id') ? -1 
+            : (+e.target.getAttribute('data-id') !== this.showIdx ? +e.target.getAttribute('data-id'): -1);
           e.stopImmediatePropagation();
       }
+  },
+  mounted() {
+    window.addEventListener('click', this.toggle);
+  },
+  beforeDestroy() {
+    window.removeEventListener('click', this.toggle);
   }
 }
 </script>
@@ -35,15 +41,14 @@ export default {
     display: flex;
     width: 90%;
     height: 30vw;
-    overflow: hidden;
     border: 10px solid rgb(0, 128, 255, .5);
     border-radius: 10px;
     box-shadow: 0 0 10px rgb(238, 196, 196);
     align-items: center;
+    overflow: hidden;
 }
 .item {
     flex: 1;
-    width: 10%;
     height: 90%;
     transition: all .2s 0s ease-in;
     margin-right: 10px;
