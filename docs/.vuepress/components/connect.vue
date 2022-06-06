@@ -89,6 +89,6 @@ export default {
   }
   .show {
     flex: 8;
-}
+  }
 }
 </style>
