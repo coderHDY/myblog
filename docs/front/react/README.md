@@ -284,6 +284,16 @@ ReactDOM.render(VDOM, document.getElementById('app'));
 ::: tab label=增删改查
 * 用setState时应该操作**新的数组**，不能修改原数组
 * 删除传参可以用`箭头函数`和`bind`
+* **数组**增删改查不可变数据操作可以用：
+    1. val.`concat`(addVal)
+    2. [...val, addVal]
+    3. val.`filter`((item, idx) => idx !== delIdx)
+    4. `Array.from(val)`
+    5. `Array.of(...val)`
+    6. `entries` / `keys` / `values`
+* **对象**增删改查可用：
+    1. Object.`assign`({}, info, {age: 18})
+    2. {...info, age: 18}
 ```jsx{10,21-22}
 class MyApp extends React.Component {
     state = {
@@ -294,7 +304,7 @@ class MyApp extends React.Component {
         ]
     }
     delete = idx => {
-        const newFriends = this.state.friends.slice(0, idx).concat(this.state.friends.slice(idx + 1));
+        const newFriends = this.state.friends.filter((_, i) => i !== idx);
         this.setState({ friends: newFriends });
     }
     render() {
@@ -339,7 +349,7 @@ function MyApp() {
     const changeVal = e => {
         setVal(val.includes(e.target.value) ?
             val.filter(item => item !== e.target.value)
-            : val.concat(e.target.value));
+            : [...val, e.target.value]);
     };
     return (
         <div>
@@ -485,6 +495,14 @@ const people = {
 };
 
 ReactDOM.render(<People {...people}/>, document.getElementById('root'));
+```
+* 需要修改部分props，其余原样传下去时：
+```jsx{2,4}
+const Button = props => {
+  const { kind, ...other } = props;
+  const className = kind === "primary" ? "PrimaryButton" : "SecondaryButton";
+  return <button className={className} {...other} />;
+};
 ```
 :::
 ::: tab label=props限制
@@ -850,7 +868,7 @@ class Login extends React.Component {
 
     // 点击状态+1了，但阀门阻止了视图更新
     addOne = () => this.setState({num: this.state.num + 1});
-    shouldComponentUpdate(...args) {
+    shouldComponentUpdate(nextProps, nextState) {
         return false;
     }
 

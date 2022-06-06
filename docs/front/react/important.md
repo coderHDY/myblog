@@ -453,3 +453,12 @@ function C() {
 ```
 :::
 ::::
+## 性能优化
+::: tip 虚拟化长列表
+1. [react-window](https://react-window.vercel.app/#/examples/list/fixed-size)
+2. [react virtualized](https://bvaughn.github.io/react-virtualized/#/components/List)
+:::
+::: tip React.PureComponent
+* 作用：比`React.Component`多一个state/props浅比较
+* 浅比较内部决定shouldComponentUpdate的值
+:::

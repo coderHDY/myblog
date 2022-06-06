@@ -158,8 +158,6 @@ fetch('/info', {
 >react-scripts模块中从2开始改变了proxy的配置方式，只能使用字符串配置，要复杂配置就用setupProxy
 :::
 ::::
-
-
 ## pubsub
 :::: tabs
 ::: tab label=使用

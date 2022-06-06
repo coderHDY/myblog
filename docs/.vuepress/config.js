@@ -65,6 +65,7 @@ module.exports = {
                 { icon: 'reco-github', link: 'https://github.com/coderHDY' },
                 { icon: 'reco-coding', link: 'https://leetcode-cn.com/u/huang-tong-xue-e/' },
                 { icon: 'reco-other', link: 'https://coderhdy.github.io/react-stories/?path=/story' },
+                { icon: 'reco-wechat', link: '/blog/2022/connect.html' },
             ]
         },
         // 搜索设置
