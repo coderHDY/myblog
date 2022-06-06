@@ -1016,6 +1016,50 @@ ReactDOM.render(<News/>, document.getElementById('root'));
 ```
 :::
 ::::
+## HOC
+:::: tabs
+::: tab label=高阶组件
+* HOC：函数入参是一个组件，返回一个新的组件
+* 可以做出mixin的效果，将原有组件进行扩展
+```jsx{5-7,17,20-22,27}
+import React, { useEffect } from 'react';
+
+// 原生组件
+function NavBar(props) {
+    useEffect(() => {
+        console.log('NavBar componentWillMount');
+    }, []);
+    return (
+        <div>
+            <span>{props.left}</span>
+            <span>{props.center}</span>
+            <span>{props.right}</span>
+        </div>
+    )
+}
+
+// HOC：包装旧组件，生成新组件。可以附加很多功能，组件的mixin效果
+function TypingTool(Comp, type) {
+    return function TypedTool(props) {
+        useEffect(() => {
+            console.log('wrapped componentWillMount');
+        }, []);
+        return (<Comp {...type} {...props} />)
+    }
+}
+
+const BackBar = TypingTool(NavBar, { left: "<" });
+
+export default function App() {
+    return (
+        <div>
+            {<BackBar center="热销商品" right="···" />}
+        </div>
+    )
+}
+```
+:::
+::::
 ## 使用规则
 ::: tip
 1. props不可变

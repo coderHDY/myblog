@@ -37,3 +37,9 @@ date: 2022-06-04
 ```
 :::
 ::::
+## 新增API
+:::: tabs
+::: tab label=transitions
+* [transitions](https://zh-hans.reactjs.org/docs/react-api.html#transitions)
+:::
+::::

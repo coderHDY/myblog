@@ -64,6 +64,7 @@ module.exports = {
             socialLinks: [     // 信息栏展示社交信息
                 { icon: 'reco-github', link: 'https://github.com/coderHDY' },
                 { icon: 'reco-coding', link: 'https://leetcode-cn.com/u/huang-tong-xue-e/' },
+                { icon: 'reco-other', link: 'https://coderhdy.github.io/react-stories/?path=/story' },
             ]
         },
         // 搜索设置
