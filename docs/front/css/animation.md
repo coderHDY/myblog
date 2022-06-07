@@ -35,7 +35,6 @@ animation: roll 2s 0s linear forwards infinite running;
 * 跳跳球动画
 :::: tabs
 ::: tab label=跳跳球
-<video src="./assets/cssballjump.mp4" style="width:200px;" controls/>
 
 ```html{22-26,28-35}
 <body>
@@ -123,7 +122,6 @@ animation-direction: alternate;
 * 动画
 :::: tabs
 ::: tab label=旋转球
-<video src="./assets/animationfillmode0.mp4" style="width:300px;" controls />
 
 ```html{27-40}
 <body>
@@ -183,7 +181,6 @@ animation-direction: alternate;
 animation-fill-mode: backwards;
 ```
 
-<video src="./assets/animationfillmode1.mp4" style="width:300px;" controls />
 
 :::
 ::: tab label=timing-function
@@ -199,7 +196,6 @@ animation-timing-function: cubic-bezier(1, 0, 1, 0);
 ```
 <img src="./assets/cubicbezier.png" style="width:300px;">
 * 效果:
-<video src="./assets/animationcubzier.mp4" style="width:300px" controls />
 
 |值|效果|
 |---|---|
@@ -216,8 +212,6 @@ animation-timing-function: cubic-bezier(1, 0, 1, 0);
 |---|---|
 |running|动画动起来|
 |paused|动画暂停|
-
-<video src="./assets/animationplaystate.mp4" controls style="width:300px;" />
 
 ```html{32-33,45-51}
 <body>
