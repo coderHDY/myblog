@@ -41,20 +41,10 @@ date: 2021-10-14
 
 > tip: 多媒体上下最好多加一个空行，否则容易导致语法错误
 
-视频：
-<video controls width="700px">
-    <source type="video/mp4" src="./assets/storybook.mp4">
-</video>
-
 图片：  
 ![图片描述](http:////www.baidu.com/img/flexible/logo/pc/result.png)
 
 <img src="http:////www.baidu.com/img/flexible/logo/pc/result.png" style="height: 50px;">
-
-音频：
-<audio id="audio" controls>
-    <source id="mp3" src="http://xxxx.mp3">
-</audio>
 :::
 
 ::: tab label=段落
