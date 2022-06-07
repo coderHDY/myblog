@@ -850,7 +850,7 @@ ReactDOM.render(<Login/>, document.getElementById('root'));
 ```
 :::
 ::: tab label=更新阀门
-* `shouleComponentUpdate`:(nextProps, nextState) => boolean
+* `shouldComponentUpdate`:(nextProps, nextState) => boolean
 * 返回boolean来确定是否更新
 * forceUpdate可以绕过这个阀门强制更新
 ```js
