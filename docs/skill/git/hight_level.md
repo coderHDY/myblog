@@ -264,3 +264,19 @@ node_modules/
 # 模式取反(某个子目录这个文件不想被忽略)
 !*.sh
 ```
+## 删除git历史文件
+```shell
+git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch 你要删除的文件名' --prune-empty --tag-name-filter cat -- --all
+
+# 例
+# git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch docs/books/javascript/assets/checkbox.mp4' --prune-empty --tag-name-filter cat -- --all
+```
+* 更新远程仓库
+```shell
+git push origin --force --all
+git push origin --force --tags
+git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
+git reflog expire --expire=now --all
+git gc --prune=now
+git count-objects -v
+```
