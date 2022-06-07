@@ -504,8 +504,6 @@ date: 2022-01-14
 * 生命周期中用$watch去侦听，返回值是一个本watch的取消器
 >两秒失效的侦听器
 
-<video src="./assets/unwatch.mp4" style="width:400px;" controls />
-
 ```html{5,15,24-29}
 <body>
     <div id="app"></div>
@@ -543,8 +541,7 @@ date: 2022-01-14
 ```
 :::
 ::: tab label=综合案例
-<video src="./assets/demoshudian.mp4" style="width:500px;" controls />
-
+* 商品的增删改查
 * 注意v-for和v-if的`嵌套关系`
 ```html{65-77}
 <body>
@@ -779,8 +776,7 @@ export const vModelText: ModelDirective<
 ```
 :::
 ::: tab label=checkbox
-<video src="./assets/checkbox.mp4" style="width:300px;" controls />
-
+* 将数组对应多个checkbox
 * **必须要有value**，`$event.target.value`才能正确的跟踪值
 * `label`里的for对应input里的id
 ```html{5-20,29}
@@ -821,8 +817,6 @@ export const vModelText: ModelDirective<
 ```
 :::
 ::: tab label=radio
-<video src="./assets/radio.mp4" style="width:300px;" controls />
-
 * 单选框，值唯一
 ```html
 <body>
@@ -1474,7 +1468,6 @@ module.exports = {
 ::: tab label=模块热替换
 >当前webpack-dev-server属于热加载`live-reloade`，更改一个位置全部浏览器刷新HMR(hot module replace)  
 >模块热替换是修改了哪个模块只热加载哪个模块，其他模块状态不变，就不会丢失掉当前测试的整个前端保存的状态。 
-<video src="./assets/webpackmokuairejiazai.mp4" style="width:600px" controls />
 
 ```js
 // webpack.config.js
@@ -1500,6 +1493,7 @@ import "./aa";
 
 // 需要热加载模块
 if (module.hot) {
+    // 第二个参数是热加载时的回调
     module.hot.accept('./aa.js', () => console.log("aa.js模块更新了！"));
 }
 ```
@@ -1824,7 +1818,7 @@ export default {
 :::
 ::: tab label=综合案例
 * 自己造轮子：tab-control  
-<video src="./assets/tabcontrol.mp4" style="width:250px" controls />
+* 可以通过tab控制展示的局部内容
 
 >目录
 ```txt
@@ -1943,8 +1937,7 @@ export default {
 ::: tab label=provide/inject
 * provide：父组件向所有的子孙组件提供参数
 * inject：子孙组件需要使用祖先提供的参数时进行引入
-
-<video src="./assets/inject0.mp4" style="width:300px;" controls />
+* **按需inject**，孙组件直接接收数据展示，子组件接收更改方法
 
 >注：要让inject参数变成响应式的，需要配置`app.config`和注入`computed`
 ```js{6-7}
@@ -2541,7 +2534,7 @@ export default {
 ```
 :::
 ::: tab label=animation
-<video src="./assets/animation.mp4" style="width:250px" controls />
+* 自定义淡出方法
 
 ```vue{5-7,29-47}
 <template>
@@ -2607,8 +2600,8 @@ export default {
     * in-out：先进后出
     * out-in：先出后进
     
-<video src="./assets/transitionmode.mp4" style="width:250px" controls />
 
+>先进还是先出会决定布局的效果，因为先进的话布局并没有让出位置
 ```vue{5,12}
 <template>
   <div>
@@ -2820,7 +2813,7 @@ export default {
 ```
 :::
 ::: tab label=原生动态数字
-<video src="./assets/yuanshengshuzidongtai.mp4" style="width:250px;" controls />
+* 利用computed将数字的变化变成动态的
 
 ```vue{21-33}
 <template>
@@ -2892,9 +2885,7 @@ export default {
 ```
 :::
 ::: tab label=动画组
-* transition-group来包裹一个动画组，里面的元素都可以实现相关的动画
-
-<video src="./assets/transitiongroup.mp4" style="width:300px;" controls/>
+* transition-group来包裹一个动画组，**组里面的里面的元素进出都可以实现相关的动画**
 
 ```vue{11-17,43-58}
 <template>
@@ -3267,8 +3258,7 @@ export default {
 ::: tab label=customRef
 * 自定义防抖ref
 
-<video src="./assets/customref.mp4" style="width:300px;" controls />
-
+>自定义ref的作用：`劫持DOM操作`，进行数据的过滤类的自定义操作
 ```vue{8,10-27,31}
 <template>
   <div>
