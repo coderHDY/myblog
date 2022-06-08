@@ -691,3 +691,159 @@ body {
 ```
 :::
 ::::
+## 手写轮播图
+:::: tabs
+::: tab label=index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="swiper-container">
+        <div class="swiper">
+            <div class="swiper-item">
+                <img src="http://p1.music.126.net/Hw0XfBDOKAq6zky6-FfNmQ==/109951167524024227.jpg?imageView&quality=89" class="swiper-img">
+            </div>
+            <div class="swiper-item">
+                <img src="http://p1.music.126.net/GlneKk-0iSdP7Ug9tHtA1w==/109951167524304592.jpg?imageView&quality=89" class="swiper-img">
+            </div>
+            <div class="swiper-item">
+                <img src="http://p1.music.126.net/9HzGGuuftmIPYeSe0IEBcA==/109951167524071252.jpg?imageView&quality=89" class="swiper-img">
+            </div>
+            <div class="swiper-item">
+                <img src="http://p1.music.126.net/wKGNJ7gaazIfkfI3uYPiIA==/109951167524045404.jpg?imageView&quality=89" class="swiper-img">
+            </div>
+            <div class="swiper-item">
+                <img src="http://p1.music.126.net/iFc1gO43OsSk2njkHWZYbA==/109951167524364228.jpg?imageView&quality=89" class="swiper-img">
+            </div>
+        </div>
+        <span class="prev">《GO</span>
+        <span class="next">GO》</span>
+    </div>
+    <script src="./index.js"></script>
+</body>
+
+</html>
+```
+:::
+::: tab label=index.css
+```css{5-8}
+* {
+    padding: 0;
+    margin: 0;
+}
+/* 隐藏scroll-bar */
+.swiper-container::-webkit-scrollbar {
+    display: none;
+}
+
+.swiper-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.swiper {
+    display: flex;
+    position: relative;
+    transition: all .5s 0s ease-in-out;
+}
+.swiper-item {
+    flex-shrink: 0;
+    width: 100%;
+    text-align: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+.swiper-img {
+    width: 100vw;
+    height: auto;
+}
+.prev,.next {
+    position: absolute;
+    background-color: rgba(232, 232, 232, 0.3);
+    box-shadow: 0 0 3px #333;
+    width: 3em;
+    height: 1.2em;
+    line-height: 1.2em;
+    border-radius: .75em;
+    top: 50%;
+    transform: translate(0, -50%);
+    user-select: none;
+}
+.prev {
+    left: 3%;
+    text-align: left;
+}
+.next {
+    position: absolute;
+    right: 3%;
+    text-align: right;
+}
+```
+:::
+::: tab label=index.js
+```js{11-27}
+const prev = document.querySelector('.prev');
+const next = document.querySelector('.next');
+const swiperItem = document.querySelector('.swiper-item');
+let swiper = document.querySelector('.swiper');
+let itemNum = swiper.querySelectorAll('.swiper-item').length;
+let swiperRect = swiper.getClientRects()[0];
+let swiperItemRect = swiperItem.getClientRects()[0];
+let itemWidth = parseInt(swiperItemRect.width);
+let moving = false;
+
+// 设计模式：代理模式
+// 利用proxy管理当前展示的 index，劫持后做DOM操作
+let showIdxProxy = new Proxy({ i: 0 }, {
+    set(target, p, val) {
+        if (val < 0) {
+            val = itemNum - 1;
+            swiper.style.left = `-${(itemNum - 1) * itemWidth}px`;
+        } else if (val >= itemNum) {
+            val = 0;
+            swiper.style.left = '0px';
+        } else {
+            swiper.style.left = `-${Math.abs(val * itemWidth)}px`;
+        }
+        Reflect.set(target, p, val);
+        return true;
+    }
+});
+
+window.addEventListener('resize', (() => {
+    let timer;
+    return () => {
+        if (timer) return;
+        timer = setTimeout(() => {
+            swiper = document.querySelector('.swiper');
+            itemNum = swiper.querySelectorAll('.swiper-item').length;
+            swiperItemRect = swiperItem.getClientRects()[0];
+            itemWidth = parseInt(swiperItemRect.width);
+        }, 20)
+    }
+})())
+
+prev.addEventListener('click', () => {
+    if (moving) return;
+    moving = true;
+    setTimeout(() => moving = false, 500);
+    showIdxProxy.i = showIdxProxy.i <= 0 ? itemNum - 1 : showIdxProxy.i - 1;
+
+})
+next.addEventListener('click', () => {
+    if (moving) return;
+    moving = true;
+    setTimeout(() => moving = false, 500);
+    showIdxProxy.i = showIdxProxy.i >= itemNum - 1 ? 0 : showIdxProxy.i + 1;
+});
+```
+::::
