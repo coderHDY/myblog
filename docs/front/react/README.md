@@ -1077,6 +1077,116 @@ export default function App() {
 }
 ```
 :::
+::: tab label=render-props
+* 利用`HOC思想`，将**render函数作为参数传入子组件内部**，让组件自行决定渲染
+```jsx{5,46-48}
+const { useState, useEffect, useRef } = React;
+function MyApp() {
+    return (
+        <>
+            <Mouse render={pst => <MovableCpm {...pst} />}
+            />
+        </>
+    )
+}
+
+function MovableCpm(props) {
+    return (
+        <div style={{ position: 'absolute', left: props.x, top: props.y }}>
+            <div>当前位置是：{props.x}</div>
+            <div>当前位置是：{props.y}</div>
+        </div>
+    )
+}
+
+function Mouse(props) {
+    const [{ x, y }, setPosition] = useState({ x: 0, y: 0 });
+    useEffect(() => {
+        let timer;
+        const listener = e => {
+            if (timer) return;
+            timer = setTimeout(() => {
+                clearTimeout(timer);
+                timer = null;
+            }, 40);
+            setPosition({
+                x: e.pageX,
+                y: e.pageY,
+            })
+        };
+        window.addEventListener('mousemove', listener);
+        return () => {
+            window.removeEventListener('mousemove', listener)
+        };
+    }, []);
+    return (
+        <>
+            <div>
+                <span>x:{x}</span>
+                <span>y:{y}</span>
+            </div>
+            {
+                props.render ? props.render({ x, y }) : false
+            }
+        </>
+    )
+}
+
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(React.createElement(MyApp, null));
+```
+:::
+::::
+## Portals
+:::: tabs
+::: tab label=portals
+* 可以实现挂载到React父组件以外的组件上去
+```jsx{6-8}
+const { useRef } = React;
+function MyApp() {
+    return (
+        <div>
+            <span>儿子你好~</span>
+            {
+                ReactDOM.createPortal(<span>你好，我不是你儿子</span>, document.querySelector('#port'))
+            }
+        </div>
+    )
+}
+
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(React.createElement(MyApp, null));
+```
+:::
+::: tab label=事件管理
+* 合成事件会传播给React的父元素
+* 浏览器事件会传播到DOM节点的父元素
+```jsx{6-7,16-17}
+const { useState, useRef } = React;
+function MyApp() {
+    const [num, setNum] = useState(0);
+    const add = () => setNum(num + 1);
+    return (
+        // SyntheticBaseEvent
+        <div onClick={e => console.log(e)}>
+            <span>num: {num}</span>
+            {
+                ReactDOM.createPortal(<button onClick={add}>加一</button>, document.querySelector('#port'))
+            }
+        </div>
+    )
+}
+
+// pointerEvent
+document.querySelector('#port').addEventListener('click', e => console.log(e));
+
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(React.createElement(MyApp, null));
+```
+:::
 ::::
 ## 使用规则
 ::: tip
