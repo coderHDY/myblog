@@ -2,6 +2,139 @@
 title: react细节知识
 date: 2022-02-28
 ---
+## 顶层API
+:::: tabs
+::: tab label=Fragment
+* 作用与空标签相同，避免创造无用根标签
+    >区别：Fragment可以写`key`/`children`值，空标签不能写属性。
+    ```jsx{7-9}
+    import React, { createRef, Fragment } from 'react'
+
+    export default function Test() {
+        const p = ['张三', '李四', '王五', 'hdy']
+        return (
+            p.map(item => (
+                <Fragment key={item}>
+                    <div>{item}</div>
+                </Fragment>
+            ))
+        )
+    }
+    ```
+:::
+::: tab label=PureComponent
+* `React.Component`的父组件渲染会调用子组件的渲染函数，调动子组件的渲染，`React.PureComponent`解决了这个问题
+* 解决方式：利用`浅比较` + `shouldComponentUpdate`控制
+    ```jsx{16-17}
+    const { useState, useEffect, useRef } = React;
+    function MyApp() {
+        const [conter, setConter] = useState(0);
+        return (
+            <>
+                <div>
+                    <button onClick={() => setConter(conter - 1)}>-</button>
+                    <span>{conter}</span>
+                    <button onClick={() => setConter(conter + 1)}>+</button>
+                    <Child count={11} />
+                </div>
+            </>
+        )
+    }
+
+    // class Child extends React.Component {
+    class Child extends React.PureComponent {
+        render() {
+            alert(this.props.count);
+            return (
+                <div>child啦啦啦！</div>
+            )
+        }
+    }
+
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(React.createElement(MyApp, null));
+    ```
+    >浅比较：`Object.is`，深层**引用数据**被更改无法监测到。
+    ```jsx{6,9,12,15}
+    const { useState, useEffect, useRef } = React;
+    function MyApp() {
+        const [conter, setConter] = useState(0);
+        const [a, setA] = useState({ b: { conter } });
+
+        // 点击 【+】 会重新渲染子组件
+        const add = () => {
+            setConter(conter + 1);
+            setA({ b: { conter } });
+        }
+
+        // 点击【-】不会重新渲染子组件
+        const del = () => {
+            setConter(conter - 1);
+            setA(Object.assign(a, { b: { conter } }));
+        }
+        return (
+            <div>
+                <button onClick={del}>-</button>
+                <span>{conter}</span>
+                <button onClick={add}>+</button>
+                <Child a={a} />
+            </div>
+        )
+    }
+
+    class Child extends React.PureComponent {
+        render() {
+            alert(this.props.a.b.conter);
+            return (
+                <div>child啦啦啦！</div>
+            )
+        }
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MyApp, null));
+    ```
+:::
+::: tab label=memo
+* 作用与类式组件的`PureComponent`相同：记忆同一个props的渲染结果，如果props不变，则不重新渲染，调用最近一次的渲染结果
+* 不同点：可以**自定义判断方法**，判断是否要更新子组件：
+```jsx{23-31}
+const { useState, useEffect, useRef } = React;
+function MyApp() {
+    const [conter, setConter] = useState(0);
+    const [a, setA] = useState({ b: { conter } });
+    const add = () => {
+        setConter(conter + 1);
+        setA({ b: { conter } });
+    }
+    const del = () => {
+        setConter(conter - 1);
+        setA({ b: { conter } });
+    }
+    return (
+        <>
+            <button onClick={del}>-</button>
+            <span>{conter}</span>
+            <button onClick={add}>+</button>
+            <Child a={a} />
+        </>
+    )
+}
+
+// 第二个参数可以自己控制，是否需要更改子组件。
+const Child = React.memo(function (props) {
+    alert(props.a.b.conter);
+    return (
+        <div>child啦啦啦！</div>
+    )
+}, function areEqual(prevProps, nextProps) {
+    return nextProps.a.b.conter >= 5;
+})
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MyApp, null));
+```
+:::
+::::
 ## setState
 :::: tabs
 ::: tab label=机制
@@ -327,27 +460,6 @@ class MyApp extends React.Component {
             </ul>
         )
     }
-}
-```
-:::
-::::
-## Fragment
-:::: tabs
-::: tab label=使用
-* 作用与空标签相同，避免创造无用根标签
->区别：Fragment可以写`key`/`children`值，空标签不能写属性。
-```jsx{7-9}
-import React, { createRef, Fragment } from 'react'
-
-export default function Test() {
-    const p = ['张三', '李四', '王五', 'hdy']
-    return (
-        p.map(item => (
-            <Fragment key={item}>
-                <div>{item}</div>
-            </Fragment>
-        ))
-    )
 }
 ```
 :::
