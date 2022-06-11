@@ -160,7 +160,7 @@ Array.prototype.myUnshift = function(...args) {
 ::::
 ### splice
 ::: tip
-* 作用：删除、插入数组
+* 作用：删除、插入数组(修改原数组)
 * 调用：arr.splice(from[, delNum, newItem...])
 * 入参：Number[, Number, any...]
 * 返回：array
@@ -190,6 +190,21 @@ console.log(arr); // [1, 100, 3]
 ```
 :::
 ::::
+### slice
+::: tip
+* 作用：切割数组，**返回新的数组**
+* 调用：arr.slice(start, end)
+* 入参：number, number
+* 返回：Array(新数组，不改变原数组)
+:::
+```js
+const arr = [1, 2, 3];
+console.log(arr.slice()); // 复制数组：[1, 2, 3]
+console.log(arr.slice(1)); // [2, 3]
+console.log(arr.slice(1, -1)); // [2]
+
+console.log(arr); // [1, 2, 3]
+```
 ### includes
 ::: tip
 * 作用：检查数组中是否包含指定的项，**可以指定开始查找的位置**
@@ -278,7 +293,6 @@ console.log(others.some(function(item) {item.age > this.age}, me));
 ```
 :::
 ::::
-
 ### find
 ::: tip
 * 作用：找到数组中**第一个**满足条件的项
@@ -367,7 +381,6 @@ console.log(arr.findIndex(function(item) {
 ```
 :::
 ::::
-
 ### indexOf
 ::: tip
 * 作用：找到指定元素的下标，不存在则返回 -1
@@ -419,7 +432,6 @@ console.log(arr.lastIndexOf('小张', 0)); // 0
 console.log(arr.lastIndexOf('小张', -2)); // 1
 
 ```
-
 ### at
 ::: tip 支持的环境
 * 新方法，支持的环境较新
