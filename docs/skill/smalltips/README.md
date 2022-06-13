@@ -34,6 +34,8 @@ plugins=(git zsh-autosuggestions)
 source ~/.zshrc
 ```
 ### 安装nvm
+:::: tabs
+::: tab label=mac
 * 安装：[官网](https://github.com/nvm-sh/nvm)
 ```shell
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -51,6 +53,13 @@ export NVM_DIR="$HOME/.nvm"
 ```shell
 source ~/.zshrc
 ```
+:::
+::: tab label=windows
+* [下载包](https://github.com/coreybutler/nvm-windows/releases)
+* 安装（不能有中文路径）
+* 双击nvm（配置环境）
+:::
+::::
 ### 安装vue-devtool
 * 能访问外网直接取扩展程序下载
 * 不能访问外网的情况下：
