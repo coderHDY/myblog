@@ -37,11 +37,11 @@ cat /etc/.gitconfig
 * 配置本地仓库信息
 ```shell
 # 本地仓库配置
-git config use.name 'coderWhy'
-git config use.email 'huangdeyu2020@163.com'
+git config user.name 'coderWhy'
+git config user.email 'huangdeyu2020@163.com'
 
-git config --local use.email 'huangdeyu2020@163.com'
-git config --local use.name 'coderWhy'
+git config --local user.email 'huangdeyu2020@163.com'
+git config --local user.name 'coderWhy'
 
 # 全局仓库配置
 git config --global user.name 'huangdeyu'
@@ -52,6 +52,10 @@ git config -l
 git config --list
 git config --global --list
 git config --local --list
+
+# 删除配置
+git config --unset user.email
+git config --unset-all user.email
 ```
 
 ## ssh-keygen
