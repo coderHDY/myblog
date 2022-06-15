@@ -51,6 +51,17 @@ const front = {
     ]
 };
 
+const backend = {
+    text: '后端',
+    ariaLabel: 'backend base',
+    items: [
+        {
+            text: '数据库',
+            link: '/backend/database/'
+        },
+    ]
+}
+
 const skill = {
     text: '必备技能',
     ariaLabel: 'soft enginer necessary',
@@ -106,6 +117,7 @@ const timeline = {
 module.exports = [
     home,
     front,
+    backend,
     skill,
     books,
     timeline,

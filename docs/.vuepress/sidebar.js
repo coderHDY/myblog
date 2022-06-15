@@ -140,6 +140,18 @@ const front = {
     ],
 }
 
+const backend = {
+    '/backend/database/': [
+        {
+            title: 'NoSQL',
+            collapsable: false,
+            children: [
+                '',
+            ]
+        },
+    ]
+}
+
 const skill = {
     '/skill/git/': [
         '',
@@ -242,6 +254,7 @@ const books = {
 
 module.exports = {
     ...front,
+    ...backend,
     ...skill,
     ...books
 }
