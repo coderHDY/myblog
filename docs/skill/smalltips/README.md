@@ -16,15 +16,18 @@ date: 2021-11-02
 ### 安装zsh
 ```shell
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+
+# curl
+sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)”
 ```
 * [开启zsh自动提示](https://blog.csdn.net/sunyv1/article/details/108049209)
 ```shell
+cd ～/.oh-my-zsh/plugins
 git clone https://github.com/zsh-users/zsh-autosuggestions.git
-
-open ~/.zshrc
 ```
 * 更改
 ```shell
+open ~/.zshrc
 # plugins=(git)
 
 plugins=(git zsh-autosuggestions)
