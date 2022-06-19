@@ -160,6 +160,25 @@ date: 2021-12-25
 </body>
 ```
 :::
+::: tab label=多行省略号
+* 多行超出显示省略号写法
+```html
+<body>
+    <div>这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书</div>
+
+    <style>
+        div {
+            display: -webkit-box;
+            white-space: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+</body>
+```
+:::
 ::::
 ## text-shadow
 ::: tip text-shadow
