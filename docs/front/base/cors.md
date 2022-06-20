@@ -56,9 +56,9 @@ app.get('/', function(req, res) {
 ::: tab label=效果
 <img src='./assets/kuayutupian.png' style="width:400px;">
 <img src='./assets/kuayu.png' style="width:400px;">
+
 :::
 ::::
-
 ## 解决方案
 ### JSONP
 ::: tip 思想
@@ -443,9 +443,9 @@ app.get('/', function(req, res) {
 * 只有user是新增的cookie
 
 <img src='./assets/daicookiekuayuheader.png' style="width:400px;">
+
 :::
 ::::
-
 ### node代理
 ::: tip 思路
 * 同源限制是浏览器规定的
@@ -787,9 +787,16 @@ wsServer.on('connection', function (ws) {
 ::: tab label=效果
 <img src="./assets/socketkehuduan.png" style="width: 600px;">
 <img src="./assets/socketfuwuduan.png" style="width: 600px;">
+
 :::
 ::::
-
+## 谷歌浏览器关闭跨域
+1. 桌面新建文件夹`aaa`
+2. 注意路径
+    ```md
+    pwd
+    open -n /Applications/Google\ Chrome.app/ --args --disable-web-security  --user-data-dir=/Users/dreamarts/Desktop/aaa
+    ```
 ### 其他方案
 ::: tip 其他不常用方案
 
