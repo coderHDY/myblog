@@ -96,6 +96,7 @@ const front = {
                 'box',
                 'text',
                 'responsive',
+                'special',
             ]
         },
         {
