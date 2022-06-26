@@ -3,6 +3,10 @@ title: git 基础
 date: 2021-10-27
 ---
 * 最详细的文档请查看[权威英文文档](https://www.git-scm.com/docs)
+* [中文文档](https://git-scm.com/book/zh/v2)
+* [猴子都能懂的git教程](https://backlog.com/git-tutorial/cn/)
+* [github中文文档](https://docs.github.com/cn)
+* [开源指北](https://oschina.gitee.io/opensource-guide/)
 ::: tip 仓库版本
 ![版本概念](./assets/thinking.png)
 :::
