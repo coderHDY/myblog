@@ -3,7 +3,8 @@ title: React hooks
 date: 2022-02-28
 ---
 ## 介绍
-::: tip 优势
+:::: tabs
+::: tab label=优势
 * [官网](https://zh-hans.reactjs.org/docs/hooks-reference.html#usestate)
 * 为了解决根本问题：**函数组件内不能用this**
     * **函数式组件只能使用简单组件（无状态组件）**，只接收props进行展示。
@@ -12,7 +13,17 @@ date: 2022-02-28
     * 复用性强，class组件逻辑复用性不强
     * 逻辑整合，将相关的逻辑整合到一起，
 :::
+::: tab label=规则
+* 只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+* 只能在 React 的函数组件中调用 Hook。
+:::
+::: tab label=hook原理
+>**hook原理**：有另一个函数`renderWithHook`调用使用hook组件，另一个函数调用时通过闭包保存了一个`current`，以链表的形式存储了hook的调用顺序，所以能够在下次组件重新渲染的时候访问到hook内的数据，因此必须保证每次渲染hook函数的调用顺序一致，**避免判断语句调用hook**
+* `renderWithHook`
+* var `dispatcher` = ReactCurrentDispatcher.current;
 
+:::
+::::
 ## useState
 :::: tabs
 ::: tab label=useState
@@ -172,6 +183,84 @@ export default function Test() {
             <div><input type="text" ref={inputBox} /></div>
             <button onClick={show}>开启定时器</button>
         </>
+    )
+}
+```
+:::
+::::
+## useReducer
+:::: tabs
+::: tab label=介绍
+* 类似于`redux`的管理方法
+    1. 定义状态的`reducer`函数，内置对各种`action`的处理，返回新的`state`: (state, payload) => newState
+    2. 使用useReducer，传入`reducer，初始化状态，初始化函数?`: (reducer, init, initFn?) => [state, dispatch]
+    3. `dispatch`发射`type`及`payload`参数：`dispatch({ type: XX, payload: XXX })`
+:::
+::: tab label=使用
+```jsx{1,8,16-20,25,32,45,47,61}
+import { useState, useReducer } from 'react';
+
+const ADD = 'add';
+const DEL = 'del';
+const CLEAR = 'clear';
+const TOGGLE_DONE = 'toggleDone';
+
+// 设计模式：策略模式。定义所有type对应的的处理函数
+const reducerMap = new Map([
+    [CLEAR, () => []],
+    [ADD, (list, payload) => [payload, ...list]],
+    [DEL, (list, payload) => list.filter(item => item.name !== payload.name)],
+    [TOGGLE_DONE, (list, payload) => list.map(item => item.name === payload.name ? { ...item, done: !item.done } : item)],
+])
+
+const init = (list = []) => list;
+const listReducer = (list, action) => {
+    const { type, payload } = action;
+    return reducerMap.get(type)(list, payload);
+}
+
+// @ts-ignore
+export default function TodoList() {
+    const [inputVal, changeInput] = useState('');
+    const [list, dispatch] = useReducer(listReducer, []);
+
+    // @ts-ignore
+    const recordList = () => {
+        const val = inputVal.trim();
+        const idx = list.findIndex(item => item.name === val);
+        if (idx !== -1 || val === '') return;
+        dispatch({ type: ADD, payload: { name: inputVal, done: false } });
+        changeInput('');
+    }
+    return (
+        <div>
+            <div>
+                <input type="text" value={inputVal} onChange={e => changeInput(e.target.value)} onKeyUp={e => e.code === 'Enter' ? recordList() : ''} />
+                <button onClick={recordList}>添加</button>
+            </div>
+            <dl>
+                {
+                    list.map((item, i) => (
+                        <li key={item.name}>
+                            <input type="checkbox" value={!item.done} onChange={() => dispatch({ type: TOGGLE_DONE, payload: item })} />
+                            <span>{item.name}</span>
+                            <button onClick={() => dispatch({ type: DEL, payload: item })}>删除</button>
+                        </li>
+                    ))
+                }
+            </dl>
+            <div>
+                <span>总计：</span>
+                <span>
+                    {
+                        list.filter(item => item.done === true).length
+                    }/{
+                        list.length
+                    }
+                </span>
+                <button onClick={() => dispatch({ type: CLEAR })}>清空</button>
+            </div>
+        </div>
     )
 }
 ```
