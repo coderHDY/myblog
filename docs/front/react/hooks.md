@@ -197,7 +197,7 @@ export default function Test() {
     3. `dispatch`发射`type`及`payload`参数：`dispatch({ type: XX, payload: XXX })`
 :::
 ::: tab label=使用
-```jsx{1,8,16-20,25,32,45,47,61}
+```jsx{8,16-23,25-26,30,36,49,51,65}
 import { useState, useReducer } from 'react';
 
 const ADD = 'add';
@@ -205,7 +205,7 @@ const DEL = 'del';
 const CLEAR = 'clear';
 const TOGGLE_DONE = 'toggleDone';
 
-// 设计模式：策略模式。定义所有type对应的的处理函数
+// 设计模式：策略模式。扩展性强的项目取出，作为策略设计解构
 const reducerMap = new Map([
     [CLEAR, () => []],
     [ADD, (list, payload) => [payload, ...list]],
@@ -213,18 +213,22 @@ const reducerMap = new Map([
     [TOGGLE_DONE, (list, payload) => list.map(item => item.name === payload.name ? { ...item, done: !item.done } : item)],
 ])
 
-const init = (list = []) => list;
 const listReducer = (list, action) => {
     const { type, payload } = action;
-    return reducerMap.get(type)(list, payload);
+    const newList = reducerMap.get(type)(list, payload);
+
+    // 持久化存储
+    localStorage.setItem('todo-list', JSON.stringify(newList));
+    return newList;
 }
 
-// @ts-ignore
+// 持久化存储
+const initState = JSON.parse(localStorage.getItem('todo-list')) || [];
+
 export default function TodoList() {
     const [inputVal, changeInput] = useState('');
-    const [list, dispatch] = useReducer(listReducer, []);
+    const [list, dispatch] = useReducer(listReducer, initState);
 
-    // @ts-ignore
     const recordList = () => {
         const val = inputVal.trim();
         const idx = list.findIndex(item => item.name === val);
