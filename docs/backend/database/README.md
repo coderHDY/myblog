@@ -114,12 +114,28 @@ db.stu.insertOne()
 
 db.stu.insertMany()
 ```
+* 插入多条
+```mongodb
+for (let i = 0; i < 20000; i++) {
+    db.user.insert({name: "hdy" + i, age: i})
+}
+
+// 单次更新更快
+const arr = [];
+for (let i = 0; i < 20000; i++) {
+    arr.push({name: "hdy" + i, age: i});
+}
+db.user.insert(arr);
+```
 :::
 ## 查
 ::: tip
-```mongodb
+```mongodb{4}
 // 查询所有符合条件 -> 返回数组
 db.stu.find()
+
+// 名字内 有 "hdy"的：可能是字符串，也【可能是数组】
+// { "name" : [ "swk", "hdy" ], "age" : 300 }
 db.stu.find({name: "hdy"})
 db.stu.findMany({name: "hdy"})
 
@@ -129,6 +145,13 @@ db.stu.findOne({name: "hdy"})
 // 统计个数
 db.stu.find({name: "hdy"}).count()
 db.stu.find({name: "hdy"}).length()
+```
+* 查内嵌文档
+```mongodb
+// 查找movies是hero的这一条数据
+{ "hobby" : { "cites" : [ "beijing", "shanghai", "shenzhen" ], "movies" : [ "sanguo", "hero" ] } }
+
+db.user.find({"hobby.movies": "hero"})
 ```
 :::
 ## 改
@@ -146,7 +169,7 @@ db.collection.updateMany()
 db.collection.replaceOne()
 ```
 * options
-```mongodb
+```mongodb{4,10}
 // 默认用新对象替换旧对象
 db.stu.update({name: "hdy"}, {age: 28})
 
@@ -173,7 +196,99 @@ db.collection.update(
 
 )
 
-
 db.stu.update({name: "hdy"}, { $set:{age: 28} }, { multi: true })
 ```
 :::
+## 删
+>一般不用物理删除
+::: tip
+* 主要方法
+```mongodb
+// 删除多个
+db.stu.remove()
+db.stu.deleteMany()
+
+// 删除一个
+db.stu.deleteOne()
+```
+* 参数
+```mongodb
+db.stu.remove(<query>, <justOne: boolean>)
+
+// 删除一个
+db.stu.remove({age: 28}, true)
+
+// 清空集合(remove必须有参数)
+db.stu.remove({})
+
+// 性能更好的清空（删除集合）
+db.stu.drop();
+```
+* 删除数据库
+```mongodb
+use test
+
+db.dropDatabase()
+```
+:::
+
+## 查 options
+::: tip
+* $in
+* $nin
+* $eq
+* $gt
+* $gte
+* $lt
+* $lte
+* $all
+---
+* limit()
+* skip
+* sort
+* collation
+* project
+:::
+* 查询方法
+    ```mongodb
+    // 在、不在范围
+    {name: {$in: ["tangseng", "swk"]}}
+    {name: {$nin: ["tangseng", "swk"]}}
+
+    // 比较
+    {age: {$eq: 500}}
+    {age: {$lt: 500}}
+    {age: {$gt: 500}}
+    {age: {$lte: 500}}
+    {age: {$gte: 500}}
+
+    // 组合
+    {age: { $gt: 490, $lte: 500 }}
+    ```
+* 限制
+```
+
+```
+## 改 options
+::: tip
+* $addFields
+* $set
+* $project
+* $unset
+* $replaceRoot
+* $replaceWith
+:::
+* 数组插入 $push
+```mongodb
+{ "name" : "zbj", "hobby" : { "movies" : [ "Interstellar" ] } }
+> db.user.update({name: "zbj"}, {$push: {"hobby.movies": "Mongo!!"}})
+{ "name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!" ] } }
+```
+* （如果没有才）插入 $addToSet
+```mongodb
+{"name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!", "Mongo!!", "Mongo!!" ] } }
+> db.user.update({name: "zbj"}, {$addToSet: {"hobby.movies": "Mongo!!"}})
+
+// 没变
+{"name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!", "Mongo!!", "Mongo!!" ] } }
+```
