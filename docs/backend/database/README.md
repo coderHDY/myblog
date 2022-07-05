@@ -59,6 +59,14 @@ mongo --dbpath /usr/XXXX/mongodb --logpath /usr/XXX/log/mongodb/mongo.log --fork
 ```
 >tip：如果mac拒绝打开就在访达按`cmd+打开`，会吧应用加入白名单
 :::
+::: tab label=导入命令
+1. [下载链接的工具](https://www.mongodb.com/try/download/database-tools?tck=docs_databasetools)
+2. book20220615.gz是数据文件
+3. 用这个命令导入
+    ```shell
+    ./mongorestore --host=127.0.0.1 --port=27018 --gzip --archive=./book20220615.gz
+    ```
+:::
 ::::
 ## 主要概念
 :::: tabs
@@ -98,6 +106,39 @@ _id: 62bc6137a0f1600f6f65c3fd
 > ObjectId()
 ```
 :::
+::: tab label=对应关系
+* 一对一：内嵌文档解决
+* 一对多：将`一的_id`存到 -> `多的文档`里面去
+    ```json
+    {
+        name: "书桌",
+        user_id: "wq4234u23h4894u21394e234ew"
+    }
+    ```
+* 多对多：将对应的id以数组的形式存储
+    ```json
+    {
+        _id: "asdf9087asdf682832e23293j22j2"
+        name: "黄老师",
+        students: [
+            "asdf24234923i42j409348023i4j23w",
+            "234rf2h29298202093j2mjk2nkjn22k",
+            "fas0fas7fa6dfa5er23jnr3n4o24924"
+        ]
+    }
+    ----
+    {
+        _id: "fdsf6atf78asdf8asd789587d7fa2"
+        name: "黄同学",
+        teachers: [
+            "f564as76t787872y3bdb283h92h2792",
+            "sf6sa67f867dfg7a68768w7r92h2oni",
+            "fas9d8f90a8g9a87g989809r8092uj3"
+        ]
+    }
+    ```
+
+:::
 ::::
 ## 增
 ::: tip
@@ -131,7 +172,7 @@ db.user.insert(arr);
 ## 查
 ::: tip
 ```mongodb{4}
-// 查询所有符合条件 -> 返回数组
+// 查询所有符合条件 -> 【返回数组】
 db.stu.find()
 
 // 名字内 有 "hdy"的：可能是字符串，也【可能是数组】
@@ -139,7 +180,7 @@ db.stu.find()
 db.stu.find({name: "hdy"})
 db.stu.findMany({name: "hdy"})
 
-// 第一个符合条件的文档 -> 返回文档对象
+// 第一个符合条件的文档 -> 【返回文档对象】
 db.stu.findOne({name: "hdy"})
 
 // 统计个数
@@ -231,64 +272,72 @@ use test
 db.dropDatabase()
 ```
 :::
-
 ## 查 options
 ::: tip
-* $in
-* $nin
-* $eq
-* $gt
-* $gte
-* $lt
-* $lte
-* $all
+|操作|作用|例|
+|---|---|---|
+| $in | 限定某个值的范围 | `db.user.find({name: {$in: ["tangseng", "swk"]}})` |
+| $nin | | `{name: {$nin: ["tangseng", "swk"]}}` |
+| $eq | 等于 | `{age: {$eq: 500}}` |
+| $ne | 不等于 | `{age: {$ne: 500}}` |
+| $gt | 大于 | `{age: {$gt: 500}}` |
+| $gte | 大于等于 | `{age: {$gte: 500}}` |
+| $lt | 小于 | `{age: {$lt: 500}}` |
+| $lte | 小等于 | `{age: {$lte: 500}}` |
+| $all | | |
+| $or | | |
 ---
-* limit()
-* skip
-* sort
-* collation
-* project
+|限制|作用|例|
+|---|---|---|
+| limit()  | | `db.user.find({age: {$gt: 19, $lt: 30}}).limit(5)` |
+| skip  | | `db.user.find().limit(20).skip(5)` |
+| sort  | | `db.tea.find().sort({"student.0.age": 1})` |
+| collation  | | |
+| project  | | |
+|投影|说明只需要哪些字段| `db.tea.find({}, {name: 1})` |
 :::
 * 查询方法
     ```mongodb
-    // 在、不在范围
-    {name: {$in: ["tangseng", "swk"]}}
-    {name: {$nin: ["tangseng", "swk"]}}
-
-    // 比较
-    {age: {$eq: 500}}
-    {age: {$lt: 500}}
-    {age: {$gt: 500}}
-    {age: {$lte: 500}}
-    {age: {$gte: 500}}
-
-    // 组合
-    {age: { $gt: 490, $lte: 500 }}
+    // 与
+    db.user.find({age: { $gt: 490, $lte: 500 }})
+    // 或
+    db.user.find({$or: [{age: {$lt: 5}}, {age: {$gt: 26}}]})
+    // 正则
+    db.user.find({name: /黄/})
     ```
-* 限制
-```
-
-```
+    >{age: {$eq: 500}} 和 {age: 500} 的区别：age是数组的画第二种方式会查询`包含`
 ## 改 options
 ::: tip
-* $addFields
-* $set
-* $project
-* $unset
-* $replaceRoot
-* $replaceWith
-:::
-* 数组插入 $push
-```mongodb
-{ "name" : "zbj", "hobby" : { "movies" : [ "Interstellar" ] } }
-> db.user.update({name: "zbj"}, {$push: {"hobby.movies": "Mongo!!"}})
-{ "name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!" ] } }
-```
-* （如果没有才）插入 $addToSet
-```mongodb
-{"name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!", "Mongo!!", "Mongo!!" ] } }
-> db.user.update({name: "zbj"}, {$addToSet: {"hobby.movies": "Mongo!!"}})
 
-// 没变
-{"name" : "zbj", "hobby" : { "movies" : [ "Interstellar", "Mongo!!", "Mongo!!", "Mongo!!" ] } }
+|命令|作用|例|
+|---|---|------------------------------------|
+| $set  | | |
+| $inc  | 自增 | `db.user.update({age: 3}, {$inc: {age: 30}})` |
+| $push | 操作【数组】，推入数据 | `db.user.update({name: "zbj"}, {$push: {"hobby.movies": "Mongo!!"}})`|
+| $addToSet | 操作【数组】如果存在就不添加了，否则推入 | `db.user.update({name: "zbj"}, {$addToSet: {"hobby.movies": "Mongo!!"}})`|
+| $addFields|||
+| $project | | |
+| $unset | | |
+| $replaceRoot | | |
+| $replaceWith | | |
+:::
+
+## Mongoose
+:::: tabs
+::: tab label=介绍
+* [官网](https://mongoosejs.com/docs/guide.html)
+* nodejs 里对 Mongodb 模块的封装
+* 主要提供了`Schema`类型校验，让nosql有了数据规范，防止插入不规则的数据
+:::
+::: tab label=主要模块
+* Schema：(模式对象)
+* Model：(集合对象)将mongodb的collection封装成对象，创建入参需要有Schema对象，做本对象的数据约束
+* Document：(文档对象)相当于具体的一个document对象
+:::
+::: tab label=引入步骤
+```js
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/test');
 ```
+:::
+::::
