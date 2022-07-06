@@ -284,8 +284,14 @@ db.dropDatabase()
 | $gte | 大于等于 | `{age: {$gte: 500}}` |
 | $lt | 小于 | `{age: {$lt: 500}}` |
 | $lte | 小等于 | `{age: {$lte: 500}}` |
-| $all | | |
-| $or | | |
+| $all | **某个值包含所有** | `db.tea.find({"student.book": {$all: ["1", "2"]}})` |
+| $size | 根据数组大小(只能传数字) | `db.tea.find({name: "黄老师", student: {$size: 3}})` |
+| $regex | [官网](https://www.mongodb.com/docs/manual/reference/operator/query/regex/) | `db.tea.find({name: {$not: {$regex: "^黄"}}})` |
+| $and | 与 | `db.tea.find({"student.age": { $gt: 10}, name: "孙老师"})` |
+| $or | 或 | `db.user.find({$or: [{age: {$lt: 5}}, {age: {$gt: 26}}]})` |
+| $nor | 不是...也不是... | `db.tea.find({$nor: [{name: "孙老师"}, {"student.age": {$gt: 20}}]})` |
+| $not | **某个值**不是 | `db.tea.find({"student.age": {$not: {$eq: 20}}})` |
+| $expr | 内部表达式（a字段大于b字段） |`db.monthlyBudget.find({$expr:{$gt:["$a", "$b"]}})`|
 ---
 |限制|作用|例|
 |---|---|---|
@@ -296,10 +302,12 @@ db.dropDatabase()
 | project  | | |
 |投影|说明只需要哪些字段| `db.tea.find({}, {name: 1})` |
 :::
-* 查询方法
+* 多条件查询方法
     ```mongodb
     // 与
     db.user.find({age: { $gt: 490, $lte: 500 }})
+    db.tea.find({"student.age": { $gt: 10}, name: "孙老师"})
+    db.tea.find({$and: [{name: {$eq: "孙老师"}}, {"student.age": {$in: [20, 30]}}]})
     // 或
     db.user.find({$or: [{age: {$lt: 5}}, {age: {$gt: 26}}]})
     // 正则
@@ -311,15 +319,24 @@ db.dropDatabase()
 
 |命令|作用|例|
 |---|---|------------------------------------|
-| $set  | | |
+| $set  | 只修改指定数据 | `db.tea.update({name: "宋老师"}, {$set: {age: 12}})` |
 | $inc  | 自增 | `db.user.update({age: 3}, {$inc: {age: 30}})` |
-| $push | 操作【数组】，推入数据 | `db.user.update({name: "zbj"}, {$push: {"hobby.movies": "Mongo!!"}})`|
 | $addToSet | 操作【数组】如果存在就不添加了，否则推入 | `db.user.update({name: "zbj"}, {$addToSet: {"hobby.movies": "Mongo!!"}})`|
+| $rename|文档字段改名|`db.articles.updateMany({}, {$rename: {subject: "place"}})`|
 | $addFields|||
 | $project | | |
-| $unset | | |
+| $unset | 删除文档的某个字段 | `db.articles.update({_id: 1}, {$unset: {place: "", views: ""}})` |
 | $replaceRoot | | |
 | $replaceWith | | |
+---
+
+* 操作数组
+
+|命令|作用|例|
+|---|---|---|
+| $push | 推入数据（最后） | `db.user.update({name: "zbj"}, {$push: {"hobby.movies": "Mongo!!"}})`|
+| $pop |移除第一个或最后一个(-1第一个)| `db.tea.update({name: "黄老师"}, {$pop: {"student": -1}})`|
+| $pull |移除指定项|`db.profiles.updateOne({_id:1},{$pull:{votes:{$gte:6}}})`|
 :::
 
 ## Mongoose
