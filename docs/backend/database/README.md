@@ -351,10 +351,112 @@ db.dropDatabase()
 * Model：(集合对象)将mongodb的collection封装成对象，创建入参需要有Schema对象，做本对象的数据约束
 * Document：(文档对象)相当于具体的一个document对象
 :::
-::: tab label=引入步骤
-```js
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/test');
-```
+::: tab label=使用步骤
+* 连接
+    ```js
+    const mongoose = require('mongoose');
+
+    // connect(`mongodb://${ host }:${ port }/${ database }`)
+    mongoose.connect('mongodb://localhost:27017/test');
+    ```
+* 创建Schema、创建Model
+    ```js
+    // model(collectionName, Schema)
+    const Cat = mongoose.model('Cat', { name: String });
+    ```
+* 安装
+    ```js
+    // 方式一
+    Cat.create({ name: "李四" }, () => console.log('success'));
+
+    // 方式二
+    const kitty = new Cat({ name: 'Zildjian' });
+    kitty.save().then(() => console.log('meow'));
+    ```
+:::
+::: tab label=增
+* 底层为mongodb的`insert`可插入`单个文档`或者`数组`
+* 返回：(err, newDoc)
+    ```js
+    // model_user.create({ docs }, callback);
+    // model_user.create([ {docs}, {docs} ], callback);
+    model_user.create({
+        name: "hdy",
+        age: 18,
+    },
+    (err, doc) => {
+        if (!err) {
+            console.log(doc._id);
+        } else {
+            console.log("err");
+        }
+    });
+    ```
+:::
+::: tab label=删
+* 物理删除
+    ```js
+    remove(conditions[, callback])
+    deleteOne(conditions[, callback])
+    deleteMany(conditions[, callback])
+    ```
+* 逻辑删除：定义一个字段，专门显示是否删除。
+    ```js
+    updateOne({id: "123aa"}, {IS_VAL: false})
+    ```
+:::
+::: tab label=改
+* 使用
+    ```js
+    const update = async () => {
+        const ans = await model_user.updateOne({ _id: "62c56bc2ddc8f86c64b873d3" }, { $set: { name: "黄大仙儿" } });
+        console.log(ans);
+    }
+    update();
+    ```
+* 方法：
+    ```js
+    update(selector, options[, callback])
+    updateOne()
+    updateMany()
+
+    replaceOne({ _id: 24601 }, { name: 'Jean Valjean' });
+    ```
+:::
+::: tab label=查
+* 方法：`model_user.find({ name: "hdy" }, ["age"], { limit: 1 })`
+    ```js
+    // model_user.find({conditions}, projection, options, callback).exex();
+    // await model_user.find({conditions}, projection, options);
+
+    // 单个查询：返回对象，非数组
+    // model_user.findById()
+    // model_user.findOne()
+
+    const search = async () => {
+        const ans = await model_user.find({ name: "hdy" }, ["age"], { limit: 1 });
+        console.log(ans); // [ { _id: new ObjectId("62c56bc2ddc8f86c64b873d3"), age: 18 } ]
+    }
+
+    search();
+    ```
+    >使用`_id`查询时，可以直接使用id号，不需要整个和mongodb一样ObjectId(id)：`model_user.findById({ _id: "62c56bc2ddc8f86c64b873d3" }, { name: 1 }, { limit: 1 });`
+* options用法
+    ```js
+    "name _id -age"
+    ["name", "_id"]
+    { name: 1, _id: 0 }
+    ```
+* 返回的doc是`Document对象`，实际上就是`Model的实例`
+    ```js
+    const search = async () => {
+        const ans = await model_user.findById({ _id: "62c56bc2ddc8f86c64b873d3" }, { name: 1 }, { limit: 1 });
+        console.log(ans instanceof model_user); // true
+    }
+    search();
+    ```
+:::
+::: tab label=其他常用
+* 计数：`model_user.count({ _id: "62c56bc2ddc8f86c64b873d3" });`
 :::
 ::::
