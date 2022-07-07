@@ -338,7 +338,6 @@ db.dropDatabase()
 | $pop |移除第一个或最后一个(-1第一个)| `db.tea.update({name: "黄老师"}, {$pop: {"student": -1}})`|
 | $pull |移除指定项|`db.profiles.updateOne({_id:1},{$pull:{votes:{$gte:6}}})`|
 :::
-
 ## Mongoose
 :::: tabs
 ::: tab label=介绍
@@ -458,5 +457,228 @@ db.dropDatabase()
 :::
 ::: tab label=其他常用
 * 计数：`model_user.count({ _id: "62c56bc2ddc8f86c64b873d3" });`
+:::
+::::
+## Mongoose封装目录
+:::: tabs
+::: tab label=config
+* 常量导出`config/db.js`
+```js
+module.exports = {
+  default: "book",
+  connections: {
+    book: {
+      host: process.env.DB_HOST || "127.0.0.1",
+      port: process.env.DB_PORT || 27017,
+      user: process.env.DB_USER,
+      pass: process.env.DB_PASS,
+      dbName: process.env.DB_NAME || "book",
+      pool: 5,
+    },
+  },
+};
+```
+:::
+::: tab label=core
+* 导出数据库连接函数`core/db.js`
+```js
+const mongoose = require("mongoose");
+const log      = require("./logger");
+const config   = require("../config/db");
+const connections = {};
+exports.createConnection = (code) => {
+  if (!connections[code]) {
+    log.warn("Create a connection.");
+    const dbURL = exports.getDBURL(code);
+    try {
+      connections[code] = mongoose.createConnection(dbURL);
+    } catch (e) {
+      log.warn(e);
+      return null;
+    }
+  }
+  return connections[code];
+};
+
+exports.getDBURL = (db) => {
+  const { host, port, dbName } = config.connections[db];
+  const url = `mongodb://${host}:${port}/${dbName}`;
+  return url;
+};
+```
+:::
+::: tab label=Model
+* 导出原始操作数据库类：`core/model.js`
+* [connect.model](https://mongoosejs.com/docs/api/connection.html#connection_Connection-model)
+```js
+const createError = require("http-errors");
+const constant    = require("./constant");
+const db          = require("./db");
+const { INVALID, MOD_FIND_DEFAULT_SKIP, MOD_FIND_DEFAULT_LIMIT } = constant;
+
+class Model {
+  constructor (code, name, scheme) {
+
+    // 固定的，数据库名
+    const conn = db.createConnection(code);
+
+    // 创建新的模型 @集合名 @Schema对象
+    this.m = conn.model(name, scheme);
+  }
+
+  async create(obj) {
+    try {
+      delete obj.__v;
+      // eslint-disable-next-line new-cap
+      return await new this.m(obj).save();
+    } catch (err) {
+      console.log(obj, err);
+      throw new createError.InternalServerError("新规错误！");
+    }
+  }
+
+  async remove(id, obj = {}) {
+    try {
+      delete obj.__v;
+      obj.valid = INVALID; // 0
+      return await this.m.findByIdAndUpdate(id, obj).exec();
+    } catch (err) {
+      throw new createError.InternalServerError("删除错误！");
+    }
+  }
+
+  async update(id, obj) {
+    try {
+      delete obj.__v;
+      return await this.m.findByIdAndUpdate(id, obj).exec();
+    } catch (err) {
+      console.log(id, obj, err);
+      throw new createError.InternalServerError("更新错误！");
+    }
+  }
+
+  async updateByCondition(condition, obj, options) {
+    try {
+      delete obj.__v;
+      return await this.m.update(condition, obj, options).exec();
+    } catch (err) {
+      console.log(condition, obj, options, err);
+      throw new createError.InternalServerError("更新错误！");
+    }
+  }
+
+  async get(id, projection = "") {
+    try {
+      return await this.m.findById(id, projection).exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+
+  async getOne(condition, projection = "", options = {}) {
+    try {
+      return await this.m.findOne(condition, projection, options).exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+
+  async getOneOrder(condition, projection = "", sort = "") {
+    try {
+      return await this.m.findOne(condition)
+        .select(projection)
+        .sort(sort)
+        .exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+
+  async count(condition) {
+    try {
+      return await this.m.count(condition).exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+
+  async distinct(field, condition) {
+    try {
+      return await this.m.distinct(field, condition).exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+
+  async getList(condition, projection,
+    skip = MOD_FIND_DEFAULT_SKIP, // 0
+    limit = MOD_FIND_DEFAULT_LIMIT, // 20
+    sort = "") {
+    try {
+      return await this.m.find(condition)
+        .select(projection)
+        .skip(skip)
+        .limit(limit)
+        .sort(sort)
+        .exec();
+    } catch (err) {
+      throw new createError.InternalServerError("取得错误！");
+    }
+  }
+}
+
+module.exports = Model;
+```
+:::
+::: tab label=models
+* 封装每个类型，制作一个集合：models/mod_book_list
+* 模型：
+    ```js
+    const mongoose   = require("mongoose");
+    const BookList = new mongoose.Schema({
+        name:            { type: String,  description: "书单名" },
+        weChatId:        { type: String,  description: "微信id" },
+        description:    { type: String,  description: "书单简介" },
+        cover:           { type: String,  description: "书单封面" },
+        createBy:        { type: Object,  description: "创建人" },
+        books:           [{ type: String, description: "isbn" }],
+        stars:           [{ type: String, description: "点赞人weChatId" }],
+    });
+
+    // @DB_NAME_BOOK 固定数据库名
+    const ModelBookList = new Model(DB_NAME_BOOK, SCHEMA_BOOK_LIST, BookList);
+    ```
+:::
+::: tab label=controlers
+* 导出每个类型（集合）的具体控制函数，以文件区分类型
+```js
+exports.nameused = async (req) => {
+  log.info("booklist.nameused() start");
+  const { name } = req.query;
+  try {
+    const condition = { valid: 1, name};
+    const item = await ModelBookList.count(condition);
+    return item !== 0;
+  } catch (err){
+    log.info("booklist.nameused() err");
+    log.error(err);
+    throw err;
+  }
+}
+```
+:::
+::: tab label=routes
+* 请求接收处理文件夹,一个文件处理一个模型的问题，接受请求，调用对应的controller
+* routes/r_book_list.js
+```js
+router.get("/:docId", async (req, res) => {
+  try {
+    const result = await ctrlBokList.get(req);
+    response.sendSuccess(res, result);
+  } catch (err) {
+    response.sendError(res, err);
+  }
+});
+```
 :::
 ::::
