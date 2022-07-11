@@ -6,6 +6,17 @@ date: 2021-11-02
 
 
 ## 新机软件
+### Homebrew
+* [一键安装包](https://gitee.com/cunkai/HomebrewCN)
+* 安装路径查看：
+    ```shell
+    brew config | grep HOMEBREW
+    ```
+### wget
+```shell
+brew install wget 
+```
+* 后续命令跟提示输入完整
 ### curl下载失败
 * [改DNS](https://blog.csdn.net/bryong/article/details/108374261)
 ::: tip 
@@ -15,16 +26,30 @@ date: 2021-11-02
 ::: 
 ### 安装zsh
 ```shell
+# brew install oh-my-zsh
+
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
 # curl
 sh -c "$(curl -fsSL https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh)”
 ```
 * [开启zsh自动提示](https://blog.csdn.net/sunyv1/article/details/108049209)
-```shell
-cd ～/.oh-my-zsh/plugins
-git clone https://github.com/zsh-users/zsh-autosuggestions.git
-```
+    ```shell
+    cd ～/.oh-my-zsh/plugins
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git
+    ```
+* Zsh自定义环境路径导出：
+    ```shell
+    open ~/.zshrc
+    ```
+    ```shell
+    export PATH=${PATH}:/Users/dreamarts/Documents/packages/mongodb-macos-x86_64-5.0.9/bin
+    ```
+* Zsh改主题：
+    ```shell
+    open ~/.zshrc
+    # ZSH_THEME="random"
+    ```
 * 更改
 ```shell
 open ~/.zshrc
@@ -38,6 +63,16 @@ source ~/.zshrc
 ```
 ### 安装nvm
 :::: tabs
+::: tab label=brew
+* 安装
+    ```shell
+    brew install nvm  #（后续配置跟弹出教程走）
+    ```
+* 配置node寻找python环境：
+    ```shell
+    npm config set python /opt/homebrew/opt/python@3.9/libexec/bin/python
+    ```
+:::
 ::: tab label=mac
 * 安装：[官网](https://github.com/nvm-sh/nvm)
 ```shell
@@ -63,6 +98,17 @@ source ~/.zshrc
 * 双击nvm（配置环境）
 :::
 ::::
+### npm淘宝镜像
+* 换淘宝
+    ```shell
+    npm config set registry https://registry.npmmirror.com
+
+    npm get registry
+    ```
+* 换回来
+    ```shell
+    npm config set registry https://registry.npmjs.org
+    ```
 ### 安装vue-devtool
 * 能访问外网直接取扩展程序下载
 * 不能访问外网的情况下：
