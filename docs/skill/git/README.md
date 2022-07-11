@@ -78,14 +78,17 @@ ssh-keygen -t rsa -C huangdeyu2020@163.com
 # 编辑 config 对应配置文件，映射每个主机对应的配置和 ss-key 位置
 vim ~/.ssh/config
 
-Host gitee.com
-User huangdeyu
-IdentityFile ~/.ssh/id_rsa.huangdeyu
+Host github.com
+    User coderhdy
+    IdentityFile ~/.ssh/id_rsa
 
 Host github.com
-    Hostname github.com
-    User coderHdy
-    IdentityFile ~/.ssh/id_rsa_github
+    User coder-HDY
+    IdentityFile ~/.ssh/work_id_rsa
+
+Host gitee.com
+    User coderhdy
+    IdentityFile ~/.ssh/id_rsa
 ```
 ## git clone
 * 克隆远程仓库到本地
