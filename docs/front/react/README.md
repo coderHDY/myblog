@@ -1191,4 +1191,5 @@ root.render(React.createElement(MyApp, null));
 ## 使用规则
 ::: tip
 1. props不可变
+2. `React.StrictMode`下初始化会让组件执行两次，以此来更明显的发现副作用BUG
 :::

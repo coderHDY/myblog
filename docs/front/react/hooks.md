@@ -134,6 +134,36 @@ useEffect(() => {
 ```
 >不传：监听所有变化，相当于`componentDidMount`和`componentDidUpdate`
 :::
+::: tab label=componentDidUpdate
+* 使用useRef来存储值，保证第一次进入不执行
+    ```js
+    const isUpdate = useRef(true);
+
+    useEffect(() => {
+    if (isUpdate.current) {
+        isUpdate.current = false;
+    } else {
+        console.log('update');
+    }
+    });
+    ```
+* 封装
+    ```js
+    const useUpdate = (fn, ...args) => {
+        const isUpdate = useRef(true);
+        useEffect(() => {
+            if (isUpdate.current) {
+                isUpdate.current = false;
+            } else {
+                fn(...args);
+            }
+        });
+    }
+
+    // 组件中
+    useUpdate(() => console.log('update'));
+    ```
+:::
 ::::
 ## useRef
 :::: tabs
@@ -270,3 +300,27 @@ export default function TodoList() {
 ```
 :::
 ::::
+## useId
+:::: tabs
+::: tab label=制作
+```js
+function Comp() {
+    const id = useId();
+    return (
+        <>
+            <label htmlFor={id}>Do you like React?</label>
+            <input id={id} type="checkbox" name="react"/>
+        </>
+    );
+}
+```
+:::
+::::
+## forceUpdate
+* 尽量少用
+    ```jsx
+    const [ _, forceUpdate ] = useReducer(c => c + 1, 0);
+    useEffect(() => {
+    setTimeout(() => forceUpdate(), 1000);
+    }, []);
+    ```
