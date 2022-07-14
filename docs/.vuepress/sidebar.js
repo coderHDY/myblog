@@ -248,7 +248,6 @@ const books = {
             collapsable: false,
             children: [
                 '',
-                'mid-level-engineer',
             ]
         },
 
