@@ -72,13 +72,13 @@ git config --unset-all user.email
     ```
 
 ## 一台电脑配置多个git对应仓库
-* 生成 ssh-key 放置到 `不同` 路径下
+* 生成每个git对应的邮箱 ssh-key 放置到 `不同` 路径下
     ```shell
     # ~/.ssh/id_rsa
     ssh-keygen -t rsa -C huangdeyu2020@163.com
 
     # ~/.ssh/id_rsa_work
-    ssh-keygen -t rsa -C huangdeyu2020@163.com
+    ssh-keygen -t rsa -C 986005715@qq.com
     ```
 * 配置多config
     ```shell
