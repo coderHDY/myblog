@@ -64,12 +64,12 @@ git config --unset-all user.email
 
 ## ssh-keygen
 * 绑定远程仓库需要使用 SSH key
-```shell
-# 用我的邮箱生成 ssh-key (中间可以配置存放路径)
-ssh-keygen -t rsa -C huangdeyu2020@163.com
-# mac下查看生成的key (自己的路径)
-cat ~/.ssh/id_rsa.pub
-```
+    ```shell
+    # 用我的邮箱生成 ssh-key (中间可以配置存放路径)
+    ssh-keygen -t rsa -C huangdeyu2020@163.com
+    # mac下查看生成的key (自己的路径)
+    cat ~/.ssh/id_rsa.pub
+    ```
 
 ## 一台电脑配置多个git对应仓库
 * 生成 ssh-key 放置到 `不同` 路径下
@@ -106,6 +106,11 @@ cat ~/.ssh/id_rsa.pub
     git clone git@github.com:coderHDY/myblog.git
     # 改成这样⬇️
     git clone git@coderHDY:coderHDY/myblog.git
+    ```
+* 同时设置本仓库的git用户信息
+    ```shell
+    git config --local user.name 'coderHDY'
+    git config --local user.email '986005715@qq.com'
     ```
 * 此仓库使用操作时自动使用host对应配置
 ## git clone
