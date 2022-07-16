@@ -62,26 +62,32 @@ git checkout .
 
 ## git tag
 * 给一个重要的commit版本打上tag标识，更好地认出找出该版本如：V1.0
-```shell
-# 列出已有tag
-git tag
-git tag -l
-git tag --list
+    ```shell
+    # 列出已有tag
+    git tag
+    git tag -l
+    git tag --list
 
-# 当前版本打标签
-git tag v1.0
-git tag -a v1.1 -m "my version 1.4"
+    # 当前版本打标签
+    git tag v1.0
+    git tag -a v1.1 -m "my version 1.4"
 
-# 指定版本打标签
-git tag -a v1.2 9fceb02
+    # 指定版本打标签
+    git tag -a v1.2 9fceb02
 
-# 查看标签
-git show v1.0
+    # 查看标签
+    git show v1.0
 
-# 删除标签
-git tag -d v1.0
-```
-
+    # 删除标签
+    git tag -d v1.0
+    ```
+* 推送：`git push`默认**不会**推送tag信息
+    ```shell
+    git push origin v1.0
+    
+    // 推送所有
+    git push origin –-tags
+    ```
 ## git stash
 * 缓存修改
 ::: tip 缓存区
