@@ -71,25 +71,43 @@ ssh-keygen -t rsa -C huangdeyu2020@163.com
 cat ~/.ssh/id_rsa.pub
 ```
 
-* 一台电脑配置多个git对应仓库
-```shell
-# 生成 ssh-key 放置到另一个路径下，以 .pub 结尾，如: ~/.ssh/id_rsa_github.pub
-ssh-keygen -t rsa -C huangdeyu2020@163.com
-# 编辑 config 对应配置文件，映射每个主机对应的配置和 ss-key 位置
-vim ~/.ssh/config
+## 一台电脑配置多个git对应仓库
+* 生成 ssh-key 放置到 `不同` 路径下
+    ```shell
+    # ~/.ssh/id_rsa
+    ssh-keygen -t rsa -C huangdeyu2020@163.com
 
-Host github.com
-    User coderhdy
-    IdentityFile ~/.ssh/id_rsa
+    # ~/.ssh/id_rsa_work
+    ssh-keygen -t rsa -C huangdeyu2020@163.com
+    ```
+* 配置多config
+    ```shell
+    # 编辑 config 对应配置文件，映射每个主机对应的配置和 ss-key 位置
+    vim ~/.ssh/config
+    ```
+    ```shell
+    Host coderHDY
+        hostname github.com
+        User git
+        IdentityFile ~/.ssh/id_rsa
 
-Host github.com
-    User coder-HDY
-    IdentityFile ~/.ssh/work_id_rsa
+    Host coder-HDY
+        hostname github.com
+        User git
+        IdentityFile ~/.ssh/work_id_rsa
 
-Host gitee.com
-    User coderhdy
-    IdentityFile ~/.ssh/id_rsa
-```
+    Host gitee
+        hostname gitee.com
+        User git
+        IdentityFile ~/.ssh/id_rsa
+    ```
+* **拉取仓库时指定host**，来对应config，如：`github.com`改成`coderHDY`
+    ```shell
+    git clone git@github.com:coderHDY/myblog.git
+    # 改成这样⬇️
+    git clone git@coderHDY:coderHDY/myblog.git
+    ```
+* 此仓库使用操作时自动使用host对应配置
 ## git clone
 * 克隆远程仓库到本地
 1. 拿到远程仓库的ssh地址
