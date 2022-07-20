@@ -682,3 +682,37 @@ router.get("/:docId", async (req, res) => {
 ```
 :::
 ::::
+## 导入/导出
+* [操作文档](https://www.mongodb.com/docs/database-tools/?_ga=2.120143496.1813334389.1658280512-1580676044.1657182971&_gac=1.171715988.1658291704.EAIaIQobChMIqJ7o-dGG-QIVnNxMAh2xzAwzEAAYASAAEgJKqfD_BwE)
+:::: tabs
+::: tab label=备份
+* 切换到存放目录，执行：
+```shell
+mongodump -d book
+
+# -d 数据库名
+```
+:::
+::: tab label=恢复
+* 跳转到恢复目标目录
+```shell
+mongorestore -d book_restore --dir ./book/
+
+# -d 恢复数据库名
+# --dir 存储位置
+
+# 压缩文件
+mongorestore --host=127.0.0.1 --port=27017 --gzip --archive=./book20220615.gz
+```
+:::
+::: tab label=导出
+```shell
+mongoexport --collection=books --db=book --out=/Users/dreamarts/Desktop/test/book/book.json
+```
+:::
+::: tab label=导入
+```shell
+mongoimport -c=books -d=test --mode=upsert --file=/Users/dreamarts/Desktop/test/book/book.json
+```
+:::
+::::
