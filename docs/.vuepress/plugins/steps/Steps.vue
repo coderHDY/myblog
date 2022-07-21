@@ -65,13 +65,13 @@ export default {
       if (this.active++ > this.steps - 2) {
         this.active = 0;
       }
-      this.backToTop();
+      // this.backToTop();
     },
     prev() {
       if (this.active-- < 1) {
         this.active = this.steps - 1;
       }
-      this.backToTop();
+      // this.backToTop();
     },
     backToTop() {
       // 当前内容超过屏幕3/2就返回顶部
@@ -134,6 +134,7 @@ export default {
 .el-container {
   margin-bottom: 10px;
   padding-top: 20px;
+  box-shadow: 0px 0px 2px 0 rgb(0 0 0 / 12%), 0 0px 2px 0 rgb(0 0 0 / 4%);
 }
 .el-header {
   height: 35px !important;
