@@ -61,7 +61,6 @@ git config --local --list
 git config --unset user.email
 git config --unset-all user.email
 ```
-
 ## ssh-keygen
 * 绑定远程仓库需要使用 SSH key
     ```shell
@@ -70,7 +69,6 @@ git config --unset-all user.email
     # mac下查看生成的key (自己的路径)
     cat ~/.ssh/id_rsa.pub
     ```
-
 ## 一台电脑配置多个git对应仓库
 * 生成每个git对应的邮箱 ssh-key 放置到 `不同` 路径下
     ```shell
@@ -113,6 +111,18 @@ git config --unset-all user.email
     git config --local user.email '986005715@qq.com'
     ```
 * 此仓库使用操作时自动使用host对应配置
+## 22端口连接失败
+```shell
+vim ~/.ssh/config
+```
+* 改成443端口并且指定ssh连接
+    ```shell{2-3}
+    Host coderHDY
+        Port 443
+        Hostname ssh.github.com
+        User git
+        IdentityFile ~/.ssh/id_rsa
+    ```
 ## git clone
 * 克隆远程仓库到本地
 1. 拿到远程仓库的ssh地址
@@ -120,7 +130,6 @@ git config --unset-all user.email
 ```shell
 git clone git@github.com:coderHDY/myblog.git
 ```
-
 ## git remote
 * 设置和查看**和本地绑定的**远程仓库
 * **名字是关联的时候取的，可以随意更改**，与远程无关，只是本地关于远程仓库的叫法
@@ -138,7 +147,6 @@ git remote rm origin
 # 修改远程仓库在本地的名字
 git remote rename origin main
 ```
-
 ## git add
 * 将本地更改添加到本地缓存
 ::: tip 本地缓存
@@ -149,7 +157,6 @@ git add index.html
 # 缓存全部本地更改
 git add .
 ```
-
 ## git commit
 * 将本地缓存文件提交，生成一个版本
 ::: tip 版本
@@ -159,7 +166,6 @@ git add .
 ```shell
 git commit -m 'some change'
 ```
-
 ## git status
 * 查看当前的状态
     1. 有修改未暂存
@@ -168,7 +174,6 @@ git commit -m 'some change'
 ```shell
 git status
 ```
-
 ## git log
 * 打印本地的所有版本信息
 * 可以看到当前的HEAD指针指向的哪个版本
@@ -181,7 +186,6 @@ git log
 # 精简版
 git reflog
 ```
-
 ## git show
 * 显示版本 diff 信息
 ```shell
@@ -192,7 +196,6 @@ git show 4022c4c
 # 展示最近十次的commit信息
 git show-branch --more=10
 ```
-
 ## git diff
 * 比较两个版本之间的差异
 > 较新的版本要放到后面
@@ -205,7 +208,6 @@ git diff HEAD^ HEAD
 # 与指定版本diff
 git diff 4022c4c HEAD
 ```
-
 ## git push
 * 当前仓库的**HEAD指针**指向的版本推到远程仓库
 ```shell
@@ -222,7 +224,6 @@ git push --force origin master
 # 删除远程分支
 git push origin --delete master
 ```
-
 ## git rm
 * 版本仓库中删除某个文件
 ```shell
