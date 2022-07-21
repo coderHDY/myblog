@@ -134,6 +134,7 @@ export default {
 .el-container {
   margin-bottom: 10px;
   padding-top: 20px;
+  box-shadow: 0px 0px 2px 0 rgb(0 0 0 / 12%), 0 0px 2px 0 rgb(0 0 0 / 4%);
 }
 .el-header {
   height: 35px !important;
