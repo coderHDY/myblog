@@ -91,6 +91,31 @@ tags:
 </body>
 ```
 :::
+::: tab label=grid
+```html
+<body>
+    <div class="father">
+      <div class="child"></div>
+    </div>
+
+    <style>
+      .father {
+        display: grid;
+        place-items: center;
+
+        width: 100vw;
+        min-height: 100vw;
+        background-color: red;
+      }
+      .child {
+        height: 100px;
+        width: 100px;
+        background-color: #333;
+      }
+    </style>
+</body>
+```
+:::
 ::::
 ## 2.实现三角形
 :::: tabs
