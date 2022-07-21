@@ -164,6 +164,34 @@ useEffect(() => {
     useUpdate(() => console.log('update'));
     ```
 :::
+::: tab label=自定义hooks
+* useMount
+    ```tsx
+    const useMount = (fn: Function) => {
+        useEffect(() => { fn?.() }, []);
+    };
+    ```
+* useUpdate
+    ```jsx
+    const useUpdate = (fn: Function) => {
+    const temp = useRef(false);
+    
+    useEffect(() => {
+        if (!temp.current) {
+        temp.current = true
+        return;
+        }
+        fn?.();
+    })
+    };
+    ```
+* useUnmonte
+    ```jsx
+    const useUnmonte = (fn: any) => {
+        useEffect(() => fn, []);
+    }
+    ```
+:::
 ::::
 ## useRef
 :::: tabs
@@ -215,6 +243,38 @@ export default function Test() {
         </>
     )
 }
+```
+:::
+::: tab label=用作缓存
+* useRef总能拿到最新的值并且避免刷新
+* useState有时候不能拿到最新的值？（没想到例子）
+```jsx
+import React, { useState, useRef } from 'react';
+
+const App = () => {
+  const [ showVal, setShowVal ] = useState(0);
+  const cacheNum = useRef(0);
+  return (
+    <div>
+      <div>{showVal}</div>
+      <button onClick={() => cacheNum.current++}>+</button>
+      <button onClick={() => setShowVal(cacheNum.current)}>更新</button>
+    </div>
+  );
+};
+
+export default App;
+```
+:::
+::: tab label=useLasted
+* 总是能拿到最新传入值的hook(解决什么问题？)
+```jsx
+const useLasted = (value: any) => {
+  const ref = useRef(value);
+  ref.current = value;
+
+  return ref;
+};
 ```
 :::
 ::::
@@ -300,10 +360,123 @@ export default function TodoList() {
 ```
 :::
 ::::
+## useMemo
+::: tip
+* React中`只要父组件的状态更新，无论有没有对自组件进行操作，子组件都会进行更新`，useMemo就是为了防止这点而出现的
+* 依赖项不变就复用最近的一次渲染结果
+:::
+:::: tabs
+::: tab label=useMemo
+```jsx{3-10,14-15}
+import React, { useState, useMemo } from 'react';
+
+const usePow = (list: number[]) => {
+
+  // useMemo 变量没有变就会返回最近一次的渲染结果
+  return useMemo(() => list.map((item:number) => {
+    console.log('我执行啦~');
+    return Math.pow(item, 2)
+  }), [list]);
+}
+
+const App = () => {
+  const [flag, setFlag] = useState(true);
+  const [list, setList] = useState([1, 2, 3]);
+
+  // 切换其他state并不会引起自定义hook重新渲染
+  const data = usePow(list);
+  return (
+    <div>
+      <div>数字：{JSON.stringify(data)}</div>
+      <button color='primary' onClick={() => {setFlag(v => !v)}}>切换</button>
+      <button color='primary' onClick={() => {setList([2, 2, 3])}}>切换</button>
+      <div>切换状态：{JSON.stringify(flag)}</div>
+    </div>
+  );
+};
+export default App;
+```
+:::
+::: tab label=memo
+* `memo`只能将组件包裹成缓存组件，默认是对比props各属性的`浅对比`
+* 也可以传入第二个参数`(preProps, currProps) => boolean`
+```tsx
+import React, { useState, memo, FC } from 'react';
+
+const Pow = memo((props: any) => {
+  console.log('render');
+  return (
+    <ul>
+      {
+        props.list.map((item, i) => <li key={i}>{item}</li>)
+      }
+    </ul>
+  )
+});
+
+
+const App = () => {
+  const [flag, setFlag] = useState(true);
+  const [list, setList] = useState(Array(10000).fill(1));
+
+  // 切换其他state并不会引起自定义hook重新渲染
+  return (
+    <div>
+      <button color='primary' onClick={() => {setFlag(v => !v)}}>切换</button>
+      <button color='primary' onClick={() => {setList(Array(10000).fill(+flag + 1))}}>切换</button>
+      <div>切换状态：{JSON.stringify(flag)}</div>
+      <div>数字：<Pow list={list} /></div>
+    </div>
+  );
+};
+export default App;
+```
+:::
+::::
+## useCallback
+:::: tabs
+::: tab label=介绍
+* 返回一个函数，**函数不会随组件刷新而刷新，除非依赖数组项发生变化**
+* `唯一使用场景`：函数作为`memo`优化过的组件的`props`传入的时候才有实际作用。
+```tsx{3-6,12,15-16}
+import React, { useState, useCallback } from 'react';
+
+const TestButton = React.memo((props:any) => {
+  console.log(`${props.title}刷新`)
+  return <button onClick={props.onClick}>{props.title}</button>
+})
+
+const MockMemo: React.FC<any> = () => {
+  const [count,setCount] = useState(0)
+  const [show,setShow] = useState(true)
+
+  // 刷新父组件无关的state，就可以避免 memo 组件刷新
+  return (
+    <div>
+      <TestButton title="普通点击" onClick={ () => setCount(count + 1) }/>
+      <TestButton title="useCallback点击" onClick={ useCallback(()=> setCount(count + 1),[count]) }/>
+
+      <div>count: {count}</div>
+      <button onClick={() => {setShow(!show)}}>刷新父组件</button>
+    </div>
+  )
+}
+
+const App = () => {
+  return (
+    <div>
+      <MockMemo />
+    </div>
+  );
+};
+export default App;
+```
+:::
+::::
 ## useId
 :::: tabs
 ::: tab label=制作
-```js
+```jsx
 function Comp() {
     const id = useId();
     return (
@@ -317,10 +490,111 @@ function Comp() {
 :::
 ::::
 ## forceUpdate
+:::: tabs
+::: tab label=hook
 * 尽量少用
     ```jsx
-    const [ _, forceUpdate ] = useReducer(c => c + 1, 0);
-    useEffect(() => {
-    setTimeout(() => forceUpdate(), 1000);
-    }, []);
+    const useForceUpdate = () => {
+        const [, update] = useState({});
+        return useCallback(() => update({}), []);
+    }
     ```
+:::
+::: tab label=使用
+```jsx
+import React, { useState, useCallback } from 'react';
+
+const useForceUpdate = () => {
+  const [, update] = useState({});
+  return useCallback(() => update({}), []);
+}
+
+const App = () => {
+  const forceUpdate = useForceUpdate();
+  return (
+    <div>
+      <div>{new Date().toLocaleTimeString()}</div>
+      <button onClick={forceUpdate}>刷新</button>
+    </div>
+  );
+};
+
+export default App;
+```
+:::
+::::
+
+## useReactive
+:::: tabs
+::: tab label=定义
+* 自定义类似Vue的响应式系统
+```jsx
+const useReactive = (obj: Object):any => {
+  const [ , update ] = useState({});
+  const o = useRef(obj);
+  const proxy = useMemo(() => {
+    return new Proxy(o.current, {
+    set(target, key, val) {
+      Reflect.set(target, key, val);
+      update({})
+      return true;
+    }
+  })}, []);
+  return proxy;
+}
+```
+:::
+::: tab label=使用
+```jsx
+import React, { useState, useRef, useMemo } from 'react';
+
+const useReactive = (obj: Object):any => {
+  const [ , update ] = useState({});
+  const o = useRef(obj);
+  const proxy = useMemo(() => {
+    return new Proxy(o.current, {
+    set(target, key, val) {
+      Reflect.set(target, key, val);
+      update({})
+      return true;
+    }
+  })}, []);
+  return proxy;
+}
+
+const App = () => {
+  const account = useReactive({
+    name: '',
+    age: 0
+  });
+  return (
+    <div>
+      <div>name: {account.name}</div>
+      <div>age: {account.age}</div>
+      <div><input type="text" onChange={(e) => account.name = e.target.value}/></div>
+      <div><input type="number" onChange={(e) => account.age = +e.target.value}/></div>
+    </div>
+  );
+};
+
+export default App;
+```
+:::
+::: tab label=ts写法
+```ts
+const useReactive = <T extends {}>(obj: T): T => {
+  const [ , update ] = useState({});
+  const o = useRef(obj);
+  const proxy = useMemo(() => {
+    return new Proxy<T>(o.current, {
+    set(target, key, val) {
+      Reflect.set(target, key, val);
+      update({})
+      return true;
+    }
+  })}, []);
+  return proxy;
+}
+```
+:::
+::::
