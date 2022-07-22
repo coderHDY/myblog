@@ -9,7 +9,8 @@ date: 2021-10-21
 ```js
 const fixJumpHash = (router) => {
     router.onReady(() => {
-        const { hash } = location;
+        if (typeof window === 'undefined') return;
+        const { hash } = window.location;
         if (hash) {
             setTimeout(() => {
                 const el = document.querySelector(`.reco-side-${decodeURIComponent(hash).slice(1)}`);
