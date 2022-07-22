@@ -8,7 +8,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 const fixJumpHash = (router) => {
     router.onReady(() => {
-        const { hash } = location;
+        if (typeof window === 'undefined') return;
+        const { hash } = window.location;
         if (hash) {
             setTimeout(() => {
                 const el = document.querySelector(`.reco-side-${decodeURIComponent(hash).slice(1)}`);
