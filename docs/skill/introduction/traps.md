@@ -2,7 +2,35 @@
 title: 避坑指南
 date: 2021-10-21
 ---
+## hash跳转问题
+:::: tabs
+::: tab label=跳转
+* `docs/.vuepress/plugins/enhanceAppFiles.js`路径下配置
+```js
+const fixJumpHash = (router) => {
+    router.onReady(() => {
+        const { hash } = location;
+        if (hash) {
+            setTimeout(() => {
+                const el = document.querySelector(`.reco-side-${decodeURIComponent(hash).slice(1)}`);
+                el?.click?.();
+            }, 500);
+        }
+    })
+}
 
+export default ({Vue, router}) => {
+    fixJumpHash(router);
+}
+```
+:::
+::: tab label=报错解决
+* `node_modules/vuepress-plugin-smooth-scroll/lib/enhanceApp.js`修改14行左右为：
+```js
+const targetElement = document.querySelector(decodeURIComponent(to.hash));
+```
+:::
+::::
 ## 乱跳bug
 * 空行、img、横线，连着的时候就会乱跳
 ![](./assets/luantiaobug.png)
