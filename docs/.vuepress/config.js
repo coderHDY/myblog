@@ -82,12 +82,19 @@ module.exports = {
         sidebarDepth: 2,
         displayAllHeaders: false,
         //valine
-        valineConfig: {
-            appId: 'XDwlSXS2pD137bPrPpwQaqqD-gzGzoHsz', // your appId
-            appKey: 'CQ8FKrMUP76LwycPcKlDoRqV', // your appKey
-            placeholder: '说说你的看法~',
-            avatar: 'wavatar',
-            serverUrl: 'https://brhdq5vq.lc-cn-n1-shared.com'
+        // valineConfig: {
+        //     appId: 'XDwlSXS2pD137bPrPpwQaqqD-gzGzoHsz', // your appId
+        //     appKey: 'CQ8FKrMUP76LwycPcKlDoRqV', // your appKey
+        //     placeholder: '说说你的看法~',
+        //     avatar: 'wavatar',
+        //     serverUrl: 'https://brhdq5vq.lc-cn-n1-shared.com'
+        // },
+        vssueConfig: {
+            platform: 'github',
+            owner: 'coderHDY',
+            repo: 'myblog',
+            clientId: '7af64d26fd58ad665393',
+            clientSecret: '13750c77ab2cbbc6c91bc76b8b0f16b1de1d69ee',
         }
     },
     markdown: {
