@@ -17,7 +17,7 @@ export default {
             "author": [{
                 "@type": "Person",
                 "name": "西瓜皮儿",
-                "url": "https://github.com/coderhdy/myBlog"
+                "url": "https://github.com/coderhdy/myblog"
             }]
           }
       <\/script>`;

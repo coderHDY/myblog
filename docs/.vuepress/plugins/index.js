@@ -58,6 +58,14 @@ module.exports = [
       after: '</div>',
     },
   ],
+  ['vuepress-plugin-code-copy', {
+    backgroundTransition: false,
+    successText: '复制成功',
+    // align: String,
+    // color: String,
+    // selector: String,
+    // backgroundColor: String,
+  }],
   require('./vuepress-plugin-jsonld'),
   (options, context) => ({
 
