@@ -19,7 +19,7 @@ const fixJumpHash = (router) => {
     })
 }
 
-export default ({Vue, router}) => {
+export default ({ Vue, router, options }) => {
     Vue.use(ElementUI);
     Vue.component(Demo.name, Demo);
     Vue.component(Step.name, Step);
