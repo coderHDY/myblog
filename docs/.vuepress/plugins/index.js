@@ -15,8 +15,19 @@ module.exports = [
     {
       hostname: 'https://coderhdy.com'
     }
-  ],
-  [
+  ], ['seo',
+    {
+      siteTitle: (_, $site) => '西瓜皮儿的技术博客',
+      title: $page => $page.title,
+      description: $page => $page.frontmatter.description,
+      author: (_, $site) => '西瓜皮儿',
+      type: $page => 'article',
+      url: (_, $site, path) => 'https://coderhdy.com' + path,
+      image: ($page, $site) => "https://coderhdy.com/assets/img/portrait.jpg",
+      publishedAt: $page => $page.frontmatter.date && new Date($page.frontmatter.date),
+      modifiedAt: $page => $page.lastUpdated && new Date($page.lastUpdated),
+    }
+  ], [
     'permalink-pinyin',
     {
       lowercase: true,
