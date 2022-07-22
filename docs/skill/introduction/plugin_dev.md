@@ -6,7 +6,6 @@ date: 2021-10-15
 ::: tip
 [vuepress官方文档](https://vuepress.vuejs.org/)可能教学并不是很全，因为它是依赖于[markdown-it](https://markdown-it.docschina.org/)和[markdown-it-container](https://www.npmjs.com/package/markdown-it-container)这两个库搭建起来的插件系统，如果需要详细地学习，需要将三个文档结合起来看。
 :::
-
 ## 开发流程
 
 :::: steps
@@ -102,3 +101,6 @@ const FIXED_ATTR = new Map([
 :::
 
 ::::
+## 全文搜索框
+* 前提：线上部署（因为需要爬虫）
+* [全文搜索框添加方法](https://github.com/mqyqingfeng/Blog/issues/267)

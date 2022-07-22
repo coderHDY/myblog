@@ -14,12 +14,18 @@ module.exports = {
         ['link', { rel: 'apple-touch-icon', href: '/assets/icons/portrait128.png' }],
         ['link', { rel: 'mask-icon', href: '/assets/icons/portrait128.svg', color: '#ceffa0' }],
         ['meta', { name: 'msapplication-TileImage', content: '/assets/icons/portrait128.png' }],
-        ['meta', { name: 'msapplication-TileColor', content: '#000000' }]
+        ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
+        ['meta', { name: 'baidu-site-verification', content: 'code-VjoGmCBp2v' }],
+        ['meta', { name: 'description', content: '西瓜皮儿的技术博客~' }],
+        ['meta', { name: 'keywords', content: '西瓜皮儿,前端西瓜皮儿,前端博客,前端,前端学习,算法,软件知识,JS,JS知识,前端开发,编程,编程知识,CSS,JavaScript' }],
     ],
     locales: {
         '/': {
             lang: 'zh-CN',
         },
+    },
+    markdown: {
+        externalLinks: { target: '_blank', rel: 'nofollow noopener noreferrer' }
     },
     themeConfig: {
         type: 'blog',

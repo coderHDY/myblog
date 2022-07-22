@@ -1,0 +1,2 @@
+Sitemap: https://coderhdy.com/sitemap.xml
+User-agent: *
