@@ -161,7 +161,16 @@ code
 :::
 
 ::::
-
+## page title编写
+```md
+---
+title: title
+description: description
+meta:
+  - name: keywords
+    content: super duper SEO
+---
+```
 ## 新建页面
 
 :::: steps
