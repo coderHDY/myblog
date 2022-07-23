@@ -65,29 +65,21 @@ export default {
       if (this.active++ > this.steps - 2) {
         this.active = 0;
       }
-      // this.backToTop();
+      this.backToTop();
     },
     prev() {
       if (this.active-- < 1) {
         this.active = this.steps - 1;
       }
-      // this.backToTop();
+      this.backToTop();
     },
     backToTop() {
-      // 当前内容超过屏幕3/2就返回顶部
-      const offsetHeight = this.$el.offsetHeight;
-      const bodyHeight = window.screen.height;
-      if (bodyHeight / 1.5 > offsetHeight) {
-        return;
-      }
       let topBar = document.querySelector(`#${this.hashId}`);
-      setTimeout(() => {
-        topBar.scrollIntoView({
-          behavior: "auto",
-          block: "start",
-          inline: "start",
-        });
-      }, 10);
+      window.scrollTo({
+        top: topBar.offsetTop + 20,
+        left: 0,
+        behavior: 'instant'
+      });
     },
     jumpTo(e) {
       // 四舍五入计算出应该跳转的步数
@@ -130,6 +122,8 @@ export default {
   background-color: #ecf6ff;
   color: #333;
   line-height: 1.5rem;
+  max-width: 100%;
+  overflow: hidden;
 }
 .el-container {
   margin-bottom: 10px;

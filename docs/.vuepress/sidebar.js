@@ -159,6 +159,7 @@ const skill = {
         '',
         'hight_level',
         'git_thinking',
+        'action',
     ],
     '/skill/linux/': [
         {
