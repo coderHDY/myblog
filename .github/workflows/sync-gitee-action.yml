@@ -13,4 +13,3 @@ jobs:
           dst_token: ${{ secrets.SYNC_GITHUB_KEY }} # gitee的 api access token
           static_list: "myblog"
           force_update: true
-			    debug: true
