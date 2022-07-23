@@ -3,7 +3,7 @@ name: deploy
 on:
   push:
     branches: [master] # master 分支有 push 时触发
-    paths-ignore:   # 下列文件的变更不触发部署，可以自行添加
+    paths-ignore:   # 下列文件的变更不触发部署
       - README.md
 
 jobs:
@@ -20,8 +20,8 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: '14.17.2'
-      - run: npm install # 安装依赖
-      - run: npm run build # 打包
+      - run: npm install
+      - run: npm run build
       - run: echo 'coderhdy.com' > ./docs/.vuepress/dist/CNAME # 自定义域名
 
       # 部署到 GitHub pages
@@ -32,4 +32,4 @@ jobs:
           github_token: ${{ secrets.DEPLOY }} # secret 名
           user_name: ${{ secrets.MY_USER_NAME }}
           user_email: ${{ secrets.MY_USER_EMAIL }}
-          commit_message: 自动部署 # 部署时的 git 提交信息，自由填写
+          commit_message: 自动部署 # 部署时的 git 提交信息
