@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      # 检出并下载里面的代码到runner中,actions/checkout@v2是官方自己造的轮子，直接拿来用就行
+      # 检出并下载里面的代码到runner环境中,actions/checkout@v2是官方自己造的轮子，直接拿来用就行
       - name: Checkout
         uses: actions/checkout@v2
 
