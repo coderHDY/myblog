@@ -1504,7 +1504,7 @@ getOffsetBody(el) {
 ### scrollTo
 ::: tip
 * 作用：元素滚动到指定的位置【[同scroll](./dom.html#scroll)】
-* 调用：node.scrollTo(x, y)
+* 调用：window.scrollTo(x, y)
 :::
 ### scrollBy
 ::: tip
