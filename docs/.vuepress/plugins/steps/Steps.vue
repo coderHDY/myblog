@@ -75,8 +75,10 @@ export default {
     },
     backToTop() {
       let topBar = document.querySelector(`#${this.hashId}`);
+      const [innerWidth, innerHeight, offsetTop] = [window.innerWidth, window.innerHeight, topBar.offsetTop];
+      const offsetDistance = innerWidth > innerHeight ? offsetTop + 20 : offsetTop - 60;
       window.scrollTo({
-        top: topBar.offsetTop + 20,
+        top: offsetDistance,
         left: 0,
         behavior: 'instant'
       });

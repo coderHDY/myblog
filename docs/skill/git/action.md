@@ -4,7 +4,7 @@ date: 2022-07-23
 discription: git action,yml,自动化部署,github同步gitee
 meta:
     - name: keywords
-      content: git action yml 自动化部署 github同步gitee
+    - content: git,action,yml,自动化部署,github同步gitee
 ---
 ## 常用配置
 :::: tabs
