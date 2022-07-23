@@ -85,7 +85,7 @@ app.get('/user', (req, res) => res.send(`
 `));
 ```
 * 关闭浏览器，再直接进 http://localhost:8888/user，发现输出不一样，说明数据删除了
-![](./assets/sessionStorage.png)
+![](./assets/sessionstorage.png)
 :::
 ::: tab label=浏览器查看
 ![](./assets/liulanqichakansession.png)
