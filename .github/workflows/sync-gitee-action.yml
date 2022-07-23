@@ -1,5 +1,6 @@
 name: SyncToGitee
-on: [push]
+'on':
+  - push
 jobs:
   repo-sync:
     runs-on: ubuntu-latest
@@ -7,9 +8,10 @@ jobs:
       - name: Mirror the Github organization repos to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
-          src: 'github/coderHDY'
-          dst: 'gitee/coderhdy'
-          dst_key: ${{ secrets.MY_PRIVATE_KEY }} # 访问gitee 仓库需要的私钥
-          dst_token: ${{ secrets.GITEE_TOKEN }} # gitee的 api access token
-          static_list: "myblog"
+          src: github/coderHDY
+          dst: gitee/coderhdy
+          dst_key: '${{ secrets.MY_PRIVATE_KEY }}'
+          dst_token: '${{ secrets.GITEE_TOKEN }}'
+          static_list: myblog
           force_update: true
+debug: true
