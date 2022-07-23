@@ -30,6 +30,10 @@ export default ({Vue, router}) => {
 ```js
 const targetElement = document.querySelector(decodeURIComponent(to.hash));
 ```
+* `node_modules/vuepress-theme-reco/node_modules/vuepress-plugin-smooth-scroll/lib/enhanceApp.js`24行
+```js
+const targetElement = document.querySelector(decodeURIComponent(to.hash));
+```
 :::
 ::::
 ## 乱跳bug
