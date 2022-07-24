@@ -104,3 +104,12 @@ main>.side-bar {
 .language-yml {
   padding-right: 10px;
 }
+
+// 密码页文字修改
+.password-shadow.password-wrapper-in>.inputBox>span {
+  font-size: 0 !important;
+}
+.password-shadow.password-wrapper-in>.inputBox>span::before {
+  content: '请输入密码';
+  font-size: 20px;
+}
