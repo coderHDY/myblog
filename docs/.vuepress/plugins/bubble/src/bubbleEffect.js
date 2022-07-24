@@ -202,4 +202,8 @@ export default class BubbleEffect {
     stopFixBubble() {
         clearInterval(this.fixInterval);
     }
+
+    clear() {
+        this.particles = []
+    }
 }
