@@ -67,6 +67,7 @@ module.exports = [
     // backgroundColor: String,
   }],
   require('./vuepress-plugin-jsonld'),
+  require('./bubble'),
   (options, context) => ({
 
     // Vue实例上挂载上自己开发的插件

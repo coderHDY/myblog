@@ -6,9 +6,11 @@
       @click="isPlay = !isPlay"
     ></div>
     <audio :src="playingSrc" ref="music" preload></audio>
+    <Bubble :x="bubbleX" :y="bubbleY" :speed="100" v-if="showBubble"/>
   </div>
 </template>
 <script>
+import Bubble from '../plugins/bubble/src/Bubble.vue';
 export default {
   data() {
     return {
@@ -16,6 +18,9 @@ export default {
       playingSrc: "",
       playingIdx: 0,
     };
+  },
+  comments: {
+    Bubble
   },
   props: {
     src: {
@@ -31,6 +36,18 @@ export default {
       }
     },
   },
+  computed: {
+    bubbleX() {
+      return window.innerWidth - 36;
+    },
+    bubbleY() {
+      return window.innerHeight - 57;
+    },
+    showBubble() {
+      return this.isPlay;
+    },
+  },
+
   mounted() {
     if (typeof this.src === "string") {
       this.playingSrc = this.src;
@@ -46,7 +63,6 @@ export default {
         this.next();
       });
     }
-    // safari禁止自动播歌，就不加了。
   },
   methods: {
     // 等待音乐地址更换，后再开播。

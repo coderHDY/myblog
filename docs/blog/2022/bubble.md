@@ -93,7 +93,7 @@ function loop() {
 
 function updateParticles() {
 
-    // 清屏
+    // 每一个 requestAnimationFrame 先把上一个状态清屏
     context.clearRect(0, 0, width, height);
 
     // Update
@@ -168,4 +168,68 @@ function Particle(x, y, canvasItem) {
 }
 ```
 :::
+::: tab label=onMouseMove
+```js
+function onMouseMove(e) {
+
+    // 有画布计算出画布的左上角距离，没有就是 clientX
+    if (hasWrapperEl) {
+        const boundingRect = element.getBoundingClientRect();
+        cursor.x = e.clientX - boundingRect.left;
+        cursor.y = e.clientY - boundingRect.top;
+    } else {
+        cursor.x = e.clientX;
+        cursor.y = e.clientY;
+    }
+
+    // 将展示气泡添加进展示数组
+    addParticle(cursor.x, cursor.y);
+}
+```
+```js
+function addParticle(x, y, img) {
+    particles.push(new Particle(x, y, img));
+}
+```
+:::
+::: tab label=onTouchMove
+* 手机可能多点触控，所以都添加进展示数组，同时不考虑局部画布，直接用全局画布
+```js
+function onTouchMove(e) {
+    if (e.touches.length > 0) {
+        for (let i = 0; i < e.touches.length; i++) {
+            addParticle(
+                e.touches[i].clientX,
+                e.touches[i].clientY,
+                canvImages[Math.floor(Math.random() * canvImages.length)]
+            );
+        }
+    }
+}
+```
+:::
+::: tab label=onWindowResize
+```js
+function onWindowResize(e) {
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    if (hasWrapperEl) {
+        canvas.width = element.clientWidth;
+        canvas.height = element.clientHeight;
+    } else {
+        canvas.width = width;
+        canvas.height = height;
+    }
+}
+```
+:::
 ::::
+## 重构
+::: tip
+1. 分成两个类`Particle`和`BubbleEffect`
+2. `BubbleEffect`增加
+    1. 自动发起动画
+    2. 关闭所有动画
+3. 降低耦合
+:::
