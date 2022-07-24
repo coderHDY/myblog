@@ -56,7 +56,13 @@ module.exports = {
                 desc: '不积跬步,无以至千里.不积小流,无以成江海',
                 logo: 'https://anyfork.gitee.io/blog-docs/images/user.jpg',
                 link: 'https://anyfork.gitee.io/blog-docs/'
-            }
+            },
+            {
+                title: '山月行',
+                desc: '山月不知心底事，水风空落眼前花',
+                logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/theme_reco.png',
+                link: 'https://shanyue.tech/'
+            },
         ],
         // 博客设置
         blogConfig: {
