@@ -10,3 +10,5 @@ isShowTitleInHome: true
 heroText: coderHDY
 tagline: 千帆过尽 不忘初心
 ---
+
+<Bubble random :speed="10" :timer="1500" />
