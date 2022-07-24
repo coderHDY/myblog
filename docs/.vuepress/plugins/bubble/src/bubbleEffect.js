@@ -150,6 +150,7 @@ export default class BubbleEffect {
 
     addParticle(x, y, img) {
         this.particles.push(new Particle(x, y, img));
+        if (this.particles.length > 8000) this.particles.shift();
     }
 
     updateParticles() {
@@ -204,6 +205,6 @@ export default class BubbleEffect {
     }
 
     clear() {
-        this.particles = []
+        this.particles = [];
     }
 }
