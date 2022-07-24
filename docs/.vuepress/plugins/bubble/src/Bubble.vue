@@ -30,9 +30,10 @@ export default {
             this.bubble?.stopFixBubble();
         },
         visibilityListener() {
-            if (document.visibilityState === 'hidden') this.clear();
+            // 离开积累大量canvas动画问题
+            // if (document.visibilityState === 'hidden') this.clear();
             // 用户打开或回到页面
-            if (document.visibilityState === 'visible') this.init();
+            if (document.visibilityState === 'visible') this.bubble.clear();
         }
     },
     mounted() {
