@@ -12,6 +12,7 @@
     "element-ui": "^2.15.6",
     "markdown-it": "^8.4.2",
     "markdown-it-container": "^2.0.0",
+    "md5": "^2.3.0",
     "vue-template-compiler": "^2.6.14",
     "vuepress": "^1.8.2",
     "vuepress-theme-reco": "^1.6.10"
