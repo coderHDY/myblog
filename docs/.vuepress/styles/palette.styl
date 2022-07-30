@@ -113,3 +113,66 @@ main>.side-bar {
   content: '请输入密码';
   font-size: 20px;
 }
+
+// 鼠标
+body {
+  --cursor-default: url("/assets/icons/cursor.svg") 5 5, pointer;
+  --cursor-link: url("/assets/icons/cursor2.svg") 5 5, pointer;
+  cursor: var(--cursor-default) !important;
+}
+a:hover {
+  cursor: var(--cursor-link) !important;
+}
+.abstract-item {
+  cursor: var(--cursor-link) !important;
+}
+.social-links>.social-item i {
+  cursor: var(--cursor-link) !important;
+}
+.tags>span {
+  cursor: var(--cursor-link) !important;
+}
+.friend-link-wrapper .friend-link-item {
+  cursor: var(--cursor-default) !important;
+}
+.friend-link-wrapper .friend-link-item .popup-window-wrapper .popup-window .info .title .btn-go {
+  cursor: var(--cursor-link) !important;
+}
+.el-tabs--border-card>.el-tabs__header .el-tabs__item {
+  cursor: var(--cursor-link) !important;
+}
+.code-copy svg {
+  cursor: var(--cursor-link) !important;  
+}
+.sub-sidebar-wrapper {
+  cursor: var(--cursor-link) !important;  
+}
+.sub-sidebar-wrapper li {
+  cursor: var(--cursor-link) !important;  
+}
+.vssue .vssue-new-comment .vssue-comment-avatar .vssue-icon {
+  cursor: var(--cursor-link) !important;  
+}
+.vssue .vssue-button {
+  cursor: var(--cursor-link) !important;  
+}
+.sidebar-group:not(.collapsable) .sidebar-heading:not(.clickable) {
+  cursor: var(--cursor-default) !important;
+}
+.dropdown-wrapper {
+  cursor: var(--cursor-default) !important;
+}
+.timeline-wrapper .timeline-content .year-wrapper li .title {
+  cursor: var(--cursor-link) !important;  
+}
+
+// 头像旋转
+.personal-info-wrapper .personal-img:hover, .navbar .logo:hover {
+  transform: rotate(18000deg);
+  transform-origin: center center;
+  transition: all 3s linear;
+}
+.personal-info-wrapper .personal-img:active, .navbar .logo:active {
+  transform: rotate(-72000deg);
+  transition: all .5s linear;
+}
