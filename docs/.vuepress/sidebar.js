@@ -107,7 +107,8 @@ const front = {
                 'animation',
                 'transition',
                 'transform',
-                'effects'
+                'effects',
+                'svg',
             ]
         },
     ],
