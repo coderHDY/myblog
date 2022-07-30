@@ -92,3 +92,16 @@ date: 2022-06-21
 
 </html>
 ```
+## button关闭点击阴影
+* 手机特有阴影效果
+```css
+button {
+    -webkit-tap-highlight-color: transparent;
+　　-moz-tap-highlight-color:transparent;
+　　outline: 0;
+}
+
+input {
+    -webkit-appearance: none;
+}
+```
