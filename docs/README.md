@@ -1,14 +1,14 @@
 ---
 home: true
-bgImage: '/assets/img/bgimg.jpg'
+bgImage: '/assets/img/bg.svg'
 bgImageStyle: {
   color: 'white',
-  maxHeight: '400px',
-  boxShadow: '0 5px 18px rgba(0,0,0,0.2)'
+  maxHeight: '690px',
+  background-size: 'cover',
 }
-isShowTitleInHome: true
-heroText: coderHDY
-tagline: 千帆过尽 不忘初心
+isShowTitleInHome: false
+heroText:  
+tagline:  
 ---
 
 <Bubble random :speed="10" :timer="1500" />

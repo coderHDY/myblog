@@ -2,6 +2,30 @@ $accentColor = #007741
 $textColor = #232521
 $textShadow = 0
 
+// 首页图片背景色
+.home-blog {
+  background: linear-gradient(to top, rgba(55, 76, 107, 255) 0%, rgb(114, 160, 201) 80%, rgb(157, 206, 249) 90%, #fff 100%) !important;
+}
+.pagation {
+  background-color: rgba(114, 160, 201, 0);
+  color: #fff;
+}
+.footer-wrapper {
+  border-top:  rgba(55, 76, 107, 255) !important;
+  background-color: rgba(55, 76, 107, 255) !important;
+}
+@media screen and (min-width: 320px) {
+  .home-blog>.hero {
+    width: 100vw;
+    height: 45vw;
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .home-blog>.hero {
+      height: 40vw;
+  }
+}
 // 首页图片上文字颜色
 .home-blog .hero h1, .home-blog .hero .description, .home-blog .hero .action {
   user-select: none;
@@ -163,9 +187,11 @@ a:hover {
   cursor: var(--cursor-default) !important;
 }
 .timeline-wrapper .timeline-content .year-wrapper li .title {
-  cursor: var(--cursor-link) !important;  
+  cursor: var(--cursor-link) !important;
 }
-
+.pagation .pagation-list span.jump {
+  cursor: var(--cursor-link) !important;
+}
 // 头像旋转
 .personal-info-wrapper .personal-img:hover, .navbar .logo:hover {
   transform: rotate(18000deg);

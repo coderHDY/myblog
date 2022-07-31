@@ -193,6 +193,14 @@ date: 2022-07-30
 </body>
 ```
 :::
+::: tab label=循环动画
+* `values`可以设置多个值，会慢慢进行重复
+```html
+<use href="#zhangyu1">
+    <animate attributeName="y" attributeType="XML" values="0;30;0" dur="4s" repeatCount="indefinite"></animate>
+</use>
+```
+:::
 ::::
 ## 常用属性
 :::: tabs
