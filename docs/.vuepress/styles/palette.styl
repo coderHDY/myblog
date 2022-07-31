@@ -26,6 +26,31 @@ $textShadow = 0
       height: 40vw;
   }
 }
+
+// 时间线背景色
+.timeline-wrapper {
+  margin: 0 0 !important;
+  overflow: hidden;
+  padding-left: 10vw !important;
+  padding-right: 10vw !important;
+  max-width: 100vw !important;
+  background: linear-gradient(to top, rgba(55, 76, 107, 255) 0%, rgb(114, 160, 201) 80%, rgb(157, 206, 249) 97%, #fff 100%) !important;
+  li span {
+    color: #fff !important;
+  }
+}
+.timeline-wrapper::before {
+  content: '';
+  display: block;
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: no-repeat url('/assets/img/bg.svg');
+  background-position: bottom 50px  left 40%;
+  background-size: cover;
+  z-index: 0;
+}
 // 首页图片上文字颜色
 .home-blog .hero h1, .home-blog .hero .description, .home-blog .hero .action {
   user-select: none;
