@@ -63,19 +63,6 @@ date: 2022-07-30
     </svg>
     ```
 :::
-::: tab label=use
-* use: 复制，可设置x,y，是`偏移量`
-    ```html
-    <svg width="1000" height="1000">
-        <g id="myShape">
-            <polyline points="0,0 100,20 50,30 100, 170"
-                style="stroke: rgb(156, 195, 255); stroke-width: 2px; fill: aqua;" />
-            <circle id="circle" cx="200" cy="50" r="50" fill="rgb(226 112 112)" stroke="#333" />
-        </g>
-        <use href="#myShape" x="200" y="200">
-    </svg>
-    ```
-:::
 ::::
 ## 特殊类型
 :::: tabs
@@ -138,6 +125,19 @@ date: 2022-07-30
             </pattern>
         </defs>
         <rect x="0" y="0" width="100%" height="100%" fill="url(#myShape)">
+    </svg>
+    ```
+:::
+::: tab label=use
+* use: 复制，可设置x,y，是`偏移量`
+    ```html
+    <svg width="1000" height="1000">
+        <g id="myShape">
+            <polyline points="0,0 100,20 50,30 100, 170"
+                style="stroke: rgb(156, 195, 255); stroke-width: 2px; fill: aqua;" />
+            <circle id="circle" cx="200" cy="50" r="50" fill="rgb(226 112 112)" stroke="#333" />
+        </g>
+        <use href="#myShape" x="200" y="200">
     </svg>
     ```
 :::
