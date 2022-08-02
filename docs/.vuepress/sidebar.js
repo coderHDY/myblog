@@ -201,13 +201,6 @@ const skill = {
                 '',
             ]
         },
-        {
-            title: '小知识点',
-            collapsable: false,
-            children: [
-                'reqhead',
-            ]
-        },
     ],
     '/skill/introduction/': [
         '',
