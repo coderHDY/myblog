@@ -1,4 +1,4 @@
-<svg id="bg_1" data-name="bg 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 703.89">
+<svg id="bg_1" data-name="bg 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1000">
 	<defs>
 		<style>
 			.cls-1 {
@@ -1097,35 +1097,35 @@
 		</g>
 	</defs>
 	<use href="#big-fish1">
-		<animate attributeName="x" from="1500" to="-1500" dur="10s" repeatCount="indefinite">
+		<animate attributeName="x" from="1900" to="-1500" dur="10s" repeatCount="indefinite">
 		</animate>
 	</use>
-	<use href="#small-fish1">
-		<animate attributeName="x" from="-500" to="1500" dur="18s" repeatCount="indefinite">
+	<use href="#small-fish1" y="50">
+		<animate attributeName="x" from="-800" to="1500" dur="18s" repeatCount="indefinite">
 		</animate>
 	</use>
-	<use href="#small-fish1" y="-70">
-		<animate attributeName="x" from="-700" to="1400" dur="14s" repeatCount="indefinite">
+	<use href="#small-fish1" y="170">
+		<animate attributeName="x" from="-700" to="1900" dur="14s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#big-fish2">
-		<animate attributeName="x" from="-500" to="1500" dur="12s" repeatCount="indefinite">
+		<animate attributeName="x" from="-500" to="1900" dur="12s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#small-fish2">
-		<animate attributeName="x" from="700" to="-1400" dur="14s" repeatCount="indefinite">
+		<animate attributeName="x" from="1000" to="-1400" dur="14s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#small-fish2" y="200">
-		<animate attributeName="x" from="600" to="-1500" dur="9s" repeatCount="indefinite">
+		<animate attributeName="x" from="900" to="-1500" dur="9s" repeatCount="indefinite">
 		</animate>
 	</use>
-	<use href="#small-fish3">
+	<use href="#small-fish3" y="150">
 		<animate attributeName="x" from="600" to="-1500" dur="17s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#zhangyu1">
-		<animate attributeName="y" attributeType="XML" values="0;30;0" dur="4s" repeatCount="indefinite">
+		<animate attributeName="y" attributeType="XML" values="0;40;0" dur="4s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#chicaoyu1">
@@ -1135,24 +1135,33 @@
 	<use href="#qipao">
 		<animateTransform attributeName="transform" type="scale" from="1 1" to="1 0.4" dur="10s" repeatCount="indefinite" />
 	</use>
+	<use href="#qipao" x="300" y="250">
+		<animateTransform attributeName="transform" type="scale" from="1 1" to="1 0.4" dur="10s" repeatCount="indefinite" />
+	</use>
+	<use href="#qipao" x="700" y="130">
+		<animateTransform attributeName="transform" type="scale" from="1 1" to="1 0.4" dur="10s" repeatCount="indefinite" />
+	</use>
+	<use href="#qipao" x="1000" y="230">
+		<animateTransform attributeName="transform" type="scale" from="1 1" to="1 0.4" dur="10s" repeatCount="indefinite" />
+	</use>
 	<use href="#haitun1">
-		<animate attributeName="y" attributeType="XML" values="30;20;30" dur="3s" repeatCount="indefinite">
+		<animate attributeName="y" attributeType="XML" values="130;140;130" dur="3s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#haitun-qiu">
-		<animate attributeName="y" attributeType="XML" values="30;-40;30" dur="3s" repeatCount="indefinite">
-		</animate>
-	</use>
-	<use href="#haitun-qipao">
-		<animate attributeName="y" attributeType="XML" values="5;-5;-5" dur="1.5s" repeatCount="indefinite">
+		<animate attributeName="y" attributeType="XML" values="130;50;130" dur="3s" repeatCount="indefinite">
 		</animate>
 	</use>
 	<use href="#wugui">
 		<animate attributeName="y" attributeType="XML" values="0;10;0" dur="7s" repeatCount="indefinite">
 		</animate>
 	</use>
+	<use href="#haitun-qipao">
+		<animate attributeName="y" attributeType="XML" values="105;90" dur="2.5s" repeatCount="indefinite">
+		</animate>
+	</use>
 	<use href="#haitun2">
-		<animate attributeName="y" attributeType="XML" values="0;5;0" dur="2s" repeatCount="indefinite">
+		<animate attributeName="y" attributeType="XML" values="100;105;100" dur="2s" repeatCount="indefinite">
 		</animate>
 	</use>
 </svg>
