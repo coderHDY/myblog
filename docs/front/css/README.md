@@ -809,6 +809,47 @@ tags:
 ```
 :::
 ::::
+## align-self
+::: tip
+* flex盒子的子元素使用，覆盖父盒子的align-items的布局属性
+:::
+```html{12,17,23,29}
+<body>
+  <div class="father">
+    <div class="child1"></div>
+    <div class="child2"></div>
+    <div class="child3"></div>
+  </div>
+
+  <style>
+    .father {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 500px;
+      background-color: rgb(241, 216, 216);
+    }
+    .child1 {
+      align-self: start;
+      height: 100px;
+      width: 100px;
+      background-color: #333;
+    }
+    .child2 {
+      align-self: center;
+      height: 100px;
+      width: 100px;
+      background-color: #333;
+    }
+    .child3 {
+      align-self: end;
+      height: 100px;
+      width: 100px;
+      background-color: #333;
+    }
+  </style>
+</body>
+```
 ## justify-content
 ::: tip justify-content
 * 作用：分配主轴元素位置与剩余可用空间的关系
