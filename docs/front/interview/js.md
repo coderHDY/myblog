@@ -1046,6 +1046,28 @@ class Printer {
 }
 ```
 :::
+::: tab label=对象优化
+```js
+const logger = {
+  timer: Promise.resolve(),
+  log(val) {
+    this.timer = this.timer.then(() => console.log(val));
+    return this;
+  },
+  wait(time) {
+    this.timer = this.timer.then(() => new Promise(res => setTimeout(res, time * 1000)));
+    return this;
+  }
+}
+
+logger
+.log(1)
+.wait(2)
+.log(2)
+.wait(3)
+.log(4)
+```
+:::
 ::::
 ## 12.先发后置
 :::: tabs
