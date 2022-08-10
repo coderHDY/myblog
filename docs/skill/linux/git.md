@@ -3,7 +3,8 @@ title: git
 date: 2021-11-10
 ---
 ## 安装
-* 更多安装版本[官网](https://github.com/git/git/releases/tag/v2.17.2)
+* [官网](https://git-scm.com/)
+* [更多安装版本](https://github.com/git/git/releases/tag/v2.17.2)
 ```shell
 wget https://github.com/git/git/archive/refs/tags/v2.33.0.tar.gz
 
@@ -22,8 +23,18 @@ yum install zlib-devel
 make
 
 make install
+```
+```shell
+vi ~/.bash_profile
 
-git --version
+# ~/.bash_profile 配置环境
+export PATH=/root/git/bin:$PATH
+
+source ~/.bash_profile
+
+# sudo寻找命令：/sbin:/bin: /usr/sbin: /usr/bin
+# 如果没有sudo权限可以开软链 fromOldLink toNewLink
+ln -s /root/lib/git/bin/git /usr/bin/git
 ```
 ## 免密pull
 ::::tabs

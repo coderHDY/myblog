@@ -7,6 +7,8 @@ date: 2021-11-02
 
 ## 新机软件
 ### Homebrew
+1. 安装git
+2. `sh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"`
 * [一键安装包](https://gitee.com/cunkai/HomebrewCN)
 * 安装路径查看：
     ```shell

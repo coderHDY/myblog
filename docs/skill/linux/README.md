@@ -2,6 +2,8 @@
 title: 云服务器上手
 date: 2021-11-14
 ---
+## centos安装
+* wget：`yum install wget`
 ## 阿里云新服务器配置
 :::: steps
 ::: step
