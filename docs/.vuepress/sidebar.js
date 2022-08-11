@@ -170,7 +170,8 @@ const skill = {
                 '',
                 'base',
                 'bugs',
-                'regexp'
+                'regexp',
+                'install',
             ]
         },
         {
