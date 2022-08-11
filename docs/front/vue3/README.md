@@ -3,6 +3,8 @@ title: Vue3总结
 date: 2022-01-27
 sticky: 3
 ---
+<window big />
+
 ## 对Vue2升级点
 :::: tabs
 ::: tab label=起步
