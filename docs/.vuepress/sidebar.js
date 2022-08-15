@@ -47,7 +47,8 @@ const front = {
                 'module',
                 'worker',
                 'canvas',
-                'webanimation'
+                'webanimation',
+                'jwt',
             ]
         },
     ],

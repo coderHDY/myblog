@@ -105,3 +105,73 @@ input {
     -webkit-appearance: none;
 }
 ```
+## 五角星
+:::: tabs
+::: tab label=样式
+```html
+<head>
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="star"></div>
+</body>
+```
+* css
+```css{14,23,28,36,41}
+* {
+    padding: 0;
+    margin: 0;
+}
+body {  
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+.star {
+    position: relative;
+    width: 0;
+    height: 0;
+    border-top: 36.32px solid red;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+}
+.star::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 36.32px solid red;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    transform-origin: center;
+    left: -50px;
+    top: -36.32px;
+    transform: rotate(69deg);
+}
+.star::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 36.32px solid red;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    transform-origin: center;
+    left: -50px;
+    top: -36.32px;
+    transform: rotate(-71deg);
+}
+```
+:::
+::: tab label=角度计算
+* 关键是计算出几个三角形的底边和高的比例
+* 已知五角星角为`36°`
+* 求出底和高，三个三角形转一转就出来了
+```js
+const reg = Math.PI / 180 * 36;
+console.log(50 * Math.tan(reg)); // 36.327
+```
+:::
+::::
