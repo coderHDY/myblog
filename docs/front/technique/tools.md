@@ -269,7 +269,7 @@ const delCookie = (key) => {
 ```
 :::
 ::::
-## 随机字符串
+## 随机函数
 :::: tabs
 ::: tab label=随机字符
 ```js
@@ -341,4 +341,178 @@ console.log(num.toLocaleString('zh-CN', {
     style: 'currency',
     currency: 'CNY'
 }));
+```
+## 日期
+:::: tabs
+::: tab label=检测是否有效
+```js
+const isValiDate = (...date) => !Number.isNaN(new Date(...date).valueOf());
+```
+* 测试
+  ```js
+  const isValiDate = (...date) => !Number.isNaN(new Date(...date).valueOf());
+  const d1 = new Date("20202asdf-1");
+  const d2 = new Date("2020-12-10");
+  console.log(isValiDate(d1)); // false
+  console.log(isValiDate(d2)); // true
+  ```
+:::
+::: tab label=计算间隔
+```js
+const timeDif = (d1, d2) => Math.floor(Math.abs(+new Date(d1) - +new Date(d2)) / (1000 * 60 * 60 * 24));
+```
+* 测试
+  ```js
+  const timeDif = (d1, d2) => Math.floor(Math.abs(+new Date(d1) - +new Date(d2)) / (1000 * 60 * 60 * 24));
+  const d1 = new Date("2020-12-1");
+  const d2 = new Date("2020-12-10");
+  console.log(timeDif(d1, d2));
+  ```
+:::
+::: tab label=一年第几天
+```js
+const first2today = today => Math.floor((+new Date(today) - +new Date(new Date(today).getFullYear().toString())) / (1000 * 60 * 60 * 24)) + 1;
+```
+* 测试
+  ```js
+  const first2today = today => Math.floor((+new Date(today) - +new Date(new Date(today).getFullYear().toString())) / (1000 * 60 * 60 * 24)) + 1;
+
+  console.log(first2today("2019-12-31")); // 365
+  console.log(first2today("2020-12-31")); // 366
+  ```
+:::
+::: tab label=格式化
+* 格式化日期
+  ```js
+  const formatDate = (date, mark = "-") => new Date(date).toISOString().slice(0, 10).split("-").join(mark);
+  ```
+  * 测试
+    ```js
+    const formatDate = (date, mark = "-") => new Date(date).toISOString().slice(0, 10).split("-").join(mark);
+
+    console.log(formatDate("2019-12-31")); // 2019-12-31
+    console.log(formatDate("2020-12-31", "/")); // 2020/12/31
+    ```
+* 格式化时间
+  ```js
+  const formatTime = (date, mark = ":") => new Date(date).toTimeString().slice(0, 8).split(":").join(mark);
+  ```
+  * 测试
+    ```js
+    const formatTime = (date, mark = ":") => new Date(date).toTimeString().slice(0, 8).split(":").join(mark);
+
+    console.log(formatTime(Date.now())); // 20:36:40
+    ```
+:::
+::::
+## 颜色
+:::: tabs
+::: tab label=rgb2hex
+* RGB（A）转16进制
+```js
+const rgb2Hex = (r, g, b, a) => {
+    let ans = "#" + ((r << 16) + (g << 8) + b).toString(16);
+    if (a !== undefined) {
+        ans += Math.floor(a * 255).toString(16).padStart(2, "0");
+    }
+    return ans;
+};
+```
+:::
+::: tab label=hex2rgb
+```js
+const hex2Rgb = (hex) => {
+    if (hex.startsWith("#")) hex = hex.slice(1);
+    hex = hex.padEnd(6, "f");
+    const [r, g, b, a] = hex.match(/\w{2}/g);
+    return a === undefined ? `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})` : `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${(parseInt(a, 16) / 255).toFixed(1)})`;
+}
+```
+* 测试
+  ```js
+  const hex2Rgb = (hex) => {
+      if (hex.startsWith("#")) hex = hex.slice(1);
+      hex = hex.padEnd(6, "f");
+      const [r, g, b, a] = hex.match(/\w{2}/g);
+      return a === undefined ? `rgb(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)})` : `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${(parseInt(a, 16) / 255).toFixed(1)})`;
+  }
+
+  console.log(hex2Rgb('#fff')); // rgb(255, 255, 255)
+  console.log(hex2Rgb('#ffffffff')); // rgba(255, 255, 255, 1.0)
+  ```
+:::
+::: tab label=随机rgb
+```js
+const randomRgb = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+```
+* 测试
+  ```js
+  const randomRgb = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+  for (let i = 0; i < 10; i++) {
+      console.log(randomRgb());
+  }
+  ```
+* rgba
+```js
+const randomRgba = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.random().toFixed(1)})`;
+```
+:::
+::: tab label=随机hex
+```js
+const randomHex = () => `#${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`
+  + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`
+  + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`;
+```
+* 带透明度
+```js
+const randomHex = () => `#${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`
+    + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`
+    + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`
+    + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`;
+```
+:::
+::::
+## 复制粘贴
+:::: tabs
+::: tab label=复制
+```js
+const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+```
+:::
+::: tab label=粘贴
+```js
+const readText = () => navigator.clipboard.readText().then(res => console.log(res));
+```
+:::
+::: tab label=事件
+* 事件：`copy，cut，paste`
+```js
+el.addEventListener('copy', e => {
+    console.log(e);
+    const clipboardData = e.clipboardData || window.clipboardData; // ie、其他浏览器不一样
+
+    // 控制剪切板api
+    // clipboardData.setData();
+    // clipboardData.getData();
+    e.preventDefault(); // 禁止复制
+})
+```
+:::
+::: tab label=获取选中的文本
+```js
+const getSelectedText = () => window.getSelection().toString();
+
+getSelectedText();
+```
+:::
+::::
+## 暗黑模式
+```js
+const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+
+console.log(isDarkMode); // true
+```
+## 检测是否激活本网页
+```js
+const isTabInView = () => !document.hidden; 
 ```
