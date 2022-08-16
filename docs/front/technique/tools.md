@@ -513,6 +513,9 @@ const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme
 console.log(isDarkMode); // true
 ```
 ## 检测是否激活本网页
+::: tip
+切换浏览器tab、最小化浏览器都算`未激活`
+:::
 ```js
 const isTabInView = () => !document.hidden; 
 ```
