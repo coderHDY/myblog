@@ -233,32 +233,35 @@ const getExplorerInfo = () => {
 :::
 ::::
 ## 操作cookie(待修善)
+::: danger
+需要注意的是，`document.cookie`方法一次只能对一个 cookie 进行设置或更新。
+:::
 :::: tabs
-::: tab label=获取
-```js
-const getCookie = (key) => {
-  const cookieStr = unescape(document.cookie);
-  const arr = cookieStr.split("; ");
-  let cookieValue = "";
-  for (let i = 0; i < arr.length; i++) {
-    const temp = arr[i].split("=");
-    if (temp[0] === key) {
-      cookieValue = temp[1];
-      break;
-    }
-  }
-  return cookieValue;
-};
+::: tab label=解析
+```JS
+const parseCookie = (cookie = document.cookie) => {
+    if (cookie.trim().length === 0) return {};
+    return Object.fromEntries(cookie.split('; ').map(item => {
+        const [key, ...val] = item.split('=');
+        return [key, val.join("=")];
+    }));
+}
 ```
 :::
-::: tab label=增
+::: tab label=增、改
 ```js
-// 会覆盖，待修善
-const setCookie = (key, value, expire) => {
-  const d = new Date();
-  d.setDate(d.getDate() + expire);
-  document.cookie = `${key}=${value};expires=${d.toUTCString()}`;
-};
+const setCookieItem = (key, val) => {
+    return document.cookie = `${key}=${val}`;
+}
+```
+:::
+::: tab label=查
+```js
+const getCookieItem = (key, cookie = document.cookie) => {
+    if (cookie.trim().length === 0) return undefined;
+    const reg = new RegExp(`(?<=^${key}=|; ${key}=)[^\;]+`);
+    return cookie.match(reg)[0];
+}
 ```
 :::
 ::: tab label=删
