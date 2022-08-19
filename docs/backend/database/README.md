@@ -45,6 +45,9 @@ sudo mkdir -p /usr/local/var/log/mongodb
 # 指定数据存储位置
 sudo mongod --dbpath /usr/local/var/mongodb --logpath /usr/local/var/log/mongodb/mongo.log --fork
 
+# 本机
+mongod --dbpath '/Users/huangdeyu/Documents/packages/mongo' --logpath /Users/huangdeyu/Documents/packages/mongo/mongo.log --fork
+
 # 启动数据库的服务器：保存数据
 mongod
 
