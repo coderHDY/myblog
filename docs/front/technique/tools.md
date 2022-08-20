@@ -232,7 +232,7 @@ const getExplorerInfo = () => {
 ```
 :::
 ::::
-## 操作cookie(待修善)
+## 操作cookie
 ::: danger
 需要注意的是，`document.cookie`方法一次只能对一个 cookie 进行设置或更新。
 :::
