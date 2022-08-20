@@ -166,6 +166,13 @@ git add .
 ```shell
 git commit -m 'some change'
 ```
+* 将改动合并到上一个版本中
+    ```shell
+    git commit --amend
+
+    # 如果已经推送到远程仓库
+    git push -f
+    ```
 ## git status
 * 查看当前的状态
     1. 有修改未暂存
