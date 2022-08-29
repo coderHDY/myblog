@@ -33,10 +33,6 @@ const front = {
             link: '/front/vue3/'
         },
         {
-            text: 'node',
-            link: '/front/node/'
-        },
-        {
             text: 'react',
             link: '/front/react/'
         },
@@ -58,6 +54,10 @@ const backend = {
         {
             text: '数据库',
             link: '/backend/database/'
+        },
+        {
+            text: 'node',
+            link: '/backend/node/'
         },
     ]
 }

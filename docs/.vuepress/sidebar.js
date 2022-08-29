@@ -99,6 +99,7 @@ const front = {
                 'text',
                 'responsive',
                 'special',
+                'form',
             ]
         },
         {
@@ -122,9 +123,6 @@ const front = {
     '/front/vue3/': [
         '',
         'project',
-    ],
-    '/front/node/': [
-        '',
     ],
     '/front/react/': [
         '',
@@ -154,7 +152,11 @@ const backend = {
                 '',
             ]
         },
-    ]
+    ],
+    '/backend/node/': [
+        '',
+        'upload-file',
+    ],
 }
 
 const skill = {

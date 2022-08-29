@@ -6,27 +6,27 @@
     "doc": "docs"
   },
   "dependencies": {
-    "@vue/component-compiler-utils": "^3.2.2",
-    "@vuepress/shared-utils": "^1.8.2",
-    "async-validator": "^1.11.5",
-    "element-ui": "^2.15.6",
-    "markdown-it": "^8.4.2",
-    "markdown-it-container": "^2.0.0",
-    "md5": "^2.3.0",
-    "vue-template-compiler": "^2.6.14",
-    "vuepress": "^1.8.2",
-    "vuepress-theme-reco": "^1.6.10"
+    "@vue/component-compiler-utils": "3.2.2",
+    "@vuepress/shared-utils": "1.8.2",
+    "async-validator": "1.11.5",
+    "element-ui": "2.15.6",
+    "markdown-it": "8.4.2",
+    "markdown-it-container": "2.0.0",
+    "md5": "2.3.0",
+    "vue-template-compiler": "2.6.14",
+    "vuepress": "1.8.2",
+    "vuepress-theme-reco": "1.6.10"
   },
   "devDependencies": {
-    "@vssue/api-github-v3": "^1.4.7",
-    "@vssue/vuepress-plugin-vssue": "^1.4.8",
-    "@vuepress/plugin-active-header-links": "^1.8.2",
-    "@vuepress/plugin-pwa": "^1.9.7",
-    "vuepress-plugin-code-copy": "^1.0.6",
-    "vuepress-plugin-container": "^2.1.5",
-    "vuepress-plugin-permalink-pinyin": "^1.0.0",
-    "vuepress-plugin-seo": "^0.1.4",
-    "vuepress-plugin-sitemap": "^2.3.1"
+    "@vssue/api-github-v3": "1.4.7",
+    "@vssue/vuepress-plugin-vssue": "1.4.8",
+    "@vuepress/plugin-active-header-links": "1.8.2",
+    "@vuepress/plugin-pwa": "1.9.7",
+    "vuepress-plugin-code-copy": "1.0.6",
+    "vuepress-plugin-container": "2.1.5",
+    "vuepress-plugin-permalink-pinyin": "1.0.0",
+    "vuepress-plugin-seo": "0.1.4",
+    "vuepress-plugin-sitemap": "2.3.1"
   },
   "scripts": {
     "docs:dev": "vuepress dev docs",
