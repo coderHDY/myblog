@@ -132,6 +132,7 @@ const front = {
         'redux',
         'important',
         'react18',
+        'scope',
     ],
     '/front/webpack/': [
         '',
