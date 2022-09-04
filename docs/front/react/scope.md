@@ -235,8 +235,11 @@ fn2();
         )
     }
     ```
-* hook原理：闭包 + 链表
-![](./assets/hookyuanli.jpg)
+* **hook原理：闭包 + 链表**
+  * 初始化  
+    ![](./assets/hookyuanli.jpg)
+  * 更新
+    ![](./assets/hookyuanli2.jpg)
 ## hook原理
 * 书写JSX
 ```jsx
@@ -317,6 +320,11 @@ const App = () => (
         children: [
             {
                 tag: Comp,
+                attrs: [],
+                children: ""
+            },
+            {
+                tag: "hr",
                 attrs: [],
                 children: ""
             },
@@ -559,6 +567,11 @@ const App = () => (
         children: [
             {
                 tag: Comp,
+                attrs: [],
+                children: ""
+            },
+            {
+                tag: "hr",
                 attrs: [],
                 children: ""
             },
