@@ -16,7 +16,8 @@ yum install autoconf automake libtool
 
 make configure
 
-./configure --prefix=/home/work
+mkdir /root/git
+./configure --prefix=/root/git
 
 yum install zlib-devel
 
@@ -29,6 +30,8 @@ vi ~/.bash_profile
 
 # ~/.bash_profile 配置环境
 export PATH=/root/git/bin:$PATH
+export PATH=/root/git/libexec:$PATH
+export PATH=/root/git/share:$PATH
 
 source ~/.bash_profile
 

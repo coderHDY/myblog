@@ -2,6 +2,22 @@
 title: node
 date: 2021-11-11
 ---
+## 安装nvm
+```shell
+wget https://github.com/nvm-sh/nvm/archive/refs/tags/v0.38.0.tar.gz
+
+mkdir /root/.nvm
+tar -zxvf v0.38.0.tar.gz --strip-components 1  -C /root/.nvm
+vi ~/.bash_profile
+```
+```shell
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+```
+```shell
+source ~/.bash_profile
+```
 ## 安装
 * 自选版本：[官方链接](https://nodejs.org/en/download/)
 ```shell
