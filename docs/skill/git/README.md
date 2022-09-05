@@ -111,6 +111,14 @@ git config --unset-all user.email
     git config --local user.email '986005715@qq.com'
     ```
 * 此仓库使用操作时自动使用host对应配置
+## 将密钥添加到缓存中
+* 添加到缓存中就不会读取 ～/ssh/config 里面 的配置，发送git命令自动携带缓存密钥
+```shell
+ssh-add --apple-use-keychain ~/.ssh/work_id_rsa
+
+# 删除
+ssh-add -d ~/.ssh/work_id_rsa 
+```
 ## 22端口连接失败
 ```shell
 vim ~/.ssh/config
