@@ -265,7 +265,7 @@ fn2();
     console.log(fn2(1)(2)(3, 4)); // 10
     console.log(fn2(1, 2, 3, 4)); // 10
     ```
-6. 调度器
+5. 调度器
     ```js
     // 两种解决方案：同步执行和异步执行
     const runner = scheduler();
