@@ -187,6 +187,103 @@ fn2();
     add();
     show();
     ```
+## 其他相关算法、知识点
+1. 防抖
+    ```html 
+    <body>
+        <input type="text" id="ipt1">
+        <input type="text" id="ipt2">
+
+        <script>
+            const debounce = (fn, sleep = 1000) => {
+                let timer;
+                return (...args) => {
+                    if (timer) clearTimeout(timer);
+                    timer = setTimeout(() => {
+                        fn(...args);
+                        timer = null;
+                    }, sleep)
+                }
+            }
+            const request1 = e => console.log(`发送网络请求: ${e.target.value}`);
+            const request2 = debounce(request1, 500);
+            ipt1.addEventListener("input", request1);
+            ipt2.addEventListener("input", request2);
+        </script>
+    </body>
+    ```
+2. 节流
+    ```HTML
+    <body>
+        <button id="btn1">抢</button>
+        <button id="btn2">抢</button>
+
+        <script>
+            const throttle = (fn, sleep = 1000) => {
+                let isFirst = true;
+                let timer;
+                return (...args) => {
+                    if (isFirst) {
+                        isFirst = false;
+                        return fn(...args);
+                    }
+                    if (timer) return;
+                    timer = setTimeout(() => {
+                        isFirst = true;
+                        timer = null;
+                    }, sleep);
+                }
+            }
+            const request1 = e => console.log(`抢红包`);
+            const request2 = throttle(request1, 500);
+            btn1.addEventListener("click", request1);
+            btn2.addEventListener("click", request2);
+        </script>
+    </body>
+    ```
+3. 无限累加器
+    ```JS
+    const f1 = sum(1, 2, 3);
+    console.log(f1.getValue()); // 6
+
+    const f2 = sum(1)(2, 3);
+    console.log(f2.getValue()); // 6
+
+    const f3 = sum(1)(2)(3)(4);
+    console.log(f3.getValue()); // 10
+    ```
+4. 科里化转换器
+    ```JS
+    // 科里化转换器
+    const fn1 = (a, b, c, d) => {
+        return a + b + c + d;
+    }
+
+    const fn2 = curry(fn1);
+    console.log(fn2(1)(2, 3)(4)); // 10
+    console.log(fn2(1, 2)(3)(4)); // 10
+    console.log(fn2(1)(2)(3, 4)); // 10
+    console.log(fn2(1, 2, 3, 4)); // 10
+    ```
+6. 调度器
+    ```js
+    // 两种解决方案：同步执行和异步执行
+    const runner = scheduler();
+
+    const fn1 = () => console.log("fn1");
+    const fn2 = () => console.log("fn2");
+    const fn3 = () => console.log("fn3");
+
+    // 执行fn1，等待1s，执行fn2，等待1s，执行fn3
+    runner
+    .run(fn1)
+    .wait(1000)
+    .run(fn2)
+    .wait(1000)
+    .run(fn3)
+
+    console.log("同步代码");
+    ```
 ## react hook
 >* react执行过程：  
     1. jsx  
@@ -342,8 +439,8 @@ ReactDOM.render(App, '#root');
 ```js{29-36}
 const React = {
     linkLists: {}, // {comp: {val: "", next: xxx}}
-    compNameStack: [],
     preNode: null,
+    compNameStack: [],
     initIdx() {
         compNameStack = [];
         this.preNode = null;
@@ -373,9 +470,8 @@ const React = {
                 current.val = val;
                 Promise.resolve().then(ReactDOM.reRender);
             }
-            const [v, setV] = [this.preNode.next.val, setState];
-            this.preNode = this.preNode.next;
-            return [v, setV]
+            this.preNode = current;
+            return [current.val, setState]
         }
     }
 }
@@ -463,9 +559,8 @@ const React = {
                 current.val = val;
                 Promise.resolve().then(ReactDOM.reRender);
             }
-            const [v, setV] = [this.preNode.next.val, setState];
-            this.preNode = this.preNode.next;
-            return [v, setV]
+            this.preNode = current;
+            return [current.val, setState];
         }
     }
 }

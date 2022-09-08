@@ -752,69 +752,26 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 
 :::
 ::: tab label=防抖实现
-```html{5-13}
+```html
 <body>
-    普通输入框:<input class='input1'>
-    防抖输入框:<input class='input2'>
-    <script>
-        function debounce(fn, daley) {
-            let timer;
-            return (...args) => {
-                if (timer) {
-                    clearTimeout(timer);
-                }
-                timer = setTimeout(() => fn.call(null, ...args), daley);
-            }
-        }
-
-        const input1 = document.querySelector('.input1');
-        const input2 = document.querySelector('.input2');
-        function getData(e) {
-            console.log('发送网络请求: ' + e.target.value);
-        }
-        const slowGetData = debounce(getData, 500);
-        input1.addEventListener('input', getData);
-        input2.addEventListener('input', slowGetData);
-    </script>
-</body>
-```
-:::
-::: tab label=升级
-* 第一次直接触发，后面再防抖
-
-<video src="./assets/debounce2.mp4" style="width:600px;" controls/>
-
-:::
-::: tab label=升级实现
-```html{8,10-12}
-<body>
-    普通输入框:<input class='input1'>
-    升级防抖框:<input class='input2'>
+    <input type="text" id="ipt1">
+    <input type="text" id="ipt2">
 
     <script>
-        function debounce(fn, daley) {
+        const debounce = (fn, sleep = 1000) => {
             let timer;
-            let isFirst = true;
             return (...args) => {
-                if (isFirst) {
-                    isFirst = false;
-                    fn.call(null, ...args);
-                } else {
-                    if (timer) {
-                        clearTimeout(timer);
-                    }
-                    timer = setTimeout(() => fn.call(null, ...args), daley);
-                }
+                if (timer) clearTimeout(timer);
+                timer = setTimeout(() => {
+                    fn(...args);
+                    timer = null;
+                }, sleep)
             }
         }
-        const input1 = document.querySelector('.input1');
-        const input2 = document.querySelector('.input2');
-        function getData(e) {
-            console.log('发送网络请求: ' + e.target.value);
-        }
-        const slowGetData = debounce(getData, 500);
-        input1.addEventListener('input', getData);
-        input2.addEventListener('input', slowGetData);
+        const request1 = e => console.log(`发送网络请求: ${e.target.value}`);
+        const request2 = debounce(request1, 500);
+        ipt1.addEventListener("input", request1);
+        ipt2.addEventListener("input", request2);
     </script>
 </body>
 ```
@@ -864,6 +821,37 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 
         btn1.addEventListener('click', big);
         btn2.addEventListener('click', lessGetData);
+    </script>
+</body>
+```
+:::
+::: tab label=节流升级
+* 每次第一次点击都触发一次
+```HTML
+<body>
+    <button id="btn1">抢</button>
+    <button id="btn2">抢</button>
+
+    <script>
+        const throttle = (fn, sleep = 1000) => {
+            let isFirst = true;
+            let timer;
+            return (...args) => {
+                if (isFirst) {
+                    isFirst = false;
+                    return fn(...args);
+                }
+                if (timer) return;
+                timer = setTimeout(() => {
+                    isFirst = true;
+                    timer = null;
+                }, sleep);
+            }
+        }
+        const request1 = e => console.log(`抢红包`);
+        const request2 = throttle(request1, 500);
+        btn1.addEventListener("click", request1);
+        btn2.addEventListener("click", request2);
     </script>
 </body>
 ```
