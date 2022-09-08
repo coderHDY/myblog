@@ -220,22 +220,22 @@ fn2();
 
         <script>
             const throttle = (fn, sleep = 1000) => {
-                let isFirst = true;
+                let disabled = false;
                 let timer;
                 return (...args) => {
-                    if (isFirst) {
-                        isFirst = false;
+                    if (!disabled) {
+                        disabled = true;
                         return fn(...args);
                     }
                     if (timer) return;
                     timer = setTimeout(() => {
-                        isFirst = true;
+                        disabled = false;
                         timer = null;
                     }, sleep);
                 }
             }
             const request1 = e => console.log(`抢红包`);
-            const request2 = throttle(request1, 500);
+            const request2 = throttle(request1, 2000);
             btn1.addEventListener("click", request1);
             btn2.addEventListener("click", request2);
         </script>
