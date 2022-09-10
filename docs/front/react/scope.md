@@ -320,7 +320,7 @@ fn2();
     }
     ```
 * 所以出现了hook
-    ```jsx{3}
+    ```jsx
     // ok
     const Comp = () => {
         const [ a, setA ] = useState(0);
@@ -337,7 +337,86 @@ fn2();
     ![](./assets/hookyuanli.jpg)
   * 更新
     ![](./assets/hookyuanli2.jpg)
-## hook原理
+## 注意点
+1. react状态链表和hook顺序一一对应，所以不能在判断条件里面定义hook，会打乱hook读取状态的顺序。
+    ```jsx
+    if (a > 0) {
+      useEffect(() => {xxx});
+    }
+    ```
+2. react函数式组件是完全刷新重新执行，所以手动addEventListener需要在useEffect里面控制执行次数并且清除EventListener
+    ```js
+    import React, { useEffect, useState } from 'react';
+
+    const App = () => {
+      const [ p, setP ] = useState({x: 0, y: 0});
+      const getMouseP = e => {
+        console.log('---');
+        const {x, y} = e;
+        setP({x, y});
+      }
+      // window.addEventListener("click", getMouseP);
+
+      useEffect(() => {
+        window.addEventListener("click", getMouseP);    
+        return () => window.removeEventListener("click", getMouseP);
+      }, []);
+      return (
+        <>
+          <div>x: {p.x}</div>
+          <div>y: {p.y}</div>
+        </>
+      );
+    }
+
+    export default App;
+    ```
+3. React hook setA更新的并不是变量a，而是这一个hook的状态对象，所以在set以后直接拿是拿不到最新的值的
+    ```jsx
+    import React, { useState } from 'react';
+
+    const App = () => {
+      const [ a, setA ] = useState(0);
+      const getA = () => {
+        setA(a + 1);
+        console.log(a);
+      }
+      return (
+        <>
+          <div>{a}</div>
+          <button onClick={getA}>getA</button>
+        </>
+      );
+    }
+
+    export default App;
+    ```
+4. 为保证性能，React是异步更新的
+    ```jsx
+    import React, { useState } from 'react';
+
+    const App = () => {
+      const [ a, setA ] = useState(2);
+      const [ b, setB ] = useState(2);
+      const [ c, setC ] = useState(2);
+      const change = () => {
+        setA(a + 1);
+        setB(b * 2);
+        setC(c * c);
+      }
+      return (
+        <>
+          <div>{a}</div>
+          <div>{b}</div>
+          <div>{c}</div>
+          <button onClick={change}>change</button>
+        </>
+      );
+    }
+
+    export default App;
+    ```
+## hook原理实现
 * 书写JSX
 ```jsx
 const Comp = () => {
@@ -360,6 +439,7 @@ const Comp = () => {
 const App = () => (
     <div>
         <Comp />
+        <hr />
         <Comp />
     </div>
 )
@@ -436,247 +516,251 @@ const App = () => (
 ReactDOM.render(App, '#root');
 ```
 * React
-```js{29-36}
+```js
 const React = {
-    linkLists: {}, // {comp: {val: "", next: xxx}}
-    preNode: null,
-    compNameStack: [],
-    initIdx() {
-        compNameStack = [];
-        this.preNode = null;
-    },
-    get compName() {
-        return this.compNameStack.join(".");
-    },
-    get useState() {
-        return (val) => {
-            if (!this.linkLists[this.compName]) {
-                // 初始化组件
-                this.preNode = { next: null };
-                this.linkLists[this.compName] = this.preNode;
-            } else if (!this.preNode) {
-                // 再刷新时进入组件
-                this.preNode = this.linkLists[this.compName];
-            }
-            if (this.linkLists[this.compName] && this.preNode.next === null) {
-                // 初始化这个hook状态
-                this.preNode.next = { val, next: null };
-            } else {
-                // hook有上一个状态值，直接用
-                val = this.preNode.next.val;
-            }
-            const current = this.preNode.next;
-            const setState = (val) => {
-                current.val = val;
-                Promise.resolve().then(ReactDOM.reRender);
-            }
-            this.preNode = current;
-            return [current.val, setState]
-        }
+  linkLists: {}, // {compA: {next: {val: "", next: xxx}}, compB: {next: {val: "", next: xxx}} }
+  preNode: null,
+  compIdx: 0,
+  compNameStack: [],
+  initNameStack() {
+    this.compIdx = 0;
+    compNameStack = [];
+    this.preNode = null;
+  },
+  get compName() {
+    return this.compNameStack.join(".");
+  },
+  get useState() {
+    return (val) => {
+      if (!this.linkLists[this.compName]) {
+        // 初始化组件
+        this.preNode = { next: null };
+        this.linkLists[this.compName] = this.preNode;
+      } else if (!this.preNode) {
+        // 再刷新时进入组件
+        this.preNode = this.linkLists[this.compName];
+      }
+      if (this.linkLists[this.compName] && this.preNode.next === null) {
+        // 初始化这个hook状态
+        this.preNode.next = { val, next: null };
+      } else {
+        // hook有上一个状态值，直接用
+        val = this.preNode.next.val;
+      }
+      const current = this.preNode.next;
+      const setState = (val) => {
+        current.val = val;
+        Promise.resolve().then(ReactDOM.reRender);
+      }
+      this.preNode = current;
+      return [current.val, setState]
     }
+  },
+  createRoot(comp) {
+    this.compNameStack = [comp.name];
+    const root = this.createElement(comp());
+    this.initNameStack(); // 初始化等待下次刷新
+    return root;
+  },
+  createElement(comp) {
+    this.compIdx++;
+    if (typeof comp !== "object") return comp;
+    const { tag, attrs, children } = comp;
+    if (typeof tag === "function") {
+      this.compNameStack.push(`${tag.name}${this.compIdx}`);
+      const ans = this.createElement(tag(...attrs)); // 子组件
+      this.compNameStack.pop();
+      return ans;
+    } else {
+      const el = document.createElement(tag);
+      Object.entries(attrs).forEach(([key, val]) => this.setAttr(el, key, val), React);
+      if (Array.isArray(children)) { el.prepend(...children.map(item => this.createElement(item))); }
+      else { el.innerText = children; }
+      return el;
+    }
+  },
+  setAttr(el, key, val) {
+    if (key.startsWith("on")) {
+      el.addEventListener(key.slice(2).toLowerCase(), val);
+    } else {
+      el.setAttribute(key, val);
+    }
+  },
 }
 ```
 * 编译器
-```js
-const ReactDOM = {
-    el: null,
-    Component: null,
-    compIdx: 0,
-    get reRender() {
+    ```js
+    const ReactDOM = {
+      el: null,
+      Component: null,
+      get reRender() {
         return () => this.render(this.Component, this.el);
-    },
-    render(comp, selector) {
-        const root = typeof selector === "string" ? document.querySelector(selector) : selector;
-        React.initIdx();
-        React.compNameStack = [comp.name];
-
-        const dom = this.deepRender(comp());
-        root.innerHTML = "";
-        root.appendChild(dom);
-        this.el = root;
+      },
+      render(comp, selector) {
+        const rootEl = typeof selector === "string" ? document.querySelector(selector) : selector;
+        const dom = React.createRoot(comp);
+        rootEl.innerHTML = "";
+        rootEl.appendChild(dom);
+        this.el = rootEl;
         this.Component = comp;
-        this.compIdx = 0;
-        React.compNameStack = []; // 初始化等待下次刷新
-    },
-    deepRender(comp) {
-        this.compIdx++;
-        if (typeof comp !== "object") return comp;
-        const { tag, attrs, children } = comp;
-        if (typeof tag === "function") {
-            React.compNameStack.push(`${tag.name}${this.compIdx}`);
-            const ans = this.deepRender(tag(...attrs)); // 子组件
-            React.compNameStack.pop();
-            return ans;
-        } else {
-            const el = document.createElement(tag);
-            Object.entries(attrs).forEach(([key, val]) => this.setAttr(el, key, val), ReactDOM);
-            if (Array.isArray(children)) { el.prepend(...children.map(item => this.deepRender(item))); }
-            else { el.innerText = children; }
-            return el;
-        }
-    },
-    setAttr(el, key, val) {
-        if (key.startsWith("on")) {
-            el.addEventListener(key.slice(2).toLowerCase(), val);
-        } else {
-            el.setAttribute(key, val);
-        }
-    },
-}
-```
+      },
+    }
+    ```
+
 ## 完整代码
 ```js
 const React = {
-    linkLists: {}, // {compA: {next: {val: "", next: xxx}}, compB: {next: {val: "", next: xxx}} }
-    compNameStack: [],
-    preNode: null,
-    initIdx() {
-        compNameStack = [];
-        this.preNode = null;
-    },
-    get compName() {
-        return this.compNameStack.join(".");
-    },
-    get useState() {
-        return (val) => {
-            if (!this.linkLists[this.compName]) {
-                // 初始化组件
-                this.preNode = { next: null };
-                this.linkLists[this.compName] = this.preNode;
-            } else if (!this.preNode) {
-                // 再刷新时进入组件
-                this.preNode = this.linkLists[this.compName];
-            }
-            if (this.linkLists[this.compName] && this.preNode.next === null) {
-                // 初始化这个hook状态
-                this.preNode.next = { val, next: null };
-            } else {
-                // hook有上一个状态值，直接用
-                val = this.preNode.next.val;
-            }
-            const current = this.preNode.next;
-            const setState = (val) => {
-                current.val = val;
-                Promise.resolve().then(ReactDOM.reRender);
-            }
-            this.preNode = current;
-            return [current.val, setState];
-        }
+  linkLists: {}, // {compA: {next: {val: "", next: xxx}}, compB: {next: {val: "", next: xxx}} }
+  preNode: null,
+  compIdx: 0,
+  compNameStack: [],
+  initNameStack() {
+    this.compIdx = 0;
+    compNameStack = [];
+    this.preNode = null;
+  },
+  get compName() {
+    return this.compNameStack.join(".");
+  },
+  get useState() {
+    return (val) => {
+      if (!this.linkLists[this.compName]) {
+        // 初始化组件
+        this.preNode = { next: null };
+        this.linkLists[this.compName] = this.preNode;
+      } else if (!this.preNode) {
+        // 再刷新时进入组件
+        this.preNode = this.linkLists[this.compName];
+      }
+      if (this.linkLists[this.compName] && this.preNode.next === null) {
+        // 初始化这个hook状态
+        this.preNode.next = { val, next: null };
+      } else {
+        // hook有上一个状态值，直接用
+        val = this.preNode.next.val;
+      }
+      const current = this.preNode.next;
+      const setState = (val) => {
+        current.val = val;
+        Promise.resolve().then(ReactDOM.reRender);
+      }
+      this.preNode = current;
+      return [current.val, setState]
     }
+  },
+  createRoot(comp) {
+    this.compNameStack = [comp.name];
+    const root = this.createElement(comp());
+    this.initNameStack(); // 初始化等待下次刷新
+    return root;
+  },
+  createElement(comp) {
+    this.compIdx++;
+    if (typeof comp !== "object") return comp;
+    const { tag, attrs, children } = comp;
+    if (typeof tag === "function") {
+      this.compNameStack.push(`${tag.name}${this.compIdx}`);
+      const ans = this.createElement(tag(...attrs)); // 子组件
+      this.compNameStack.pop();
+      return ans;
+    } else {
+      const el = document.createElement(tag);
+      Object.entries(attrs).forEach(([key, val]) => this.setAttr(el, key, val), React);
+      if (Array.isArray(children)) { el.prepend(...children.map(item => this.createElement(item))); }
+      else { el.innerText = children; }
+      return el;
+    }
+  },
+  setAttr(el, key, val) {
+    if (key.startsWith("on")) {
+      el.addEventListener(key.slice(2).toLowerCase(), val);
+    } else {
+      el.setAttribute(key, val);
+    }
+  },
 }
 const ReactDOM = {
-    el: null,
-    Component: null,
-    compIdx: 0,
-    get reRender() {
-        return () => this.render(this.Component, this.el);
-    },
-    render(comp, selector) {
-        const root = typeof selector === "string" ? document.querySelector(selector) : selector;
-        React.initIdx();
-        React.compNameStack = [comp.name];
-
-        const dom = this.deepRender(comp());
-        root.innerHTML = "";
-        root.appendChild(dom);
-        this.el = root;
-        this.Component = comp;
-        this.compIdx = 0;
-        React.compNameStack = []; // 初始化等待下次刷新
-    },
-    deepRender(comp) {
-        this.compIdx++;
-        if (typeof comp !== "object") return comp;
-        const { tag, attrs, children } = comp;
-        if (typeof tag === "function") {
-            React.compNameStack.push(`${tag.name}${this.compIdx}`);
-            const ans = this.deepRender(tag(...attrs)); // 子组件
-            React.compNameStack.pop();
-            return ans;
-        } else {
-            const el = document.createElement(tag);
-            Object.entries(attrs).forEach(([key, val]) => this.setAttr(el, key, val), ReactDOM);
-            if (Array.isArray(children)) { el.prepend(...children.map(item => this.deepRender(item))); }
-            else { el.innerText = children; }
-            return el;
-        }
-    },
-    setAttr(el, key, val) {
-        if (key.startsWith("on")) {
-            el.addEventListener(key.slice(2).toLowerCase(), val);
-        } else {
-            el.setAttribute(key, val);
-        }
-    },
-
+  el: null,
+  Component: null,
+  get reRender() {
+    return () => this.render(this.Component, this.el);
+  },
+  render(comp, selector) {
+    const rootEl = typeof selector === "string" ? document.querySelector(selector) : selector;
+    const dom = React.createRoot(comp);
+    rootEl.innerHTML = "";
+    rootEl.appendChild(dom);
+    this.el = rootEl;
+    this.Component = comp;
+  },
 }
 
 const Comp = () => {
-    const { useState } = React;
-    const [a, setA] = useState(0);
-    const [b, setB] = useState(0);
-    return (
-        {
-            tag: "div",
-            attrs: {},
-            children: [
+  const { useState } = React;
+  const [a, setA] = useState(0);
+  const [b, setB] = useState(0);
+  return (
+    {
+      tag: "div",
+      attrs: {},
+      children: [
 
-                {
-                    tag: "div",
-                    attrs: [],
-                    children: [{
-                        tag: "span",
-                        attrs: {},
-                        children: a,
-                    },
-                    {
-                        tag: "button",
-                        attrs: { "onClick": () => setA(a + 1) },
-                        children: "+1"
-                    }]
-                },
-                {
-                    tag: "div",
-                    attrs: {},
-                    children: [
-                        {
-                            tag: "span",
-                            attrs: {},
-                            children: b,
-                        },
-                        {
-                            tag: "button",
-                            attrs: { "onClick": () => setB(a * a) },
-                            children: "a的平方"
-                        },
-                    ]
-                }
-            ]
+        {
+          tag: "div",
+          attrs: [],
+          children: [{
+            tag: "span",
+            attrs: {},
+            children: a,
+          },
+          {
+            tag: "button",
+            attrs: { "onClick": () => setA(a + 1) },
+            children: "+1"
+          }]
+        },
+        {
+          tag: "div",
+          attrs: {},
+          children: [
+            {
+              tag: "span",
+              attrs: {},
+              children: b,
+            },
+            {
+              tag: "button",
+              attrs: { "onClick": () => setB(a * a) },
+              children: "a的平方"
+            },
+          ]
         }
-    )
+      ]
+    }
+  )
 }
 const App = () => (
-    {
-        tag: "div",
+  {
+    tag: "div",
+    attrs: [],
+    children: [
+      {
+        tag: Comp,
         attrs: [],
-        children: [
-            {
-                tag: Comp,
-                attrs: [],
-                children: ""
-            },
-            {
-                tag: "hr",
-                attrs: [],
-                children: ""
-            },
-            {
-                tag: Comp,
-                attrs: [],
-                children: ""
-            },
-        ]
-    }
+        children: ""
+      },
+      {
+        tag: "hr",
+        attrs: [],
+        children: ""
+      },
+      {
+        tag: Comp,
+        attrs: [],
+        children: ""
+      },
+    ]
+  }
 )
 
 ReactDOM.render(App, 'body');
