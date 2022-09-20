@@ -125,3 +125,113 @@ function drop() {
 ```
 :::
 ::::
+## 接收外部图片
+* [效果预览](https://coderhdy.github.io/h5-demo/#基础021-图片拖动2)
+::: tip
+* 外部drag接收来的图片拿不到path，但是可以直接拿到file对象，包含文件所有信息
+* 可以直接接受上传
+:::
+:::: tabs
+::: tab label=html
+```html
+<body>
+  <link rel="stylesheet" href="./index.css">
+
+  <div class="container">
+    <input type="file" accept="image/*" class="ipt-container" />
+  </div>
+
+  <script src="./index.js"></script>
+</body>
+```
+:::
+::: tab label=css
+```css
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  display: grid;
+  place-items: center;
+  background-color: rgb(134, 181, 242);
+  height: 100vh;
+}
+.container {
+  position: relative;
+  width: 500px;
+  height: 400px;
+  background-color: rgb(223, 223, 223);
+  z-index: 1;
+}
+.container img {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.container::before {
+  content: "+";
+  font-size: 4rem;
+  color: rgb(54, 103, 103);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.ipt-container {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+```
+:::
+::: tab label=js
+```js{13-15,24-30}
+const container = document.querySelector(".container");
+const iptContainer = document.querySelector(".ipt-container");
+
+const host = 'https://hdy.gh520.xyz';
+// const host = 'http://127.0.0.1:8080';
+
+function dragOver(e) {
+  e.preventDefault();
+}
+function drop(e) {
+  e.preventDefault();
+
+  // 能拿到drop进来的文件对象及其信息。
+  // 只是引用，事件停止即销毁
+  const file = e.dataTransfer.files[0];
+  uploadAndUpdate(file);
+}
+function change() {
+  const file = this.files[0];
+  uploadAndUpdate(file);
+}
+const uploadAndUpdate = async (file) => {
+
+  // 上传文件方法
+  const formData = new FormData();
+  formData.append("file", file);
+  const { filename } = await fetch(`${host}/api/uploadFile`, {
+      method: "POST",
+      body: formData,
+  }).then(res => res.ok ? res.json() : {});
+
+  if (filename) {
+    const img = document.createElement("img");
+    img.src = `${host}/files/${filename}`;
+    container.appendChild(img);
+  }
+}
+
+iptContainer.addEventListener("dragover", dragOver);
+iptContainer.addEventListener("drop", drop);
+iptContainer.addEventListener("change", change);
+```
+:::
+::::
