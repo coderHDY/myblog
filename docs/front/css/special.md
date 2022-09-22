@@ -175,3 +175,167 @@ console.log(50 * Math.tan(reg)); // 36.327
 ```
 :::
 ::::
+## 骨架屏
+::: tip 重点
+* 用某祖先节点类名控制整体的loading样式
+* **background-position移动是盒子移动，背景图片不动**，背景图片可以控制大小和repeat来制作重复效果
+:::
+* [效果预览](https://coderhdy.github.io/h5-demo/#基础024-骨架屏)
+:::: tabs
+::: tab label=html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./index.css">
+  <title>Document</title>
+</head>
+<body>
+  <div class="card loading">
+    <div class="title-img-wrapper">
+      <img src="https://coderhdy.com/assets/img/bgimg.jpg" alt="" class="title-img">
+    </div>
+    <div class="user-info">
+      <div class="avator-wrapper">
+        <img src="https://coderhdy.com/assets/img/portrait.jpg" alt="" class="avatar">
+      </div>
+      <span class="name">coderHDY</span>
+    </div>
+    <div class="contant">
+      <p class="context1">this is some useful papper!this is some useful papper!this is some useful papper!</p>
+      <p class="context2">this is some useful papper!</p>
+    </div>
+  </div>
+  <script src="./index.js"></script>
+</body>
+</html>
+```
+:::
+::: tab label=css
+```css
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  background-color: rgb(104, 186, 236);
+}
+.card {
+  width: 300px;
+  height: auto;
+  border-radius: .5rem;
+  box-shadow: 0 0 30px rgb(210, 202, 202);
+  background-color: #fff;
+  overflow: hidden;
+}
+.title-img-wrapper {
+  position: relative;
+  height: 150px;
+  width: 100%;
+}
+.title-img {
+  height: 100%;
+  width: 100%;
+}
+.user-info {
+  position: relative;
+  margin-top: 1rem;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.avator-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50%;
+  vertical-align: bottom;
+  overflow: hidden;
+}
+.avatar {
+  width: 100%;
+  height: 100%;
+}
+.name {
+  position: relative;
+  display: inline-block;
+  margin-left: 1rem;
+  height: 50px;
+  line-height: 50px;
+}
+.contant {
+  margin-top: 1rem;
+  padding: 1rem;
+}
+.context1 {
+  position: relative;
+  text-indent: 2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.context2 {
+  position: relative;
+  margin-top: 1rem;
+  font-size: .9rem;
+  color: rgb(119, 115, 115);
+}
+
+/* 骨架屏 */
+.loading.card {
+  background-color: rgb(200, 200, 200);
+}
+.loading.card .title-img-wrapper::after,
+.loading.card .avator-wrapper::after,
+.loading.card .name::after,
+.loading.card .context1::after,
+.loading.card .context2::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 10%, #f6f7f8 20%, #f6f7f8 100%);
+  background-size: 200% 100%;
+  background-color: rgb(255, 255, 255);
+  background-position: 50% 0;
+  animation: bg 1s linear infinite;
+  border-radius: 1px;
+  z-index: 100;
+}
+.loading.card .name::after {
+  margin-top: 1rem;
+  height: 1rem;
+  width: 10rem;
+}
+.loading.card .name::after,
+.loading.card .context1::after,
+.loading.card .context2::after {
+  border-radius: 7px;
+}
+
+@keyframes bg {
+  to {
+    background-position: -150% 0;
+  }
+}
+```
+:::
+::: tab label=js
+```js
+const card = document.querySelector(".card");
+
+setTimeout(() => {
+  card.classList.remove("loading")
+}, 4000)
+```
+:::
+::::
