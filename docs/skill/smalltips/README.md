@@ -146,15 +146,6 @@ yarn run build
 :::
 ::::
 ## 工作调试
-### 手机端打印
-```shell
-npm install vconsole
-```
-```js
-import Vconsole from 'vconsole';
-new Vconsole();
-console.log('test');
-```
 ### 调试手机网页
 :::: tabs
 ::: tab label=苹果手机
@@ -166,6 +157,27 @@ console.log('test');
 ::: tab label=内网穿透
 * 方式1：花生壳 / ngrok网穿透，进行公网服务器映射
 * 方式2：局域网内开启服务器（nginx、webpack devserver、vite等），局域网可以访问
+:::
+::: tab label=vConsole
+* 两种方式添加
+1. publuc文件夹
+```HTML
+<script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+<script>
+    // VConsole will be exported to `window.VConsole` by default.
+    var vConsole = new window.VConsole();
+</script>
+```
+2. 项目添加
+```shell
+npm install vconsole
+```
+```js
+import Vconsole from 'vconsole';
+new Vconsole();
+console.log('test');
+```
+
 :::
 ::::
 ### chrome插件下载
