@@ -785,7 +785,6 @@ Object.defineProperty(RegExp.prototype, 'myFlags', {
 |chrome|90|
 |node|no|
 :::
-
 ## Symbol方法
 ::: warning
 * 被Symbol标识出来的方法，基本都被String.prototype.XXX **内部调用**
