@@ -338,6 +338,18 @@ date: 2021-12-27
     </style>
 </body>
 ```
+## background
+::: tip
+1. `background-image`可以通过写多个url的形式传递兜底图片，前面题片加载失败才会加载后面图片
+    ```css
+    background-image: url("https://media.giphy.com/media/EZqwsBSPlvSda/giphy.gif"), url("https://coderhdy.com/assets/img/bg.svg");
+    ```
+2. `background-position`是指**图片相对于盒子的位置**
+    ```css
+    /** 背景图片向左移动 盒子的 50% */
+    background-position: -50% 0;
+    ```
+:::
 ## 特殊
 ### 三角形盒子
 ::: tip 画出三角形
