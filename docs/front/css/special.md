@@ -339,3 +339,7 @@ setTimeout(() => {
 ```
 :::
 ::::
+## JS获取样式
+```JS
+const width = getComputedStyle(e.target).getPropertyValue('width');
+```
