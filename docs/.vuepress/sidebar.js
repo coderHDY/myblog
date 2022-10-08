@@ -49,6 +49,7 @@ const front = {
                 'canvas',
                 'webanimation',
                 'jwt',
+                'IndexeDB',
             ]
         },
     ],
