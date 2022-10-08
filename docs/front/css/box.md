@@ -350,6 +350,25 @@ date: 2021-12-27
     background-position: -50% 0;
     ```
 :::
+## table
+```css
+table {
+    overflow: scroll;
+
+    /* 文本不换行 */
+    white-space: nowrap;
+
+    /* tr 的 border 之间没有间隙 */
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid #333;
+    padding: 1rem;
+    max-width: 10rem;
+    overflow: scroll;
+}
+```
 ## 特殊
 ### 三角形盒子
 ::: tip 画出三角形
