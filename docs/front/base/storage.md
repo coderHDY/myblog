@@ -301,7 +301,7 @@ app.get('/', (req, res) => res.send(`
                 body: JSON.stringify({account, pwd}),
                 headers: {'Content-Type': 'application/json'}
             }).then(res => {
-                return res.ok ?  res.json() : return Promise.reject();
+                return res.ok ?  res.json() : Promise.reject();
             })
             .then(res => {
                 const userName = res.userName;
