@@ -7,7 +7,7 @@ date: 2022-10-09 19:51:00
 * 可作为观察者，观察DOM对象`是否与可视窗口交叉`
 * 可以用来做`图片懒加载`、`进场动画`等一系列动作。
 :::
-```html
+```html{140-147,149}
 <body>
     <ul>
         <li>1</li>
@@ -128,7 +128,7 @@ date: 2022-10-09 19:51:00
         }
 
         .active {
-            animation: bigger .4s linear 0s 1 forwards;
+            animation: bigger .4s linear 1;
         }
 
         @keyframes bigger {
@@ -147,9 +147,16 @@ date: 2022-10-09 19:51:00
     </style>
     <script>
         const lis = document.querySelectorAll("li");
-        const observer = new IntersectionObserver(([intersectionObserverEntry, intersectionObserver]) => {
-            intersectionObserverEntry.target.classList[intersectionObserverEntry.isIntersecting ? "add" : "remove"]('active');
-        });
+        const callback = ([IntersectionObserverEntry, IntersectionObserver]) => {
+            IntersectionObserverEntry.target.classList[IntersectionObserverEntry.isIntersecting ? "add" : "remove"]('active');
+        };
+        const options = {
+            root: document.rootElement, // 判断交叉的根元素
+            rootMargin: "-10px", // 判断的偏差值，默认是0，一交叉就出发
+            threshold: 0, // 交叉判定比例，1为整个元素都可见才触发,默认 0
+        };
+
+        const observer = new IntersectionObserver(callback, options);
         Array.prototype.forEach.call(lis, item => observer.observe(item));
     </script>
 
