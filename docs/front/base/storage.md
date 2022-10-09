@@ -270,7 +270,8 @@ app.get('/user', (req, res) => res.send(`
 ```
 :::
 ::: tab label=登录网页
-* 有两个网页，【/】和【/user】，登录成功后设置sessionStorage，两个页面都能拿到设置的值
+* 有两个网页，【/】和【/me】，登录成功后设置sessionStorage，两个页面都能拿到设置的值
+>用户名：hdy 密码：123
 ```js{21-42,82-87}
 const express = require('express');
 const app = new express();
