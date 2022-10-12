@@ -143,6 +143,9 @@ const front = {
         'vue3hooks',
         'tools',
     ],
+    '/front/ios/': [
+        '',
+    ],
 }
 
 const backend = {
