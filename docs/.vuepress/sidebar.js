@@ -145,6 +145,7 @@ const front = {
     ],
     '/front/ios/': [
         '',
+        'string',
     ],
 }
 
