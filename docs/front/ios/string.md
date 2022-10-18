@@ -2,6 +2,8 @@
 title: String
 date: 2022-10-13
 ---
+## index
+* [String index设计原理](https://kemchenj.github.io/2019-10-07/)
 ## count
 * 长度
 ```swift
@@ -122,16 +124,16 @@ for i in (0 ..< s.count).reversed() {
 ```
 ## 其他
 * 富文本
-```swift
-var s = """
-<h1>
-    你好
-</h1>
-"""
-print(s);
-```
+    ```swift
+    var s = """
+    <h1>
+        你好
+    </h1>
+    """
+    print(s);
+    ```
 * 标识位引号
-```swift
-var s = #""你好""""#
-print(s); // "你好"""
-```
+    ```swift
+    var s = #""你好""""#
+    print(s); // "你好"""
+    ```

@@ -146,6 +146,10 @@ const front = {
     '/front/ios/': [
         '',
         'string',
+        'array',
+        'set',
+        'dictionary',
+        'func',
     ],
 }
 
