@@ -343,3 +343,12 @@ setTimeout(() => {
 ```JS
 const width = getComputedStyle(e.target).getPropertyValue('width');
 ```
+## form表单禁止跳转
+```html
+<body>
+    <form action="" onsubmit="return false">
+        <input type="search">
+        <input type="submit" value="submit">
+    </form>
+</body>
+```
