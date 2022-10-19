@@ -101,7 +101,6 @@ const goExitFullscreen = () => {
     const img = document.querySelector("img");
     img.addEventListener("click", () => {
       goToFullScreen(img);
-      setTimeout(() => goExitFullscreen(img), 1000);
     });
   </script>
 </body>
