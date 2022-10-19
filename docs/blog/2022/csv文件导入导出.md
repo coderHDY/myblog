@@ -42,7 +42,7 @@ date: 2022-10-08 12:30:00
             fr.onload = (e) => {
                 const buffer = fr.result;
                 const wb = XLSX.read(buffer, { type: "binary" });
-                let worksheet = wb.Sheets[wb.SheetNames[1]];
+                let worksheet = wb.Sheets[wb.SheetNames[0]];
                 objArr = XLSX.utils.sheet_to_json(worksheet);
                 obj2th(objArr[0]);
                 objArr.forEach(item => obj2td(item));

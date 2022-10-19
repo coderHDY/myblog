@@ -2,6 +2,17 @@
 title: String
 date: 2022-10-13
 ---
+## 拼接
+::: warning
+* 拼接，两种方法
+  * 【+】号只能做字符串类型的拼接
+  * 【\ ()】可以拼接任意类型
+:::
+```swift
+print("1 + 1 = \(1 + 1)")
+print("1 + 1 =" + "2")
+print("1 + 1 = " + String(1 + 1));
+```
 ## index
 * [String index设计原理](https://kemchenj.github.io/2019-10-07/)
 ## count
