@@ -1,5 +1,5 @@
 ---
-title: soket实现实时
+title: soket实现实时弹幕
 date: 2022-10-19
 ---
 ## 理论
