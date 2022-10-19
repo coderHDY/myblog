@@ -96,6 +96,12 @@ var b = Int(c) ?? 100; // 解析出来是nil，空值运算符赋值为后面的
 
 print(b); // 100
 ```
+## Any/AnyObject
+* Any: 任意数据类型
+* AnyObject: 类的类型
+```swift
+
+```
 ## 枚举类型
 * 一般**大写**开头
     ```swift
@@ -169,158 +175,6 @@ print(b); // 100
         print(People.allCases[i]); // name age
     }
     ```
-## struct 结构体
-* 类似于`class`，有属性/方法/初始化函数init
-* self == this
-* 都可以写属性/静态属性/方法/静态方法，但不太建议写太复杂的东西在struct内
-* 赋值传递是拷贝传递
-* **如果结构体是 let 定义，那么结构体内属性都不准修改**
-```swift
-struct People
-{
-    private var name = "";
-    private var age = 0;
-    static let type = "人类";
-
-    func getName() -> String
-    {
-        return self.name;
-    }
-    func getAge() -> Int
-    {
-        return self.age;
-    }
-
-    // 写方法必须加 mutating
-    mutating func setAge(newAge: Int) -> Void
-    {
-        self.age = newAge;
-    }
-    
-    // 初始化方法不需要加 func， 且可以多次重载
-    init() {
-        print("默认初始化");
-    }
-    init(name: String) {
-        self.name = name;
-        print("初始化姓名，缺少年龄");
-    }
-    init(name: String, age: Int)
-    {
-        self.name = name;
-        self.age = age;
-    }
-}
-
-print(People.type); // 人类
-
-let p1 = People(name: "hdy", age: 18);
-print(p1); // People(name: "hdy", age: 18)
-
-// p1.setAge(newAge: 19) // 报错
-
-let p2 = People(); // 默认初始化
-print(p2); // People(name: "", age: 0)
-```
-### 读写拦截。
-```swift
-struct People
-{
-    private var _name = "";
-    var name: String
-    {
-        set(v) // 也可以直接省略参数，拿默认参数名：newValue
-        {
-            _name = v;
-        }
-        get
-        {
-            return _name;
-        }
-    }
-}
-
-var p = People();
-    
-print(p.name); // ""
-p.name = "hdy";
-print(p.name); // hdy
-```
->默认：set和get都不设置，就是默认状态。  
->只读属性：只设置get方法。
-### 属性监听
-```swift
-struct People
-{
-    var name: String = "默认值"
-    {
-        willSet
-        {
-            print("将要改变：\(newValue)"); // 将要改变：hdy
-        }
-        didSet
-        {
-            print("已经改变：\(oldValue)"); // 已经改变：默认值
-        }
-    }
-}
-
-var p = People();
-
-p.name = "hdy";
-print(p.name); // hdy
-```
-### 绑定下标
-```swift
-struct People
-{
-    private var vals: [Any] = ["hdy", 18, 170, true];
-    subscript(index: Int) -> Any
-    {
-        set
-        {
-            vals.insert(newValue, at: index)
-        }
-        get
-        {
-            return vals[index]
-        }
-    }
-}
-
-var p = People();
-
-p[0] = "hdy";
-print(p); // People(vals: ["hdy", "hdy", 18, 170, true])
-print(p[1]); // hdy
-```
-## class
-::: tip class 和 struct 不同的地方
-* class空的 init(){} 需要加convenience
-    ```swift
-    class People
-    {
-        var name = "";
-        var age = 0;
-        convenience init()
-        {
-            self.init(name: "hdy", age: 18)
-        }
-        init(name: String, age: Int)
-        {
-            self.name = name;
-            self.age = age
-        }
-    }
-
-    let p = People();
-
-    print(p.name); // hdy
-    print(p.age); // 18
-    ```
-* 类的实例的传递是`传引用`，结构体传递是`传值`
-* 类的实例用`let`设置成常量以后，里面的属性是可以改变的，结构体不行
-:::
 ## Int/Float/Double
 * 数字**可以用下划线分割**方便展示
 ```swift

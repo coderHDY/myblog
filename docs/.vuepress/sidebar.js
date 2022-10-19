@@ -150,6 +150,7 @@ const front = {
         'set',
         'dictionary',
         'func',
+        'class',
     ],
 }
 
