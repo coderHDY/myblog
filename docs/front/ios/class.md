@@ -175,6 +175,125 @@ print(p[1]); // hdy
     print(p.getName()); // hdy
     ```
 * 继承
-```swift
+    ```swift
+    class People
+    {
+        private var name = "";
+        init(name: String) {
+            self.name = name;
+        }
+        public func getName() -> String {
+            return self.name;
+        }
+    }
 
+    class Student: People
+    {
+        
+    }
+
+    let s: People = Student(name: "hdy");
+    print(type(of: s)); // Student
+    ```
+### 向下类型转换
+* 问题：Any/AnyObject可以表示任意类型，但是如果是继承来的方法，调用会有问题
+    ```swift{14-15}
+    class People
+    {
+        private var name = "";
+        init(name: String) {
+            self.name = name;
+        }
+        public func getName() -> String {
+            return self.name;
+        }
+    }
+
+    class Student: People {}
+
+    let s: Any = Student(name: "hdy");
+    print(s.getName()); // Error
+    ```
+* 用已知有这个方法的实例就不会有问题（本身或者父类）
+    ```swift{14-15}
+    class People
+    {
+        private var name = "";
+        init(name: String) {
+            self.name = name;
+        }
+        public func getName() -> String {
+            return self.name;
+        }
+    }
+
+    class Student: People {}
+
+    let s: People = Student(name: "hdy");
+    print(s.getName()); // hdy
+    ```
+* 向下类型转换
+    ```swift
+    class People
+    {
+        private var name = "";
+        init(name: String) {
+            self.name = name;
+        }
+        public func getName() -> String {
+            return self.name;
+        }
+    }
+
+    class Student: People {}
+
+    let s: Any = Student(name: "hdy");
+    let ss = s as! Student;
+
+    print(ss.getName()); // hdy
+    ```
+    ```swift
+    let s: Any = Student(name: "hdy");
+
+    if let ss = s as? Student {
+        print(ss.getName()); // hdy
+    }
+    ```
+    ```swift
+    let s: Any = Student(name: "hdy");
+
+    let ss = s as? Student;
+    print(ss?.getName()); // Optional("hdy")
+    print(ss!.getName()); // hdy
+    ```
+### 重载/多态/重写
+::: tip 重载定义
+* 函数名一样，参数不同/返回值不同
+:::
+::: tip 多态定义
+* 父类引用指向子类对象
+:::
+::: tip 重写定义
+* 子类重写父类同名方法/属性
+:::
+* 重写
+```swift
+class People {
+    var name = "";
+    init(name: String) {
+        self.name = name;
+    }
+    public func getName() -> String {
+        return self.name;
+    }
+}
+
+class Student: People {
+    override init(name: String) {
+        super.init(name: "子类\(name)")
+    }
+}
+
+let s = Student(name: "10");
+print(s.getName()); // 子类10
 ```

@@ -79,7 +79,7 @@ c = "123";
 * 常量：`let`
 * 输出：
 * 类型推断：type(of: a)
-* 判断数据类型：
+* 判断数据类型：s `is` People
 * 类型转换(构造器)：String(true)
 * 类型别名：`typealias`
 :::
@@ -211,6 +211,46 @@ print(a); // Optional(100)
 a = 1;
 let b: Int = a;
 print(b); // 100
+```
+```swift{15,16-18}
+class People
+{
+    private var name = "";
+    init(name: String) {
+        self.name = name;
+    }
+    public func getName() -> String {
+        return self.name;
+    }
+}
+
+class Student: People {}
+
+let s: Any = Student(name: "hdy");
+
+if let ss = s as? Student {
+    print(ss.getName()); // hdy
+}
+```
+```swift
+class People
+{
+    private var name = "";
+    init(name: String) {
+        self.name = name;
+    }
+    public func getName() -> String {
+        return self.name;
+    }
+}
+
+class Student: People {}
+
+let s: Any = Student(name: "hdy");
+
+let ss = s as? Student;
+print(ss?.getName()); // Optional("hdy")
+print(ss!.getName()); // hdy
 ```
 ## 可选项绑定
 * 在if语句中，让可选项变成绑定值，如果有值才执行if语句，并且赋值乘正确的值
