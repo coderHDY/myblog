@@ -125,3 +125,6 @@ app.get("/msg", (req, res) => {
     </script>
 </body>
 ```
+## 效果预览
+* [开启弹幕屏幕](https://coderhdy.github.io/h5-demo/#%E5%9F%BA%E7%A1%80045-%E5%BC%B9%E5%B9%95/index.html)
+* [发送弹幕屏幕](https://coderhdy.github.io/h5-demo/#%E5%9F%BA%E7%A1%8046-%E5%BC%B9%E5%B9%95%E5%8F%91%E5%B0%84%E5%99%A8/index.html)
