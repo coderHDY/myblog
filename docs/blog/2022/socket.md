@@ -97,7 +97,8 @@ app.get("/msg", (req, res) => {
         const dynamicText = (text) => {
             const span = document.createElement("span");
             span.classList.add("dynamic");
-            span.style.top = `${Math.random() * 80 + 10}vh`
+            span.style.top = `${Math.random() * 80 + 10}vh`;
+            span.style.animationDuration = `${Math.random() * 5 + 5}s`;
             span.innerText = text;
             document.body.appendChild(span);
             setTimeout(() => {
