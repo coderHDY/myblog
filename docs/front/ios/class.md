@@ -129,7 +129,19 @@ print(p); // People(vals: ["hdy", "hdy", 18, 170, true])
 print(p[1]); // hdy
 ```
 ## class
-### 同结构体类比
+### 对比判断
+* 注：引用判断，三个`===`
+```SWIFT
+class People
+{
+    public var type = "人";
+}
+
+var p1 = People();
+var p2 = People();
+print(p1 === p2); // false
+```
+### 与结构体对比
 ::: tip class 和 struct 不同的地方
 * class空的 init(){} 需要加convenience
     ```swift
@@ -267,33 +279,52 @@ print(p[1]); // hdy
     print(ss!.getName()); // hdy
     ```
 ### 重载/多态/重写
-::: tip 重载定义
+::: tip 重载
 * 函数名一样，参数不同/返回值不同
 :::
-::: tip 多态定义
+::: tip 多态
 * 父类引用指向子类对象
 :::
-::: tip 重写定义
+::: tip 重写
 * 子类重写父类同名方法/属性
 :::
-* 重写
-```swift
-class People {
-    var name = "";
-    init(name: String) {
-        self.name = name;
+* 重写(与父类同样方法会报错)
+    ```SWIFT
+    class People
+    {
+        func say()
+        {
+            print("我是人");
+        }
     }
-    public func getName() -> String {
-        return self.name;
-    }
-}
 
-class Student: People {
-    override init(name: String) {
-        super.init(name: "子类\(name)")
+    class Student: People
+    {
+        override func say()
+        {
+            print("我是学生");
+        }
     }
-}
+    let s = Student();
+    s.say(); // 我是学生
+    ```
+    ```swift
+    class People {
+        var name = "";
+        init(name: String) {
+            self.name = name;
+        }
+        public func getName() -> String {
+            return self.name;
+        }
+    }
 
-let s = Student(name: "10");
-print(s.getName()); // 子类10
-```
+    class Student: People {
+        override init(name: String) {
+            super.init(name: "子类\(name)")
+        }
+    }
+
+    let s = Student(name: "10");
+    print(s.getName()); // 子类10
+    ```
