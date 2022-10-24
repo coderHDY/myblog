@@ -210,3 +210,14 @@ test(18);
 
     print(p); // 2
     ```
+## 泛型
+```swift
+func getAge<T>(age: T) -> T
+{
+    return age;
+}
+    
+print(getAge(age: "hdy")); // hdy
+print(getAge(age: 18)); // 18
+print(getAge(age: [1, 2, 3, 4])); // [1, 2, 3, 4]
+```
