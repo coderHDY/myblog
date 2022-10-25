@@ -391,6 +391,43 @@ for i in 0 ..< 5
         print(i); // 9 6 3 0
     }
     ```
+## 错误捕获
+::: tip
+* 可能会`throw error`的函数需要加`throws`
+* `do try`...`catch e1`...`catch e2`...`defer`
+* `defer`是一定会执行的末尾处理
+:::
+```swift{1,7,10,21-23}
+enum Err: String, Error
+{
+    case err1 = "错误1";
+    case err2 = "错误2";
+}
+
+func test (p: Int) throws
+{
+    if p < 10 {
+        throw Err.err1;
+    } else if p > 20 {
+        print("p > 20")
+    } else {
+        print("p 在 10-20 之间");
+    }
+}
+
+do {
+    try test(p: 9)
+}
+catch Err.err1 {
+    print("err1"); // err1
+}
+catch Err.err2 {
+    print("err2");
+}
+defer {
+    print("结束"); // 结束
+}
+```
 ## 注意
 ::: tip
 * ios没有`++ --`运算符

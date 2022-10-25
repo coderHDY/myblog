@@ -141,6 +141,14 @@ let p = People(name: "hdy", age: 18)
 print(p); // People(name: "hdy", age: 18)
 ```
 ## class
+### 权限
+::: tip
+* `private`：只能当前类中访问
+* `fileprivate`：当前swift源文件可访问
+* `internal`（默认）：整个模块/库内部/框架内部/app内部可以访问
+* `public`：可以被任何人访问，但是在其他module不可以背override和继承
+* `open`：可以被任何人访问
+:::
 ### 对比判断
 * `==`表示符号两边的值是否相等，`===`表示两个类型（class type）是否引用同一个类实例
 * 注：引用判断，三个`===`
@@ -430,6 +438,25 @@ print(s.getName()); // 18
 
     let p = People();
     print(p.name); // hdy
+    ```
+* 协议内泛型
+    ```swift
+    protocol T
+    {
+        associatedtype T
+        func test(p: T)
+    }
+        
+    class Test: T
+    {
+        func test(p: String)
+        {
+            print(p);
+        }
+    }
+
+    let t = Test()
+    t.test(p: "你好"); // 你好
     ```
 ### lazy 延迟属性
 ::: tip
