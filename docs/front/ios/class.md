@@ -482,22 +482,22 @@ print(s.getName()); // 18
     var p = P(); // p init
     p.date // date init
     ```
-    ### 闭包初始化器
-    ```swift
-    class People
-    {
-        var name: String = {
-            return "我叫hdy"
-        }();
-        var age: Int = {
-            return "name".count
-        }();
-    }
+### 闭包初始化器
+```swift
+class People
+{
+    var name: String = {
+        return "我叫hdy"
+    }();
+    var age: Int = {
+        return "name".count
+    }();
+}
 
-    let p = People()
-    print(p.name); // 我叫hdy
-    print(p.age); // 4
-    ```
+let p = People()
+print(p.name); // 我叫hdy
+print(p.age); // 4
+```
 ### 析构函数
 * 引用只要有一个变量或常量指向这个实例，**实例对象就不会被销毁**
 ```swift

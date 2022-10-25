@@ -221,3 +221,26 @@ print(getAge(age: "hdy")); // hdy
 print(getAge(age: 18)); // 18
 print(getAge(age: [1, 2, 3, 4])); // [1, 2, 3, 4]
 ```
+## 尾随闭包
+* 类似JS的高级函数，接收函数作为参数
+    ```SWIFT
+    func test(p1: String, p2: (_: String) -> Void)
+    {
+        return p2(p1);
+    }
+
+    test(p1: "hdy", p2: {p3 in
+        print("你好，\(p3)");
+    }); // 你好，hdy
+    ```
+* 尾随闭包写法：将尾随的函数参数挪到外面去调用
+```SWIFT
+func test(p1: String, p2: (_: String) -> Void)
+{
+    return p2(p1);
+}
+
+test(p1: "hdy") {p3 in
+    print("你好，\(p3)");
+}; // 你好，hdy
+```
