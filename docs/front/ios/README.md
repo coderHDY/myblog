@@ -434,3 +434,15 @@ defer {
 * 元组可以集体比较，会按顺序一一比较
 * `repeat...while` 就是 `do...while`
 :::
+## XCode快捷键
+::: tip
+* 编译运行：command + r
+* 编译：command + b
+* 清除工程：command + shift + K
+* 收缩结构体：command + option + ←
+* 回到上一个页面：control + command + ←
+* 代码格式化：⌃ + I：
+* 跳转到点击内容的定义位置：⌃ + ⌘ + Click
+* 项目内查找：⇧ + ⌘ + F
+* 对选中代码进行上下移动：⌘ + ⌥ + [
+:::
