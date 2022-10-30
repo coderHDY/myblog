@@ -3,6 +3,10 @@ title: 摸鱼鼠标控制
 date: 2022-10-30
 ---
 ## robotjs
+```shell
+npm i pm2 -g
+npm i robotjs
+```
 ```JS
 const robot = require("robotjs");
 robot.setMouseDelay(2);
