@@ -5,22 +5,34 @@ date: 2022-10-30
 ## robotjs
 ```JS
 const robot = require("robotjs");
-
-// Speed up the mouse.
 robot.setMouseDelay(2);
 
-var twoPI = Math.PI * 2.0;
-var screenSize = robot.getScreenSize();
-var height = (screenSize.height / 2) - 10;
-var width = screenSize.width;
+const timer = 1000 * 60 * 10;
 
 const run = () => {
-    for (let x = 0; x < width; x++) {
-        y = height * Math.sin((twoPI * x) / width) + height;
-        robot.moveMouse(x, y);
+    let twoPI = Math.PI * 2.0;
+    let screenSize = robot.getScreenSize();
+    let height = (screenSize.height / 2) - 10;
+    let width = screenSize.width;
+    let { x, y } = robot.getMousePos();
+    return () => {
+        let mouse = robot.getMousePos();
+        if (mouse.x === x && mouse.y === y) {
+            for (let cx = 0; cx < width; cx++) {
+                let y = height * Math.sin((twoPI * cx) / width) + height;
+                robot.moveMouse(x, y);
+            }
+        }
+        x = mouse.x;
+        y = mouse.y;
+        console.log("Mouse is at x:" + x + " y:" + y);
     }
 }
 
-run();
-setInterval(run, 1000 * 60 * 10); // 10分钟动一下鼠标
+run()();
+setInterval(run(), timer);
+```
+* 使用PM2启动脚本即可生效
+```SHELL
+pm2 start test.js
 ```
