@@ -78,9 +78,9 @@ test(people: (name: "hdy", age: 18));
     ```
 * 只写一个默认外部名称和内部名称相同
     ```swift
-    func test(age a: Int)
+    func test(age: Int)
     {
-        print("年龄是\(a)");
+        print("年龄是\(age)");
     }
 
     test(age: 18);
