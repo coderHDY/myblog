@@ -151,6 +151,7 @@ const front = {
         'dictionary',
         'func',
         'class',
+        'storyboard',
     ],
 }
 
