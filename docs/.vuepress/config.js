@@ -54,7 +54,7 @@ module.exports = {
             {
                 title: '小紫念沁',
                 desc: '不积跬步,无以至千里.不积小流,无以成江海',
-                logo: 'https://anyfork.gitee.io/blog-docs/images/user.jpg',
+                logo: 'https://anyfork.gitee.io/blog-docs/images/logo.png',
                 link: 'https://anyfork.gitee.io/blog-docs/'
             },
             {
