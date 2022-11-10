@@ -152,6 +152,7 @@ const front = {
         'func',
         'class',
         'storyboard',
+        'autolayout',
     ],
 }
 
