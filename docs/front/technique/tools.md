@@ -507,6 +507,27 @@ const getSelectedText = () => window.getSelection().toString();
 getSelectedText();
 ```
 :::
+::: tab label=旧替代方法
+```html
+<body>
+    <div id="div">123234213423423家阿克琉斯的积分啦4</div>
+</body>
+<script>
+    div.addEventListener("click", function () {
+        const val = this.innerText;
+
+        var input = document.createElement("input");
+        input.style = `position: fixed;left: -100vw;`;
+        input.value = val;
+        document.body.appendChild(input);
+        input.select();
+        input.setSelectionRange(0, input.value.length - 5);
+        document.execCommand('Copy');
+        document.body.removeChild(input);
+    })
+</script>
+```
+:::
 ::::
 ## 暗黑模式
 ```js
