@@ -34,6 +34,14 @@ btn1.setTitle("哈哈哈", for: UIControl.State.normal);
 blueView.addSubview(btn1);
 btn1.backgroundColor = UIColor.blue;
 ```
+## 设置动态添加元素附着点
+```swift
+// 设置附着view
+pickerView?.popoverPresentationController?.sourceView = self.datePickView
+
+// 设置附着元素
+pickerView?.popoverPresentationController?.sourceRect = self.datePickerButton.frame
+```
 ## 动态改变优先级
 ```swift
 redHeight0.priority = redHeight0.priority.rawValue < 201 ? UILayoutPriority(rawValue: 1000.0) : UILayoutPriority(rawValue: 200.0)
@@ -47,4 +55,12 @@ redHeight0.priority = redHeight0.priority.rawValue < 201 ? UILayoutPriority(rawV
 ## 断点调试
 ```swift
 po self.contentScrollView
+```
+## 获取指定元素距离顶部的距离
+```swift
+// 获取【相对于父元素】位置
+let offsetY = deepBlueView.frame.origin.y
+
+// scrollView 滚动到指定位置
+self.contentScrollView.contentOffset = CGPoint.init(x: 0, y: offsetY)
 ```
