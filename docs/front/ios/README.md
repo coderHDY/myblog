@@ -364,6 +364,27 @@ print("\(newName)的年龄是\(newAge)");
             print("比较失败？");
     }
     ```
+## 数组区间匹配
+```swift{11-13}
+var a = [1, 2, 3, 4, 5, 6];
+
+let b = 6
+switch b {
+  case 1:
+    print("b is 1");
+    break;
+  case 2:
+    print("b is 2");
+    break;
+  case b where a.contains(b):
+    print("b in a");
+    break;
+  default:
+    print("i don't know b!");
+}
+
+// b in a
+```
 ## 区间运算符
 ::: tip
 * 【1-4】`1 ... 4`
