@@ -542,3 +542,82 @@ console.log(isDarkMode); // true
 ```js
 const isTabInView = () => !document.hidden; 
 ```
+## touchmove事件打平
+::: tip
+1. 鼠标`mousemove`和`touch`事件取x和y方法不一样
+2. mouse有移出屏幕的风险，会导致监听触发不符合预期
+:::
+:::: tabs
+::: tab label=使用
+```js
+// callback: (x, y) => void
+const moveListener = (el, callback) => {
+    let mouseDown = false;
+    el.addEventListener("touchmove", e => callback(e.targetTouches[0].clientX, e.targetTouches[0].clientY));
+    el.addEventListener("mousedown", () => mouseDown = true);
+    el.addEventListener("mouseup", () => mouseDown = false);
+    el.addEventListener("mouseout", () => mouseDown = false);
+    document.addEventListener("mouseout", () => mouseDown = false);
+    el.addEventListener("mousemove", (e) => {
+        if (!mouseDown) return;
+        callback(e.clientX, e.clientY);
+    })
+}
+```
+:::
+::: tab label=测试
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="position">x: 0 y: 0</div>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+    <script>
+        const body = document.body;
+        const position = document.querySelector("#position");
+
+        // callback: (x, y) => void
+        const moveListener = (el, callback) => {
+            let mouseDown = false;
+            el.addEventListener("touchmove", e => callback(e.targetTouches[0].clientX, e.targetTouches[0].clientY));
+            el.addEventListener("mousedown", () => mouseDown = true);
+            el.addEventListener("mouseup", () => mouseDown = false);
+            el.addEventListener("mouseout", () => mouseDown = false);
+            document.addEventListener("mouseout", () => mouseDown = false);
+            el.addEventListener("mousemove", (e) => {
+                if (!mouseDown) return;
+                callback(e.clientX, e.clientY);
+            })
+        }
+
+        const handleMove = (x, y) => {
+            position.innerText = `x: ${x} y: ${y} `;
+        }
+        moveListener(body, handleMove);
+    </script>
+</body>
+
+</html>
+```
+:::
+::::

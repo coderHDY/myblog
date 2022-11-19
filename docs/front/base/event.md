@@ -864,3 +864,28 @@ Object.prototype.myAddEventListener = function(type, callback) {
     ```
 :::
 ::::
+### clientX/pageX/screenX
+::: tip
+* `e.targetTouches[0].clientX`是相对于浏览器左边缘距离
+* `e.targetTouches[0].screenX`是相对于屏幕左边缘距离
+* `e.targetTouches[0].pageX`是相对于页面左边缘距离，有可能发生了滚动
+:::
+### touch事件和mouse事件打平
+::: tip
+1. 鼠标`mousemove`和`touch`事件取x和y方法不一样
+2. mouse有移出屏幕的风险，会导致监听触发不符合预期
+:::
+```js
+const moveListener = (el, callback) => {
+    let mouseDown = false;
+    el.addEventListener("touchmove", e => callback(e.targetTouches[0].clientX, e.targetTouches[0].clientY));
+    el.addEventListener("mousedown", () => mouseDown = true);
+    el.addEventListener("mouseup", () => mouseDown = false);
+    el.addEventListener("mouseout", () => mouseDown = false);
+    document.addEventListener("mouseout", () => mouseDown = false);
+    el.addEventListener("mousemove", (e) => {
+        if (!mouseDown) return;
+        callback(e.clientX, e.clientY);
+    })
+}
+```

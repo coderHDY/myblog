@@ -24,6 +24,8 @@ context = canvas.getContext("webgl");
 * canvas坐标系：与css盒子坐标系相同，**左上为起点**
 :::
 ::: tab label=基础使用
+* 重要：canvas的**宽高不能由css决定，必须以属性的形式存在canvas元素上**（可以通过js动态修改）
+* **css设置的只是盒子属性的宽高，并不是画布的宽高**
 ```html
 <body>
     <canvas id="canvas" height="1000" width="1000"></canvas>
