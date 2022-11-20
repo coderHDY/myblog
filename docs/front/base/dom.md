@@ -1052,6 +1052,23 @@ date: 2021-12-16
 ```
 :::
 ::::
+### getBoundingClientRect
+::: tip
+* 获取元素绝对位置最简便的方法
+:::
+```js
+const rect = divEl.getBoundingClientRect();
+const {
+    top, // 距离浏览器顶部
+    bottom,
+    left,
+    right,
+    height,
+    width,
+    x,// 距离浏览器顶部
+    y,
+} = rect;
+```
 ## 坐标/大小
 ### scrollxxx
 ::: tip scrollHeight/scrollWidth

@@ -301,6 +301,60 @@ console.log(url);
 ```
 :::
 ::::
+## 分辨率问题
+::: tip
+* 问题
+    * [分辨率问题](../css/responsive.html#移动端视口)
+    * canvas是画布，设置的宽高是一个`设备独立像素`的像素点
+    * 受dpr影响，一个设备独立像素可能对应多个`物理设备像素`的像素点
+    * 所以像素填充不饱满就会被模糊、有锯齿
+* 解决
+    * 获取设备独立像素比例dpr：`window.devicePixelRatio`
+    * 将画布等比放大，同时css对应的宽高不变，画布的像素就会被压缩
+    * 再将ctx上下文进行压缩，避免绘制计算错误：ctx.scale(dpr, dpr)
+:::
+:::: tabs
+::: tab label=压缩方法
+* [canvas刮刮乐](https://coderhdy.github.io/h5-demo/#%E5%9F%BA%E7%A1%80047-%E5%88%AE%E5%88%AE%E4%B9%90/index.html)
+```js
+const dpr = window.devicePixelRatio;
+canvas.width = width * dpr;
+canvas.height = height * dpr;
+ctx.scale(dpr, dpr)
+```
+:::
+::: tab label=对比
+```html{11-18}
+<body>
+    <canvas width="200" height="200" id="c1"></canvas>
+    <canvas width="200" height="200" id="c2"></canvas>
+    <script>
+        const ctx1 = c1.getContext("2d");
+        const ctx2 = c2.getContext("2d");
+
+        ctx1.font = '15px "微软雅黑"';
+        ctx1.fillText("我是画布1", 30, 30);
+
+        // 计算、压缩ctx2
+        const { width, height } = c2.getBoundingClientRect();
+        const dpr = window.devicePixelRatio;
+        c2.style.width = width;
+        c2.style.height = height;
+        c2.width = width * dpr;
+        c2.height = height * dpr;
+        ctx2.scale(dpr, dpr);
+
+        ctx2.font = '15px "微软雅黑"';
+        ctx2.fillText("我是画布2", 30, 30);
+
+        const c = document.createElement("canvas")
+        const cc = c.getContext("2d")
+        cc.fillText()
+    </script>
+</body>
+```
+:::
+:::: 
 ## Konva
 :::: tabs
 ::: tab label=拖动球

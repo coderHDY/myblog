@@ -875,6 +875,11 @@ Object.prototype.myAddEventListener = function(type, callback) {
 1. 鼠标`mousemove`和`touch`事件取x和y方法不一样
 2. mouse有移出屏幕的风险，会导致监听触发不符合预期
 :::
+::: danger
+* mouse事件有x,y，touch事件只有clientX，clientY
+* touch事件必须拿`targetTouches`或`touches`获取clientX/clientY
+* mac的触控板是touch事件
+:::
 ```js
 const moveListener = (el, callback) => {
     let mouseDown = false;
