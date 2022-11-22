@@ -466,4 +466,9 @@ defer {
 * 跳转到点击内容的定义位置：⌃ + ⌘ + Click
 * 项目内查找：⇧ + ⌘ + F
 * 对选中代码进行上下移动：⌘ + ⌥ + [
+* 批量更改变量名： ⌘ + ⌃ + e
+* 查找下一个： option + ⌘ + e
+* 多光标：shift + control + click 
+* 多光标：shift + control + up 
+* 跳到某一行：command + L
 :::
