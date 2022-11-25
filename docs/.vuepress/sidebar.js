@@ -142,6 +142,7 @@ const front = {
         '',
         'vue3hooks',
         'tools',
+        'toolsfunc',
     ],
     '/front/ios/': [
         '',
@@ -230,7 +231,6 @@ const skill = {
         '',
         'vuepress',
         'vscode',
-        'tools',
     ]
 }
 
