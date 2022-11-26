@@ -1,10 +1,20 @@
 <template>
-  <div class="code-pen" :style="{ width: `${width}px`, height: `${height}px` }">
-    <div class="select">
+  <div
+    class="code-pen"
+    :class="randomClass"
+    :style="{ width: `${width}px`, height: `${height}px` }"
+  >
+    <div style="height: 0; overflow: hidden">
+      <slot></slot>
+    </div>
+    <div
+      class="select"
+      v-if="(selectVals && selectVals.length > 1) || val !== undefined"
+    >
       <el-select
         v-if="selectVals && selectVals.length > 1"
-        v-model="val"
-        :placeholder="val"
+        v-model="value"
+        :placeholder="value"
       >
         <el-option
           v-for="item in selectVals"
@@ -14,7 +24,11 @@
         >
         </el-option>
       </el-select>
-      <el-input v-else v-model="val" :placeholder="val"></el-input>
+      <el-input
+        v-else-if="val !== undefined"
+        v-model.lazy="value"
+        :placeholder="value"
+      ></el-input>
     </div>
     <div v-html="innerCode"></div>
   </div>
@@ -26,6 +40,8 @@
  * ```html
  * XXX
  * ```
+ *
+ * 注：js代码内不能有单引号，会报错！！！
  */
 export default {
   props: {
@@ -39,17 +55,16 @@ export default {
     },
     code: String,
     select: String,
-    value: String,
+    val: String,
   },
   data() {
     return {
-      val: this.value,
+      value: this.val,
     };
   },
   computed: {
     innerCode() {
       const rawCode = decodeURIComponent(this.code);
-
       // css变量分割
       const scopeCssReg = /(?<=(\}|(style\>))\s*)(.+)(?=\{)/g;
 
@@ -63,7 +78,7 @@ export default {
         setTimeout(() => {
           const script = document.createElement("script");
           script.innerText = jsCode[1]
-            .replace(valReg, this.val)
+            .replace(valReg, this.value)
             .replace(/(let)|(const)/g, "var")
             .replace(/\\n/g, "")
             .replace(/\s{2,}/g, " ");
@@ -75,8 +90,8 @@ export default {
       }
 
       return rawCode
-        .replace(scopeCssReg, ".code-pen $3")
-        .replace(valReg, this.val)
+        .replace(scopeCssReg, `.${this.randomClass} $3`)
+        .replace(valReg, this.value)
         .replace(/(let)|(const)/g, "var")
         .replace(/\\n/g, "")
         .replace(/\s{2,}/g, " ");
@@ -85,6 +100,12 @@ export default {
       if (!this.$props.select) return [];
       return this.$props.select.slice(1, -1).split(",");
     },
+    randomClass() {
+      return `c${this._uid}_${Math.floor(Math.random() * 1000)}`;
+    },
+  },
+  mounted() {
+    // console.log(decodeURIComponent(this.code));
   },
 };
 </script>
@@ -95,7 +116,13 @@ export default {
   overflow: hidden;
 }
 .select {
+  display: flex;
+  flex-direction: row-reverse;
   position: relative;
-  left: 70%;
+  left: 50%;
+  width: 50%;
+}
+.select * {
+  background-color: #fff !important;
 }
 </style>

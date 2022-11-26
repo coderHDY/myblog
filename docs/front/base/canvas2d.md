@@ -150,7 +150,7 @@ date: 2022-11-26
 
 :::
 
-::: codePen value=destination-atop height=300 select=[destination-atop,source-atop,source-over,destination-over,source-in,source-out,destination-in,destination-out,lighter,copy,xor,multiply,screen,overlay,darken,lighten,color-dodge,color-burn,hard-light,soft-light,difference,exclusion,hue,saturation,color,luminosity]
+::: codePen val=destination-atop height=300 select=[destination-atop,source-atop,source-over,destination-over,source-in,source-out,destination-in,destination-out,lighter,copy,xor,multiply,screen,overlay,darken,lighten,color-dodge,color-burn,hard-light,soft-light,difference,exclusion,hue,saturation,color,luminosity]
 ```html
 <canvas id="canvas100" width="500" height="500" style="width:500px; height: 500px;"></canvas>
 <style>
@@ -233,3 +233,55 @@ date: 2022-11-26
 ```
 :::
 ::::
+## lineCap
+::: tip
+* 线段末端的属性
+
+|值|效果|
+|---|---|
+|butt|线段末端以方形结束|
+|round|线段末端以圆形结束|
+|square|线段末端以方形结束，增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域|
+:::
+
+```html
+<body>
+    <canvas id="canvas1" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas1');
+        const ctx = canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(100, 100);
+        ctx.lineWidth = 15;
+        ctx.lineCap = "round";
+ 
+        ctx.stroke()
+    </script>
+</body>
+```
+
+::: codePen val=round select=[round,bott,square]
+```html
+<canvas id="canvas11" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+<style>
+    canvas {
+        background-color: rgb(180, 236, 147);
+    }
+</style>
+<script>
+    const canvas = document.getElementById("canvas11");
+    const ctx = canvas.getContext("2d");
+
+    ctx.beginPath();
+    ctx.moveTo(10, 10);
+    ctx.lineTo(100, 100);
+    ctx.lineWidth = 15;
+    ctx.lineCap = "{{val}}";
+
+    ctx.stroke();
+</script>
+```
+:::

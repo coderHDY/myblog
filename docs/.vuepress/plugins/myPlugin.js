@@ -6,16 +6,19 @@ const components = [
   'step',
   'steps',
   'demo',
-  'codePen',
   'el-button',
   'el-slider',
   'tabs',
   'tab'
 ]
 
+// 注册codePen组件，特殊处理
 const registerCodePen = (md) => {
   const mark = "codePen";
   md.use(container, mark, {
+    // validate: function (params) {
+    //   return params.trim().match(/^codePen\s*(.*)?$/);
+    // },
     render(tokens, idx) {
       const token = tokens[idx];
       if (token.nesting === 1) {
