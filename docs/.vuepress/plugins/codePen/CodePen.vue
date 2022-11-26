@@ -112,7 +112,7 @@ export default {
   
 <style scoped>
 .code-pen {
-  margin: 3rem 0;
+  margin: 1rem 0;
   overflow: hidden;
 }
 .select {
