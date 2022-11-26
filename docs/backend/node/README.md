@@ -69,3 +69,7 @@ npm config set registry https://registry.npm.taobao.org
 ```shell
 npm get config registry
 ```
+## 清空node打印台
+```js
+process.stdout.write('\x1Bc')
+```

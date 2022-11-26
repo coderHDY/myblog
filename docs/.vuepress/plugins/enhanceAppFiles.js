@@ -1,6 +1,7 @@
 import Demo from './demo/Demo.vue';
 import Steps from './steps/Steps.vue';
 import Step from './steps/Step.vue';
+import CodePen from './codePen/codePen.vue';
 import ElementUI from "element-ui";
 import Tabs from 'element-ui/lib/tabs';
 import TabPane from 'element-ui/lib/tab-pane';
@@ -24,6 +25,7 @@ export default ({ Vue, router, options }) => {
     Vue.component(Demo.name, Demo);
     Vue.component(Step.name, Step);
     Vue.component(Steps.name, Steps);
+    Vue.component('codePen', CodePen);
     Vue.component('tabs', Tabs);
     Vue.component('tab', TabPane);
     fixJumpHash(router);

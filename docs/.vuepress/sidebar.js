@@ -47,6 +47,7 @@ const front = {
                 'module',
                 'worker',
                 'canvas',
+                'canvas2d',
                 'webanimation',
                 'jwt',
                 'IndexeDB',

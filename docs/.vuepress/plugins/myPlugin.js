@@ -6,15 +6,31 @@ const components = [
   'step',
   'steps',
   'demo',
+  'codePen',
   'el-button',
   'el-slider',
   'tabs',
   'tab'
 ]
 
-module.exports = function tabsPlugin(md, options = {}) {
-  options = options || {};
+const registerCodePen = (md) => {
+  const mark = "codePen";
+  md.use(container, mark, {
+    render(tokens, idx) {
+      const token = tokens[idx];
+      if (token.nesting === 1) {
+        const encodedInnerHtml = encodeURIComponent(tokens[idx + 1]?.content);
+        const reg = new RegExp(`(?<=${mark}\\s+)(.*)`, "g");
+        const rawAttrs = token.info.match(reg);
+        return `<${mark} code=${encodedInnerHtml} ${rawAttrs}>\n`;
+      } else {
+        return `</${mark}>\n`;
+      }
+    }
+  })
+}
 
+module.exports = function tabsPlugin(md, options = {}) {
   const registerCtn = mark => {
     md.use(container, mark, {
       render(tokens, idx) {
@@ -28,5 +44,6 @@ module.exports = function tabsPlugin(md, options = {}) {
       }
     })
   }
-  components.forEach(mark => registerCtn(mark))
+  components.forEach(mark => registerCtn(mark));
+  registerCodePen(md);
 };

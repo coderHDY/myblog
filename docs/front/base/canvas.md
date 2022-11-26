@@ -354,6 +354,32 @@ ctx.scale(dpr, dpr)
 </body>
 ```
 :::
+::: tab label=常用初始化
+```html
+<body>
+    <script>
+        const canvas = document.createElement("canvas");
+        const dpr = window.devicePixelRatio;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        canvas.style.width = width;
+        canvas.style.height = height;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = "#333 solid"
+        // ctx.
+        ctx.fillText("你好呀", 50, 50, 100);
+
+        document.body.append(canvas);
+    </script>
+</body>
+```
+:::
 :::: 
 ## Konva
 :::: tabs
