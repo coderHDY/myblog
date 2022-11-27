@@ -65,7 +65,7 @@ export default {
   computed: {
     innerCode() {
       const rawCode = decodeURIComponent(this.code);
-      // css变量分割
+      // css样式隔离
       const scopeCssReg = /(?<=(\}|(style\>))\s*)(.+)(?=\{)/g;
 
       // val变量注入
@@ -75,7 +75,7 @@ export default {
       const jsReg = /\<script\>(.*)\<\/script\>/s;
       const jsCode = rawCode.match(jsReg);
       if (jsCode) {
-        // 将js代码放到本地执行
+        // 方案二：将js代码放到本组件沙盒执行
         const querySlectorReg1 = /(document(?=\.querySelector))/g;
         const querySlectorReg2 =
           /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
@@ -98,7 +98,7 @@ export default {
             console.warn(e);
           }
         });
-        // 添加js代码形式
+        // 方案一: 添加js代码形式
         // setTimeout(() => {
         //   const script = document.createElement("script");
         //   script.innerText = jsCode[1]
