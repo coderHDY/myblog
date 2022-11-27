@@ -85,13 +85,6 @@ export default {
         this.$nextTick(() => {
           try {
             function sandBox() {
-              console.log(
-                jsCode[1]
-                  .replace(valReg, this.value)
-                  .replace(querySlectorReg1, "this.$el")
-                  .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
-                  .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
-              );
               eval(
                 jsCode[1]
                   .replace(valReg, this.value)

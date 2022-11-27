@@ -272,7 +272,6 @@ date: 2022-11-26
     }
 </style>
 <script>
-    console.log(this.$el)
     const canvas = document.getElementById("canvas100");
     const ctx = canvas.getContext("2d");
 
