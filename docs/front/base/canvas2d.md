@@ -42,11 +42,14 @@ date: 2022-11-26
     </script>
 </body>
 ```
-## fillStyle
+## strokeStyle/fillStyle
 ::: tip
-* 描述即将渲染的图形的颜色和样式
+* strokeStyle：画笔（`边框`/`线条`）的颜色、样式
+* fillStyle/描述即将渲染的图形（`内部`）的颜色和样式
 * 值： `color` | `ctx.createLinearGradient`对象 | `ctx.createPattern`对象
 :::
+:::: tabs
+::: tab label=fillStyle
 ```html{6,9,12,15-18}
 <body>
     <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -72,6 +75,49 @@ date: 2022-11-26
     </script>
 </body>
 ```
+:::
+::: tab label=strokeStyle
+```html
+<body>
+    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "#333";
+        ctx.fillRect(10, 5, 30, 30);
+
+        ctx.fillStyle = "#879900";
+        ctx.fillRect(10, 40, 30, 30);
+
+        ctx.strokeStyle = "red";
+        ctx.strokeRect(10, 40, 31, 31)
+
+        document.body.append(canvas);
+    </script>
+</body>
+```
+:::
+::::
+* strokeStyle
+::: codePen
+```html
+<canvas id="c1" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+<script>
+    const canvas = document.querySelector("#c1");
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#333";
+    ctx.fillRect(10, 5, 30, 30);
+
+    ctx.fillStyle = "#879900";
+    ctx.fillRect(10, 40, 30, 30);
+
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(10, 40, 31, 31)
+</script>
+```
+:::
+---
 ## filter
 ::: tip
 * 模糊、灰度等过滤效果
@@ -349,7 +395,7 @@ date: 2022-11-26
 :::
 ::::
 
-::: codePen label=lineDashOffset val=2 type=number
+::: codePen label=lineDashOffset val=2 type=number height=150
 ```html
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -381,7 +427,7 @@ date: 2022-11-26
 ```
 :::
 * 蚂蚁线
-::: codePen label=timer val=10 type=number
+::: codePen label=timer val=10 type=number height=170
 ```html
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -414,7 +460,26 @@ date: 2022-11-26
 * 同一条线转弯位置的连接方式
 * 可选值：`bevel`,`round`,`miter`
 :::
-::: codePen label=lineJoin val=bevel select=[bevel,round,miter]
+```html{12}
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(50, 50);
+
+        ctx.lineJoin = "bevel";
+
+        ctx.lineTo(100, 10);
+        ctx.stroke();
+    </script>
+</body>
+```
+::: codePen height=100 label=lineJoin val=bevel select=[bevel,round,miter]
 ```html
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -435,3 +500,42 @@ date: 2022-11-26
 </body>
 ```
 :::
+## lineWidth
+::: tip
+* 线宽
+:::
+```js
+ctx.lineWidth = 7;
+```
+## shadow
+::: tip
+|属性|作用|值|例|
+|---|---|---|---|
+|shadowBlur|阴影范围|数字|10|
+|shadowColor|阴影颜色|String|"#333333"|
+|shadowOffsetX|阴影x轴偏移量|Number|10|
+|shadowOffsetY|阴影Y轴偏移量|Number|10|
+
+:::
+```html
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.shadowColor = "red";
+        ctx.shadowBlur = 30;
+        ctx.fillStyle = "#333"
+        ctx.fillRect(50, 30, 200, 100)
+    </script>
+</body>
+```
+## textBaseLine
+* 文字对齐方式
+```js
+ctx.textBaseLine = 'center';
+```
+<img src="./assets/baselineshezhi.png" style="width:300px"/>
+
+## textAlign

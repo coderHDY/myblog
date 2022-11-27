@@ -25,7 +25,7 @@ const registerCodePen = (md) => {
         const encodedInnerHtml = encodeURIComponent(tokens[idx + 1]?.content);
         const reg3 = new RegExp(`${mark}\\s+(.*)`);
         const rawAttrs = token.info.match(reg3);
-        return `<${mark} code=${encodedInnerHtml} ${rawAttrs[1]}>\n`;
+        return `<${mark} code=${encodedInnerHtml} ${rawAttrs && rawAttrs[1]}>\n`;
       } else {
         return `</${mark}>\n`;
       }
