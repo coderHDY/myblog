@@ -157,6 +157,7 @@ export default {
 @media screen and (max-width: 500) {
   .select {
     left: 0% !important;
+    width: 100% !important;
   }
 }
 .label {
