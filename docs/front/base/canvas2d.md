@@ -265,14 +265,15 @@ date: 2022-11-26
 
 ::: codePen val=round select=[round,bott,square]
 ```html
-<canvas id="canvas11" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+<canvas id="canvas100" width="500" height="500" style="width:500px; height: 500px;"></canvas>
 <style>
     canvas {
         background-color: rgb(180, 236, 147);
     }
 </style>
 <script>
-    const canvas = document.getElementById("canvas11");
+    console.log(this.$el)
+    const canvas = document.getElementById("canvas100");
     const ctx = canvas.getContext("2d");
 
     ctx.beginPath();

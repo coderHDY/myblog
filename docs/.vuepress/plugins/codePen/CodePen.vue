@@ -42,6 +42,7 @@
  * ```
  *
  * 注：js代码内不能有单引号，会报错！！！
+ * 注：js选择器用 querySelector
  */
 export default {
   props: {
@@ -75,18 +76,49 @@ export default {
       const jsReg = /\<script\>(.*)\<\/script\>/s;
       const jsCode = rawCode.match(jsReg);
       if (jsCode) {
-        setTimeout(() => {
-          const script = document.createElement("script");
-          script.innerText = jsCode[1]
-            .replace(valReg, this.value)
-            .replace(/(let)|(const)/g, "var")
-            .replace(/\\n/g, "")
-            .replace(/\s{2,}/g, " ");
-          document.body.append(script);
-          setTimeout(() => {
-            script.remove();
-          }, 200);
-        }, 100);
+        // 将js代码放到本地执行
+        const querySlectorReg1 = /(document(?=\.querySelector))/g;
+        const querySlectorReg2 =
+          /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
+        const querySlectorReg3 =
+          /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
+
+        this.$nextTick(() => {
+          try {
+            function sandBox() {
+              console.log(
+                jsCode[1]
+                  .replace(valReg, this.value)
+                  .replace(querySlectorReg1, "this.$el")
+                  .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
+                  .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
+              );
+              eval(
+                jsCode[1]
+                  .replace(valReg, this.value)
+                  .replace(querySlectorReg1, "this.$el")
+                  .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
+                  .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
+              );
+            }
+            sandBox.call(this);
+          } catch (e) {
+            console.warn(e);
+          }
+        });
+        // 添加js代码形式
+        // setTimeout(() => {
+        //   const script = document.createElement("script");
+        //   script.innerText = jsCode[1]
+        //     .replace(valReg, this.value)
+        //     .replace(/(let)|(const)/g, "var")
+        //     .replace(/\\n/g, "")
+        //     .replace(/\s{2,}/g, " ");
+        //   document.body.append(script);
+        //   setTimeout(() => {
+        //     script.remove();
+        //   }, 200);
+        // }, 100);
       }
 
       return rawCode
