@@ -42,7 +42,6 @@
  * ```
  *
  * 注：js代码内不能有单引号，会报错！！！
- * 注：js选择器用 querySelector
  */
 export default {
   props: {
