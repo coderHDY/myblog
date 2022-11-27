@@ -66,7 +66,7 @@ export default {
     innerCode() {
       const rawCode = decodeURIComponent(this.code);
       // css样式隔离
-      const scopeCssReg = /(?<=(\}|(style\>))\s*)(.+)(?=\{)/g;
+      const scopeCssReg = /((}|style>)[^\.\w#]*)([^{]+)(\s*{)/g;
 
       // val变量注入
       const valReg = /{{val}}/g;
@@ -76,19 +76,19 @@ export default {
       const jsCode = rawCode.match(jsReg);
       if (jsCode) {
         // 方案二：将js代码放到本组件沙盒执行
-        const querySlectorReg1 = /(document(?=\.querySelector))/g;
-        const querySlectorReg2 =
-          /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
-        const querySlectorReg3 =
-          /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
 
         this.$nextTick(() => {
           try {
+            const querySlectorReg1 = /document(\.querySelector)/g;
+            const querySlectorReg2 =
+              /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
+            const querySlectorReg3 =
+              /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
             function sandBox() {
               eval(
                 jsCode[1]
                   .replace(valReg, this.value)
-                  .replace(querySlectorReg1, "this.$el")
+                  .replace(querySlectorReg1, "this.$el$1")
                   .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
                   .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
               );
@@ -114,7 +114,7 @@ export default {
       }
 
       return rawCode
-        .replace(scopeCssReg, `.${this.randomClass} $3`)
+        .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
         .replace(valReg, this.value)
         .replace(/(let)|(const)/g, "var")
         .replace(/\\n/g, "")

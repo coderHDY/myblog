@@ -23,9 +23,9 @@ const registerCodePen = (md) => {
       const token = tokens[idx];
       if (token.nesting === 1) {
         const encodedInnerHtml = encodeURIComponent(tokens[idx + 1]?.content);
-        const reg = new RegExp(`(?<=${mark}\\s+)(.*)`, "g");
-        const rawAttrs = token.info.match(reg);
-        return `<${mark} code=${encodedInnerHtml} ${rawAttrs}>\n`;
+        const reg3 = new RegExp(`${mark}\\s+(.*)`);
+        const rawAttrs = token.info.match(reg3);
+        return `<${mark} code=${encodedInnerHtml} ${rawAttrs[1]}>\n`;
       } else {
         return `</${mark}>\n`;
       }
