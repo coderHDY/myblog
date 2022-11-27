@@ -154,6 +154,11 @@ export default {
   left: 50%;
   width: 50%;
 }
+@media screen and (max-width: 500) {
+  .select {
+    left: 0%;
+  }
+}
 .label {
   height: 40px;
   line-height: 40px;

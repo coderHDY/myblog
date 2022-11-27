@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     title: '西瓜皮儿',
     port: 8070,
-    // host: '192.168.31.237',
+    host: '192.168.31.237',
     theme: 'reco',
     head: [
         ['link', { rel: 'icon', href: '/assets/icons/book128.png' }],
