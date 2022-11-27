@@ -7,6 +7,7 @@
     <div style="height: 0; overflow: hidden">
       <slot></slot>
     </div>
+
     <div
       class="select"
       v-if="(selectVals && selectVals.length > 1) || val !== undefined"
@@ -26,9 +27,11 @@
       </el-select>
       <el-input
         v-else-if="val !== undefined"
-        v-model.lazy="value"
+        v-model="value"
         :placeholder="value"
+        :type="type"
       ></el-input>
+      <div v-if="label" class="label">{{ label }}</div>
     </div>
     <div v-html="innerCode"></div>
   </div>
@@ -54,8 +57,13 @@ export default {
       default: "200",
     },
     code: String,
+    type: {
+      type: String,
+      default: "string",
+    },
     select: String,
     val: String,
+    label: String,
   },
   data() {
     return {
@@ -145,6 +153,16 @@ export default {
   position: relative;
   left: 50%;
   width: 50%;
+}
+.label {
+  height: 40px;
+  line-height: 40px;
+  margin-right: 1rem;
+  font-weight: 700;
+  color: cornflowerblue;
+}
+.label::after {
+  content: ":";
 }
 .select * {
   background-color: #fff !important;

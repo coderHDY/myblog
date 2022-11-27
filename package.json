@@ -10,7 +10,6 @@
     "@vuepress/shared-utils": "1.8.2",
     "async-validator": "1.11.5",
     "element-ui": "2.15.6",
-    "fastclick": "^1.0.6",
     "markdown-it": "8.4.2",
     "markdown-it-container": "2.0.0",
     "md5": "2.3.0",

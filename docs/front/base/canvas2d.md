@@ -150,7 +150,7 @@ date: 2022-11-26
 
 :::
 
-::: codePen val=destination-atop height=300 select=[destination-atop,source-atop,source-over,destination-over,source-in,source-out,destination-in,destination-out,lighter,copy,xor,multiply,screen,overlay,darken,lighten,color-dodge,color-burn,hard-light,soft-light,difference,exclusion,hue,saturation,color,luminosity]
+::: codePen label=globalCompositeOperation val=destination-atop height=300 select=[destination-atop,source-atop,source-over,destination-over,source-in,source-out,destination-in,destination-out,lighter,copy,xor,multiply,screen,overlay,darken,lighten,color-dodge,color-burn,hard-light,soft-light,difference,exclusion,hue,saturation,color,luminosity]
 ```html
 <canvas id="canvas100" width="500" height="500" style="width:500px; height: 500px;"></canvas>
 <style>
@@ -243,7 +243,6 @@ date: 2022-11-26
 |round|线段末端以圆形结束|
 |square|线段末端以方形结束，增加了一个宽度和线段相同，高度是线段厚度一半的矩形区域|
 :::
-
 ```html
 <body>
     <canvas id="canvas1" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -262,8 +261,7 @@ date: 2022-11-26
     </script>
 </body>
 ```
-
-::: codePen val=round select=[round,bott,square]
+::: codePen label=lineCap val=round select=[round,bott,square]
 ```html
 <canvas id="canvas100" width="500" height="500" style="width:500px; height: 500px;"></canvas>
 <style>
@@ -283,5 +281,157 @@ date: 2022-11-26
 
     ctx.stroke();
 </script>
+```
+:::
+## lineDashOffset
+::: tip
+* 虚线偏移量
+:::
+:::: tabs
+::: tab label=lineDashOffset
+```html{8,10}
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // 设置虚线 实线4-虚线16
+        ctx.setLineDash([4, 16]);
+        // 向前偏移
+        ctx.lineDashOffset = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 50);
+        ctx.lineTo(400, 50);
+        ctx.stroke();
+
+        // 重置虚线配置
+        ctx.setLineDash([0, 0]);
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(100, 100);
+        ctx.lineWidth = 15;
+        ctx.lineCap = "round";
+
+        ctx.stroke();
+    </script>
+</body>
+```
+:::
+::: tab label=蚂蚁线
+```html{11,12}
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.setLineDash([5, 10]);
+        let offset = 0;
+        const stashLine = (x, y) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            offset++;
+            ctx.lineDashOffset = offset;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 100, y);
+            ctx.lineTo(x + 100, y + 100);
+            ctx.lineTo(x, y + 100);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            setTimeout(() => stashLine(x, y), 10)
+        }
+        stashLine(10, 10);
+    </script>
+</body>
+```
+:::
+::::
+
+::: codePen label=lineDashOffset val=2 type=number
+```html
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // 设置虚线 实线4-虚线16
+        ctx.setLineDash([4, 16]);
+        // 向前偏移
+        ctx.lineDashOffset = {{val}};
+
+        ctx.beginPath();
+        ctx.moveTo(0, 50);
+        ctx.lineTo(400, 50);
+        ctx.stroke();
+
+        // 重置虚线配置
+        ctx.setLineDash([0, 0]);
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(100, 100);
+        ctx.lineWidth = 15;
+        ctx.lineCap = "round";
+
+        ctx.stroke();
+    </script>
+</body>
+```
+:::
+* 蚂蚁线
+::: codePen label=timer val=10 type=number
+```html
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.setLineDash([5, 10]);
+        let offset = 0;
+        const stashLine = (x, y) => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            offset++;
+            ctx.lineDashOffset = offset;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + 100, y);
+            ctx.lineTo(x + 100, y + 100);
+            ctx.lineTo(x, y + 100);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            setTimeout(() => stashLine(x, y), {{val}})
+        }
+        stashLine(10, 10);
+    </script>
+</body>
+```
+:::
+## lineJoin
+::: tip
+* 同一条线转弯位置的连接方式
+* 可选值：`bevel`,`round`,`miter`
+:::
+::: codePen label=lineJoin val=bevel select=[bevel,round,miter]
+```html
+<body>
+    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+    <script>
+        const canvas = document.querySelector("#dashCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        ctx.moveTo(10, 10);
+        ctx.lineTo(50, 50);
+
+        ctx.lineJoin = "{{val}}";
+
+        ctx.lineTo(100, 10);
+        ctx.stroke();
+    </script>
+</body>
 ```
 :::
