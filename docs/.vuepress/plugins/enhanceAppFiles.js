@@ -6,6 +6,10 @@ import ElementUI from "element-ui";
 import Tabs from 'element-ui/lib/tabs';
 import TabPane from 'element-ui/lib/tab-pane';
 import 'element-ui/lib/theme-chalk/index.css';
+import FastClick from 'fastclick';
+
+// 处理ElementUI select组件点击两次生效问题
+FastClick.attach(document.body);
 
 const fixJumpHash = (router) => {
     router.onReady(() => {

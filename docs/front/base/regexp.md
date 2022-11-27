@@ -374,6 +374,7 @@ console.log(reg2.exec(str)); // [ 'abc', index: 5, input: 'I am abc', groups: un
 ### 高级筛选
 :::: tabs
 ::: tab label=环视
+>又名`零宽断言`，ios / mac不支持
 * 【exp1(?=exp2)】：查找 exp2 前面的 exp1。
 * 【exp1(?!exp2)】：查找后面不是 exp2 的 exp1。
 * 【(?<=exp2)exp1】：查找前面是 exp2 的 exp1。
