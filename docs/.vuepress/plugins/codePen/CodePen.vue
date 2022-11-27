@@ -151,14 +151,6 @@ export default {
   display: flex;
   flex-direction: row-reverse;
   position: relative;
-  left: 50%;
-  width: 50%;
-}
-@media screen and (max-width: 500) {
-  .select {
-    left: 0% !important;
-    width: 100% !important;
-  }
 }
 .label {
   height: 40px;
