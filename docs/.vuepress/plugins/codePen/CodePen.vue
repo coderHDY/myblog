@@ -125,13 +125,15 @@ export default {
         // }, 100);
       }
 
-      return rawCode
-        .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-        .replace(htmlReg, "")
-        .replace(valReg, this.value)
-        .replace(/(let)|(const)/g, "var")
-        .replace(/\\n/g, "")
-        .replace(/\s{2,}/g, " ");
+      return (
+        rawCode
+          .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
+          .replace(htmlReg, "")
+          .replace(valReg, this.value)
+          // .replace(/(let)|(const)/g, "var")
+          .replace(/\\n/g, "")
+          .replace(/\s{2,}/g, " ")
+      );
     },
     selectVals() {
       if (!this.$props.select) return [];
