@@ -73,6 +73,10 @@ export default {
   computed: {
     innerCode() {
       const rawCode = decodeURIComponent(this.code);
+      // html内部标签删除
+      const htmlReg =
+        /<\/?body>|<head>.*<\/head>|<\/?html[^>]*>|<\!DOCTYPE\s*html>/gs;
+
       // css样式隔离
       const scopeCssReg = /((}|style>)[^\.\w#]*)([^{]+)(\s*{)/g;
 
@@ -123,7 +127,7 @@ export default {
 
       return rawCode
         .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-        .replace(jsReg, "")
+        .replace(htmlReg, "")
         .replace(valReg, this.value)
         .replace(/(let)|(const)/g, "var")
         .replace(/\\n/g, "")
