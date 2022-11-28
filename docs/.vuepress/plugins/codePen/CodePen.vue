@@ -84,7 +84,7 @@ export default {
       const valReg = /{{val}}/g;
 
       // js变量注入/全局let/const改var
-      const jsReg = /\<script\>(.*)\<\/script\>/s;
+      const jsReg = /(\<script\>)(.*)(\<\/script\>)/s;
       const jsCode = rawCode.match(jsReg);
       if (jsCode) {
         // 方案二：将js代码放到本组件沙盒执行
@@ -97,7 +97,7 @@ export default {
             /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
           function sandBox() {
             try {
-              const box = `try{${jsCode[1]
+              const box = `try{${jsCode[2]
                 .replace(valReg, this.value)
                 .replace(querySlectorReg1, "this.$el$1")
                 .replace(querySlectorReg2, 'this.$el.querySelector("#$1")')
@@ -130,7 +130,7 @@ export default {
       return (
         rawCode
           .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-          // .replace(jsReg, "")
+          .replace(jsReg, "$1try{$2}catch(e){console.warn(e)}$3")
           .replace(htmlReg, "")
           .replace(valReg, this.value)
           // .replace(/(let)|(const)/g, "var")
