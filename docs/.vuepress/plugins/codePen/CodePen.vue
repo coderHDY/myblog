@@ -46,7 +46,6 @@
  * XXX
  * ```
  *
- * 注：js代码内不能有单引号，会报错！！！
  */
 export default {
   props: {
@@ -75,7 +74,7 @@ export default {
   computed: {
     // 方案三：iframe
     innerCode() {
-      const rawCode = decodeURIComponent(this.code);
+      let rawCode = decodeURIComponent(this.code);
       // html内部标签删除
       // const htmlReg = /<\/?body>|<head>.*<\/head>|<\/?html[^>]*>|<\!DOCTYPE\s*html>/gs;
       // css样式隔离
@@ -128,16 +127,18 @@ export default {
       // }, 100);
       // }
 
-      return (
-        rawCode
-          // .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-          // .replace(jsReg, "")
-          // .replace(htmlReg, "")
-          .replace(valReg, this.value)
-        // .replace(/(let)|(const)/g, "var")
-        // .replace(/\\n/g, "")
-        // .replace(/\s{2,}/g, " ")
-      );
+      const bodyReg = /(\<body)([^\>]*\>)/g;
+
+      rawCode = bodyReg.test(rawCode)
+        ? rawCode.replace(bodyReg, '$1 style="overflow:hidden" $2')
+        : `<body style="overflow:hidden" >\n${rawCode}\n</body>`;
+      return rawCode.replace(valReg, this.value);
+      // .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
+      // .replace(jsReg, "")
+      // .replace(htmlReg, "")
+      // .replace(/(let)|(const)/g, "var")
+      // .replace(/\\n/g, "")
+      // .replace(/\s{2,}/g, " ")
     },
     selectVals() {
       if (!this.$props.select) return [];

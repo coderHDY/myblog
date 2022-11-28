@@ -461,7 +461,7 @@ ctx.lineWidth = 7;
 :::
 ::: codePen height=100
 ```html
-<body>
+<body style="overflow:hidden;">
     <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
     <script>
         const canvas = document.querySelector("#canvas");
@@ -472,7 +472,6 @@ ctx.lineWidth = 7;
         ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
         ctx.stroke();
     </script>
-</body>
 ```
 :::
 ```html
