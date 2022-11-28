@@ -33,7 +33,7 @@
       ></el-input>
       <div v-if="label" class="label">{{ label }}</div>
     </div>
-    <div v-html="innerCode"></div>
+    <div v-html="innerCode" ref="coder"></div>
   </div>
 </template>
 
@@ -145,6 +145,9 @@ export default {
   },
   mounted() {
     // console.log(decodeURIComponent(this.code));
+  },
+  beforeDestroy() {
+    this.$refs.coder.innerHTML = "";
   },
 };
 </script>
