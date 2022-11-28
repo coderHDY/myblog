@@ -41,8 +41,8 @@ date: 2022-11-26
         const ctx = canvas.getContext("2d");
 
         ctx.arc(100, 100, 70, Math.PI, 0, false);
-        ctx.clip(); // 将上述部分剪裁掉
-        ctx.fillRect(0, 0, 100, 100); // 填充形状，被剪裁掉的无法填充
+        ctx.clip();
+        ctx.fillRect(0, 0, 100, 100);
     </script>
 </body>
 ```
@@ -290,9 +290,7 @@ ctx.textBaseLine = 'center';
         const canvas = document.querySelector("#dashCanvas");
         const ctx = canvas.getContext("2d");
 
-        // 设置虚线 实线4-虚线16
         ctx.setLineDash([4, 16]);
-        // 向前偏移
         ctx.lineDashOffset = {{val}};
 
         ctx.beginPath();
@@ -300,7 +298,6 @@ ctx.textBaseLine = 'center';
         ctx.lineTo(400, 50);
         ctx.stroke();
 
-        // 重置虚线配置
         ctx.setLineDash([0, 0]);
         ctx.beginPath();
         ctx.moveTo(10, 10);
