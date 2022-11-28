@@ -128,7 +128,7 @@ export default {
       return (
         rawCode
           .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-          .replace(jsReg, "")
+          // .replace(jsReg, "")
           // .replace(htmlReg, "")
           .replace(valReg, this.value)
           // .replace(/(let)|(const)/g, "var")
