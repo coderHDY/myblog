@@ -90,13 +90,13 @@ export default {
         // 方案二：将js代码放到本组件沙盒执行
 
         this.$nextTick(() => {
-          try {
-            const querySlectorReg1 = /document(\.querySelector)/g;
-            const querySlectorReg2 =
-              /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
-            const querySlectorReg3 =
-              /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
-            function sandBox() {
+          const querySlectorReg1 = /document(\.querySelector)/g;
+          const querySlectorReg2 =
+            /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
+          const querySlectorReg3 =
+            /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
+          function sandBox() {
+            try {
               eval(
                 jsCode[1]
                   .replace(valReg, this.value)
@@ -104,11 +104,11 @@ export default {
                   .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
                   .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
               );
+            } catch (e) {
+              console.warn(e);
             }
-            sandBox.call(this);
-          } catch (e) {
-            console.warn(e);
           }
+          sandBox.call(this);
         });
         // 方案一: 添加js代码形式
         // setTimeout(() => {
@@ -128,7 +128,7 @@ export default {
       return (
         rawCode
           .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-          .replace(htmlReg, "")
+          // .replace(htmlReg, "")
           .replace(valReg, this.value)
           // .replace(/(let)|(const)/g, "var")
           .replace(/\\n/g, "")
