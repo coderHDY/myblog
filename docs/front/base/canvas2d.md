@@ -144,9 +144,9 @@ ctx.textBaseLine = 'center';
         ctx.lineTo(100, 40);
         ctx.stroke();
         ctx.font = "30px emoji";
-        ctx.textBaseline = "{{val}}"
+        ctx.textBaseline = "{{val}}";
         
-        ctx.fillText("你好呀", 100, 40)
+        ctx.fillText("你好呀", 100, 40);
     </script>
 </body>
 ```
@@ -174,9 +174,9 @@ ctx.textBaseLine = 'center';
         ctx.lineTo(100, 40);
         ctx.stroke();
         ctx.font = "30px emoji";
-        ctx.textBaseline = "{{val}}"
+        ctx.textBaseline = "{{val}}";
         
-        ctx.fillText("你好呀", 100, 40)
+        ctx.fillText("你好呀", 100, 40);
     </script>
 </body>
 ```
@@ -198,9 +198,9 @@ ctx.textBaseLine = 'center';
         ctx.moveTo(100, 0);
         ctx.lineTo(100, 100);
         ctx.stroke();
-        ctx.font = "30px emoji"
-        ctx.textAlign = "{{val}}"
-        ctx.fillText("你好呀", 100, 30)
+        ctx.font = "30px emoji";
+        ctx.textAlign = "{{val}}";
+        ctx.fillText("你好呀", 100, 30);
     </script>
 </body>
 ```
@@ -221,8 +221,8 @@ ctx.textBaseLine = 'center';
         ctx.moveTo(100, 0);
         ctx.lineTo(100, 100);
         ctx.stroke();
-        ctx.textAlign = "center"
-        ctx.fillText("你好呀", 100, 30)
+        ctx.textAlign = "center";
+        ctx.fillText("你好呀", 100, 30);
     </script>
 </body>
 ```
@@ -273,7 +273,7 @@ ctx.textBaseLine = 'center';
         ctx.lineWidth = 15;
         ctx.lineCap = "round";
  
-        ctx.stroke()
+        ctx.stroke();
     </script>
 </body>
 ```
@@ -332,7 +332,7 @@ ctx.textBaseLine = 'center';
             ctx.lineTo(x, y + 100);
             ctx.lineTo(x, y);
             ctx.stroke();
-            setTimeout(() => stashLine(x, y), {{val}})
+            setTimeout(() => stashLine(x, y), {{val}});
         }
         stashLine(10, 10);
     </script>
@@ -392,7 +392,7 @@ ctx.textBaseLine = 'center';
             ctx.lineTo(x, y + 100);
             ctx.lineTo(x, y);
             ctx.stroke();
-            setTimeout(() => stashLine(x, y), 10)
+            setTimeout(() => stashLine(x, y), 10);
         }
         stashLine(10, 10);
     </script>
@@ -468,9 +468,9 @@ ctx.lineWidth = 7;
         const ctx = canvas.getContext("2d");
 
         ctx.beginPath();
-        ctx.moveTo(100, 100)
-        ctx.bezierCurveTo(100, 0, 10, 30, 10, 90)
-        ctx.stroke()
+        ctx.moveTo(100, 100);
+        ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
+        ctx.stroke();
     </script>
 </body>
 ```
@@ -483,9 +483,9 @@ ctx.lineWidth = 7;
         const ctx = canvas.getContext("2d");
 
         ctx.beginPath();
-        ctx.moveTo(100, 100)
-        ctx.bezierCurveTo(100, 0, 10, 30, 10, 90)
-        ctx.stroke()
+        ctx.moveTo(100, 100);
+        ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
+        ctx.stroke();
     </script>
 </body>
 ```
@@ -510,7 +510,7 @@ ctx.lineWidth = 7;
     ctx.fillRect(10, 40, 30, 30);
 
     ctx.strokeStyle = "red";
-    ctx.strokeRect(10, 40, 31, 31)
+    ctx.strokeRect(10, 40, 31, 31);
 </script>
 ```
 :::
@@ -741,7 +741,7 @@ ctx.lineWidth = 7;
         canvas.height = canvas.height * dpr;
         ctx.scale(dpr, dpr);
 
-        ctx.arc(100, 100, 50, Math.PI, 0, false)
+        ctx.arc(100, 100, 50, Math.PI, 0, false);
         ctx.stroke();
     </script>
 </body>
@@ -760,7 +760,7 @@ ctx.lineWidth = 7;
         canvas.height = canvas.height * dpr;
         ctx.scale(dpr, dpr);
 
-        ctx.arc(100, 100, 50, Math.PI, 0, false)
+        ctx.arc(100, 100, 50, Math.PI, 0, false);
         ctx.stroke();
     </script>
 </body>
