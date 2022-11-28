@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="code-pen"
-    :class="randomClass"
-    :style="{ width: `${width}px`, height: `${height}px` }"
-  >
+  <div class="code-pen" :class="randomClass">
     <div style="height: 0; overflow: hidden">
       <slot></slot>
     </div>
@@ -33,7 +29,13 @@
       ></el-input>
       <div v-if="label" class="label">{{ label }}</div>
     </div>
-    <div v-html="innerCode" ref="coder"></div>
+    <!-- <div v-html="innerCode" ref="coder"></div> -->
+    <iframe
+      frameborder="0"
+      id="frame"
+      :srcDoc="innerCode"
+      :style="{ width: `${width}px`, height: `${height}px` }"
+    ></iframe>
   </div>
 </template>
 
@@ -71,69 +73,70 @@ export default {
     };
   },
   computed: {
+    // 方案三：iframe
     innerCode() {
       const rawCode = decodeURIComponent(this.code);
       // html内部标签删除
-      const htmlReg =
-        /<\/?body>|<head>.*<\/head>|<\/?html[^>]*>|<\!DOCTYPE\s*html>/gs;
-
+      // const htmlReg = /<\/?body>|<head>.*<\/head>|<\/?html[^>]*>|<\!DOCTYPE\s*html>/gs;
       // css样式隔离
-      const scopeCssReg = /((}|style>)[^\.\w#]*)([^{]+)(\s*{)/g;
+      // const scopeCssReg = /((}|style>)[^\.\w#]*)([^{]+)(\s*{)/g;
+
+      // js变量注入/全局let/const改var
+      // const jsReg = /\<script\>(.*)\<\/script\>/s;
+      // const jsCode = rawCode.match(jsReg);
 
       // val变量注入
       const valReg = /{{val}}/g;
 
-      // js变量注入/全局let/const改var
-      const jsReg = /\<script\>(.*)\<\/script\>/s;
-      const jsCode = rawCode.match(jsReg);
-      if (jsCode) {
-        // 方案二：将js代码放到本组件沙盒执行
+      // if (jsCode) {
+      // 方案二：将js代码放到本组件沙盒执行
 
-        this.$nextTick(() => {
-          const querySlectorReg1 = /document(\.querySelector)/g;
-          const querySlectorReg2 =
-            /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
-          const querySlectorReg3 =
-            /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
-          function sandBox() {
-            try {
-              eval(
-                jsCode[1]
-                  .replace(valReg, this.value)
-                  .replace(querySlectorReg1, "this.$el$1")
-                  .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
-                  .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
-              );
-            } catch (e) {
-              console.warn(e);
-            }
-          }
-          sandBox.call(this);
-        });
-        // 方案一: 添加js代码形式
-        // setTimeout(() => {
-        //   const script = document.createElement("script");
-        //   script.innerText = jsCode[1]
-        //     .replace(valReg, this.value)
-        //     .replace(/(let)|(const)/g, "var")
-        //     .replace(/\\n/g, "")
-        //     .replace(/\s{2,}/g, " ");
-        //   document.body.append(script);
-        //   setTimeout(() => {
-        //     script.remove();
-        //   }, 200);
-        // }, 100);
-      }
+      // this.$nextTick(() => {
+      //   const querySlectorReg1 = /document(\.querySelector)/g;
+      //   const querySlectorReg2 =
+      //     /document.getElementById\(['"`]([^'"`]+)['"`]\)/g;
+      //   const querySlectorReg3 =
+      //     /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
+      //   function sandBox() {
+      //     try {
+      //       eval(
+      //         jsCode[1]
+      //           .replace(valReg, this.value)
+      //           .replace(querySlectorReg1, "this.$el$1")
+      //           .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
+      //           .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
+      //       );
+      //     } catch (e) {
+      //       console.warn(e);
+      //     }
+      //   }
+      //   sandBox.call(this);
+      // });
+
+      // 方案一: 添加js代码形式
+      // setTimeout(() => {
+      //   const script = document.createElement("script");
+      //   script.innerText = jsCode[1]
+      //     .replace(valReg, this.value)
+      //     .replace(/(let)|(const)/g, "var")
+      //     .replace(/\\n/g, "")
+      //     .replace(/\s{2,}/g, " ");
+      //   document.body.append(script);
+      //   setTimeout(() => {
+      //     script.remove();
+      //   }, 200);
+      // }, 100);
+      // }
 
       return (
         rawCode
-          .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
-          .replace(jsReg, "")
-          .replace(htmlReg, "")
+          // .replace(scopeCssReg, `$1 .${this.randomClass} $3 $4`)
+          // .replace(jsReg, "")
+          // .replace(htmlReg, "")
           .replace(valReg, this.value)
-          // .replace(/(let)|(const)/g, "var")
-          .replace(/\\n/g, "")
-          .replace(/\s{2,}/g, " ")
+        // .replace(/(let)|(const)/g, "var")
+        // .replace(/\\n/g, "")
+        // .replace(/\s{2,}/g, " ")
       );
     },
     selectVals() {
@@ -143,12 +146,6 @@ export default {
     randomClass() {
       return `c${this._uid}_${Math.floor(Math.random() * 1000)}`;
     },
-  },
-  mounted() {
-    // console.log(decodeURIComponent(this.code));
-  },
-  beforeDestroy() {
-    this.$refs.coder.innerHTML = "";
   },
 };
 </script>
