@@ -97,13 +97,15 @@ export default {
             /document.getElementsByClassName\(['"`]\s*([^'"`]+)['"`]\)/g;
           function sandBox() {
             try {
-              eval(
-                jsCode[1]
-                  .replace(valReg, this.value)
-                  .replace(querySlectorReg1, "this.$el$1")
-                  .replace(querySlectorReg2, `this.$el.querySelector("#$1")`)
-                  .replace(querySlectorReg3, `this.$el.querySelector(".$1")`)
-              );
+              const box = `try{${jsCode[1]
+                .replace(valReg, this.value)
+                .replace(querySlectorReg1, "this.$el$1")
+                .replace(querySlectorReg2, 'this.$el.querySelector("#$1")')
+                .replace(
+                  querySlectorReg3,
+                  'this.$el.querySelector(".$1")'
+                )}} catch(e) {console.log(e)}`;
+              eval(box);
             } catch (e) {
               console.warn(e);
             }
