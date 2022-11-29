@@ -313,7 +313,7 @@ console.log('1'.padEnd(10)); // '1         '
 ### replace
 ::: tip
 * 作用：替换（一个或全部）指定字符串
-* 调用：str1.replace(reg, str2)
+* 调用：str1.replace(reg, str2 | (match, $1, $2, ...) => String)
 * 入参1：String | RegExp 
 * 入参2：String | (matchs[, match...], input) => {}
 * 返回：String
@@ -374,6 +374,17 @@ console.log(a.replace(reg3, (matchs, match, index, input) => {
     return 'L'
 })); // heLord?
 ```
+:::
+::: tab label=$
+* 插入$:`$$`
+* 插入第N个匹配组:`$N`
+* 插入匹配的左边的一个字符:$`
+* 插入匹配的右边的一个字符:`$'`
+* 插入匹配的具名名称:`$Name`
+```js
+str.replace(valReg, (_, $1) => attr[$1]);
+```
+:::
 ::::
 ### replaceAll
 ::: danger

@@ -1,9 +1,5 @@
 <template>
   <div class="code-pen" :class="randomClass">
-    <div style="height: 0; overflow: hidden">
-      <slot></slot>
-    </div>
-
     <div
       class="select"
       v-if="(selectVals && selectVals.length > 1) || val !== undefined"
@@ -36,6 +32,10 @@
       :srcDoc="innerCode"
       :style="{ width: `${width}px`, height: `${height}px` }"
     ></iframe>
+    <!-- <div style="height: 0; overflow: hidden"> -->
+    <div>
+      <slot></slot>
+    </div>
   </div>
 </template>
 

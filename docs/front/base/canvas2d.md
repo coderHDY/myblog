@@ -41,25 +41,12 @@ date: 2022-11-26
         const ctx = canvas.getContext("2d");
 
         ctx.arc(100, 100, 70, Math.PI, 0, false);
-        ctx.clip();
-        ctx.fillRect(0, 0, 100, 100);
-    </script>
-</body>
-```
-:::
-```html
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-
-        ctx.arc(100, 100, 70, Math.PI, 0, false);
         ctx.clip(); // 将上述部分剪裁掉
         ctx.fillRect(0, 0, 100, 100); // 填充形状，被剪裁掉的无法填充
     </script>
 </body>
 ```
+:::
 ## 文字
 ### font
 ::: tip
@@ -151,38 +138,9 @@ ctx.textBaseLine = 'center';
 </body>
 ```
 :::
-```html
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-        const dpr = window.devicePixelRatio;
-        canvas.style.width = canvas.width;
-        canvas.style.height = canvas.height;
-        canvas.width = canvas.width * dpr;
-        canvas.height = canvas.height * dpr;
-        ctx.scale(dpr, dpr);
-
-        ctx.moveTo(10, 25);
-        ctx.lineTo(100, 25);
-        ctx.stroke();
-        ctx.moveTo(10, 55);
-        ctx.lineTo(100, 55);
-        ctx.stroke();
-        ctx.moveTo(10, 40);
-        ctx.lineTo(100, 40);
-        ctx.stroke();
-        ctx.font = "30px emoji";
-        ctx.textBaseline = "{{val}}";
-        
-        ctx.fillText("你好呀", 100, 40);
-    </script>
-</body>
-```
 ### textAlign
 ::: codePen label=textAlign val=center select=[center,left,right,start,end] height=100
-```html
+```html{16}
 <body>
     <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
     <script>
@@ -205,27 +163,6 @@ ctx.textBaseLine = 'center';
 </body>
 ```
 :::
-```html{16}
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-        const dpr = window.devicePixelRatio;
-        canvas.style.width = canvas.width;
-        canvas.style.height = canvas.height;
-        canvas.width = canvas.width * dpr;
-        canvas.height = canvas.height * dpr;
-        ctx.scale(dpr, dpr);
-
-        ctx.moveTo(100, 0);
-        ctx.lineTo(100, 100);
-        ctx.stroke();
-        ctx.textAlign = "center";
-        ctx.fillText("你好呀", 100, 30);
-    </script>
-</body>
-```
 ## 线
 ### lineCap
 ::: tip
@@ -259,30 +196,12 @@ ctx.textBaseLine = 'center';
 </script>
 ```
 :::
-```html
-<body>
-    <canvas id="canvas1" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-
-    <script>
-        const canvas = document.getElementById('canvas1');
-        const ctx = canvas.getContext('2d');
-
-        ctx.beginPath();
-        ctx.moveTo(10, 10);
-        ctx.lineTo(100, 100);
-        ctx.lineWidth = 15;
-        ctx.lineCap = "round";
- 
-        ctx.stroke();
-    </script>
-</body>
-```
 ### lineDashOffset
 ::: tip
 * 虚线偏移量
 :::
 
-::: codePen label=lineDashOffset val=2 type=number height=150
+::: codePen label=lineDashOffset val=2 type=number height=151
 ```html
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -400,14 +319,13 @@ ctx.textBaseLine = 'center';
 ```
 :::
 ::::
-
 ### lineJoin
 ::: tip
 * 同一条线转弯位置的连接方式
 * 可选值：`bevel`,`round`,`miter`
 :::
 ::: codePen height=130 label=lineJoin val=bevel select=[bevel,round,miter]
-```html
+```html{12}
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
     <script>
@@ -427,25 +345,6 @@ ctx.textBaseLine = 'center';
 </body>
 ```
 :::
-```html{12}
-<body>
-    <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#dashCanvas");
-        const ctx = canvas.getContext("2d");
-
-        ctx.lineWidth = 20;
-        ctx.beginPath();
-        ctx.moveTo(10, 10);
-        ctx.lineTo(50, 50);
-
-        ctx.lineJoin = "bevel";
-
-        ctx.lineTo(100, 10);
-        ctx.stroke();
-    </script>
-</body>
-```
 ### lineWidth
 ::: tip
 * 线宽
@@ -472,22 +371,9 @@ ctx.lineWidth = 7;
         ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
         ctx.stroke();
     </script>
-```
-:::
-```html
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-
-        ctx.beginPath();
-        ctx.moveTo(100, 100);
-        ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
-        ctx.stroke();
-    </script>
 </body>
 ```
+:::
 ## 形状
 ### strokeStyle/fillStyle
 ::: tip
@@ -727,25 +613,6 @@ ctx.lineWidth = 7;
 * `anticlockwise`: 逆时针，默认为false
 :::
 ::: codePen height=100
-```html
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-        const dpr = window.devicePixelRatio;
-        canvas.style.width = canvas.width;
-        canvas.style.height = canvas.height;
-        canvas.width = canvas.width * dpr;
-        canvas.height = canvas.height * dpr;
-        ctx.scale(dpr, dpr);
-
-        ctx.arc(100, 100, 50, Math.PI, 0, false);
-        ctx.stroke();
-    </script>
-</body>
-```
-:::
 ```html{13}
 <body>
     <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -764,6 +631,7 @@ ctx.lineWidth = 7;
     </script>
 </body>
 ```
+:::
 ### arcTo
 ::: tip
 * ctx.arcTo(x1, y1, x2, y2, radius);
@@ -779,23 +647,9 @@ ctx.lineWidth = 7;
 
         ctx.beginPath();
         ctx.moveTo(100, 100);
-        ctx.arcTo(100, 0, 0, 0, 100);
-        ctx.stroke();
-    </script>
-</body>
-```
-:::
-```html
-<body>
-    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
-    <script>
-        const canvas = document.querySelector("#canvas");
-        const ctx = canvas.getContext("2d");
-
-        ctx.beginPath();
-        ctx.moveTo(100, 100);
         ctx.arcTo(100, 0, 0, 0, 100); // 直角切线，半径100
         ctx.stroke();
     </script>
 </body>
 ```
+:::
