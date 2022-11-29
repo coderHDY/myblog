@@ -7,6 +7,7 @@ date: 2022-11-26
 |变量|作用|调用|
 |---|---|---|
 |beginPath|重开一个路径|beginPath()|
+|closePath|将画笔以直线回到此次路径的起点|closePath()|
 |stroke|将本次beginPath以后的线都`描`出来|stroke()|
 |fill|将本次beginPath以后的线都`填充`出来|fill()|
 |clearRect|清除方块|clearRect(x, y, width, height)|
@@ -32,6 +33,12 @@ date: 2022-11-26
 </body>
 ```
 ### clip规则
+::: tip
+* 作用：以之前的图形为基准，剪切掉外部的canvas，**以后绘图都只会在之前的图形基础上绘制**
+* 使用：ctx.clip(path?, fillRule?)
+* path：路径
+* fillRule（判断内部和外部的算法）：`evenodd` | `nonzero`
+:::
 ::: codePen height=100
 ```html
 <body>
@@ -591,6 +598,7 @@ ctx.lineWidth = 7;
 |shadowOffsetY|阴影Y轴偏移量|Number|10|
 
 :::
+::: codePen height=170
 ```html
 <body>
     <canvas id="dashCanvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -605,6 +613,7 @@ ctx.lineWidth = 7;
     </script>
 </body>
 ```
+:::
 ## 圆
 ### arc
 ::: tip
@@ -637,7 +646,7 @@ ctx.lineWidth = 7;
 * ctx.arcTo(x1, y1, x2, y2, radius);
 * 需要先到一个点，然后根据arcTo传的两个点做出来一个角，然后从初始点到这个角的切线
 :::
-::: codePen
+::: codePen height=130
 ```html
 <body>
     <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
@@ -649,6 +658,227 @@ ctx.lineWidth = 7;
         ctx.moveTo(100, 100);
         ctx.arcTo(100, 0, 0, 0, 100); // 直角切线，半径100
         ctx.stroke();
+
+        // 画出直角
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(100, 0);
+        ctx.lineTo(100, 100);
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+    </script>
+</body>
+```
+:::
+## 颜色
+### addColorStop
+::: tip
+* 渐变颜色的填充器
+* 调用：`gradient.addColorStop(0.3, "blue")`
+:::
+### createConicGradient
+::: tip
+* 作用：围绕某个点做圆状渐变
+* 调用：ctx.createConicGradient(`startAngle`, `x`, `y`)
+* 返回：圆状渐变`制作器`
+* 制作渐变：gradient.addColorStop(0～1, color)
+* 通过`fillStyle`将渐变制作器加上。
+:::
+::: codePen height=250
+```html{8-12}
+<body>
+    <canvas id="canvas" width="500" height="500" style="width:500px; height: 500px;"></canvas>
+
+    <script>
+        const canvas = document.querySelector("#canvas");
+        const ctx = canvas.getContext("2d");
+
+        const gradient = ctx.createConicGradient(0, 120, 120);
+        gradient.addColorStop(0, "red");
+        gradient.addColorStop(0.5, "blue");
+        gradient.addColorStop(1, "red");
+        ctx.fillStyle = gradient;
+        ctx.arc(120, 120, 100, 0, 2 * Math.PI);
+        ctx.fill();
+    </script>
+</body>
+```
+:::
+### createLinearGradient
+::: codePen height=120
+```html
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    const gradient = ctx.createLinearGradient(10, 0, 100, 100);
+    gradient.addColorStop(0, "red");
+    gradient.addColorStop(0.3, "blue");
+    gradient.addColorStop(1, "pink");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(10, 10, 100, 100);
+</script>
+```
+:::
+### createRadialGradient
+::: codePen height=210
+```html
+<body>
+    <canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+
+    <script>
+        const canvas = document.querySelector("#canvas");
+        const ctx = canvas.getContext("2d");
+
+
+        let stopR = new Proxy({ val: 80 }, {
+            set(t, k, v) {
+                ctx.clearRect(0, 0, 200, 200);
+                const gradient = ctx.createRadialGradient(100, 100, 100, 100, 100, v);
+                gradient.addColorStop(0, "#fff");
+                gradient.addColorStop(1, "#a2d5ec");
+                ctx.fillStyle = gradient;
+                ctx.arc(100, 100, 100, 0, 2 * Math.PI);
+                ctx.fill();
+                Reflect.set(t, k, v);
+            }
+        })
+        const animate = () => {
+            stopR.val = stopR.val > 80 ? 0 : stopR.val + 3;
+            setTimeout(animate, 100)
+        }
+        animate();
+    </script>
+</body>
+```
+:::
+## 图片
+### 增删改
+
+::: tip
+|api|调用|说明|
+|---|---|---|
+|drawImage|`img.onload = () => ctx.drawImage(img, x, y, width, height)`|**需要已加载完毕的图片才能绘制**|
+|createImageData|`createImageData(width, height)`｜`imagedata`|都是指定为透明黑，只不过使用`imagedata`会创造相同的像素的透明黑初始图片|
+|getImageData|getImageData(`left`, `top`, `width`, `height`)|获取canvas指定区域的像素作为图片对象|
+|putImageData|putImageData(myImageData, dx, dy)|将指定Image对象以像素的形式写入|
+:::
+>点击图片反转颜色
+::: codePen
+```html{11,13,20}
+<body>
+    <canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+
+    <script>
+        const canvas = document.querySelector("#canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = 1000;
+        canvas.height = 1000;
+        const img = new Image();
+        img.src = "/assets/img/portrait.jpg";
+        img.onload = () => ctx.drawImage(img, 0, 0);
+        const reverse = () => {
+            const imgData = ctx.getImageData(0, 0, 1000, 1000);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = 255 - data[i];
+                data[i + 1] = 255 - data[i + 1];
+                data[i + 2] = 255 - data[i + 2];
+            }
+            ctx.putImageData(imgData, 0, 0)
+        }
+        canvas.addEventListener("click", reverse)
+    </script>
+</body>
+```
+:::
+### getImageData
+::: tip
+* 作用：获取canvas画布的像素对象
+* 调用：getImageData(`left`, `top`, `width`, `height`)
+* [图片取色器](https://coderhdy.github.io/h5-demo/#canvas%E5%8F%96%E8%89%B2/index.html)
+:::
+::: codePen width=400 height=400
+```html{11,13,20}
+<body>
+  <canvas width="300px" height="300px" id="canvas"></canvas>
+  <img src="/assets/img/portrait.jpg" alt="" id="img" style="width: 0;"/>
+  <h4>移动取色，点击固定色：<span id="span"></span></h4>
+
+    <script>
+      const canvas = document.querySelector("canvas");
+      const ctx = canvas.getContext("2d");
+      const setColor = (e) => {
+          const {x, y} = e;
+          const {data: rgba} = ctx.getImageData(x, y, 1, 1);
+          if (rgba) {
+            const color = `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`
+            canvas.style.backgroundColor = color;
+            span.innerText = color;
+          }
+      };
+      canvas.addEventListener("mousemove", setColor);
+      canvas.addEventListener("click", () => canvas.removeEventListener("mousemove", setColor));
+      img.onload = () => ctx.drawImage(img, 50, 50, 200, 200);
+    </script>
+</body>
+```
+:::
+### toDataURL
+::: tip
+* 导出canvas为图像，**可以用来下载**
+* 调用：canvas.toDataURL("image/png", 1)
+* 第二个参数为图片质量，默认`0.92`
+:::
+::: codePen height=250 width=310
+```html{36-44}
+<body>
+    <canvas id="canvas" width="300" height="200" style="width:300px; height: 200px;border: 1px solid #333"></canvas>
+    <button id="btn">下载</button>
+    <script>
+        const canvas = document.querySelector("#canvas");
+        const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio;
+        canvas.width *= dpr;
+        canvas.height *= dpr;
+        ctx.scale(dpr, dpr);
+
+        ctx.lineWidth = 3;
+        const rect = canvas.getBoundingClientRect();
+        let drawing = new Proxy({ val: false }, {
+            set(target, k, v) {
+                if (v === true) ctx.beginPath();
+                Reflect.set(target, k, v);
+            }
+        });
+        canvas.addEventListener("mousedown", e => drawing.val = true);
+        canvas.addEventListener("touchstart", e => drawing.val = true);
+        canvas.addEventListener("mousemove", e => {
+            if (!drawing.val) return;
+            ctx.lineTo(e.x - rect.x, e.y - rect.y);
+            ctx.stroke();
+        })
+        canvas.addEventListener("touchmove", e => {
+            e.preventDefault();
+            if (!drawing.val) return;
+            ctx.lineTo(e.targetTouches[0].clientX - rect.x, e.targetTouches[0].clientY - rect.y);
+            ctx.stroke();
+        })
+        canvas.addEventListener("mouseup", e => drawing.val = false);
+        canvas.addEventListener("touchend", e => drawing.val = false);
+
+        btn.addEventListener("click", () => {
+            const url = canvas.toDataURL("image/png");
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "img.png"; // 下载文件名
+            document.body.append(a);
+            a.click();
+            a.remove();
+            ctx.clearRect(0, 0, 300, 200);
+        })
     </script>
 </body>
 ```
