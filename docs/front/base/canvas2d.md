@@ -8,10 +8,36 @@ date: 2022-11-26
 |---|---|---|
 |beginPath|重开一个路径|beginPath()|
 |closePath|将画笔以直线回到此次路径的起点|closePath()|
-|stroke|将本次beginPath以后的线都`描`出来|stroke()|
-|fill|将本次beginPath以后的线都`填充`出来|fill()|
+|stroke|将本次beginPath以后的线都`描`出来|stroke(path2D)|
+|fill|将本次beginPath以后的线都`填充`出来|fill(path2D?, fillRule?)|
+|clip|`剪裁掉`之前的路径以外的区域(可以通过restore恢复)|ctx.clip(path?, fillRule?)|
 |clearRect|清除方块|clearRect(x, y, width, height)|
-|clip|剪裁掉|clearRect(x, y, width, height)|
+:::
+### path2D
+>path2D是固定一套路径，随时可以复用
+::: codePen val=stroke select=[stroke,fill,clip]
+```html{6-10,14}
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    // path2D固定路径
+    const path2D = new Path2D();
+    path2D.arc(100, 100, 70, 0, Math.PI * 2);
+    path2D.moveTo(200, 0);
+    path2D.bezierCurveTo(100, 0, 80, 70, 170, 90);
+
+    ctx.fillStyle = "red";
+    ctx.strokeStyle = "blue";
+    ctx.{{val}}(path2D); // 不同的方法使用path2D操作会有不同的效果
+
+    //
+    ctx.fillStyle = "black";
+    ctx.rect(0, 0, 50, 100);
+    ctx.fill();
+</script>
+```
 :::
 ### fill规则
 ![canvas](./assets/canvasfillguize.png)
@@ -54,7 +80,82 @@ date: 2022-11-26
 </body>
 ```
 :::
+### save/restore
+::: tip
+* save通过`栈的形式`存储ctx的`状态`
+* restore出栈状态
+* 当前的`变换矩阵`, 当前的`剪切区域？`, 当前的`虚线列表`, `strokeStyle`, `fillStyle`, `globalAlpha`, `lineWidth`, `lineCap`, `lineJoin`, `miterLimit`, `lineDashOffset`, `shadowOffsetX`, `shadowOffsetY`, `shadowBlur`, `shadowColor`, `globalCompositeOperation`, `font`, `textAlign`, `textBaseline`, `direction`, `imageSmoothingEnabled`.
+:::
+::: codePen height=50
+```html{7,11,16,19}
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillRect(10, 10, 20, 20);
+    ctx.save();
+
+    ctx.fillStyle = "#999999";
+    ctx.fillRect(40, 10, 20, 20);
+    ctx.save();
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(70, 10, 20, 20);
+
+    ctx.restore();
+    ctx.fillRect(100, 10, 20, 20);
+
+    ctx.restore();
+    ctx.fillRect(130, 10, 20, 20);
+</script>
+```
+:::
+::: codePen
+```html
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.save()
+    ctx.arc(100, 100, 50, 0, 2 * Math.PI)
+    ctx.clip();
+
+    ctx.fillStyle = "red";
+    ctx.fillRect(0, 0, 120, 200);
+
+    ctx.restore();
+    ctx.fillRect(125, 0, 120, 200);
+</script>
+```
+:::
 ## 文字
+::: tip
+|变量|作用|调用|
+|---|---|---|
+|fillText|填充文字, 超出maxWidth会被**压缩**|fillText(text, x, y, maxWidth?)|
+|strokeText|描边空心文字|strokeText(text, x, y , maxWidth?)|
+|measureText|检测文字的信息|ctx.measureText("你好呀").width|
+:::
+::: codePen val=strokeText select=[strokeText,fillText] width=300 height=50
+```html
+<canvas id="canvas" width="300" height="200" style="width:300px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio;
+    canvas.style.width = canvas.width;
+    canvas.style.height = canvas.height;
+    canvas.width = canvas.width * dpr;
+    canvas.height = canvas.height * dpr;
+    ctx.scale(dpr, dpr);
+
+    ctx.font = "30px serif";
+    ctx.{{val}}("你好呀，大佬！", 30, 30, 300);
+</script>
+```
+:::
 ### font
 ::: tip
 * 设置字体`大小`和`类型`
@@ -171,6 +272,14 @@ ctx.textBaseLine = 'center';
 ```
 :::
 ## 线
+::: tip 常用属性
+|变量|作用|调用|
+|---|---|---|
+|moveTo|移动到XX|moveTo(x, y)|
+|lineTo|连接到XX，（并没有绘制）|lineTo(x, y)|
+|getLineDash|获取当前线段（虚线）样式|fillText(text, x, y, maxWidth?)|
+|setLineDash|描粗体文字|setLineDash([4, 4, 10, 10])|
+:::
 ### lineCap
 ::: tip
 * 线段末端的属性
@@ -377,11 +486,39 @@ ctx.lineWidth = 7;
         ctx.moveTo(100, 100);
         ctx.bezierCurveTo(100, 0, 10, 30, 10, 90);
         ctx.stroke();
+
+        ctx.fillRect(100, 0, 2, 2);
+        ctx.fillRect(10, 30, 2, 2);
     </script>
 </body>
 ```
 :::
+### quadraticCurveTo
+::: tip
+* 二次贝塞尔曲线
+* quadraticCurveTo(cpx, cpy, x, y)
+* 参照点坐标，终点坐标
+:::
+::: codePen height=120
+```html
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(50, 100, 100, 0);
+    ctx.stroke();
+    ctx.fillRect(50, 100, 2, 2)
+</script>
+```
+:::
 ## 形状
+::: tip
+|变量|作用|调用|
+|---|---|---|
+|rect|I 创建矩形路径|rect(x, y, width, height)|
+|fillRect|填充一个方块|fillRect(x, y, width, height)|
+:::
 ### strokeStyle/fillStyle
 ::: tip
 * strokeStyle：画笔（`边框`/`线条`）的颜色、样式
@@ -479,8 +616,6 @@ ctx.lineWidth = 7;
 
         ctx.fillStyle = "blue";
         ctx.fillRect(60, 60, 100, 100);
-
-        document.body.append(canvas);
     </script>
 </body>
 ```
@@ -668,6 +803,26 @@ ctx.lineWidth = 7;
         ctx.stroke();
     </script>
 </body>
+```
+:::
+### ellipse
+::: tip
+* 椭圆：ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, anticlockwise)
+* x, y：圆心
+* rotation: 旋转角度，**顺时针旋转**
+* startAngle, endAngle：开始结束角度，**顺时针计算**
+* anticlockwise：是否逆时针，默认false
+:::
+>定完 startAngle, endAngle就已经确定起始和结束位置了
+::: codePen label=anticlockwise val=true select=[true,false]
+```html 
+<canvas id="canvas" width="1000" height="1000" style="width:1000px; height: 1000px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.ellipse(100, 100, 40, 20, 45/180 * Math.PI, 0, 1 / 3 * Math.PI, {{val}});
+    ctx.stroke();
+</script>
 ```
 :::
 ## 颜色
@@ -882,4 +1037,34 @@ ctx.lineWidth = 7;
     </script>
 </body>
 ```
+:::
+## 变换
+::: tip
+|变量|作用|调用|
+|---|---|---|
+|getTransform|获取当前被应用到上下文的转换矩阵|getTransform()|
+|setTransform|重新设置变换矩阵并调用变换的方法|setTransform(a, b, c, d, e, f)|
+|resetTransform|重新设置当前变形|setTransform(a, b, c, d, e, f)|
+|rotate|旋转|rotate(angle)|
+:::
+### rotate
+>旋转中心是canvas起始点，可以通过 translate() 方法移动 canvas。
+::: codePen height=100
+```html
+<canvas id="canvas" width="200" height="200" style="width:200px; height: 200px;"></canvas>
+<script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.rotate(45 / 180 * Math.PI);
+    ctx.fillRect(50, 10, 20, 20);
+</script>
+```
+:::
+## 其他
+::: tip
+|变量|作用|调用|
+|---|---|---|
+|isPointInPath|检测当前路径中是否包含检测点|isPointInPath(path?, x, y, fillRule?)|
+|isPointInStroke|检测当前描边线中是否包含检测点|resetTransform()|
 :::
