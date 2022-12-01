@@ -381,6 +381,19 @@ ctx.scale(dpr, dpr)
 ```
 :::
 :::: 
+## 动画堆积问题
+::: tip
+* canvas动画一般借助`requestAnimationFrame`或`setTimeout` / `setInterval`实现
+* 浏览器收起或看不见时，会导致动画堆积，再回来容易卡顿，清除动画解决
+:::
+* [canvas烟花](https://coderhdy.github.io/h5-demo/#canvas_%E7%83%9F%E8%8A%B1/index.html)
+```js
+
+// 离开清除烟花
+window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === 'visible') this.fireworks = [];
+})
+```
 ## Konva
 :::: tabs
 ::: tab label=拖动球
