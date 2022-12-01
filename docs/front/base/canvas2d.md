@@ -518,6 +518,7 @@ ctx.lineWidth = 7;
 |---|---|---|
 |rect|I 创建矩形路径|rect(x, y, width, height)|
 |fillRect|填充一个方块|fillRect(x, y, width, height)|
+|strokeRect|描绘一个方块|strokeRect(x, y, width, height)|
 :::
 ### strokeStyle/fillStyle
 ::: tip
@@ -1045,6 +1046,8 @@ ctx.lineWidth = 7;
 |getTransform|获取当前被应用到上下文的转换矩阵|getTransform()|
 |setTransform|重新设置变换矩阵并调用变换的方法|setTransform(a, b, c, d, e, f)|
 |resetTransform|重新设置当前变形|setTransform(a, b, c, d, e, f)|
+|transform|多次叠加当前变换|transform(a, b, c, d, e, f)|
+|translate|canvas平移变换|translate(x, y)|
 |rotate|旋转|rotate(angle)|
 :::
 ### rotate
@@ -1061,6 +1064,12 @@ ctx.lineWidth = 7;
 </script>
 ```
 :::
+## setTransform
+* 将整个canvas画板进行变换
+```js
+// 水平缩放，垂直倾斜，水平倾斜，垂直缩放，水平移动，垂直移动
+ctx.setTransform(a, b, c, d, e, f);
+```
 ## 其他
 ::: tip
 |变量|作用|调用|
