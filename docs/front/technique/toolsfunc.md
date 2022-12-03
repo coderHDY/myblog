@@ -473,6 +473,21 @@ const randomHex = () => `#${Math.floor(Math.random() * 256).toString(16).padStar
     + `${Math.floor(Math.random() * 256).toString(16).padStart(2, "0")}`;
 ```
 :::
+::: tab label=网页变灰
+```css
+.gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    -webkit-filter: gray;
+    filter: gray;
+    -webkit-filter: progid:dximagetransform.microsoft.basicimage(grayscale=1);
+    filter: progid:dximagetransform.microsoft.basicimage(grayscale=1);
+}
+```
+:::
 ::::
 ## 复制粘贴
 :::: tabs

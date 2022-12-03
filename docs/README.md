@@ -12,3 +12,5 @@ tagline:
 ---
 
 <Bubble random :speed="10" :timer="1500" />
+
+<Gray />
