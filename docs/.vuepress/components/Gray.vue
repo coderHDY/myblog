@@ -5,25 +5,14 @@
 export default {
   data() {
     return {
-      grayStyle: `
-        -webkit-filter: grayscale(100%);
-        -moz-filter: grayscale(100%);
-        -ms-filter: grayscale(100%);
-        -o-filter: grayscale(100%);
-        -webkit-filter: gray;
-        -webkit-filter:
-        progid:dximagetransform.microsoft.basicimage(grayscale=1);
-        filter: progid:dximagetransform.microsoft.basicimage(grayscale=1);
-        filter: grayscale(100%);
-        filter: gray;
-      `,
+      grayClass: "gray",
     };
   },
   mounted() {
-    document.body.setAttribute("style", this.grayStyle);
+    document.documentElement.classList.add(this.grayClass);
   },
   beforeDestroy() {
-    // document.body.removeAttribute("style");
+    // document.body.classList.remove(this.grayClass);
   },
 };
 </script>
