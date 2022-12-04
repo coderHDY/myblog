@@ -32,10 +32,7 @@ animation: roll 2s 0s linear forwards infinite running;
 |animation-timing-function|定义CSS动画在每一动画周期中执行的节奏|ease / ease-in / ease-out / ease-in-out / linear / steps(4, end) / cubic-bezier(0.1, 0.7, 1.0, 0.1) / step-start / step-end|
 |animation-fill-mode|动画在执行之前和之后如何将样式应用于其目标。|none / forwards / backwards / both|
 :::
-* 跳跳球动画
-:::: tabs
-::: tab label=跳跳球
-
+::: codePen label=animation-direction val=alternate select=[normal,alternate,reverse,alternate-reverse] height=520
 ```html{22-26,28-35}
 <body>
     <div id="container">
@@ -61,7 +58,7 @@ animation: roll 2s 0s linear forwards infinite running;
             animation-name: jump;
             animation-delay: 1s;
             animation-duration: 3s;
-            animation-direction: alternate;
+            animation-direction: {{val}};
             animation-iteration-count: infinite;
         }
         @keyframes jump {
@@ -76,6 +73,7 @@ animation: roll 2s 0s linear forwards infinite running;
 </body>
 ```
 :::
+:::: tabs
 ::: tab label=name/delay/duration
 >animation-name
 * 调用定义好的关键帧，本例中调用了下面的jump关键帧
@@ -115,7 +113,6 @@ animation-iteration-count: infinite;
 ```css
 animation-direction: alternate;
 ```
-![](./assets/animationduration.png)
 :::
 ::::
 
