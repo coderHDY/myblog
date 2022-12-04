@@ -17,11 +17,8 @@ tags:
 |bottom right|下右顶点|
 |50px 20px|x轴向左跑50，y轴向下跑20|
 :::
-:::: tabs
-::: tab label=图解
+>图解  
 <img src="./assets/transformorigin.png" style="width:400px;">
-:::
-::::
 
 ## transform-function
 ### rotate
@@ -38,10 +35,8 @@ tags:
 |6.2832rad|360°【2π】|
 |1turn|360°|
 :::
-:::: tabs
-::: tab label=旋转球
-<video src="./assets/cssxuanzhuanqiu0.mp4" controls style="width:200px;" />
-
+>旋转球
+::: codePen
 ```html{23-24,26-28}
 <body>
     <div id="container">
@@ -51,7 +46,6 @@ tags:
     <style>
         #container {
             position: relative;
-            margin: 50px;
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
@@ -60,6 +54,7 @@ tags:
             box-sizing: border-box;
             overflow: hidden;
         }
+
         #ball {
             width: 100px;
             height: 100px;
@@ -75,7 +70,6 @@ tags:
 </body>
 ```
 :::
-::::
 ### rotate3d
 ::: tip
 * 作用：定义3d旋转动画
