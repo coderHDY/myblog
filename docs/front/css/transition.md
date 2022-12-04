@@ -17,10 +17,8 @@ transition: property duration delay timing-function;
 |transition-delay|开始前等待时间|1s / 3ms|
 |transition-timing-function|描述动画的加速曲线|ease / ease-in / ease-out / ease-in-out / linear / steps(4, end) / cubic-bezier(0.1, 0.7, 1.0, 0.1) / step-start / step-end|
 :::
-:::: tabs
-::: tab label=过渡球
-<video src="./assets/guoduqiu.mp4" controls style="width:300px;" />
-
+>过渡球
+::: codePen
 ```html{23,25-28}
 <body>
     <div id="container">
@@ -30,12 +28,12 @@ transition: property duration delay timing-function;
     <style>
         #container {
             position: relative;
-            margin: 50px;
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
             overflow: hidden;
         }
+
         #ball {
             width: 100px;
             height: 100px;
@@ -54,7 +52,8 @@ transition: property duration delay timing-function;
 </body>
 ```
 :::
-::: tab label=property
+
+### property
 >transition-property
 * 关联变化过渡的属性名称，本例中【all】代表**所有的变化都要遵循此过渡方式**
 ```css
@@ -82,8 +81,7 @@ transition: all 1s 100ms cubic-bezier(0.1, 0.7, 1.0, 0.1);
     border: 10px #333 solid;
 }
 ```
-:::
-::: tab label=duration/delay
+### duration/delay
 >transition-duration
 * 过渡完成需要的总时长
 ```css
@@ -98,8 +96,8 @@ transition-delay: 100ms;
 
 transition: all 1s 100ms cubic-bezier(0.1, 0.7, 1.0, 0.1);
 ```
-:::
-::: tab label=timing-function
+
+### timing-function
 >transition-timing-function
 * 描述过渡加速曲线，本例中【cubic-bezier(0.1, 0.7, 1.0, 0.1)】是一个[贝塞尔曲线(Cubic Bezier)](https://blog.csdn.net/wjnf012/article/details/78795573)
 * 分别对应的值是：cubic-bezier(x1, y1, x2, y2)，与[0, 0]、[1, 1] 分别连线生成的曲线，作为加速曲线
@@ -112,6 +110,44 @@ transition-timing-function: cubic-bezier(1, 0, 1, 0);
 ```
 <img src="./assets/cubicbezier.png" style="width:300px;">
 * 效果:
+
+
+::: codePen
+```html{23,25-28}
+<body>
+    <div id="container">
+        <div id="ball"></div>
+    </div>
+
+    <style>
+        #container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background-color: rgb(118, 144, 233);
+            overflow: hidden;
+        }
+
+        #ball {
+            width: 100px;
+            height: 100px;
+            margin-left: 50%;
+            transform: translate(-50%, 50%);
+            background-color: #fff;
+            border-radius: 50px;
+
+            transition: all 1s 100ms cubic-bezier(0.1, 0.7, 1.0, 0.1);
+            transition-timing-function: cubic-bezier(1, 0, 1, 0);
+        }
+        #ball:hover {
+            border-radius: 0;
+            background-color: rgb(227, 159, 236);
+        }
+    </style>
+</body>
+```
+:::
+
 <video src="./assets/cubicbezier.mp4" style="width:300px" controls />
 
 |值|效果|
@@ -121,5 +157,3 @@ transition-timing-function: cubic-bezier(1, 0, 1, 0);
 |ease-in|慢-快（等于 cubic-bezier(0.42, 0, 1, 1)）|
 |ease-out|快-慢（等于 cubic-bezier(0, 0, 0.58, 1)）|
 |ease-in-out|慢-快-慢，（等于 cubic-bezier(0.42, 0, 0.58, 1)）|
-:::
-::::
