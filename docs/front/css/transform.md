@@ -241,21 +241,9 @@ tags:
 |skewX(x)|skew(x, 0)|
 |skewY(x)|skew(0, y)|
 :::
-:::: tabs
-::: tab label=规则
-```css
-transform: skew(45deg, 0);
-```
-<img src="./assets/skewx.png" style="width:500px;">
 
-```css
-transform: skew(0, 45deg);
-```
-<img src="./assets/skewy.png" style="width:500px;">
-:::
-::: tab label=倾斜
-<video src="./assets/skew0.mp4" style="width:300px;" controls />
-
+>沿x轴倾斜45度 = y轴向x轴`逆时针`倒45度
+::: codePen
 ```html{27}
 <body>
     <div id="container">
@@ -283,29 +271,55 @@ transform: skew(0, 45deg);
             transition: all 500ms ease;
         }
         #ball:hover {
-            transform: skew(45deg, 0);
+            transform: skew(45deg, 0);;
         }
     </style>
 </body>
 ```
-::::
+:::
+>沿y轴倾斜45度 = x轴向y轴`逆时针`倒45度
+::: codePen
+```html{27}
+<body>
+    <div id="container">
+        <div id="ball">你好</div>
+    </div>
+
+    <style>
+        #container {
+            position: relative;
+
+            width: 200px;
+            height: 200px;
+            background-color: rgb(118, 144, 233);
+            padding-left: 50px;
+            padding-top: 50px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        #ball {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+
+            transform-origin: center;
+            transition: all 500ms ease;
+        }
+        #ball:hover {
+            transform: skew(0, 45deg);
+        }
+    </style>
+</body>
+```
+:::
 ### translate
 ::: tip
 * 作用：平移
 * 使用：translate(x, y)
 * 入参：向量上的平移量，**如果是百分比，参照的是自身向量方向上的长度**
 :::
-:::: tabs
-::: tab label=图解
-```css
-transform: translate(50%, 50%);
-```
-<img src="./assets/translate.png" style="width:500px;">
-:::
-::: tab label=平移
-<video src="./assets/translatehezi.mp4" style="width:300px;" controls/>
-
->自身x轴长100px，所以x轴平移50px，y轴同
+>平移：自身x轴长100px，所以x轴平移50px，y轴同
+::: codePen
 ```html{16-17,24}
 <body>
     <div id="container">
@@ -336,7 +350,6 @@ transform: translate(50%, 50%);
 </body>
 ```
 :::
-::::
 ### translate3d
 ::: tip
 * 作用：3d方向上的平移矢量
