@@ -99,7 +99,15 @@ transition: all 1s 100ms cubic-bezier(0.1, 0.7, 1.0, 0.1);
 
 ### timing-function
 >transition-timing-function
-* 描述过渡加速曲线，本例中【cubic-bezier(0.1, 0.7, 1.0, 0.1)】是一个[贝塞尔曲线(Cubic Bezier)](https://blog.csdn.net/wjnf012/article/details/78795573)
+
+|值|效果|
+|---|---|
+|ease|【默认】慢-快-慢（cubic-bezier(0.25, 0.1, 0.25, 1)）|
+|linear|全程匀速，（等于 cubic-bezier(0, 0, 1, 1)）|
+|ease-in|慢-快（等于 cubic-bezier(0.42, 0, 1, 1)）|
+|ease-out|快-慢（等于 cubic-bezier(0, 0, 0.58, 1)）|
+|ease-in-out|慢-快-慢，（等于 cubic-bezier(0.42, 0, 0.58, 1)）|
+* 描述过渡加速曲线，本例中【`cubic-bezier(0.1, 0.7, 1.0, 0.1)`】是一个[贝塞尔曲线(Cubic Bezier)](https://blog.csdn.net/wjnf012/article/details/78795573)
 * 分别对应的值是：cubic-bezier(x1, y1, x2, y2)，与[0, 0]、[1, 1] 分别连线生成的曲线，作为加速曲线
 ```css
 transition-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1);
@@ -147,13 +155,3 @@ transition-timing-function: cubic-bezier(1, 0, 1, 0);
 </body>
 ```
 :::
-
-<video src="./assets/cubicbezier.mp4" style="width:300px" controls />
-
-|值|效果|
-|---|---|
-|ease|【默认】慢-快-慢（cubic-bezier(0.25, 0.1, 0.25, 1)）|
-|linear|全程匀速，（等于 cubic-bezier(0, 0, 1, 1)）|
-|ease-in|慢-快（等于 cubic-bezier(0.42, 0, 1, 1)）|
-|ease-out|快-慢（等于 cubic-bezier(0, 0, 0.58, 1)）|
-|ease-in-out|慢-快-慢，（等于 cubic-bezier(0.42, 0, 0.58, 1)）|
