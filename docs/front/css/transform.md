@@ -92,13 +92,11 @@ tags:
 |rotateY(a)|rotate3d(0, 1, 0, a)|
 |rotateZ(a)|rotate3d(0, 0, 1, a)|
 :::
-:::: tabs
-::: tab label=旋转坐标轴
-* 原点为【transform-origin】定义，默认是【center】
+* 旋转坐标轴
+* 原点为【transform-origin】定义，默认是【center】  
 <img src="./assets/rotate3dshiliang.png" style="width:400px;">
-:::
-::::
 
+>翻转案例
 ::: codePen
 ```html{27}
 <body>
@@ -146,10 +144,8 @@ tags:
 ::: danger 伸缩内容
 * 整个盒子内容都会被伸缩，包括文字
 :::
-:::: tabs
-::: tab label=both
-<video src="./assets/scale0.mp4" controls style="width:300px;"/>
-
+>both
+::: codePen
 ```html{27}
 <body>
     <div id="container">
@@ -159,7 +155,7 @@ tags:
     <style>
         #container {
             position: relative;
-            margin: 50px;
+
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
@@ -183,12 +179,10 @@ tags:
     </style>
 </body>
 ```
-:::
-::: tab label=分别伸缩
+>分别伸缩
 * x轴放大1.5倍，y轴不变
 
-<video src="./assets/scale1.mp4" style="width:300px;" controls/>
-
+::: codePen
 ```html{23,27}
 <body>
     <div id="container">
@@ -198,7 +192,7 @@ tags:
     <style>
         #container {
             position: relative;
-            margin: 50px;
+
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
@@ -223,7 +217,6 @@ tags:
 </body>
 ```
 :::
-::::
 ### scale3d
 ::: tip
 * 作用：3d图像各方向伸缩比例
@@ -272,7 +265,7 @@ transform: skew(0, 45deg);
     <style>
         #container {
             position: relative;
-            margin: 50px;
+
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
