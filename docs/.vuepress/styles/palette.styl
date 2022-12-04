@@ -247,3 +247,26 @@ a:hover {
   filter: grayscale(85%);
   filter: gray;
 }
+// 滚动条
+//：滚动条整体部分，其中的属性有width,height,background,border等。
+body::-webkit-scrollbar {
+  background: linear-gradient(to bottom, #a2d5ec 0%, #3e91b4 57.6px, #fff 57.6px, #fff 100%) !important;
+}
+
+// 滚动条里面可以拖动的滑块
+body::-webkit-scrollbar-thumb {
+}
+// 外层轨道。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果。
+body::-webkit-scrollbar-track {
+  height: calc(100vh - 57.6px);
+  margin-top: 57.6px;
+}
+// 内层轨道，需要注意的就是它会覆盖第三个属性的样式。
+body::-webkit-scrollbar-track-piece {
+}
+//  滚动条两端的按钮。可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果。
+body::-webkit-scrollbar-button {}
+// 边角，两个滚动条交汇处
+body::-webkit-scrollbar-corner {}
+// 两个滚动条交汇处用于拖动调整元素大小的小控件（基本用不上）
+body::-webkit-resizer {}
