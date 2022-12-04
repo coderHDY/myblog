@@ -97,9 +97,9 @@ tags:
 * 原点为【transform-origin】定义，默认是【center】
 <img src="./assets/rotate3dshiliang.png" style="width:400px;">
 :::
-::: tab label=翻牌
-<video src="./assets/ratate3d0.mp4" style="width:300px;" controls />
+::::
 
+::: codePen
 ```html{27}
 <body>
     <div id="container">
@@ -109,7 +109,6 @@ tags:
     <style>
         #container {
             position: relative;
-            margin: 50px;
             width: 200px;
             height: 200px;
             background-color: rgb(118, 144, 233);
@@ -118,6 +117,7 @@ tags:
             box-sizing: border-box;
             overflow: hidden;
         }
+
         #ball {
             width: 100px;
             height: 100px;
@@ -133,7 +133,6 @@ tags:
 </body>
 ```
 :::
-::::
 ### scale
 ::: tip
 * 作用：2d平面图像伸缩，伸缩的起点由transform-origin定义
