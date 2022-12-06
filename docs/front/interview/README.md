@@ -538,9 +538,6 @@ wait
 :::
 ::: tab label=恶意脚本
 * 一个简单的评论系统
-
-<video src="./assets/xssmoni1.mp4" style="width:400px;" controls />
-
 >server.js
 ```js
 const path = require('path');
