@@ -12,10 +12,7 @@ categories:
 * 能拿当前队列的长度
 :::
 :::: tabs
-::: tab label=图解
-<img src="./assets/queue.png" style="width:400px;">
-
-* 期望：
+::: tab label=期望
 ```js
 const queue = new Queue();
 queue.in('hdy');
@@ -58,9 +55,6 @@ class Queue {
 :::: tabs
 ::: tab label=问题
 * 一圈小朋友围成一圈，从1数到5，第五个人淘汰，求最后一个剩下的人
-
-<img src="./assets/jiguchuanhua.png" style="width:400px;">
-
 * 期望：
 ```js
 const boys =['小张', '小李', 'hdy', '小黑'];
