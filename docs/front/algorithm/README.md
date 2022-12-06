@@ -12,10 +12,7 @@ categories:
 * 判断空/清空
 :::
 :::: tabs
-::: tab label=图解
-<img src="./assets/stack.png" style="width:300px;">
-
-* 期望：
+::: tab label=期望：
 ```js
 const stack = new Stack();
 stack.push(1);
