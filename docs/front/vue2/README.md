@@ -24,8 +24,6 @@ date: 2021-11-10
     * .passive
 ---
 
-<video src="./assets/qibudemo.mp4" style="width:400px;" controls />
-
 ```html{3-4}
 <body>
     <div id="app">
