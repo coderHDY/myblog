@@ -658,9 +658,6 @@ app.get('/api/comments', (req, res) => {
 
 ---
 * **恶意植入操作**
-
-<video src="./assets/xss3.mp4" style="width:400px;" controls />
-
 >server.js
 ```js{45-50}
 const path = require('path');
