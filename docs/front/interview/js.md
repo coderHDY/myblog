@@ -748,8 +748,6 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 * 要求：间隔一定时间未重复触发事件才触发回调
 ----
 
-<video src="./assets/debounce.mp4" style="width:600px;" controls />
-
 :::
 ::: tab label=防抖实现
 ```html
