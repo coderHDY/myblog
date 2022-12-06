@@ -278,7 +278,10 @@ git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -3
 * 查看文件路径
 ```shell
 # hash码
-git rev-list --objects --all | grep b1bf4cf155117e9950aeb2d04168aa890e1cb012
+git rev-list --objects --all | grep
+
+# 例
+# git rev-list --objects --all | grep b1bf4cf155117e9950aeb2d04168aa890e1cb012
 ```
 ```shell
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch 你要删除的文件名' --prune-empty --tag-name-filter cat -- --all
