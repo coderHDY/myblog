@@ -977,8 +977,6 @@ export const vModelText: ModelDirective<
 * webpack是一个服务于现代javascript应用程序的`静态的模块化打包工具`。
 * 将各种资源的语法打包成 **浏览器认识的** html/css/图片/视频等格式。
 
-<img src="./assets/webpackjieshao.png" style="width:600px;">
-
 :::
 ::: tab label=起步
 * 安装
@@ -1020,8 +1018,6 @@ console.log(add( a, b ));
 ```shell
 webpack
 ```
-<img src="./assets/webpack0.png" style="height:100px;">
-<img src="./assets/webpack1.png" style="height:100px;">
 
 :::
 ::: tab label=依赖
@@ -1295,7 +1291,6 @@ module.exports = {
 :::
 ::: tab label=babel
 >babel本质上是一个编译器，将我们的源代码转换成另一份源代码
-![](./assets/babeljiexi.png)
 * 安装
 ```shell
 npm i @babel/core @babel/cli -D
@@ -1404,9 +1399,6 @@ app.mount("#app");
     <div id="app"></div>
 </body>
 ```
-* 效果  
-<img src="./assets/vuerumenpeizhi.png" style="width:300px">
-
 :::
 ::: tab label=调试
 * mode:`development`开发模式，打包就不会压缩。打包上线设置`production`
@@ -1502,8 +1494,6 @@ if (module.hot) {
 >Vue-loader已自动支持模块热替换 
 * 模块热加载原理：webpack起了一个express静态资源服务器，起了一个socket长连接服务实时推送信息。
 * 服务器监听到模块发生变化后，向客户端推送变化模块：（manifist.json 和 updata chunk），浏览器就能进行实时更新。
-
-<img src="./assets/hmryuanli.png" style="width:700px">
 
 :::
 ::: tab label=其他配置
@@ -2264,8 +2254,6 @@ const Home = defineAsyncComponent({
 * 大部分业务都是用路由懒加载。特殊页面内异步组件可以这样定义。
 :::
 ::: tab label=异步组件示例
-<img src="./assets/asynccomp1.png" style="height:300px">
-
 >App.vue
 ```vue{8-10,16-19,24,29-32}
 <template>
@@ -3073,8 +3061,6 @@ obj.name = '李四'; // 可以
 * readonly可以设置对象内部的值也不可变。
 >原理是通过数据劫持，set的时候不修改值。
 
-<img src="./assets/readonly.png" style="width:500px;">
-
 ```vue{8,11-13}
 <template>
   <div>
@@ -3102,7 +3088,6 @@ export default {
 ::: tab label=readonly结合
 * readonly可以让后面的值无法修改这个数据
 * 本组件内部想要修改是可以的，就需要设置一个`reactive`响应式的数据作为`readonly`的入参.  
-<img src="./assets/readonly1.png" style="width:400px;">
 
 >父组件
 ```vue{12-13,15-16}
@@ -3551,8 +3536,6 @@ export default {
 ::: tab label=watchEffect参数
 * 基于watchEffect实现百度搜索的实时请求/取消请求
 * 假如服务器响应时间是1s，那么在请求过程中用户继续输入关键字，就取消原先请求
-
-<video src="./assets/watcheffectanli.mp4" style="width:400px;" controls />
 
 >server.js
 ```js
@@ -4140,16 +4123,12 @@ export default {
 }
 </script>
 ```
->效果  
-<img src="./assets/timestempanli.png" style="width:300px;">
+>效果
 
 :::
 ::: tab label=teleport
 * 定义挂载到app元素之外的模板里面
 >组件内部定义的`teleport`标签，内容会被放到app挂载元素的外面，做一些特殊元素的展示。
-
-<img src="./assets/teleport.png" style="width:500px;">
-
 ```vue{5-7}
 <template>
   <div>

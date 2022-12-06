@@ -279,7 +279,6 @@ console.log(str.match(reg)); // [ '2021/09/10', '21/9/1' ]
 * 【\b\B】边界详解
 :::: tabs
 ::: tab label=1
-![](./assets/dancibianju.png)
 ```js
 const str = 'a , c';
 
@@ -293,7 +292,6 @@ console.log(str.match(reg2)); // [ 'a', ' , ', 'c' ]
 ```
 :::
 ::: tab label=2
-![](./assets/feidancibianju.png)
 ```JS
 const str = 'apple';
 const reg1 = /\b.+?\b/g;
@@ -305,7 +303,6 @@ console.log(str.match(reg2)); // [ 'p', 'p', 'l' ]
 :::
 ::: tab label=3
 * 中文：
-![](./assets/hdyjianju.png)
 ```js
 const str = '我hdy,我 hdy'
 const reg1 = /\b.+?\b/g;
