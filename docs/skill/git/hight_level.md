@@ -274,6 +274,7 @@ node_modules/
 * 查出最大的几个文件
 ```shell
 git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -3
+# 最大三个：tail -3
 ```
 * 查看文件路径
 ```shell
