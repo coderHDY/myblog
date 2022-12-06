@@ -870,9 +870,6 @@ app.get('/byby', (req, res) => {
 :::
 ::: tab label=网抑云首页
 * 正常操作
-
-<video src="./assets/csrf1.mp4" style="width:400px;" controls />
-
 ```html{78-81}
 <!DOCTYPE html>
 <html lang="en">
