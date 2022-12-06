@@ -261,14 +261,6 @@ app.get('/', function(req, res) {
 });
 ```
 :::
-::: tab label=效果1
-* 数据：
-<img src="./assets/corsdayin.png" style="width:400px;">
----
-* 响应头
-
-<img src="./assets/corsxiangyingtou.png" style="width:400px;">
-:::
 ::: tab label=post
 * 以post的形式向服务器发送请求
 
@@ -346,10 +338,6 @@ app.post('/', function(req, res) {
     res.send(data);
 });
 ```
-:::
-::: tab label=效果2
-<img src='./assets/corspost.png' style="width:400px;">
-<img src='./assets/corspostdayin.png' style="width:400px;">
 :::
 ::: tab label=cookie
 
@@ -436,14 +424,6 @@ app.get('/', function(req, res) {
     res.send(data);
 });
 ```
-:::
-::: tab label=效果3
-<img src='./assets/daicookiekuayu.png' style="width:400px;">
-
-* 只有user是新增的cookie
-
-<img src='./assets/daicookiekuayuheader.png' style="width:400px;">
-
 :::
 ::::
 ### node代理

@@ -158,7 +158,6 @@ date: 2021-12-18
 </body>
 ```
 
-![](./assets/addeventlistener.png)
 :::
 ::: tab label=第三个参数
 * 可查看[mdn](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener)
@@ -200,7 +199,7 @@ date: 2021-12-18
 father.addEventListener('click', () => console.log('father'));
 child.addEventListener('click', () => console.log('child'));
 ```
-<img src="./assets/buhuoeventlistener.png" style="width:400px;">
+
 
 * 冒泡
 ```js
