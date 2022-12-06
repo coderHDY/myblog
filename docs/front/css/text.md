@@ -399,10 +399,7 @@ date: 2021-12-25
 |content|元素内可以选择|
 |all|一选择就整体选中|
 :::
-:::: tabs
-::: tab label=示例
-<video src="./assets/userselect.mp4" style="width:400px;" controls />
-
+::: codePen
 ```html
 <body>
     <p class="all">我是all我是all我是all我是all</p>
@@ -422,7 +419,6 @@ date: 2021-12-25
 </body>
 ```
 :::
-::::
 ## vertical-align
 ::: tip vertical-align
 * 行内元素或表格元素的对齐方式
