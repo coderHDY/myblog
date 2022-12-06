@@ -907,8 +907,6 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 ::: tab label=效果
 * 电脑搜索输入框输入文字即发送请求，继续输入就取消上次请求，发送新的请求
 
-<video src="./assets/watcheffectanli.mp4" style="width:500px;" controls />
-
 :::
 ::: tab label=server
 ```js
