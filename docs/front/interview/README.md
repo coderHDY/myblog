@@ -965,8 +965,6 @@ app.get('/byby', (req, res) => {
 ::: tab label=黑客服务器
 * 网抑云cookie保持在有效期，在黑客网站点击了恶意攻击按钮，**浏览器向网抑云服务器发送请求携带了cookie**，导致服务器以为是我本人想注销账号，受到很大的损失
 
-<video src="./assets/csrf2.mp4" style="width:400px;" controls />
-
 ```html
 <body>
     <h1>网抑云周边商城</h1>

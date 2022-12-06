@@ -37,7 +37,7 @@ git branch -d dev
 # 强制删除分支
 git branch -D dev
 ```
-# git merge
+## git merge
 ::: tip 冲突
 * a是b拉出来的一个分支，也就是说a是基于b分支在进行开发，a的commit不影响到b。
 * b分支自己也在开发，b的commit也不影响到a
@@ -271,6 +271,15 @@ node_modules/
 !*.sh
 ```
 ## 删除git历史文件
+* 查出最大的几个文件
+```shell
+git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -3
+```
+* 查看文件路径
+```shell
+# hash码
+git rev-list --objects --all | grep b1bf4cf155117e9950aeb2d04168aa890e1cb012
+```
 ```shell
 git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch 你要删除的文件名' --prune-empty --tag-name-filter cat -- --all
 
