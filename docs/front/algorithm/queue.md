@@ -69,9 +69,6 @@ console.log(getAns(boys)); // 小李
 :::
 ::: tab label=思路
 >绕圈圈入队
-
-<img src="./assets/jichuchuanhuasilu.png" style="width:400px;">
-
 :::
 ::: tab label=代码
 ```js
