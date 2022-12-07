@@ -23,3 +23,8 @@ github.com/coderHDY/myblog
 # 对应
 api.github.com/repos/coderHDY/myblog
 ```
+## 远程删除分支
+* 本地处理
+```shell
+git remote prune origin
+```
