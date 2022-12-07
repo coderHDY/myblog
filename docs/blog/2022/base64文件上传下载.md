@@ -15,8 +15,7 @@ date: 2022-12-08
     <input type="file" id="fileInput" />
     <button id="upload">上传</button>
     <button id="download">下载</button>
-
-    <p id="p"></p>
+    <p id="txt"></p>
 
     <script>
         let obj;
@@ -26,6 +25,7 @@ date: 2022-12-08
             const fr = new FileReader();
             fr.onload = () => {
                 obj = fr.result;
+                txt.innerText = obj;
             }
             // 读取文件转换为 base64
             fr.readAsDataURL(fileInput.files[0]);
