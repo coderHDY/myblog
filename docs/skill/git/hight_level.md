@@ -291,10 +291,10 @@ git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch 你�
 ```
 * 更新远程仓库
 ```shell
+git push origin --force --all
+git push origin --force --tags
 git for-each-ref --format='delete %(refname)' refs/original | git update-ref --stdin
 git reflog expire --expire=now --all
 git gc --prune=now
-git push origin --force --all
-git push origin --force --tags
 git count-objects -v
 ```
