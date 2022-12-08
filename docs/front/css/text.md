@@ -119,10 +119,8 @@ date: 2021-12-25
 |clip|溢出父盒子的位置剪裁|
 |ellipsis|溢出位置省略号|
 :::
-:::: tabs
-::: tab label=clip
-<img src="./assets/textoverflowclip.png" style="width:200px">
-
+>默认效果，截断
+::: codePen height=50
 ```html{6-7,11}
 <body>
     <div>我叫张三我叫张三我叫张三我叫张三我叫张三</div>
@@ -140,9 +138,8 @@ date: 2021-12-25
 </body>
 ```
 :::
-::: tab label=ellipsis
-<img src="./assets/textoverflowellipsis.png" style="width:200px">
-
+>单行省略号
+::: codePen height=50
 ```html{6-7,11}
 <body>
     <div>我叫张三我叫张三我叫张三我叫张三我叫张三</div>
@@ -160,8 +157,8 @@ date: 2021-12-25
 </body>
 ```
 :::
-::: tab label=多行省略号
-* 多行超出显示省略号写法
+>多行省略号
+::: codePen height=100
 ```html
 <body>
     <div>这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书</div>
@@ -179,7 +176,6 @@ date: 2021-12-25
 </body>
 ```
 :::
-::::
 ## text-shadow
 ::: tip text-shadow
 * 文字阴影
