@@ -16,76 +16,21 @@ date: 2021-12-25
 |match-parent|start和end的值根据父元素的direction确定，并被替换为恰当的left或right【很多环境未实现】|
 |【String】|根据本字符串对齐【很多环境未实现】|
 :::
-:::: tabs 
-::: tab label=start/left
-<img src="./assets/textalignstart.png" width="400px">
-
+::: codePen label=text-align val=start select=[start,left,right,end,center,justify]
 ```html{7}
-<body>
-    <div>我是张三，你找我？</div>
-
-    <style>
-        div {
-            background-color: rgb(221, 144, 144);
-            text-align: start;
-            /* text-align: left; */
-        }
-    </style>    
-</body>
-```
-:::
-::: tab label=right/end
-<img src="./assets/textalignend.png" width="400px">
-
-```html{7}
-<body>
-    <div>我是张三，你找我？</div>
-
-    <style>
-        div {
-            background-color: rgb(221, 144, 144);
-            text-align: end;
-            /* text-align: right; */
-        }
-    </style>    
-</body>
-```
-:::
-::: tab label=center
-<img src="./assets/textaligncenter.png" width="400px">
-
-```html{7}
-<body>
-    <div>我是张三，你找我？</div>
-
-    <style>
-        div {
-            background-color: rgb(221, 144, 144);
-            text-align: center;
-        }
-    </style>    
-</body>
-```
-:::
-::: tab label=justify
-<img src="./assets/textalignjustify.png" width="400px">
-
-```html{7}
-
 <body>
     <div>我是张三，你找我？我是张三，你找我？我是张三，你找我？我是张三，你找我？</div>
 
     <style>
         div {
             background-color: rgb(221, 144, 144);
-            width: 200px;
-            text-align: justify;
+            width: 220px;
+            text-align: {{val}};
         }
     </style>    
 </body>
 ```
 :::
-::::
 ## text-decoration
 ::: tip text-decoration
 * 文字装饰
