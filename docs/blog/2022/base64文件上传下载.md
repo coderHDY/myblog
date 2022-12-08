@@ -38,7 +38,7 @@ date: 2022-12-08
                 type: "",
                 blob: "",
             }
-            if (!reg.test(obj)) return info;
+            if (!reg.test(base64)) return info;
             const res = base64.match(reg);
 
             // 重点：base64 解码字符串，获取文件类型，转 u8array。让 blob 读取成为缓存
