@@ -2,7 +2,7 @@
 title: base64文件上传下载
 date: 2022-12-08
 ---
-# base64文件上传下载
+## base64文件上传下载
 ::: codePen width=375
 ```html{24,37-42,54}
 <html>
@@ -144,4 +144,10 @@ date: 2022-12-08
 
 </html>
 ```
+:::
+## buffer处理base64问题
+::: tip
+* node端`buffer.from(base64, "base64")`
+* 转换过程中需要将base64头去掉`data:text/markdown;base64,`
+* 因为 base64 需要是 4 的倍数，前面头的长度不固定，转buffer如果长度不准确就会被加长处理，atob转换回来就不正确
 :::
