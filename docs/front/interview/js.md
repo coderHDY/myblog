@@ -778,8 +778,6 @@ Array.prototype.myReduce = function(fn, pre, thisArg) {
 * 说明：每一段时间内只能触发一次
 ---
 >例：两个按钮作用都是让div变大20px，一个有节流，一段时间只能触发一次。  
-<video src="./assets/throttle.mp4" style="width:600px;" controls />
-
 :::
 ::: tab label=节流实现
 ```html{8-20}
@@ -1061,8 +1059,6 @@ logger
 
 :::
 ::: tab label=问题实现
-<video src="./assets/xianfahouzhiwenti.mp4" style="width:400px;" controls />
-
 ```js{37-40,48-50}
 const express = require('express');
 const bdParser = require('body-parser');
@@ -1120,8 +1116,6 @@ app.post('/data', (req, res) => {
 ```
 :::
 ::: tab label=解决方案1
-<video src="./assets/xianfahouzhijiejue.mp4" style="width:500px;" controls />
-
 * 全局用一个reqIndex存储已经发送的请求数量，同时存一个showIndex作为当前展示的是第几个请求返回的数据。
 * 函数作用域内存一个自身的请求index。
 * 响应时拿到数据，对比一下index是否大于全局的showIndex，如果大于再放进去，同时更改showIndex；小了就说明这个数据无效了。
@@ -1560,10 +1554,6 @@ export { a, add }
 * 一个列表每一项都要设置同一个事件的不同效果
 * 如果每个列表项都增加事件监听，性能消耗比较大
 * 实现在列表添加事件监听，然后对应不同的列表项触发不同的事件
----
-
-<video src="./assets/shijiandaili.mp4" style="width:400px;" controls />
-
 :::
 ::: tab label=事件代理
 ```html{20-26}

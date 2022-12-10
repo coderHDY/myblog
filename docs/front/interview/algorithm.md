@@ -266,8 +266,6 @@ console.log(merge(obj1, obj2));
 ## 6.数据流清理
 :::: tabs
 ::: tab label=题
-<img src="./assets/dataflow.png" style="width:400px"/>
-
 * node: 节点,string
 ```js
 const node = 'NODE_1';

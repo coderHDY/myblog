@@ -120,9 +120,6 @@ tags:
 ## 2.实现三角形
 :::: tabs
 ::: tab label=实现1
-<img src="./assets/triangle.png" style="width:300px;">
-
----
 ```html{7-9}
 <body>
     <div></div>
@@ -143,9 +140,6 @@ tags:
 :::: tabs
 ::: tab label=题目
 * 要实现一个列表三种颜色循环渲染
-
-<img src="./assets/xunhuanliebiaose.png" style="width:300px;">
-
 :::
 ::: tab label=实现
 ```html{22-30}
@@ -549,8 +543,6 @@ tags:
 * 作用：CSStransform属性允许你旋转，缩放，倾斜或平移给定元素。这是通过**修改CSS视觉格式化模型的坐标空间来实现的**。
 * 原理：是通过`矩阵变换`做出来的，**矩阵记录一个css盒子的几个坐标**，然后通过这个矩阵给盒子定位、定绘制大小。transform通过变换这个矩阵的值来进行计算，得到目标位置的新矩阵，进行绘制
 * 计算厚的矩阵变换**不会影响原文档的绘制布局**，因为他是`新建的图层`进行的动画展示
-    <img src="./assets/csslayer.png" style="width:300px">
-
 ```html
 <body>
     <div class="other"></div>

@@ -650,10 +650,6 @@ app.get('/api/comments', (req, res) => {
 :::
 ::: tab label=恶意诱导用户操作
 * 用户本人正常操作
-
-<video src="./assets/xss2.mp4" style="width:400px;" controls />
-
----
 * **恶意植入操作**
 >server.js
 ```js{45-50}
