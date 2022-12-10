@@ -2,7 +2,11 @@
 title: base64文件上传下载
 date: 2022-12-08
 ---
+<<<<<<< HEAD
 # base64文件上传下载
+=======
+## base64文件上传下载
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ::: codePen width=375
 ```html{24,37-42,54}
 <html>
@@ -38,7 +42,11 @@ date: 2022-12-08
                 type: "",
                 blob: "",
             }
+<<<<<<< HEAD
             if (!reg.test(obj)) return info;
+=======
+            if (!reg.test(base64)) return info;
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
             const res = base64.match(reg);
 
             // 重点：base64 解码字符串，获取文件类型，转 u8array。让 blob 读取成为缓存
@@ -144,4 +152,13 @@ date: 2022-12-08
 
 </html>
 ```
+<<<<<<< HEAD
+=======
+:::
+## buffer处理base64问题
+::: tip
+* node端`buffer.from(base64, "base64")`
+* 转换过程中需要将base64头去掉`data:text/markdown;base64,`
+* 因为 base64 需要是 4 的倍数，前面头的长度不固定，转buffer如果长度不准确就会被加长处理，atob转换回来就不正确
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 :::

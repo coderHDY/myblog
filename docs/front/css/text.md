@@ -16,6 +16,7 @@ date: 2021-12-25
 |match-parent|start和end的值根据父元素的direction确定，并被替换为恰当的left或right【很多环境未实现】|
 |【String】|根据本字符串对齐【很多环境未实现】|
 :::
+<<<<<<< HEAD
 :::: tabs 
 ::: tab label=start/left
 <img src="./assets/textalignstart.png" width="400px">
@@ -73,19 +74,32 @@ date: 2021-12-25
 ```html{7}
 
 <body>
+=======
+::: codePen label=text-align val=start select=[start,left,right,end,center,justify]
+```html{7}
+<body>
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
     <div>我是张三，你找我？我是张三，你找我？我是张三，你找我？我是张三，你找我？</div>
 
     <style>
         div {
             background-color: rgb(221, 144, 144);
+<<<<<<< HEAD
             width: 200px;
             text-align: justify;
+=======
+            width: 220px;
+            text-align: {{val}};
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
         }
     </style>    
 </body>
 ```
 :::
+<<<<<<< HEAD
 ::::
+=======
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ## text-decoration
 ::: tip text-decoration
 * 文字装饰
@@ -119,10 +133,15 @@ date: 2021-12-25
 |clip|溢出父盒子的位置剪裁|
 |ellipsis|溢出位置省略号|
 :::
+<<<<<<< HEAD
 :::: tabs
 ::: tab label=clip
 <img src="./assets/textoverflowclip.png" style="width:200px">
 
+=======
+>默认效果，截断
+::: codePen height=50
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ```html{6-7,11}
 <body>
     <div>我叫张三我叫张三我叫张三我叫张三我叫张三</div>
@@ -140,9 +159,14 @@ date: 2021-12-25
 </body>
 ```
 :::
+<<<<<<< HEAD
 ::: tab label=ellipsis
 <img src="./assets/textoverflowellipsis.png" style="width:200px">
 
+=======
+>单行省略号
+::: codePen height=50
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ```html{6-7,11}
 <body>
     <div>我叫张三我叫张三我叫张三我叫张三我叫张三</div>
@@ -160,8 +184,13 @@ date: 2021-12-25
 </body>
 ```
 :::
+<<<<<<< HEAD
 ::: tab label=多行省略号
 * 多行超出显示省略号写法
+=======
+>多行省略号
+::: codePen height=100
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ```html
 <body>
     <div>这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书这是一本好书</div>
@@ -179,7 +208,10 @@ date: 2021-12-25
 </body>
 ```
 :::
+<<<<<<< HEAD
 ::::
+=======
+>>>>>>> 38feadc4e84ab8388b6bf5687e195f07fb5867e6
 ## text-shadow
 ::: tip text-shadow
 * 文字阴影
