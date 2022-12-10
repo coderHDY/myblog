@@ -53,11 +53,6 @@ app.get('/', function(req, res) {
 });
 ```
 :::
-::: tab label=效果
-<img src='./assets/kuayutupian.png' style="width:400px;">
-<img src='./assets/kuayu.png' style="width:400px;">
-
-:::
 ::::
 ## 解决方案
 ### JSONP
@@ -558,9 +553,6 @@ export default {
 </style>
 ```
 :::
-::: tab label=效果
-![](./assets/vueproxy.png)
-:::
 ::: tab label=react
 * 安装插件
 ```shell
@@ -686,9 +678,6 @@ app.get('/api', function(req, res) {
     })
 });
 ```
-:::
-::: tab label=效果
-![](./assets/nginxxiaoguo.png)
 :::
 ::::
 ### webSocket

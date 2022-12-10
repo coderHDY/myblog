@@ -442,8 +442,6 @@ console.log(maxProfit(prices)); // 7
 :::: tabs
 ::: tab label=思路
 * 【低点买入，高点卖出】下一个时间段涨了我就买，下一个时间段跌了我就卖
-<img src="./assets/maigupiao.png" style="width:400px;">
-
 >时间：99.15%  
 >空间：56.41%
 ```js{6-12}

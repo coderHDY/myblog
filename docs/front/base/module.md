@@ -377,6 +377,6 @@ export { count, add, get }
 ```
 :::
 ::: tab label=效果
-<img src="./assets/importzhi.png" style="width:600px;">
+* add方法修改了count，说明是同一个值
 :::
 ::::

@@ -163,9 +163,6 @@ self.addEventListener('message', e => {
 })
 ```
 :::
-::: tab label=效果
-<img src="./assets/worker.png" style="width:400px;">
-:::
 ::::
 
 ### terminate
@@ -225,9 +222,6 @@ setInterval(() => {
   postMessage('我是张三，你找我？');
 }, 1000);
 ```
-:::
-::: tab label=效果
-![](./assets/workerterminate.png)
 :::
 ::::
 ## 钩子

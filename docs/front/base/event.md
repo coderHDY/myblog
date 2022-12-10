@@ -141,7 +141,6 @@ date: 2021-12-18
     </script>
 </body>
 ```
-<img src="./assets/onclick.png">
 :::
 ::: tab label=addEventListener
 ```html
@@ -243,7 +242,6 @@ Object.prototype.myAddEventListener = function(type, callback) {
     this[eventTypeHandlers].push(callback);
 }
 ```
-![](./assets/shouxieaddevent.png)
 * 其实是依赖于on事件回调触发，并不算自己触发的
 :::
 ::::

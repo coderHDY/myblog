@@ -47,7 +47,6 @@ app.get('/user', (req, res) => res.send(`
 `));
 ```
 * 关闭浏览器，再直接进 http://localhost:8888/user，发现还是一样的输出，说明数据长期存在
-![](./assets/localstorage.png)
 :::
 ::: tab label=sessionStorage
 ```js{14-15,29}
@@ -85,10 +84,6 @@ app.get('/user', (req, res) => res.send(`
 `));
 ```
 * 关闭浏览器，再直接进 http://localhost:8888/user，发现输出不一样，说明数据删除了
-![](./assets/sessionstorage.png)
-:::
-::: tab label=浏览器查看
-![](./assets/liulanqichakansession.png)
 :::
 ::::
 ## setItem
@@ -365,12 +360,9 @@ app.post('/login', (req, res) => {
 :::
 ::: tab label=登录网页测试
 * 输入正确可以在sessionStorage中添加本次会话用户信息
-<img src="./assets/sessionshezhi.png" style="width:500px;">
 ---
 * 点击我的，跳转到别的页面，依旧能拿到本次会话用户的信息
-<img src="./assets/sessionduqu.png" style="width:500px;">
 ---
 * 关闭浏览器，直接打开【localhost:8888/me】，发现登录信息没了
-<img src="./assets/sessionwuxinxi.png" style="width:500px;">
 :::
 ::::
