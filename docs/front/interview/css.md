@@ -118,8 +118,7 @@ tags:
 :::
 ::::
 ## 2.实现三角形
-:::: tabs
-::: tab label=实现1
+::: codePen height=130
 ```html{7-9}
 <body>
     <div></div>
@@ -135,13 +134,11 @@ tags:
 </body>
 ```
 :::
-::::
 ## 3.循环列表色
-:::: tabs
-::: tab label=题目
+::: tip 题目
 * 要实现一个列表三种颜色循环渲染
 :::
-::: tab label=实现
+::: codePen
 ```html{22-30}
 <body>
     <ul>
@@ -177,14 +174,13 @@ tags:
 </body>
 ```
 :::
-::::
 ## 4.自适应盒子
-:::: tabs
-::: tab label=问题
+::: tip
 * 左侧固定长度
 * 右侧盒子自适应
 :::
-::: tab label=calc
+>方案1
+::: codePen height=100
 ```html{8,16}
 <body>
     <div class="father">
@@ -208,7 +204,8 @@ tags:
 </body>
 ```
 :::
-::: tab label=flex
+>方案2
+::: codePen height=100
 ```html{8,16}
 <body>
     <div class="father">
@@ -232,15 +229,13 @@ tags:
 </body>
 ```
 :::
-::::
 ## 5.长宽固定比
-:::: tabs
-::: tab label=问题
+::: tip 问题
 * 长宽固定比例的盒子
-:::
-::: tab label=padding/margin
 * padding/margin用百分比表示时，是通过width做基准的。
 >不过padding有背景色，margin没有背景色
+:::
+::: codePen width=300
 ```html
 <body>
     <div></div>
@@ -253,10 +248,8 @@ tags:
 </body>
 ```
 :::
-::::
 ## 6.左右固定，中间自适应
-:::: tabs
-::: tab label=解
+::: codePen height=50
 ```html
 <body>
     <div class="container">
@@ -287,8 +280,8 @@ tags:
 
 ```
 :::
-::::
 ## 7.匹配列表头尾几个元素
+::: codePen height=380
 ```html{25-30}
 <body>
     <ul>
@@ -323,6 +316,7 @@ tags:
     </style>
 </body>
 ```
+:::
 ## 8.隐藏元素
 :::: tabs
 ::: tab label=opacity
@@ -441,9 +435,8 @@ tags:
 :::
 ::::
 ## 9.制作扇形
-:::: tabs
-::: tab label=思路1
-* 思路1：外层div，`radius`控制弧形，内层div控制两个直角边，进行移动拼接成扇形
+>思路1：外层div，`radius`控制弧形，内层div控制两个直角边，进行移动拼接成扇形
+::: codePen height=150
 ```html
 <body>
     <div class="outer">
@@ -467,8 +460,8 @@ tags:
 </body>
 ```
 :::
-::: tab label=思路2
-* 一个div盒子，
+>思路2，一个div盒子，
+::: codePen height=150
 ```html
 <body>
     <div class="container">
@@ -486,7 +479,6 @@ tags:
 </body>
 ```
 :::
-::::
 ## 10.transform顺序
 :::: tabs
 ::: tab label=题
