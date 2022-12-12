@@ -12,16 +12,12 @@ date: 2021-12-27
 |focus|光标聚焦|
 |visited|已访问过(历史记录有这一条)|
 :::
-:::: tabs
-::: tab label=超链接
-<video src="./assets/csslinkvisited.mp4" style="width:300px;" controls />
-
-
 * 注意：【:link】和【:visited】应该放在最上面，因为同时多种状态且属性冲突时，取最下面一种状态设置的属性
-* 例：【:hover】时元素的【:link】属性依旧触发，所以【:hover】应该定义在【:link的下面】
+>例：【:hover】时元素的【:link】属性依旧触发，所以【:hover】应该定义在【:link的下面】
+::: codePen height=70
 ```html
 <body>
-    <a href="#a1">超链接</a>
+    <a href="#a1" id="a">超链接</a>
 
     <div id="a1">锚点</div>
     <style>
@@ -38,13 +34,12 @@ date: 2021-12-27
             background-color:greenyellow;
         }
     </style>
+    <script>a.addEventListener("click", e => e.preventDefault())</script>
 </body>
 ```
 :::
-::: tab label=focus
-* 取消【input】元素选中时的边框  
-<video src="./assets/inputfocus.mp4" style="width:300px;" controls />
-
+>取消【input】元素选中时的边框
+::: codePen height=70
 ```html{6-8}
 <body>
     <input type="text" id="input1">
@@ -58,7 +53,6 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
 ## 关联选择器
 ::: tip 
 |选择器|选择元素|
@@ -70,10 +64,8 @@ date: 2021-12-27
 |所有弟弟|p~.left|
 |下一个弟弟|p+.left|
 :::
-:::: tabs
-::: tab label=交集/后代/并集
-<img src="./assets/cssjiaojixuanzeqi.png" style="width:400px;">
-
+>交集/后代/并集
+::: codePen height=100
 ```html
 <body>
     <p class="left">
@@ -102,9 +94,8 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: tab label=子代/兄弟
-<img src="./assets/guanxixuanzeqi.png" style="width:300px;">
-
+>子代/兄弟
+::: codePen
 ```html{4-10}
 <body>
     <div class="big-brother">哥哥</div>
@@ -141,7 +132,6 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
 ## 属性选择器
 ::: tip 属性选择器
 * 元素拥有某个属性时选择，【css scope原理】
@@ -149,10 +139,8 @@ date: 2021-12-27
 [property] {}
 ```
 :::
-:::: tabs
-::: tab label=属性选择器
-<img src="./assets/shuxingxuanzeqi.png" style="width:400px;">
 
+::: codePen height=100
 ```html
 <body>
     <div>tag选择器</div>
@@ -174,7 +162,6 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
 ## 正则属性选择器
 ::: tip 正则匹配属性
 |选择器|含义|
@@ -183,10 +170,7 @@ date: 2021-12-27
 |[data$=box]|data以box结尾|
 |[id*=container]|id包含container|
 :::
-:::: tabs
-::: tab label=示例
-<img src="./assets/shuxingzhengze.png" style="width:300px;">
-
+::: codePen
 ```html
 <body>
     <div id="my-box">1</div>
@@ -211,7 +195,6 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
 ## 结构化伪类选择器
 ::: tip 伪类
 |选择元素|选择器|
@@ -225,33 +208,8 @@ date: 2021-12-27
 |空选择器|:empty|
 |跳转目标选择器|:target|
 :::
-:::: tabs
-::: tab label=非
-* 本选择器且非内部选择器
-<img src="./assets/feixuanzeqi.png" style="width:300px;">
-
-```html{10}
-<body>
-    <ul class="father">
-        <li class="big-brother">哥哥</li>
-        <li class="me">我</li>
-        <li class="brother">弟弟</li>
-        <li class="sister">妹妹</li>
-    </ul>
-
-    <style>
-        li:not(.me) {
-            background-color: pink;
-        }
-    </style>
-</body>
-```
-:::
-::: tab label=独子
-* 本标签是父标签的独子  
-<img src="./assets/onlychild.png" style="width:300px;">
-
-```html{9-11}
+::: codePen label=选择器 val=li:only-child select=[li:only-child,li:not(.me),li:first-child,li:last-child]
+```html{14}
 <body>
     <ul class="father">
         <li class="big-brother">哥哥</li>
@@ -265,114 +223,15 @@ date: 2021-12-27
     </ul>
 
     <style>
-        li:only-child {
+        {{val}} {
             background-color: pink;
         }
     </style>
 </body>
 ```
 :::
-::: tab label=大儿子/小儿子
-* 本标签是父标签的大儿子/小儿子，独子的情况下都触发，取后面那一个定义的  
-<img src="./assets/onlychild.png" style="width:300px;">
-
-```html
-<body>
-    <ul class="father">
-        <li class="big-brother">哥哥</li>
-        <li class="me">我</li>
-        <li class="brother">弟弟</li>
-        <li class="sister">妹妹</li>
-    </ul>
-
-    <ul class="father">
-        <li>独子</li>
-    </ul>
-
-    <style>
-        li:first-child {
-            background-color: pink;
-        }
-
-        li:last-child {
-            background-color: red;
-        }
-    </style>
-</body>
-```
-:::
-::: tab label=按序选择
-* 本标签是【父标签的第X个】，可以使用N作为正整数来做无限渲染 【N=0，1，2，3...】
->例：列表三种颜色循环渲染，第一个例外渲染成黑色  
-
-<img src="./assets/xunhuanliebiao.png" style="width:300px;">
-
-```html{16-24}
-<body>
-    <ul class="father">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-    </ul>
-
-    <style>
-        li:nth-child(3N) {
-            background-color: red;
-        }
-        li:nth-child(3N + 1) {
-            background-color: pink;
-        }
-        li:nth-child(3N + 2) {
-            background-color: yellow;
-        }
-
-        li:nth-child(1) {
-            background-color: black;
-        }
-    </style>
-</body>
-```
-:::
-::: tab label=奇偶选择器
-<img src="./assets/jiouxuanzeqi.png" style="width:300px;">
-
-```html{16-21}
-<body>
-    <ul class="father">
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-        <li>7</li>
-        <li>8</li>
-        <li>9</li>
-        <li>10</li>
-    </ul>
-
-    <style>
-        li:nth-of-type(odd) {
-            background-color: pink;
-        }
-        li:nth-of-type(even) {
-            background-color: yellow;
-        }
-    </style>
-</body>
-```
-:::
-::: tab label=空选择器
-* 本选择器且【没有内容和子标签】  
-<img src="./assets/kongxuanzeqi.png" style="width:300px;">
-
+>本选择器且【没有内容和子标签】
+::: codePen label=选择器 val=li:empty select=[li:empty,li:nth-child(3N),li:nth-child(3N+1),li:nth-child(3N+2),li:nth-of-type(odd),li:nth-of-type(even)] height=300
 ```html{11-12}
 <body>
     <ul class="father">
@@ -389,13 +248,14 @@ date: 2021-12-27
     </ul>
 
     <style>
-        li:empty {
+        {{val}} {
             background-color: pink;
         }
     </style>
 </body>
 ```
 :::
+:::: tabs
 ::: tab label=跳转目标选择器
 * 本选择器且【作为超链接的跳转目标被触发时】  
 <video src="./assets/targetxuanzeqi.mp4" style="width:300px;" controls/>
@@ -441,11 +301,9 @@ date: 2021-12-27
 |placeholder|占位文本|
 |selection|选中文本的样式自定义|
 :::
-:::: tabs
-::: tab label=after/before
-<img src="./assets/beforeafter.png" style="width:400px;">
-
-```html{5-13}
+>after/before
+::: codePen height=70 width=370
+```html
 <body>
     <p class="content">我是一段文章文章。。。</p>
 
@@ -462,9 +320,7 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: tab label=first-letter
-<img src="./assets/firstletter.png" style="width:250px;">
-
+::: codePen val=first-letter select=[.content::first-letter,.content::first-line] height=100
 ```html{13-15}
 <body>
     <p class="content">
@@ -478,40 +334,15 @@ date: 2021-12-27
     </div>
 
     <style>
-        .content::first-letter {
+        {{val}} {
             background-color: pink;
         }
     </style>
 </body>
 ```
 :::
-::: tab label=first-line
-<img src="./assets/firstline.png" style="width:250px;">
-
-```html{13-15}
-<body>
-    <p class="content">
-        我是一段文章文章。。。
-        <br>
-        我是第二行
-    </p>
-
-    <div class="content">
-        我是一段文章文章。。。
-    </div>
-
-    <style>
-        .content::first-line {
-            background-color: pink;
-        }
-    </style>
-</body>
-```
-:::
-::: tab label=marker
-* HTML默认的结构化标记增加自定义样式  
-<img src="./assets/marker.png" style="width:250px;">
-
+>marker: HTML默认的结构化标记增加自定义样式  
+::: codePen height=250
 ```html{15-17}
 <body>
     <ul>
@@ -534,10 +365,8 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: tab label=placeholder
-* HTML默认的结构化标记增加自定义样式  
-<img src="./assets/placeholder.png" style="width:300px;">
-
+>placeholder:HTML默认的结构化标记增加自定义样式  
+::: codePen height=70
 ```html{5-8}
 <body>
     <input type="text" placeholder="默认占位符样式">
@@ -551,10 +380,8 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: tab label=selection
-* 本选择器内，鼠标选中文本时自定义样式  
-<video src="./assets/selection.mp4" style="width:300px;" controls/>
-
+>selection:自定义选中样式
+::: codePen height=100
 ```html
 <body>
     <p>我是文字我是文字我是文字</p>
@@ -567,4 +394,3 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
