@@ -63,6 +63,12 @@ module.exports = {
                 logo: 'https://photo.smallsunnyfox.com/images/blog/friendlink/theme_reco.png',
                 link: 'https://shanyue.tech/'
             },
+            {
+                title: 'ming',
+                desc: '美酒佳人只等闲，就怕君心不思进取，蹉跎不前',
+                logo: 'https://lvdengming.com/assets/img/logo.png',
+                link: 'https://lvdengming.com/'
+            },
         ],
         // 博客设置
         blogConfig: {
