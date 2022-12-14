@@ -6,30 +6,20 @@ date: 2021-11-14
 :::: steps
 ::: step
 * 按量付费云服务器（要先在阿里云充100+余额），普通用法比较便宜
-![](./assets/anliangfufei.png)
 * 选规格，按最便宜的方式选
-![](./assets/xuanguige.png)
 * 选镜像系统，要linux/centos
-![](./assets/xuanjingxiang.png)
 * 点击下一步，重要：按量付费
-![](./assets/anliangfufeixuanze.png)
 * 剩下就直接购买，进入安全组配置
 :::
 ::: step
 * 进入管理控制台，点开安全组配置
-![](./assets/anquanzupeizhi.png)
 * 点击配置规则
-![](./assets/peizhiwendang.png)
 * 增加8822端口号（为ssh连接专门配置，也可以设置其他）
-![](./assets/jiaduankouhao.png)
 * 配置好远程连接密码，重启
-![](./assets/peizhisshmima.png)
 :::
 ::: step
 * 进入远程连接
-![](./assets/jinruyuanchenglianjie.png)
 * 选择立即登录
-![](./assets/lijidenglu.png)
 :::
 ::: step
 * 编辑ssh配置，打开port为步骤二设置的port

@@ -54,7 +54,6 @@ kill-9 2222
 # 查看日志，发现无法恢复
 pm2 logs
 ```
-![](./assets/pm2nowatch.png)
 :::
 ::: tab label=监听方式
 ```shell
@@ -72,7 +71,6 @@ kill -9 2222
 pm2 logs
 # 发现进程挂了还重启了
 ```
-![](./assets/pm2watch.png)
 :::
 ::: tab label=总结对比
 * --watch方式
