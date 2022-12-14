@@ -25,11 +25,8 @@ date: 2021-12-27
 |多列容器|元素的 column-count 或 column-width (en-US) 不为 auto，包括 column-count 为 1|
 >column-span 为 all 的元素始终会创建一个新的BFC，即使该元素没有包裹在一个多列容器中（标准变更，Chrome bug）。
 :::
-:::: tabs
-::: tab label=margin重叠
-* 非BFC盒子之间，内部的子盒子margin溢出且与外面别的margin重叠，说明本盒子内部布局影响到外部  
-<img src="./assets/bfc0.png" style="width:250px;">
-
+>margin重叠: 非BFC盒子之间，内部的子盒子margin溢出且与外面别的margin重叠，说明本盒子内部布局影响到外部  
+::: codePen height=220
 ```html
 <body>
     <div class="nobfc">
@@ -42,16 +39,17 @@ date: 2021-12-27
 
     <style>
         .nobfc>div {
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             background-color: yellowgreen;
-            margin: 100px;
+            margin: 50px;
         }
     </style>
 </body>
 ```
 :::
-::: tab label=浮动塌陷
+>浮动塌陷
+::: codePen height=100
 ```html{2-5}
 <body>
     <div class="father">
@@ -65,16 +63,16 @@ date: 2021-12-27
         }
 
         .child {
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             float: left;
             margin: 10px;
             background-color: blue;
         }
 
         .other {
-            height: 100px;
-            width: 200px;
+            height: 50px;
+            width: 100px;
             background-color: green;
         }
 
@@ -83,10 +81,9 @@ date: 2021-12-27
 
 ```
 :::
-::: tab label=BFC盒子
-* BFC盒子内部无论怎么折腾都不会影响到外部的盒子  
-<img src="./assets/bfc2.png" style="width:250px;">
+>BFC盒子: BFC盒子内部无论怎么折腾都不会影响到外部的盒子  
 
+::: codePen height=250
 ```html{11-13}
 <body>
     <div class="nobfc">
@@ -102,20 +99,20 @@ date: 2021-12-27
             overflow: hidden;
         }
         .nobfc>div {
-            width: 100px;
-            height: 100px;
+            width: 50px;
+            height: 50px;
             background-color: yellowgreen;
-            margin: 100px;
+            margin: 50px;
         }
     </style>
 </body>
 ```
 :::
-::: tab label=其他效果
+
+::: tip 其他效果
 * BFC可以包含浮动元素（清除浮动脱离文档流的影响）
 * BFC可以让外部浮动不影响自己
 :::
-::::
 ## box-sizing
 ::: tip box-sizing
 |值|效果|
@@ -123,58 +120,30 @@ date: 2021-12-27
 |content-box|【标准盒子】宽高设置只包括内容部分|
 |border-box|【怪异盒子/IE盒子】宽高设置包括【内容+padding】|
 :::
-:::: tabs
-::: tab label=content-box
-* 默认效果，宽高只包括内容，设置border和padding会撑大盒子
-<img src="./assets/content-box.png" style="width:300px">
 
+::: codePen val=content-box select=[content-box,border-box] label=box-sizing
 ```html
 <body>
     <div class="father">你好</div>
 
     <style>
         .father {
-            width: 200px;
-            height: 200px;
+            width: 50px;
+            height: 50px;
             background-color: rgb(109, 219, 238);
 
             margin: 10px;
-            padding: 50px;
-            border: 20px solid #333;
-            box-sizing: content-box;
+            padding: 20px;
+            border: 5px solid #333;
+            box-sizing: {{val}};
         }
     </style>
 </body>
 ```
 :::
-::: tab label=border-box
-* 默认效果，宽高只包括内容，设置border和padding会撑大盒子
-<img src="./assets/borderbox.png" style="width:300px">
-
-```html
-<body>
-    <div class="father">你好</div>
-
-    <style>
-        .father {
-            width: 200px;
-            height: 200px;
-            background-color: rgb(109, 219, 238);
-
-            margin: 10px;
-            padding: 50px;
-            border: 20px solid #333;
-            box-sizing: border-box;
-        }
-    </style>
-</body>
-```
-:::
-::::
 ## 居中
 ### 行内块元素
-<img src="./assets/textalign.png" style="width:300px;" />
-
+::: codePen height=50
 ```html{9}
 <body>
     <span>我是盒子</span>
@@ -189,12 +158,13 @@ date: 2021-12-27
     </style>
 </body>
 ```
+:::
 ### transform
 ::: tip
 * 先移动父盒子的50%，再往回拉自身的50%
 :::
-<img src="./assets/transformjuzhong.png" style="width:300px;" />
 
+::: codePen
 ```html{11,18-21}
 <body>
     <div class="father">
@@ -221,14 +191,12 @@ date: 2021-12-27
     </style>
 </body>
 ```
+:::
 ### margin
 ::: tip
 * 用margin: 0 auto; 自适应水平居中
 :::
-:::: tabs
-::: tab label=margin
-<img src="./assets/margin0auto.png" style="width:300px;" />
-
+::: codePen
 ```html{17}
 <body>
     <div class="father">
@@ -252,10 +220,8 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: tab label=配合flex
-* 可以配合flex做到水平垂直居中  
-<img src="./assets/transformjuzhong.png" style="width:300px">
-
+>margin配合flex
+::: codePen
 ```html{12-14,21}
 <body>
     <div class="father">
@@ -283,14 +249,13 @@ date: 2021-12-27
 </body>
 ```
 :::
-::::
 ### flex
 ::: tip 思想
 * justify-content主轴居中
 * align-items交叉轴居中
 :::
-<img src="./assets/flexjuzhong.png" style="width:300px;" />
 
+::: codePen
 ```html{12-14}
 <body>
     <div class="father">
@@ -315,13 +280,13 @@ date: 2021-12-27
     </style>
 </body>
 ```
+:::
 ### line-height
 ::: tip
 * 文字本身就在行内垂直居中。
 * 行高 === 父盒子高让文字在父盒子居中
 :::
-<img src="./assets/lineheight.png" style="width:200px;">
-
+::: codePen
 ```html
 <body>
     <div class="father">你好</div>
@@ -338,6 +303,7 @@ date: 2021-12-27
     </style>
 </body>
 ```
+:::
 ## background
 ::: tip
 1. `background-image`可以通过写多个url的形式传递兜底图片，前面题片加载失败才会加载后面图片
@@ -374,10 +340,7 @@ td {
 ::: tip 画出三角形
 * 使用边框border的特性
 :::
-:::: tabs
-::: tab label=三角形
-* 原理：border解析的原理  
-<img src="./assets/sanjiaoxing0.png" style="width:300px;">
+::: codePen
 ```html{12-17}
 <body>
     <div class="father">
@@ -399,9 +362,9 @@ td {
     </style>
 </body>
 ```
-
 :::
-::: tab label=原理
+
+::: tip 原理
 * border解析会有斜边，让内容消失，也就是【content、padding=0】那么斜边就会交叉，形成三角形
 
 <img src="./assets/borderjiexi.png" style="width:500px;">
@@ -409,9 +372,9 @@ td {
 * 然后再让其他几个边的border颜色继承父盒子，也就是自己透明，就形成了三角形
 <img src="./assets/borderjiexi2.png" style="width:500px;">
 :::
-::: tab label=示例
-<img src="./assets/traingle.png" style="width:400px;">
 
+>示例
+::: codePen height=100
 ```html
 <body>
     <div class="father">
@@ -459,7 +422,6 @@ td {
 </body>
 ```
 :::
-::::
 ### 渐变背景色
 ::: warning
 注：渐变背景色被解析成`background-imag`e，因此不能与北京图片一起使用
@@ -474,14 +436,11 @@ td {
 |black 10%|10%处是黑色|
 |#33333333 20%|20%处是透明|
 :::
-:::: tabs
-::: tab label=渐变颜色
-* 从20%处开始渐变，100%处变色完成  
-<img src="./assets/lineargradient0.png" style="width:300px;">
-
+>渐变颜色: 从20%处开始渐变，100%处变色完成  
+::: codePen height=120
 ```html{8}
 <body>
-    <div id='div'></div>
+    <div id="div"></div>
 
     <style>
         #div {
@@ -493,13 +452,12 @@ td {
 </body>
 ```
 :::
-::: tab label=多段渐变
-* 从20%处开始渐变，60%处设置一个变色点，100%处再设置一个变色点  
-<img src="./assets/lineargradient2.png" style="width:300px;">
+>多段渐变: 从20%处开始渐变，60%处设置一个变色点，100%处再设置一个变色点  
 
+::: codePen height=120
 ```html{8}
 <body>
-    <div id='div'></div>
+    <div id="div"></div>
 
     <style>
         #div {
@@ -511,13 +469,11 @@ td {
 </body>
 ```
 :::
-::: tab label=多段背景色
-* 让渐变的初始状态和结束状态都是一个颜色就可以了   
-<img src="./assets/lineargradient3.png" style="width:300px;">
-
+>多段背景色: 让渐变的初始状态和结束状态都是一个颜色就可以了   
+::: codePen height=120
 ```html{8}
 <body>
-    <div id='div'></div>
+    <div id="div"></div>
 
     <style>
         #div {
@@ -529,32 +485,29 @@ td {
 </body>
 ```
 :::
-::: tab label=透明色
-* 透明色可以用【rgba(0,0,0,0)】或者【#3333333（八位）】来实现  
-<img src="./assets/toumingse.png" style="width:300px;">
-
+>透明色: 透明色可以用【rgba(0,0,0,0)】或者【#3333333（八位）】来实现  
+::: codePen height=130
 ```html{15}
 <body>
     <div id="father">
-        <div id='div'></div>
+        <div id="div"></div>
     </div>
 
     <style>
         #father {
-            height: 200px;
-            width: 375px;
+            height: 100px;
+            width: 175px;
             background-color: rgb(38, 0, 255);
         }
         #div {
-            height: 100px;
-            width: 375px;
+            height: 50px;
+            width: 175px;
             background: linear-gradient(to right, yellow 33%,rgba(0,0,0,0) 33%,rgba(0,0,0,0) 66%,black 60%,black 100%)
         }
     </style>
 </body>
 ```
 :::
-::::
 ## 问题总结
 ### 移动端盒子点击阴影问题
 ```css
