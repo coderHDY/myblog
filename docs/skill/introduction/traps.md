@@ -38,7 +38,6 @@ const targetElement = document.querySelector(decodeURIComponent(to.hash));
 ::::
 ## 乱跳bug
 * 空行、img、横线，连着的时候就会乱跳
-![](./assets/luantiaobug.png)
 ## 组件嵌套
 * 除非本身是嵌套组件，否则尽量不要使用组件嵌套，容易出现编译错误
 * markdown-it-container是通过成对的 ::: 作为token来判断编译语法的，嵌套时容易出现token配对错误
@@ -115,12 +114,7 @@ const targetElement = document.querySelector(decodeURIComponent(to.hash));
 ### 新建子目录
 * 无论嵌套多少层级，子目录md文件都是每一项**父目录的相对路径**
 * 每个父目录都是**和navbar项一一映射**的，建子目录时不能修改，只能动子目录的路径
-
-<img src='./assets/muluyingshe.png' />
-
 ### 新建nav目录
 
 * 每个nav目录**至少有一个**子目录包含一个README.md文件，同时sidebar配置为 '' ，如果没有会路径解析错误。  
 >因为点击nav目录时跳转的时nav路径下的README.md文件解析成的index.html文件。
-
-![nav配置](./assets/navpeizhi.png)

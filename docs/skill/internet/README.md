@@ -15,7 +15,6 @@ date: 2021-11-13
 :::: tabs
 ::: tab label=prefetch
 * Purpose: prefetch代表当前用户**可能用到这个资源**，需要**在空闲时间**做预取，放在浏览器内存里面，真正用到的时候直接从浏览器内存取
-![](./assets/prefetch.png)
 :::
 ::: tab label=preload
 * Purpose: preload代表这个资源暂时没有被用到，但是**极有可能会用到**，优先级很高，所以会直接开启一个请求线程去请求相关资源，并**不会等网络空闲下来**

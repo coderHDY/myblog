@@ -13,8 +13,6 @@ date: 2021-10-15
 ::: step
 * 在.vuepress/components 目录下新建文件夹，文件夹名字为组件名称
 * 为方便目录结构管理尽量遵循目录结构统一
-
-<img src="./assets/abc493bf1d893f1bcfe4daf155958b0c.png" style="height: 300px;"/>
 :::
 
 ::: step
@@ -97,7 +95,6 @@ const FIXED_ATTR = new Map([
 
 ::: step
 * 使用对应的插件语法，查看效果
-![](./assets/01c3c9f2fae74cfd2589356ad50b016e.png)
 :::
 
 ::::
