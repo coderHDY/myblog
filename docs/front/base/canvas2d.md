@@ -1064,6 +1064,44 @@ ctx.lineWidth = 7;
 </script>
 ```
 :::
+::: codePen
+```html{18,20-24,28-29}
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.querySelector("#canvas");
+        canvas.setAttribute("style", "width: 100vw; height: 100vh");
+        const { innerWidth, innerHeight, devicePixelRatio: dpr } = window;
+
+        canvas.width = innerWidth * dpr;
+        canvas.height = innerHeight * dpr;
+
+
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+
+        const xOffset = 100;
+        const yOffset = 75;
+
+        ctx.save();
+
+        // 画布旋转圆心总是 ctx 左上角，所以移动圆心就要移动 ctx
+        // 将圆心从左上角移动到指定位置，再把 ctx 拉回来绘画
+        ctx.translate(xOffset, yOffset);
+        ctx.rotate(15 * Math.PI / 180);
+        ctx.translate(-xOffset, -yOffset);
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(50, 50, 100, 50);
+
+        // 恢复到初始ctx状态
+        ctx.restore();
+
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(50, 130, 100, 50);
+    </script>
+</body>
+``
+:::
 ## setTransform
 * 将整个canvas画板进行变换
 ```js
