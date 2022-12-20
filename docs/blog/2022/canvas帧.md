@@ -25,7 +25,7 @@ const loop = (timeStamp = Date.now()) => {
 * 肉眼能反应的较舒适的帧数是每秒`30帧-60帧`，也就是 `17-34 毫秒`
 * 可以固定好`每秒的运动量`，以及通过时间戳差计算出该有的运动量
 :::
-::: codePen height=200 val=360 type=number
+::: codePen height=200 val=30 type=number
 ```html{18,23,37-47}
 <body>
     <canvas id="canvas"></canvas>
