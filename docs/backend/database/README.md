@@ -695,6 +695,10 @@ mongodump -d book
 
 # -d 数据库名
 ```
+* 整个db导出为压缩gz文件
+```shell
+mongodump --archive=testbook.gz --gzip --db=testbook
+```
 :::
 ::: tab label=恢复
 * 跳转到恢复目标目录
@@ -709,6 +713,7 @@ mongorestore --host=127.0.0.1 --port=27017 --gzip --archive=./book20220615.gz
 ```
 :::
 ::: tab label=导出
+* 单个doc导出
 ```shell
 mongoexport --collection=books --db=book --out=/Users/dreamarts/Desktop/test/book/book.json
 ```
