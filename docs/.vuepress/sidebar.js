@@ -144,6 +144,7 @@ const front = {
         'vue3hooks',
         'tools',
         'toolsfunc',
+        'react-hooks',
     ],
     '/front/ios/': [
         '',
