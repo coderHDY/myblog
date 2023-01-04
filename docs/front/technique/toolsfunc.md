@@ -636,3 +636,18 @@ const moveListener = (el, callback) => {
 ```
 :::
 ::::
+## url解析query
+```js
+const queryParser = (url) => {
+    const queryReg = /\?([^#]+)/;
+    try {
+        const queryStr = url.match(queryReg);
+        if (queryStr === null) return {};
+
+        const queryParams = Object.fromEntries(queryStr[1].split("&").map(item => item.split("=")).map(([k, v]) => ([k, decodeURIComponent(v)])));
+        return queryParams;
+    } catch (e) {
+        return {}
+    }
+}
+```
