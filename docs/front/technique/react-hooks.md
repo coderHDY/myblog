@@ -9,8 +9,7 @@ date: 2023-01-04
 3. useLocalStorage中监听自定义事件做出数据修改，完成响应式
 :::
 ::: warning
-* react 的 setState 中，setTimeout 和 addEventListener 中是同步修改，所以会导致只修改了一次
-* 所以每次取 localStorage 中最新数据作为比对进行再次 set 数据，处理了页面多个组件同步更新问题
+* 每次取 localStorage 中最新数据作为比对进行再次 set 数据，处理了页面多个组件同步更新问题
 :::
 ```js{9-10,46-49}
 import { useState, useEffect, useCallback } from "react";
