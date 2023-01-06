@@ -878,16 +878,32 @@ Object.prototype.myAddEventListener = function(type, callback) {
 * mac的触控板是touch事件
 :::
 ```js
+
+// 打平移动端位置事件
 const moveListener = (el, callback) => {
-    let mouseDown = false;
-    el.addEventListener("touchmove", e => callback(e.targetTouches[0].clientX, e.targetTouches[0].clientY));
-    el.addEventListener("mousedown", () => mouseDown = true);
-    el.addEventListener("mouseup", () => mouseDown = false);
-    el.addEventListener("mouseout", () => mouseDown = false);
-    document.addEventListener("mouseout", () => mouseDown = false);
-    el.addEventListener("mousemove", (e) => {
-        if (!mouseDown) return;
-        callback(e.clientX, e.clientY);
-    })
+  let mouseDown = false;
+  const touchMove = e => callback(e.targetTouches[0].clientX, e.targetTouches[0].clientY);
+  const mouseDownEvent = () => mouseDown = true;
+  const mouseUp = () => mouseDown = false;
+  const mouseOut = () => mouseDown = false;
+  const mouseMove = (e) => {
+    if (!mouseDown) return;
+    callback(e.clientX, e.clientY);
+  }
+  el.addEventListener("touchmove", touchMove);
+  el.addEventListener("mousedown", mouseDownEvent);
+  el.addEventListener("mouseup", mouseUp);
+  el.addEventListener("mouseout", mouseOut);
+  document.addEventListener("mouseout", mouseOut);
+  el.addEventListener("mousemove", mouseMove);
+
+  return () => {
+    el.removeEventListener("touchmove", touchMove);
+    el.removeEventListener("mousedown", mouseDownEvent);
+    el.removeEventListener("mouseup", mouseUp);
+    el.removeEventListener("mouseout", mouseOut);
+    document.removeEventListener("mouseout", mouseOut);
+    el.removeEventListener("mousemove", mouseMove);
+  }
 }
 ```
