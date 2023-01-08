@@ -1,7 +1,6 @@
 ---
 title: Vue3总结
 date: 2022-01-27
-sticky: 3
 ---
 
 ## 对Vue2升级点

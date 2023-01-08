@@ -3,7 +3,7 @@ title: 《软件开发的201个原则》
 date: 2022-02-04
 categories:
  - 读书笔记
-sticky: 2
+sticky: 1
 ---
 ## 序
 ::: tip
