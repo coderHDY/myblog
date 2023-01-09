@@ -142,7 +142,38 @@ export default {
     },
     selectVals() {
       if (!this.$props.select) return [];
-      return this.$props.select.slice(1, -1).split(",");
+
+      // 截取
+      const str = this.$props.select.slice(1, -1);
+      const stack = [];
+      let idx = 0;
+      const ans = [];
+      const pairToken = {
+        "(": ")",
+        "[": "]",
+        "{": "}",
+        '"': '"',
+        "'": "'",
+        "`": "`",
+      };
+      for (let i = 0; i < str.length; i++) {
+        if ("([{'\"`".includes(str[i])) {
+          stack.push(str[i]);
+        } else if (")]}'\"`".includes(str[i]) && stack.length > 0) {
+          const lastToken = stack[stack.length - 1];
+          if (pairToken[lastToken] === str[i]) {
+            stack.pop();
+          }
+        } else if (str[i] === "," && stack.length === 0) {
+          ans.push(str.slice(idx, i).trim());
+          idx = i + 1;
+        }
+      }
+      if (idx < str.length - 1) {
+        ans.push(str.slice(idx, str.length).trim());
+      }
+
+      return ans;
     },
     randomClass() {
       return `c${this._uid}_${Math.floor(Math.random() * 1000)}`;

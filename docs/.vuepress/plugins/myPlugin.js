@@ -17,7 +17,8 @@ const registerCodePen = (md) => {
   const mark = "codePen";
   // 替换掉字串的内容 {{val}} -> xxx
   const replaceInnerCode = (item, attrStr) => {
-    const attr = attrStr.split(/\s+/).reduce((pre, item) => {
+    const reg = /[^\s+=]+=.+?(?=\s+[^\s=]+=|\s*$)/g;
+    const attr = (attrStr.match(reg) || []).reduce((pre, item) => {
       const [k, v] = item.split("=")
       pre[k] = v;
       return pre;
@@ -32,15 +33,20 @@ const registerCodePen = (md) => {
     // },
     render(tokens, idx) {
       const token = tokens[idx];
-      if (token.nesting === 1) {
-        const encodedInnerHtml = encodeURIComponent(tokens[idx + 1]?.content);
-        const reg3 = new RegExp(`${mark}\\s+(.*)`);
-        const rawAttrs = token.info.match(reg3);
-        replaceInnerCode(tokens[idx + 1], token.info);
-        return `<${mark} code=${encodedInnerHtml} ${rawAttrs && rawAttrs[1]}>\n`;
-      } else {
-        return `</${mark}>\n`;
-      }
+        if (tokens[idx].nesting === 1) {
+            const encodedInnerHtml = encodeURIComponent(tokens[idx + 1]?.content);
+            const reg3 = new RegExp(`${mark}\\s+(.*)`);
+            const rawAttrs = token.info.match(reg3);
+
+            // 加双引号
+            const addQuoteReg = /([^\s+=]+=)(.+?)(?=\s+[^\s=]+=|\s*$)/g;
+            const vueAttrs = rawAttrs?.[1]?.replace(addQuoteReg, "$1'$2'")
+
+            replaceInnerCode(tokens[idx + 1], token.info);
+            return `<${mark} code=${encodedInnerHtml} ${vueAttrs}>\n`;
+        } else {
+            return `</${mark}>\n`;
+        }
     }
   })
 }

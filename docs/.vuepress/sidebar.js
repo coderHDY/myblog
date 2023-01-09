@@ -96,6 +96,7 @@ const front = {
             collapsable: false,
             children: [
                 '',
+                'grid',
                 'selector',
                 'box',
                 'text',
