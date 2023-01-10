@@ -4,6 +4,7 @@ date: 2021-12-06
 tags: 
  - 前端重点
 ---
+## 底层
 ::: tip
 * js正则底层是基于perl实现的正则引擎
 * 同样的字符串处理正则会比一般的字符串方法快很多
@@ -377,8 +378,8 @@ console.log(reg2.exec(str)); // [ 'abc', index: 5, input: 'I am abc', groups: un
 >又名`零宽断言`，ios / mac部分不支持
 * 【exp1(?=exp2)】：查找 exp2 前面的 exp1。
 * 【exp1(?!exp2)】：查找后面不是 exp2 的 exp1。
-* 【(?<=exp2)exp1】：查找前面是 exp2 的 exp1。
-* 【(?<!exp2)exp1】：查找前面不是 exp2 的 exp1。
+* 【(?<=exp2)exp1】：查找前面是 exp2 的 exp1，safari不支持。
+* 【(?<!exp2)exp1】：查找前面不是 exp2 的 exp1，safari不支持。
 ```js
 const str = '986005715@qq.com';
 
@@ -899,7 +900,6 @@ console.log(a.replace(reg2, (matchs, index, input) => {
     console.log(input);  // hello world!  // hello world!  // hello world!
     return 'L'
 })); // heLLo worLd!
-
 ```
 :::
 ::: tab label=正则有分组
@@ -953,7 +953,6 @@ var re2 = /[.]/g;
 console.log(str.search(re)); // 4
 console.log(str.search(re2)); // -1
 ```
-
 ::: warning search和indexof的区别
 * search支持正则，但也只能返回第一个匹配项
 * indexOf支持变换起始下标，但不支持正则
@@ -971,8 +970,8 @@ console.log(str.indexOf('1', 1)); // 3
 * 返回：Array，用str2/reg分割得来的数组，可限制数组长度
 * tip：第二个参数是限制了数组的长度
 * tip：第一个参数可以是正则
+* 参数1是正则时，String.prototype.split()内部调用此方法
 :::
-* **参数1是正则时，String.prototype.split()内部调用此方法**
 ::::tabs
 ::: tab label=调用证明
 ```js{5,6}
