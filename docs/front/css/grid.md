@@ -129,7 +129,7 @@ date: 2023-01-09 10:00:00
 |`repeat(2, 50px 80px) repeat(5, 30px 60px)`|14个单位，前四个遵循第一个repeat，后10个遵循第二个repeat|
 |`repeat(2, min-content auto max-content)`|min-content是`本列最长单个单词的长度`，max-content`本列不会换行时的最长单位的长度`|
 |`repeat(2, fit-content(100px) 40px)`|内容最短长度和给定值取取小值|
-|`repeat(auto-fill, 150px)`|内容有确定的值就不影响，没有确定的值就用给定的150px|
+|`repeat(auto-fill, 150px)`|单元格大小固定150px，每行放置最多自动往下排列|
 :::
 
 ::: codePen width=375 height=500 label=grid-template-columns val=repeat(1, min-content auto max-content) select=[repeat(1, min-content auto max-content), repeat(6, 1fr), repeat(3, 33.3%), repeat(4, fit-content(100px)), repeat(auto-fill, 100px), repeat(auto-fill, 150px), repeat(auto-fit, 100px), repeat(auto-fit, 150px)]
