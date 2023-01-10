@@ -22,7 +22,7 @@ const front = {
             children: [
                 'set',
                 'map',
-                'regexp',
+                'reg',
                 'date',
                 'math',
                 'proxy',
