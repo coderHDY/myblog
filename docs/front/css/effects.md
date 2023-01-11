@@ -672,12 +672,6 @@ date: 2021-12-28
 </html>
 ```
 :::
-::: tab label=index.css
-```css{65-68,114}
-
-```
-:::
-::::
 ## 手写轮播图
 ::: codePen width=600 height=300
 ```html
