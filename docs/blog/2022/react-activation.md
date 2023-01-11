@@ -30,6 +30,8 @@ npm i react-activation
     ```
 * 需要缓存的文件用`KeepAlive`包裹
     ```jsx{4,8}
+    import KeepAlive from 'react-activation'
+    
     const routerMap = [
         {
             path: "/home",
