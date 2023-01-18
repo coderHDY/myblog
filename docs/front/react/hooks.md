@@ -367,7 +367,7 @@ export default function TodoList() {
 :::
 :::: tabs
 ::: tab label=useMemo
-```jsx{3-10,14-15}
+```jsx{3-10,16-17}
 import React, { useState, useMemo } from 'react';
 
 const usePow = (list: number[]) => {
