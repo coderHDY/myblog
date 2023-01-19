@@ -33,7 +33,7 @@
       :style="{ width: `${width}px`, height: `${height}px` }"
     ></iframe>
     <!-- <div style="height: 0; overflow: hidden"> -->
-    <div>
+    <div v-if="isShowCode">
       <slot></slot>
     </div>
   </div>
@@ -62,6 +62,10 @@ export default {
       type: String,
       default: "string",
     },
+    showCode: {
+      type: String,
+      default: "true"
+    },
     select: String,
     val: String,
     label: String,
@@ -70,6 +74,9 @@ export default {
     return {
       value: this.val,
     };
+  },
+  mounted() {
+    console.log(this.isShowCode);
   },
   computed: {
     // 方案三：iframe
@@ -178,6 +185,9 @@ export default {
     randomClass() {
       return `c${this._uid}_${Math.floor(Math.random() * 1000)}`;
     },
+    isShowCode() {
+      return Boolean("true" === this.showCode.toLowerCase());
+    }
   },
 };
 </script>
