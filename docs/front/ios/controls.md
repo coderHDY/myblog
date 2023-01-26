@@ -2,7 +2,112 @@
 title: 控制流
 date: 2023-01-26
 ---
-## String
+## 类型整理
+### 所有类型
+* Int
+* Float: 32位浮点数。精度要求不高的话可以使用此类型
+* Double: 64位浮点数。当你需要存储很大或者很高精度的浮点数时请使用此类型
+    * 当推断浮点数的类型时，Swift 总是会选择 Double 而不是 Float。
+* Bool
+* tuples: 元组，元组相比数组，并不会要求所有值是一个类型
+    * `let http404Error = (404, "Not Found")`
+* optionals: 可选类型
+* nil: 不是指针，它是一个确定的值，用来表示值缺失
+>typealias AudioSample = UInt16 `定义类型别名`
+```swift
+let a = 3.14
+print(type(of: a)); // Double
+```
+### 解构可选类型的方法
+* 可选类型：不确定是否有值
+    ```swift
+    let a = "0123"
+
+    let b = Int(a)
+    print(b); // Optional(123)
+    ```
+* 默认值解构
+    ```swift
+    let a = "123"
+
+    let b = Int(a) ?? 0
+    print(b); // 123
+    ```
+* 强制解构
+    ```swift
+    let a = "123"
+
+    let b = Int(a)!
+    print(b); // 123
+    ```
+* if解构(如果确定是optional类型，声明可以重名)
+    ```swift
+    let a = "123"
+
+    let b = Int(a)
+
+    if let b = b {
+        print(b)
+    }
+    ```
+* if多条件并列判断
+    ```swift
+    let a = "123"
+
+    let b = Int(a)
+
+    // 不能使用 || 运算符
+    if let b = b, a == "123"{
+        print(b)
+    }
+    ```
+### 断言调试
+* assert传入正确值，假如遇到`false`值会中断执行并报相应的错误
+    ```swift
+    let a = "123"
+
+    assert(a == "123", "a 等于123，不理他")
+
+    let b = Int(a)
+
+    assert(a == "234", "a 不等于234"); // 断言停止执行并报错
+
+    print("到不了我")
+    ```
+* 先决条件`precondition`：当一个条件可能为假，但是继续执行代码要求条件必须为真的时候，需要使用先决条件
+    ```swift
+    let a = "123"
+
+    precondition(a == "123", "a 不等于123")
+
+    let b = Int(a)
+
+    precondition(a == "234", "a 不等于234"); // 断言停止执行并报错
+
+    print("到不了我")
+    ```
+### 特殊写法(写进Number里面)
+* 进制整理
+```swift
+let decimalInteger = 17
+let binaryInteger = 0b10001       // 二进制的17
+let octalInteger = 0o21           // 八进制的17
+let hexadecimalInteger = 0x11     // 十六进制的17
+```
+* 简洁写法: 整数和浮点数都可以添加额外的零并且包含下划线
+```swift
+let a = 1_000_000
+print(a); // 1000000
+```
+### 数字类型转换
+```swift
+let a = 1_000_000
+print(Double(a)); // 1000000.0
+
+let b = 3.14
+print(Int(b)); // 3
+```
+## String(写进String里面)
 * 声明可以隐式转换
     ```swift
     let a: Double = 70
