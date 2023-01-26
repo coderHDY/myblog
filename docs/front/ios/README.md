@@ -4,6 +4,7 @@ date: 2022-10-11
 ---
 ## 常用命令
 * [中文文档](https://swift.bootcss.com/)
+* [中文文档](https://swiftgg.gitbook.io/swift/huan-ying-shi-yong-swift/03_a_swift_tour)
 * [官方英文api文档](https://developer.apple.com/documentation/swift/array/withunsafemutablebufferpointer(_:))
 :::: tabs
 ::: tab label=使用

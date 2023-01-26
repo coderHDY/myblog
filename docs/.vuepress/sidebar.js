@@ -149,6 +149,7 @@ const front = {
     ],
     '/front/ios/': [
         '',
+        'controls',
         'string',
         'array',
         'set',
