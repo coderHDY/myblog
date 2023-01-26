@@ -9,8 +9,8 @@ export default {
         next(modifyRawPage);
 
         // 关闭气泡，待优化写法
-        if (!global) {
-            window._bubble?.stopFixBubble();
-        }
+        // if (!global) {
+        //     window._bubble?.stopFixBubble();
+        // }
     },
 }
