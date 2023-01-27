@@ -380,6 +380,27 @@ ctx.scale(dpr, dpr)
 </body>
 ```
 :::
+::: tab label=通用函数
+```js
+const getCtx = (canvas) => {
+    const canvasRect = canvas.getBoundingClientRect();
+    console.log(canvasRect)
+    const dpr = window.devicePixelRatio;
+    const width = canvasRect.width;
+    const height = canvasRect.height;
+
+    canvas.style.width = width;
+    canvas.style.height = height;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.scale(dpr, dpr);
+    return ctx;
+}
+
+const ctx = getCtx(canvas);
+```
+:::
 :::: 
 ## 动画堆积问题
 ::: tip

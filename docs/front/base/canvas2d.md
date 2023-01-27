@@ -950,6 +950,34 @@ ctx.lineWidth = 7;
 </body>
 ```
 :::
+### drawImage配合input
+```js
+const ctx = getCtx(canvas);
+// input获取图片文件，传入canvas展示
+/* <input type="file" accept="image/*" class="file" /> */
+const getImgData = (e) => {
+    const imgFile = e.target.files[0];
+    console.log(imgFile)
+    let reader = new FileReader();
+    reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        console.log(img)
+        img.onload = () => {
+            imgWidth = img.width;
+            imgHeight = img.height;
+            ctx.drawImage(img, 0, 0, imgWidth, imgHeight);
+        }
+
+    }
+    reader.readAsDataURL(imgFile);
+}
+file.addEventListener("change", getImgData);
+
+// 导出图片
+// let imageData = ctx.getImageData(0, 0, this.imageWidth, this.imageHeight);
+// this.canvasSrc = this.canvas.toDataURL("image/png");
+```
 ### getImageData
 ::: tip
 * 作用：获取canvas画布的像素对象
