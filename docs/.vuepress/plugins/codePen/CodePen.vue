@@ -64,7 +64,7 @@ export default {
     },
     showCode: {
       type: String,
-      default: "true"
+      default: "true",
     },
     select: String,
     val: String,
@@ -74,9 +74,6 @@ export default {
     return {
       value: this.val,
     };
-  },
-  mounted() {
-    console.log(this.isShowCode);
   },
   computed: {
     // 方案三：iframe
@@ -187,7 +184,7 @@ export default {
     },
     isShowCode() {
       return Boolean("true" === this.showCode.toLowerCase());
-    }
+    },
   },
 };
 </script>
