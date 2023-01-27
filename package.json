@@ -32,7 +32,8 @@
     "docs:dev": "vuepress dev docs",
     "build": "vuepress build docs",
     "start": "pm2 start npm -- run docs:dev --name blog",
-    "stop": "pm2 stop ecosystem.config.js"
+    "stop": "pm2 stop ecosystem.config.js",
+    "deploy": "sh deploy.sh && pm2 restart all"
   },
   "author": "coderHdy",
   "license": "ISC",
