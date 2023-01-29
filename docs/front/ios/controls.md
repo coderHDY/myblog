@@ -574,6 +574,24 @@ p.name = "hdy";
 print(p.name); // hdy
 ```
 ## 枚举
+### 枚举固定类型
+* 二次赋值只需要`.xxx`
+```swift
+enum Barcode {
+    case a, b, c
+}
+
+var code = Barcode.a
+
+print(code); // a
+print(code == Barcode.a); // true
+print(type(of: code)); // Barcode
+
+
+code = .b
+print(code); // b
+```
+### 使用枚举值
 * 枚举键：`.rawValue`
 * 枚举值
 * 枚举公用方法：在枚举中定义`func`
@@ -595,6 +613,17 @@ print(rawValue) // 3
 
 let ans = school.three.getFive()
 print(ans) // 234
+```
+### 枚举自定义结构类型
+```swift
+enum Barcode {
+    case upc(Int, Int, Int, Int)
+    case qrCode(String)
+}
+
+let code = Barcode.upc(1, 2, 3, 4);
+
+print(code); // upc(1, 2, 3, 4)
 ```
 ## 并发性
 ### async
