@@ -1,173 +1,148 @@
 ---
 title: Dictionary
-date: 2022-10-14 15:07:00
+date: 2023-01-29
 ---
-## 定义
-* let 不可变
-* 
+## 基础使用
+* 键值对(类似JS对象)
+* 所有键需要是相同的类型
+* 所有值需要是相同的类型
 ```swift
-var d1 = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
-
-var d2: Dictionary<String, String> = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
-
-print(d1); // ["c": "C", "b": "B", "a": "A"]
-```
-* 空字典
-```swift
-var d3 = [String: String]();
-
-var d4: Dictionary<String, String> = [:]
-```
-## 增删改查
-### 增 / 改
-* 直接赋值：增/改
-    ```swift
-    var d1 = [
-        "a": "A",
-        "b": "B",
-        "c": "C"
-    ];
-
-    d1["a"] = "AA";
-    print(d1); // ["b": "B", "c": "C", "a": "AA"]
-
-    d1["d"] = "DD";
-    print(d1); // ["a": "AA", "c": "C", "d": "DD", "b": "B"]
-    ```
-* `updateValue`：增/改
-    ```swift
-    var d = [
-        "a": "A",
-        "b": "B",
-        "c": "C"
-    ];
-
-    d.updateValue("hello", forKey: "g");
-
-    print(d); // ["a": "A", "b": "B", "g": "hello", "c": "C"]
-    ```
-### 删
-```swift
-var d = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
-
-d.removeValue(forKey: "a");
-
-print(d); // ["c": "C", "b": "B"]
-```
-```swift
-var d = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
-
-d.removeAll();
+var d: [String: String] = [:]
 
 print(d); // [:]
 ```
-## 其他
-### 取值
-::: tip
-* 由于取出来可能是`nil`，所以正常取出来都是`optional`
-:::
 ```swift
-var d1 = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
+var d = ["name": "小黄"]
 
-print(d1["a"]); // Optional("A")
-print(d1["d"]); // nil
-print(d1["a"]!); // A
-print(d1["a"] ?? ""); // A
-
-if let item = d1["a"] {
-  print(item); // A
-}
+print(d); // ["name": "小黄"]
 ```
-### count
+## count
 ```swift
-var d1 = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
+var d = ["name": "小黄", "age": "18"]
 
-print(d1.count); // 3
+print(d.count); // 2
 ```
-### filter
-* 元组取值
-    ```swift
-    var d1 = [
-        "a": "A",
-        "b": "B",
-        "c": "C"
-    ];
-
-    var d2 = d1.filter({item -> Bool in
-        return item.key != "a";
-    });
-
-    print(d2); // ["b": "B", "c": "C"]
-
-    var d3 = d1.filter({item -> Bool in
-        return item.value != "C";
-    });
-
-    print(d3); // ["b": "B", "a": "A"]
-    ```
-* 解构对象取值
-    ```swift
-    var d1 = [
-        "a": "A",
-        "b": "B",
-        "c": "C"
-    ];
-
-    var d2 = d1.filter { (k, v) in
-        return k.uppercased() != v;
-    }
-
-    print(d2); // [:]
-    ```
-### 遍历
-* for循环
-    ```swift
-    var d = [
-        "a": "A",
-        "b": "B",
-        "c": "C"
-    ];
-
-    for (k, v) in d
-    {
-        print(k, v);
-    }
-    ```
-### contains
+## updateValue
+* `新增`或`修改`键值对
+* updateValue新增成功会返回nil
+* updateValue修改成功会返回旧的value
 ```swift
-var d = [
-    "a": "A",
-    "b": "B",
-    "c": "C"
-];
+var d = ["name": "小黄", "age": "18"]
 
-let ans = d.contains { (k, v) in
-    return k.uppercased() != v;
+// 更新，返回 old value
+print(d.updateValue("小灰", forKey: "name")); // Optional("小黄")
+
+// 新增，返回nil
+print(d.updateValue("170", forKey: "height")); // nil
+
+// 新增成功
+print(d); // ["age": "18", "name": "小灰", "height": "170"]
+```
+* 同下标设置值
+>下标设置不会有任何的限制
+```swift
+var d = ["name": "小黄", "age": "18"]
+
+d["height"] = "170"
+
+print(d); // ["name": "小黄", "age": "18", "height": "170"]
+```
+## remove
+* 删除前首先要`确定包含`。去掉optional的可能
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+if let idx = d.index(forKey: "age") {
+    let f = d.remove(at:  idx)
+    print(f); // (key: "age", value: "18")
 }
 
-print(ans); // false
+print(d); // ["name": "小灰", "height": "170"]
+```
+## removeValue
+* 可以`不考虑是否包含`
+* 返回删除的`值`
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+if let removeVal = d.removeValue(forKey: "age") {
+    print(removeVal); // 18
+}
+
+print(d); // ["height": "170", "name": "小灰"]
+```
+* 同
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+d["age"] = nil
+print(d); // ["name": "小灰", "height": "170"]
+```
+## removeAll
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+d.removeAll()
+print(d); // [:]
+```
+## contains
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+print(d.contains(where: {$0 == "age" && $1 == "18"})); // true
+```
+## filter
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+let f = d.filter({$0.key == "name" && $0.value == "小灰"})
+print(f); // ["name": "小灰"]
+```
+## reduce
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+print(d.reduce("", {"我的\($1.key)是\($1.value), \($0)"})); // 我的height是170, 我的name是小灰, 我的age是18,
+```
+## 遍历
+### for-in
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+for (k, v) in d {
+    print("\(k)：\(v)")
+}
+
+//name：小灰
+//age：18
+//height：170
+```
+### keys
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+for k in d.keys {
+    print(k)
+}
+
+//age
+//height
+//name
+```
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+print(d.values); // ["170", "18", "小灰"]
+```
+### values
+```swift
+var d = ["age": "18", "name": "小灰", "height": "170"]
+
+for v in d.values {
+    print(v)
+}
+
+//18
+//小灰
+//170
 ```
