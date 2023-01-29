@@ -40,7 +40,7 @@ print(type(of: a)); // Double
     let b = Int(a)!
     print(b); // 123
     ```
-* if解构(如果确定是optional类型，声明可以重名)
+* `if`解构(如果确定是`optional`类型，声明可以重名)
     ```swift
     let a = "123"
 
@@ -107,44 +107,6 @@ print(Double(a)); // 1000000.0
 let b = 3.14
 print(Int(b)); // 3
 ```
-## String(写进String里面)
-* 声明可以隐式转换
-    ```swift
-    let a: Double = 70
-    let a = 70.0
-    print(a); // 70.0
-    ```
-* 其他操作无法隐式转换
-    ```swift
-    let label = "The width is "
-    let width = 94
-
-    //let widthLabel = label + width // 报错
-
-    let widthLabel = label + String(width) 正确
-
-     print(widthLabel)
-    ```
-* 转换String快捷方式
-    ```swift
-    let apples = 3
-    let oranges = 5
-
-    let fruitSummary = "我有 \(apples + oranges) 个水果."
-
-    print(fruitSummary)
-    ```
-* 换行String
-    ```swift
-    let apples = 3
-    let oranges = 5
-    let q = """
-    I said "我有 \(apples) 个苹果"
-    我有 \(apples + oranges) 个水果"
-    """
-
-    print(q)
-    ```
 ## 数组和字典
 * 初始化空
     ```swift
@@ -181,37 +143,75 @@ print(Int(b)); // 3
 
     print(totle)
     ```
-* ...运算符
-```swift
-var score = 3;
-
-// 打印 0 1 2 3
-for i in 0...score {
-    print(i)
-}
-
-// 打印 0 1 2 
-for i in 0..<score {
-    print(i)
-}
-```
-### 条件判断
-* if 赋值：去optional
+* 区间运算符（...）
     ```swift
-    let name: String? = "黄德宇";
-    print(name); // Optional("黄德宇")
+    var score = 3;
 
-    if let a = name {
-        print("你好\(a)") // 你好黄德宇
+    // 打印 0 1 2 3
+    for i in 0...score {
+        print(i)
+    }
+
+    // 打印 0 1 2 
+    for i in 0..<score {
+        print(i)
     }
     ```
+* `stride` 跳过条件
+    ```swift
+    let minute = 60;
+    let jump = 5
+
+    for seconds in stride(from: 0, to: minute, by: jump) {
+        print(seconds) ; // 0 5 10 15 20 25 30 35 40 45 50 55
+    }
+    ```
+### 单侧区间
+```swift
+let names = [1, 2, 3, 4, 5, 6, 7]
+for name in names[2...] {
+    print(name) // 34567
+}
+
+for name in names[...2] {
+    print(name) // 123
+}
+
+for name in names[..<2] {
+    print(name) // 12
+}
+```
+### `if` 赋值：去`optional`
+```swift
+let name: String? = "黄德宇";
+print(name); // Optional("黄德宇")
+
+if let a = name {
+    print("你好\(a)") // 你好黄德宇
+}
+```
+### guard
+* 和if语句判断相反，且必须有`else`语句，**主要用来保护后面代码正确执行**
+```swift
+var name: String?
+
+func hello(_ name: String?) {
+    guard let name else {
+        print("你好啊，无名氏")
+        return;
+    }
+    print("你好呀，\(name)")
+}
+
+hello(name)
+```
 ### switch
 * 直接判断
 * 多值判断
 * 语句判断
->运行 switch 中匹配到的 case 语句之后，程序会退出 switch 语句，并不会继续向下运行，所以**不需要在每个子句结尾写 break。**
+>运行 switch 中匹配到的 case 语句之后，程序会退出 switch 语句，并不会继续向下运行，所以**不需要在每个子句结尾写 break。** 同时如果需要贯穿要加关键字`fallthrough`
 ```swift
-let score = 62
+let score = 97
 
 switch score {
 case let s where s < 0 || s > 100:
@@ -220,36 +220,36 @@ case 100:
     print("满分")
 case 60,61,62:
     print("刚刚及格")
+case 95...99:
+    print("差点满分")
 case let s where s < 60:
     print("不及格")
 default:
     print("考得不错")
 }
 ```
-### 遍历
-* 字典遍历无序
-    ```swift
-    let score = [
-        "小黄": 90,
-        "小李": 77,
-        "小周": 68,
-        "小沈": 98,
-        "小呆": 99,
-    ]
+* 元组情况
+  * 可以使用`_`来匹配所有值
+  * 用let分别取作用域别名
+```swift
+let score = ("小黄", 20)
 
-    // 无序遍历
-    for (name, s) in score {
-        print(name)
-        print(s)
-    }
-    ```
+switch score {
+case (_, 60):
+    print("刚刚及格")
+case (let name, 20):
+    print("\(name)考的真差")； // 小黄考的真差
+default:
+    print("考得不错")
+}
+```
 ### while / repeat...while
 * while 直接判断
     ```swift
     var score = 8;
 
     while score < 10 {
-        print(score)
+        print(score); // 8 9
         score += 1
     }
     ```
@@ -258,7 +258,7 @@ default:
 var score = 10;
 
 repeat {
-    print(score)
+    print(score); // 10
     score += 1
 } while score < 10
 ```
@@ -673,4 +673,12 @@ func anyCommonElements<T: Sequence, U: Sequence>(_ lhs: T, _ rhs: U) -> Bool
 }
 let ans = anyCommonElements([1, 2, 3], [3])
 print(ans)
+```
+## 检测api可用性
+```swift
+if #available(iOS 10, macOS 10.12, *) {
+    // 在 iOS 使用 iOS 10 的 API, 在 macOS 使用 macOS 10.12 的 API
+} else {
+    // 使用先前版本的 iOS 和 macOS 的 API
+}
 ```
