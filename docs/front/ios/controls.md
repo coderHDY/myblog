@@ -3,7 +3,7 @@ title: 控制流
 date: 2023-01-26
 ---
 ## 类型整理
-### 所有类型
+### 所有基础类型
 * Int
 * Float: 32位浮点数。精度要求不高的话可以使用此类型
 * Double: 64位浮点数。当你需要存储很大或者很高精度的浮点数时请使用此类型
@@ -13,10 +13,20 @@ date: 2023-01-26
     * `let http404Error = (404, "Not Found")`
 * optionals: 可选类型
 * nil: 不是指针，它是一个确定的值，用来表示值缺失
+* tuple：元组，定义一组数据，**定义时就确定了每个位置的类型**
 >typealias AudioSample = UInt16 `定义类型别名`
 ```swift
 let a = 3.14
 print(type(of: a)); // Double
+```
+### tuple
+* 元组，可以用来做为函数返回值
+```swift
+var stu = ("hdy", 18, "170", ["你不知道的JS"])
+
+stu.3.append("JS高级编程")
+
+print(stu); // ("hdy", 18, "170", ["你不知道的JS", "JS高级编程"])
 ```
 ### 解构可选类型的方法
 * 可选类型：不确定是否有值
@@ -264,9 +274,11 @@ repeat {
 ```
 ## 函数与闭包
 ### 函数基础写法
+
+* 函数`只有单行表达式`且`表达式的值匹配函数返回值类型`会直接被作为返回值
 ```swift
 func sum (a: Int, b: Int)-> Int {
-    return a + b
+    a + b
 }
 
 let a = 1
@@ -274,6 +286,15 @@ let b = 2
 
 let c = sum(a: a, b: b)
 print (c) // 3
+```
+### 可变参数长度
+* 接受不固定长度参数，形参用`...`转化为数组
+```swift
+func sum(_ nums: Double...) -> Double {
+    nums.reduce(0, {$0 + $1})
+}
+
+print(sum(1, 2, 3, 4)); // 10
 ```
 ### 函数标签
 * 标签，标签调用顺序**不可以乱序**
@@ -389,9 +410,36 @@ let n2 = n1 % 2 == 0 ? n1 : 0
 
 print(n2) // 0
 ```
+### 闭包函数
+```swift
+func getSumFn (_ a: Int, _ b: Int)-> (Int) -> Int {
+    func add(c: Int) -> Int {a + b + c}
+    return add;
+}
+
+
+let sumFn = getSumFn(1, 2)
+let c = sumFn(3)
+
+print (c) // 6
+```
+### 自动闭包
+```swift
+var customersInLine = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
+
+// 函数闭包赋值，并没有执行
+let customerProvider = { customersInLine.remove(at: 0) }
+print(customersInLine.count)
+// 5
+
+print("Now serving \(customerProvider())!")
+// Now serving Chris!
+print(customersInLine.count)
+// 4
+```
 ### 匿名闭包
 * 回调闭包
-    ```swift{2-5}
+    ```swift
     let n1 = [1, 2, 3, 4]
     let n2 = n1.map({
         (n: Int) -> Int in
@@ -402,7 +450,7 @@ print(n2) // 0
     print(n2);
     ```
 * 单行闭包简写
-    ```swift{2}
+    ```swift
     let n1 = [1, 2, 3, 4]
     let n2 = n1.map({n in n % 2 == 0 ? n : 0})
 
@@ -410,7 +458,7 @@ print(n2) // 0
     print(n2);
     ```
 * 闭包省略参数：通过位置操作
-    ```swift{2}
+    ```swift
     let n1 = [1, 2, 3, 4]
     let n2 = n1.map({$0 % 2 == 0 ? $0 : 0})
 
