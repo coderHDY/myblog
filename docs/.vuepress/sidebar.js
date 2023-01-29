@@ -151,6 +151,7 @@ const front = {
         '',
         'controls',
         'string',
+        'number',
         'array',
         'set',
         'dictionary',
