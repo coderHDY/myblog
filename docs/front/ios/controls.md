@@ -591,6 +591,7 @@ print(type(of: code)); // Barcode
 code = .b
 print(code); // b
 ```
+>**不会**被隐式地赋值为 0，1，2 和 3。相反，这些枚举成员本身就是完备的值，这些值的类型是已经明确定义好的 `CompassPoint` 类型
 ### 使用枚举值
 * 枚举键：`.rawValue`
 * 枚举值
@@ -624,6 +625,21 @@ enum Barcode {
 let code = Barcode.upc(1, 2, 3, 4);
 
 print(code); // upc(1, 2, 3, 4)
+```
+### 遍历枚举
+* 实现`CaseIterable`协议就能遍历
+```swift
+enum People: CaseIterable {
+    case teacher;
+    case student;
+    case police;
+}
+
+print(People.allCases.count); // 3
+
+for i in People.allCases {
+    print(i); // teacher student police
+}
 ```
 ## 并发性
 ### async
