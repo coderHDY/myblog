@@ -43,7 +43,7 @@ print(stu); // ("hdy", 18, "170", ["你不知道的JS", "JS高级编程"])
     let b = Int(a) ?? 0
     print(b); // 123
     ```
-* 强制解构
+* 强制解构，**尽量不用**
     ```swift
     let a = "123"
 
@@ -71,6 +71,32 @@ print(stu); // ("hdy", 18, "170", ["你不知道的JS", "JS高级编程"])
         print(b)
     }
     ```
+### 强制解包
+::: warning
+* 尽量不要使用强制解包
+* 强制解包都可以被`if let...`语句替代
+:::
+* 当可选值为空时可选链式调用只会调用失败，然而强制解包将会触发`运行时错误`。
+>正常情况(强制解包)
+```swift
+class People {
+    var name: String?
+}
+
+let people = People()
+people.name = "小黄"
+print(people.name!); // 小黄
+```
+>运行时错误
+```swift
+class People {
+    var name: String?
+}
+
+let people = People()
+
+print(people.name!); // 运行时错误
+```
 ### 断言调试
 * assert传入正确值，假如遇到`false`值会中断执行并报相应的错误
     ```swift
