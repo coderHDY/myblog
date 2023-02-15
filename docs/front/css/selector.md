@@ -320,7 +320,7 @@ date: 2021-12-27
 </body>
 ```
 :::
-::: codePen val=first-letter select=[.content::first-letter,.content::first-line] height=100
+::: codePen val=.content::first-letter select=[.content::first-letter,.content::first-line] height=100
 ```html{13-15}
 <body>
     <p class="content">
@@ -370,7 +370,7 @@ date: 2021-12-27
 ```html{5-8}
 <body>
     <input type="text" placeholder="默认占位符样式">
-    <input type="text" class="mybox"placeholder="自定义占位符样式">
+    <input type="text" class="mybox" placeholder="自定义占位符样式">
     <style>
         .mybox::placeholder {
             color: red;
