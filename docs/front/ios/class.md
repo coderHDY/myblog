@@ -908,6 +908,7 @@ print(s.getName()); // 18
     t.test(p: "你好"); // 你好
     ```
 ### 引用问题
+* **swift除了`class对象`和`闭包`，都是值类型**
 :::: tabs
 ::: tab label=强引用
 * 直接赋值就是强引用
