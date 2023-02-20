@@ -98,12 +98,12 @@ export default class BubbleEffect {
     }
 
     isCode(e) {
-        const eventPath = e.path;
+        const eventPath = e.composedPath();
         return eventPath.some(item => item.tagName === 'PRE');
     }
 
     preventCode(e) {
-        if (!Array.isArray(e?.path)) {
+        if (!e?.composedPath) {
             return;
         }
         if (this.isCode(e)) {
