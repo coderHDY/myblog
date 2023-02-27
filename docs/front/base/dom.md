@@ -1054,7 +1054,7 @@ date: 2021-12-16
 ::::
 ### getBoundingClientRect
 ::: tip
-* 获取元素绝对位置最简便的方法
+* 获取元素`相对浏览器视口`绝对位置最简便的方法
 :::
 ```js
 const rect = divEl.getBoundingClientRect();
