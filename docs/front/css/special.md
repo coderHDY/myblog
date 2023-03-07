@@ -378,3 +378,15 @@ body::-webkit-scrollbar-corner {}
 // 两个滚动条交汇处用于拖动调整元素大小的小控件（基本用不上）
 body::-webkit-resizer {}
 ```
+## 浏览器滚动条占位
+* 问题：局部滚动，出现滚动条，滚动条占位，会影响页面布局
+* 复现条件：
+  * mac设置 -> 滚动条 -> 总是展示滚动条
+```css
+/* 滚动 div 盒子 */
+/* overflow: overlay firefox浏览器不生效，因此设置两个属性作为降级属性 */
+div {
+  overflow: auto;
+  overflow-y: overlay;
+}
+```
