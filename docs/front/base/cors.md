@@ -558,8 +558,43 @@ export default {
 ```shell
 npm i http-proxy-middleware
 ```
-* src目录下创建文件，名字固定，react脚手架会调用
+* src目录下创建文件，`名字固定`，react脚手架会调用
 * 可以创建多个代理
+>需要cookies
+```js
+// 注：不能改名，不能换 .ts
+// src/setupProxy.js
+const paoxy = require("http-proxy-middleware");
+
+// 代理服务器存储cookie，下次请求附带cookie
+let cookie;
+const relayRequestHeaders = (proxyReq, req) => {
+  if (cookie) {
+    proxyReq.setHeader("cookie", cookie);
+  }
+};
+
+const relayResponseHeaders = (proxyRes, req, res) => {
+  const proxyCookie = proxyRes.headers["set-cookie"];
+  if (proxyCookie) {
+    cookie = proxyCookie;
+  }
+};
+
+module.exports = function (app) {
+  app.use(
+    paoxy.createProxyMiddleware("/dev", {
+      target: "http://localhost:8080",
+      changeOrigin: true,
+      cookieDomainRewrite: "localhost",
+      pathRewrite: { "^/dev": "" },
+      onProxyReq: relayRequestHeaders,
+      onProxyRes: relayResponseHeaders,
+    })
+  );
+};
+```
+>不需要cookies 配置
 ```js
 // src/setupProxy.js
 const proxy = require('http-proxy-middleware')

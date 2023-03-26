@@ -390,3 +390,23 @@ div {
   overflow-y: overlay;
 }
 ```
+## input-number隐藏按钮
+::: codePen height=100
+```html
+<body>
+  <input type="number" />
+  <input type="number" class="special" />
+
+  <style>
+    input[type="number"].special::-webkit-inner-spin-button,
+    input[type="number"].special::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"].special {
+      -moz-appearance: textfield;
+    }
+  </style>
+</body>
+```
+:::
