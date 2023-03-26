@@ -644,6 +644,152 @@ navigate(1)
 ```
 :::
 ::::
+### 组件外跳转
+:::: tabs
+::: tab label=history库
+* react-router6不支持组件外跳转的API，需要借助`history`库
+```shell
+npm i history
+```
+* 创建单例history对象`utils/history/history.ts`
+```ts
+import { createBrowserHistory } from "history";
+
+const history = createBrowserHistory();
+export default history;
+```
+:::
+::: tab label=路由包装
+```jsx
+import React, {useLayoutEffect, useState, memo} from "react";
+import type { History } from "history";
+import type { BrowserRouterProps as NativeBrowserRouterProps } from "react-router-dom";
+import { Router } from "react-router-dom";
+
+export interface BrowserRouterProps
+  extends Omit<NativeBrowserRouterProps, "window"> {
+  history: History;
+}
+
+const BrowserRouter: React.FC<BrowserRouterProps> = (props) => {
+  const { history, ...restProps } = props;
+  const [state, setState] = useState({
+    action: history.action,
+    location: history.location,
+  });
+
+  // 监听路由变化，然后调用 setState 手动变换当前 Router 指定路径
+  useLayoutEffect(() => history.listen(setState), [history]);
+
+  return (
+    <Router
+      {...restProps}
+      location={state.location}
+      navigationType={state.action}
+      navigator={history}
+    />
+  );
+};
+
+export default memo(BrowserRouter);
+```
+:::
+::: tab label=定义路由
+```jsx{7,8,28,30}
+import React, { Suspense, useContext, useEffect } from "react";
+import { useRoutes } from "react-router-dom";
+import Home from "pages/Home";
+import Error from "pages/Error";
+
+// 用自定义的包装路由 而不是react-router6的路由
+import BrowserRouter from "./utils/History/HistoryRouter";
+import history from "./utils/History/history";
+
+const router = [
+  {
+    path: "home",
+    element: <Home />,
+  },
+  {
+    path: "error",
+    element: <Error />,
+  },
+];
+
+const Elements = () => {
+  return useRoutes(router);
+};
+
+const App: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BrowserRouter history={history}>
+        <Elements />
+      </BrowserRouter>
+    </Suspense>
+  );
+};
+
+export default App;
+```
+:::
+::: tab label=路由外跳转
+* `utils/fetch.js`
+```js{25-26,29-30}
+import fetch from "axios";
+import history from "./History/history";
+import { getBaseUrl } from "./urlPathTool";
+
+const baseUrl = `${getBaseUrl()}/dev/`; // http://localhost:8080/dev
+
+const commonRequest = async (
+  method: string,
+  path: string,
+  arr: { params?: any; data?: any }
+) => {
+  const options = {
+    method,
+    url: `${baseUrl}${path}`,
+    ...arr,
+  };
+
+  try {
+    const response = await fetch(options);
+    return response.data.data;
+  } catch (err: any) {
+    if (err && err.response) {
+      if (err.response.data.code === 401) {
+
+        // 路由外跳转
+        history.replace("/login");
+      } else if (err.response.data.code === 500) {
+
+        // 路由外跳转
+        history.replace("/error");
+      }
+      throw err;
+    }
+  }
+};
+
+export function get(url: string, params = {}) {
+  return commonRequest("get", url, { params });
+}
+
+export function post(url: string, data = {}) {
+  return commonRequest("post", url, { data: { ...data } });
+}
+
+export function put(url: string, data = {}) {
+  return commonRequest("put", url, { data: { ...data } });
+}
+
+export function del(url: string, data = {}) {
+  return commonRequest("delete", url, { data: { ...data } });
+}
+```
+:::
+::::
 ### 其他
 :::: tabs
 ::: tab label=懒加载
