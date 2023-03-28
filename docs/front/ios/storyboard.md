@@ -598,3 +598,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 ```
 :::
 ::::
+## 添加事件
+* 添加action事件，
+* `@IBAction`和`senter`需要固定
+```swift
+// 按钮事件
+@IBAction func addItem(senter: UIButton) {
+    print("aaaaa")
+}
+```
