@@ -137,6 +137,7 @@ const front = {
         'react18',
         'scope',
         'context',
+        'test',
     ],
     '/front/webpack/': [
         '',
