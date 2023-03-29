@@ -582,17 +582,117 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return dataArray.count;
     }
     
-    // 每行内容
+    // 重要：每行内容
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCellId", for: indexPath)
         cell.textLabel?.text = dataArray[indexPath.row];
         return cell;
     }
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "分区头部";
     }
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return "分区尾部";
+    }
+}
+```
+:::
+::: tab label=自定义cell-数据类
+* 定义数据类
+```swift
+import UIKit
+
+class TableData: NSObject {
+    var done = false;
+    var title = "";
+    init(_ title: String = "", _ done: Bool = false) {
+        self.done = done
+        self.title = title
+    }
+}
+```
+:::
+::: tab label=自定义cell-cell类
+* 定义UI连接文件
+```swift
+import UIKit
+
+class TableViewCell: UITableViewCell {
+
+    // 连接label
+    @IBOutlet weak var title: UILabel!
+    // 连接button
+    @IBOutlet weak var switchBtn: UISwitch!
+
+    // 定义本组件的复用id，一个页面只展示部分同一类组件，组件复用，性能好
+    static let reuseIdentifier = "itemCell"
+
+    // 管理本组件的数据，类传递引用，因此会直接改
+    var model: TableData = TableData("", false);
+
+    // 让父组件 tableView 统一调用的方法，初始化本组件数据
+    func config(_ model: TableData) {
+        // 给关联组件传值要放在这里
+        title.text = model.title
+        switchBtn.isOn = model.done
+        self.model = model
+    }
+
+    @IBAction func toogleTouch() {
+        self.model.done = switchBtn.isOn
+    }
+}
+```
+:::
+::: tab label=自定义cell-tableView类
+* 定义tableView
+```swift
+import UIKit
+
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    @IBOutlet weak var tableView: UITableView!
+    var dataArray: Array<TableData> = [
+        TableData("吃饭", false),
+        TableData("打游戏", false),
+        TableData("睡觉", false),
+    ];
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.delegate = self;
+        tableView.dataSource = self;
+        self.view.addSubview(tableView);
+
+        // 是否使用 弹性滚动边界
+        tableView.bounces = false;
+    }
+    // 按钮事件
+    @IBAction func addItem(senter: UIButton) {
+        dataArray.append(TableData("接着睡觉", false));
+        tableView.reloadData();
+    }
+
+    // 分区个数
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1;
+    }
+    
+    // 行数
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataArray.count;
+    }
+    
+    // 每行内容
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        // 重点：调用指定类，并且指定复用id
+        let cell = (tableView.dequeueReusableCell(withIdentifier: TableViewCell.reuseIdentifier, for: indexPath))as! TableViewCell
+        
+        cell.config(dataArray[indexPath.row]);
+        return cell;
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "今日任务";
     }
 }
 ```
