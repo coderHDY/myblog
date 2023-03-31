@@ -615,6 +615,8 @@ class TableData: NSObject {
 :::
 ::: tab label=自定义cell-cell类
 * 定义UI连接文件
+* 定义`reuseIdentifier`：组件复用id，在页面可见高度上一直复用同一组件，只改数据，提升性能
+* **将`类名`和`reuseIdentifier`的值配置到UI组件上，关联页面TableViewCell和控制器类**
 ```swift
 import UIKit
 
@@ -646,7 +648,10 @@ class TableViewCell: UITableViewCell {
 ```
 :::
 ::: tab label=自定义cell-tableView类
-* 定义tableView
+* 定义tableView（继承` UITableViewDataSource, UITableViewDelegate`类）
+* UI关联类
+* 在`viewDidLoad`指定`delegate`和`dataSource`代理连接，并且view添加上`table`
+* 实现几个主要实现方法：行数/cell内容
 ```swift
 import UIKit
 
