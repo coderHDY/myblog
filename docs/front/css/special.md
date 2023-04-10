@@ -410,3 +410,24 @@ div {
 </body>
 ```
 :::
+## input-search修改clear样式
+```css
+input[type=search]::-webkit-search-cancel-button: {
+  -webkit-appearance: none,
+  position: relative,
+  height: 1rem,
+  width: 1rem,
+  borderRadius: 50%,
+  backgroundSize: 100% 100%,
+  backgroundImage: url("a.svg"),
+},
+input[type=search]::-ms-clear: {
+  appearance: none,
+  position: relative,
+  height: 1rem,
+  width: 1rem,
+  borderRadius: 50%,
+  backgroundSize: 100% 100%,
+  backgroundImage: url("a.svg"),
+},
+```

@@ -100,9 +100,6 @@ print(b); // 100
 ## Any/AnyObject
 * Any: 任意数据类型
 * AnyObject: 类的类型
-```swift
-
-```
 ## 枚举类型
 * 一般**大写**开头
     ```swift
