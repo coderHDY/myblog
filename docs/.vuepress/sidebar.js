@@ -103,6 +103,7 @@ const front = {
                 'responsive',
                 'special',
                 'form',
+                'omitted',
             ]
         },
         {
