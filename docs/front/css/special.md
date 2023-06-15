@@ -431,3 +431,42 @@ input[type=search]::-ms-clear: {
   backgroundImage: url("a.svg"),
 },
 ```
+
+## css节流按钮
+::: codePen height=100
+```html
+<body>
+  <button>节流按钮</button>
+
+  <script>
+    const btn = document.querySelector("button");
+    btn.addEventListener("click", () => {
+      console.log("11111111");
+    });
+  </script>
+
+  <style>
+    button {
+      animation: throttle 1s 0s forwards;
+    }
+    button:active {
+      animation: none;
+    }
+    @keyframes throttle {
+      0% {
+        color: red;
+        pointer-events: none;
+      }
+      99% {
+        color: red;
+        pointer-events: none;
+      }
+      100% {
+        color: black;
+        pointer-events: all;
+      }
+    }
+  </style>
+</body>
+```
+:::
