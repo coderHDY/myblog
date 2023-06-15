@@ -459,7 +459,7 @@ input[type=search]::-ms-clear: {
       }
       to {
         color: black;
-        pointer-events: all;
+        pointer-events: auto;
       }
     }
   </style>
