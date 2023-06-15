@@ -378,3 +378,17 @@ div {
 ```
 :::
 ::::
+
+## 是否触摸屏
+```js
+const canHover = matchMedia("(hover: hover)").matches;
+```
+## 是否IE
+```js
+export function isIE() {
+  if (!!window.ActiveXObject || "ActiveXObject" in window) {
+    return true;
+  }
+  return false;
+}
+```
