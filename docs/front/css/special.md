@@ -447,26 +447,23 @@ input[type=search]::-ms-clear: {
 
   <style>
     button {
-      animation: throttle 1s 0s forwards;
+      animation: throttle 1s forwards step-end;
     }
     button:active {
       animation: none;
     }
     @keyframes throttle {
-      0% {
+      from {
         color: red;
         pointer-events: none;
       }
-      99% {
-        color: red;
-        pointer-events: none;
-      }
-      100% {
+      to {
         color: black;
         pointer-events: all;
       }
     }
   </style>
 </body>
+
 ```
 :::
