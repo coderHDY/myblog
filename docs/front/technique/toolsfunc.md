@@ -443,6 +443,20 @@ const hex2Rgb = (hex) => {
   console.log(hex2Rgb('#ffffffff')); // rgba(255, 255, 255, 1.0)
   ```
 :::
+
+::: tab label=hex颜色透明度
+```js
+const hex2rgba = (hex, opacity) => {
+    if (hex[0] === "#") {
+        hex = hex.slice(1);
+    }
+    const rgbArr = hex.padEnd(6, "f").match(/\w{2}/g);
+    return rgbArr.reduce((pre, item) => pre.replace("{color}", parseInt(`0x${item}`)), `rgba({color},{color},{color},${opacity})`);
+}
+
+console.log(hex2rgba("#fc5531", 0.2)); // rgba(252,85,49,0.2)
+```
+:::
 ::: tab label=随机rgb
 ```js
 const randomRgb = () => `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
