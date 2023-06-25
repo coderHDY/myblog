@@ -152,6 +152,7 @@ const front = {
     ],
     '/front/ios/': [
         '',
+        'base',
         'controls',
         'string',
         'number',
