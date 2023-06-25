@@ -151,18 +151,31 @@ const front = {
         'react-hooks',
     ],
     '/front/ios/': [
-        '',
-        'base',
-        'controls',
-        'string',
-        'number',
-        'array',
-        'set',
-        'dictionary',
-        'func',
-        'class',
-        'storyboard',
-        'autolayout',
+        {
+            title: 'swift',
+            collapsable: false,
+            children: [
+                '',
+                'base',
+                'controls',
+                'string',
+                'number',
+                'array',
+                'set',
+                'dictionary',
+                'func',
+                'class',
+                'autolayout',
+            ]
+        },
+        {
+            title: 'storyboard',
+            collapsable: false,
+            children: [
+                'storyboard',
+                'storyboardComp',
+            ]
+        },
     ],
 }
 
