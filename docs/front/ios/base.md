@@ -29,3 +29,10 @@ date: 2023-06-25
 * 更改boundleId：选择项目工作空间最外层-`singing & Capabilities`- `bundle Identifier`
 ## 浏览视图对应的文件
 * 选中view-点击顶部黄色按钮拿到该view的view controller-找到class，点进去就是view对应的文件
+* 选中View -> 右上角的几条横线按钮 -> assistant -> 进入该view对应的代码视图
+## 关联视图和代码
+* control + 拖动
+>有关联试图的代码前面圆圈按钮就是实心的，没有关联的是空心的
+## 注释
+* 单行注释：commond + /
+* 多行注释：commond + option + /
