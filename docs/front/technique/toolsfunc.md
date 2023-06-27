@@ -693,7 +693,6 @@ const toHalfWidth = (str: string) => {
   let result = "";
   const reg = /[a-z0-9０-９]/i;
   for (let i = 0; i < str.length; i++) {
-    // 英数字以外の言語メソッドの平仮名
     if (/[あ-おア-エ]/.test(str[i])) {
       result += jp2en(str[i] as Vowels);
       continue;
