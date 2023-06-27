@@ -230,6 +230,11 @@ const getExplorerInfo = () => {
 };
 ```
 :::
+:::tab label=js判断可触屏
+```js
+const canHover = matchMedia("(hover: hover)").matches;
+```
+:::
 ::::
 ## 操作cookie
 ::: danger
@@ -665,3 +670,150 @@ const queryParser = (url) => {
     }
 }
 ```
+## 输入法半角转全角
+* 涉及到日文输入法可以直接转化为对应英文字母
+```js
+const jp2en = (s: Vowels) => {
+  const map = {
+    あ: "a",
+    い: "i",
+    う: "u",
+    え: "e",
+    お: "o",
+    ア: "a",
+    イ: "i",
+    ウ: "u",
+    エ: "e",
+    オ: "o",
+  };
+  return Object.keys(map).includes(s) ? map[s] : "";
+};
+
+const toHalfWidth = (str: string) => {
+  let result = "";
+  const reg = /[a-z0-9０-９]/i;
+  for (let i = 0; i < str.length; i++) {
+    // 英数字以外の言語メソッドの平仮名
+    if (/[あ-おア-エ]/.test(str[i])) {
+      result += jp2en(str[i] as Vowels);
+      continue;
+    }
+    if (!reg.test(str[i])) {
+      continue;
+    }
+    const c = str.charCodeAt(i);
+    if (c >= 0xff01 && c <= 0xff5e) {
+      // full string
+      result += String.fromCharCode(c - 0xfee0);
+    } else {
+      result += str.charAt(i);
+    }
+  }
+  return result;
+};
+
+```
+## 防抖节流
+:::: tabs
+::: tab label=节流
+```js
+const throttle: Throttle = (fn, sleep = 200) => {
+  let timer: ReturnType<typeof setTimeout> | null;
+  return () => {
+    if (timer) return;
+    timer = setTimeout(() => {
+      fn();
+      timer = null;
+    }, sleep);
+    return () => {
+      timer = null;
+    };
+  };
+};
+```
+:::
+::: tab label=UI防抖
+* react hook
+* 目的：先更新UI，再发请求更新数据
+```js
+type UseUIDebounce = <T>(
+  asyncFn: (p: T) => any,
+  genKeyFn?: (p: T) => string,
+  time?: number
+) => (p: T) => any;
+
+/**
+ * UI refresh first, api debounce request
+ * @param asyncFn 更新数据的发送请求的函数
+ * @param genKeyFn 判断是否是同一个请求，通过参数做一个唯一标识key
+ * @param time
+ * @returns
+ */
+const useUIDebounce: UseUIDebounce = (asyncFn, genKeyFn, time = 1000) => {
+  const singleTimer = useRef<any>();
+  const multiTimer = useRef(new Map());
+  return (p) => {
+    if (typeof genKeyFn === "function") {
+      const key = genKeyFn(p);
+      if (multiTimer.current.has(key)) {
+        clearTimeout(multiTimer.current.get(key));
+      }
+      multiTimer.current.set(
+        key,
+        setTimeout(() => {
+          asyncFn(p);
+          multiTimer.current.delete(key);
+        }, time)
+      );
+    } else {
+      clearTimeout(singleTimer.current);
+      singleTimer.current = setTimeout(() => {
+        asyncFn(p);
+        singleTimer.current = null;
+      }, time);
+    }
+  };
+};
+```
+* 使用
+```js
+// 发送网络请求函数
+const updateFn = async (param) => {
+  try {
+      await post("api/xxxxx", param)
+      
+  } catch {
+    return "failed";
+  }
+};
+// 发送网络请求函数做成防抖函数
+const debounceUpdate = useUIDebounce(
+  updateFn,
+  // 使用参数的某个key做唯一标识
+  ({ key }) => key
+);
+const doSomeThing = () => {
+  setList(newList);
+  void debounceUpdate(newList);
+};
+```
+:::
+::: tab label=屏幕resize防抖
+```js
+interface UseWindowResize {
+  (callback: () => void, throttleTime?: number): void;
+}
+const useWindowResize: UseWindowResize = (callback, throttleTime = 200) => {
+  const throttledUpdateWidth = throttle(callback, throttleTime);
+
+  useEffect(() => {
+    window.addEventListener("resize", throttledUpdateWidth);
+    return () => window.removeEventListener("resize", throttledUpdateWidth);
+  }, [throttledUpdateWidth]);
+  useEffect(() => {
+    callback();
+  }, []);
+};
+```
+:::
+::::
