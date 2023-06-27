@@ -85,7 +85,7 @@ hiddenBtn.isHidden = true
     @IBAction func openThirdPage(_ sender: UIButton) {
         let ThirdController = storyboard!.instantiateViewController(withIdentifier: "ThirdView")
 
-        // 屏幕打开
+        // 全屏幕打开popup
         ThirdController.modalPresentationStyle = .fullScreen;
 
         present(ThirdController, animated: true, completion: nil)
