@@ -36,3 +36,6 @@ date: 2023-06-25
 ## 注释
 * 单行注释：commond + /
 * 多行注释：commond + option + /
+## 更改初始界面
+* storyboard拖拽箭头
+* viewController设置`is Initial View Controller`
