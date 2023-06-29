@@ -122,4 +122,42 @@ imageView.image = UIImage(named: "Univercity")
 * 点的是`UITableView`，对应的Controller就要选`UIViewController`，因为主页面controller还是`UIViewController`，TableView只是一个组件而已
 * 点的是`UITableViewController`，对应的Controller就要选`UITableViewController`
 :::
-* 可拖入`Table View Cell`
+* 可拖入`Table View Cell`，**要记得设置`复用id`**
+
+```swift
+class ListController: UIViewController {
+    var dataArr: [String] = []
+    
+    @IBOutlet weak var myTable: UITableView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        for index in 0...99 {
+            dataArr.append("你好呀\(index)")
+        }
+        
+        // 事件代理为本类
+        myTable.delegate = self
+        // 数据代理为本类
+        myTable.dataSource = self
+        // 数据更新后重新加载列表
+        myTable.reloadData()
+        
+    }
+    
+}
+
+extension ListController: UITableViewDataSource, UITableViewDelegate {
+    // 有多少个
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataArr.count
+    }
+    // 每一个Cell长什么样子
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // id 为 UITableView 里面的 UICell 的 id
+        let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
+        cell.textLabel?.text = dataArr[indexPath.row]
+        return cell
+    }
+}
+```
