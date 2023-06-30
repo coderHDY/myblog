@@ -85,7 +85,7 @@ hiddenBtn.isHidden = true
     @IBAction func openThirdPage(_ sender: UIButton) {
         let ThirdController = storyboard!.instantiateViewController(withIdentifier: "ThirdView")
 
-        // 屏幕打开
+        // 全屏幕打开popup
         ThirdController.modalPresentationStyle = .fullScreen;
 
         present(ThirdController, animated: true, completion: nil)
@@ -93,3 +93,71 @@ hiddenBtn.isHidden = true
     ```
 ### 路由
 * 首页面：点击ViewController，勾选`is initial View Controller`
+### Navigation Controller
+* 既有页面添加导航控制器：选中ViewController，右上角菜单选择`Editor`-`Embed on`-`Navigation Controller`，原UIView可以设置页面`Title`了
+* 可视化跳转：按钮`control + 拖动`到新的view中，并选择`push`
+## UITextField
+* 输入文本等数据
+```swift
+if !textField1.text!.isEmpty {
+    print(textField1.text!)
+}
+```
+* 设置`placeHolder`
+```swift
+textField1.placeholder = "1111111"
+```
+## UIImageView
+* 设置图片控件
+* 可以在`Image`设置中选择系统的图片
+* 可以在assets根目录放入图片，`1x 2x 3x`是1～3倍图片，再在`Image`中输入图片名称
+* 动态控制展示本地图片
+```swift
+imageView.image = UIImage(named: "Univercity")
+```
+## UICollection
+## ScrollView
+## UITable
+::: warning
+* 点的是`UITableView`，对应的Controller就要选`UIViewController`，因为主页面controller还是`UIViewController`，TableView只是一个组件而已
+* 点的是`UITableViewController`，对应的Controller就要选`UITableViewController`
+:::
+* 可拖入`Table View Cell`，**要记得设置`复用id`**
+
+```swift
+class ListController: UIViewController {
+    var dataArr: [String] = []
+    
+    @IBOutlet weak var myTable: UITableView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        for index in 0...99 {
+            dataArr.append("你好呀\(index)")
+        }
+        
+        // 事件代理为本类
+        myTable.delegate = self
+        // 数据代理为本类
+        myTable.dataSource = self
+        // 数据更新后重新加载列表
+        myTable.reloadData()
+        
+    }
+    
+}
+
+extension ListController: UITableViewDataSource, UITableViewDelegate {
+    // 有多少个
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataArr.count
+    }
+    // 每一个Cell长什么样子
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // id 为 UITableView 里面的 UICell 的 id
+        let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
+        cell.textLabel?.text = dataArr[indexPath.row]
+        return cell
+    }
+}
+```
