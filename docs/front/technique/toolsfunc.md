@@ -1208,7 +1208,5 @@ export { useGestures };
 export type { StarInfo, MoveInfo };
 ```
 * 使用
-
-```
 :::
 ::::
