@@ -1208,5 +1208,20 @@ export { useGestures };
 export type { StarInfo, MoveInfo };
 ```
 * 使用
+```js
+const onOpenStart = (startInfo: StarInfo) => {
+  // 触控开始只在左100px内触发监听
+  return startInfo.x < 100;
+};
+const onOpenEnd = (info: MoveInfo) => {
+  const inHomePath = location.pathname === "/";
+  // 触控结束条件，根据速度/路由/滑动距离判断是否触发事件
+  const opCondition = info.xSpeed > 0.5 || (info.xMovePercent > 0.5 && info.yMoved < 100);
+  if (inHomePath && opCondition) {
+    setMobileSide(true);
+  }
+};
+useGestures({ onStart: onOpenStart, onEnd: onOpenEnd });
+```
 :::
 ::::
