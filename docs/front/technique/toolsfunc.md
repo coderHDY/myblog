@@ -1093,7 +1093,7 @@ type UseGestures = (
 ) => (() => void) | void;
 
 const init: UseGestures = ({ onStart, onEnd }, target = document.body) => {
-  let listen = false;
+  let listen = true;
   const domWidth = document.body.clientWidth;
   const domHeight = document.body.clientHeight;
   const initStarInfo = {
@@ -1189,19 +1189,10 @@ const init: UseGestures = ({ onStart, onEnd }, target = document.body) => {
 
 const useGestures: UseGestures = ({ onStart, onEnd }, target) => {
   // resize will change dom size
-  const [changeTime, setCurrentTime] = useState(new Date());
-  const first = useRef(true);
-  useWindowResize(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
-    setCurrentTime(new Date());
-  });
   useEffect(() => {
     const destroy = init({ onStart, onEnd }, target);
     return destroy;
-  }, [target, changeTime]);
+  }, [target, onStart, onEnd]);
 };
 
 export { useGestures };
