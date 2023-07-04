@@ -121,7 +121,11 @@ imageView.image = UIImage(named: "Univercity")
 ::: warning
 * 点的是`UITableView`，对应的Controller就要选`UIViewController`，因为主页面controller还是`UIViewController`，TableView只是一个组件而已
 * 点的是`UITableViewController`，对应的Controller就要选`UITableViewController`
+* tableView要先设置`delegate = self`，代表本类能操作table数据
+* 设置`dataSource = self`，代表数据源是本类
+* 数据更新完要调用`tableView.reloadData()`刷新页面
 :::
+* 也可以将tableView的`delegate`和`dataSource`通过可视化视图拖到对应的`UIViewController`上，做关联
 * 可拖入`Table View Cell`，**要记得设置`复用id`**
 
 ```swift
@@ -147,6 +151,7 @@ class ListController: UIViewController {
     
 }
 
+// 扩展实现UITableView类必须实现方法
 extension ListController: UITableViewDataSource, UITableViewDelegate {
     // 有多少个
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -154,10 +159,14 @@ extension ListController: UITableViewDataSource, UITableViewDelegate {
     }
     // 每一个Cell长什么样子
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // id 为 UITableView 里面的 UICell 的 id
+        // id 为 UITableView 里面的 UICell 的 复用id
         let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
         cell.textLabel?.text = dataArr[indexPath.row]
         return cell
+    }
+    // 某一个Cell被点击了
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("点击了\(dataArr[indexPath.row])")
     }
 }
 ```

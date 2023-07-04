@@ -39,3 +39,15 @@ date: 2023-06-25
 ## 更改初始界面
 * storyboard拖拽箭头
 * viewController设置`is Initial View Controller`
+## 代码格式化
+* ctrl + a 全选
+* control + i 被选中代码格式化
+## 排查错误
+* 打log
+* 打断点
+  * 打开：单机行数
+  * 关闭：拖出去
+  * 鼠标放到变量名上可以直接看变量当前值
+  * 可以操作：下一行/进入函数/跳出函数
+* 进入调试模式
+* 测试
