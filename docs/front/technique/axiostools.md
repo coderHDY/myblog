@@ -12,8 +12,7 @@ date: 2023-07-05
 * 路由跳转时，路径可能不是根路径，所以需要获取当前路径
 ```js
 export const getBaseUrl = () => {
-  let baseurl =
-    globalBaseUrl || `${window.location.protocol}//${window.location.host}`;
+  let baseurl = `${window.location.protocol}//${window.location.host}`;
   if (baseurl.match(/^\//g)) {
     baseurl = `${window.location.protocol}//${window.location.host}${baseurl}`;
   }
@@ -159,10 +158,30 @@ history.replace(ROUTE_MESSAGE_LOGIN);
 ```
 :::
 ::: tab label=vue3路由外跳转
+* `utils/webHistory.ts`
 ```js
-import { useRouter } from "vue-router";
-const router = useRouter();
-router.push("/zh-CN/login");
+import { createWebHistory } from "vue-router";
+
+const webHistory = createWebHistory(import.meta.env.BASE_URL);
+export default webHistory;
+```
+* `router/index.ts`
+```js
+import { createRouter } from "vue-router";
+import ErrorView from "@/views/ErrorView/ErrorView.vue";
+import webHistory from "@/utils/webHistory";
+
+const router = createRouter({
+	history: webHistory,
+	routes: [
+		{
+			path: "/:w+",
+			component: ErrorView,
+		},
+	],
+});
+
+export default router;
 ```
 :::
 ::::
