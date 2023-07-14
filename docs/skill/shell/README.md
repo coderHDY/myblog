@@ -115,3 +115,36 @@ do
     fi
 done
 ```
+## 自动部署脚本
+* pm2启动
+```sh
+PATH_DEPLOY=/usr/local/html
+PATH_ROOT=/home/app/loan
+PATH_PROJECT=/home/app/loan/02_src/cash-loans-front
+
+update() {
+    cd ${PATH_ROOT}
+    git pull
+    cd ${PATH_PROJECT}
+    npm i
+    npm run build-only
+    mv ${PATH_DEPLOY} ${PATH_DEPLOY}_temp
+    mv ./dist ${PATH_DEPLOY}
+    rm -rf ${PATH_DEPLOY}_temp
+    echo "完成更新:" `date +"%Y-%m-%d %H:%M:%S"` >> log.txt
+}
+
+update
+
+while true
+do
+    current=`date +%H`
+    if test ${current} -eq '03';then
+        update
+    fi
+
+    sleepTime=`expr 60 \* 58`
+    # sleepTime=`expr 60 \* 3`
+    sleep ${sleepTime}
+done
+```

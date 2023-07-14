@@ -234,3 +234,62 @@ server
     include /www/server/panel/vhost/nginx/*.conf;
 }
 ```
+## 项目配置
+* vue/react项目需要配置路由重定向，来处理浏览器刷新问题
+```shell
+user  nginx;
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;
+
+    ##
+
+    server {
+        listen 443 ssl;
+        server_name  127.0.0.1;
+
+        ssl_protocols        TLSv1.2;
+        ssl_certificate      /usr/local/cert/server.pem;
+        ssl_certificate_key  /usr/local/cert/server.key;
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5:!CBC:!3DES;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            root   /usr/local/html;
+            index  index.html index.htm;
+	          ## 兜底路由
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}
+```

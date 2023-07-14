@@ -149,6 +149,7 @@ const front = {
         'tools',
         'toolsfunc',
         'react-hooks',
+        'axiostools',
     ],
     '/front/ios/': [
         {
