@@ -343,6 +343,20 @@ div {
 </html>
 ```
 :::
+::: label=rem【3】
+* 基于16px做
+```js
+(function () {
+const setRootFontSize = () => {
+    const dpi = document.documentElement.clientWidth;
+    const fontSize = (dpi * 16) / 375; // iphone6上是 100
+    document.documentElement.style.fontSize = fontSize + "px";
+};
+setRootFontSize();
+window.addEventListener("resize", setRootFontSize);
+})();
+```
+:::
 ::: tab label=vw百分比
 * 未来主流方式。当前兼容性不好。
 * 想响应式的数据就除以375(设计稿的宽度)做vw的百分比，因为**vw变化是视口要做响应式的直接原因**。
