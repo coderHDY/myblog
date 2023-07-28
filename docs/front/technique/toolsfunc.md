@@ -1216,3 +1216,17 @@ useGestures({ onStart: onOpenStart, onEnd: onOpenEnd });
 ```
 :::
 ::::
+## 检测
+* ie检测
+```js
+function isIE() {
+  if (!!window.ActiveXObject || "ActiveXObject" in window) {
+    return true;
+  }
+  return false;
+}
+```
+* 触控设备检测
+```js
+const canHover = matchMedia("(hover: hover)").matches || isIE();
+```
