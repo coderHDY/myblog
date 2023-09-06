@@ -185,3 +185,40 @@ export default router;
 ```
 :::
 ::::
+
+
+## 文件上传进度条
+```ts
+import axios, { AxiosProgressEvent } from "axios";
+// 做进度条函数
+const uploadProgress = (evt: AxiosProgressEvent, id: string) => {
+  if (evt.progress && evt.total) {
+    const percent = Math.round((evt.loaded * 100) / evt.total);
+    setProgresses({ ...progresses, [id]: percent });
+  }
+};
+const fileUpload = async (file: File) => {
+  const url = `${getBaseUrl()}/${FILE_UPLOAD}`;
+  const form = new FormData();
+  const { fileInfo, cid } = file;
+  if (fileInfo) {
+    form.append("file", fileInfo);
+    const option = {
+      method: "post",
+      url,
+      data: form,
+      onUploadProgress: (event: AxiosProgressEvent) =>
+        uploadProgress(event, cid),
+    };
+    try {
+      const result = await axios(option);
+      uploadedFilesUrl.current = {
+        ...uploadedFilesUrl.current,
+        [cid]: result.data.data,
+      };
+    } catch (e) {
+      setUploadFailed([...uploadFailed, cid]);
+    }
+  }
+};
+```

@@ -178,6 +178,15 @@ const front = {
             ]
         },
     ],
+    '/front/test/': [
+        {
+            title: 'jest',
+            collapsable: false,
+            children: [
+                '',
+            ]
+        },
+    ],
 }
 
 const backend = {

@@ -48,6 +48,10 @@ const front = {
             text: 'IOS',
             link: '/front/ios/'
         },
+        {
+            text: '单测',
+            link: '/front/test/'
+        },
     ]
 };
 
