@@ -1230,3 +1230,18 @@ function isIE() {
 ```js
 const canHover = matchMedia("(hover: hover)").matches || isIE();
 ```
+## vh手机适配
+* 手机safari的`100vh`会算上底边工具栏
+```js
+const setVhUnit = () => {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+setVhUnit();
+window.addEventListener('resize', setVhUnit);
+```
+* 使用
+```js
+height: calc(var(--vh, 1vh) * 100);
+```

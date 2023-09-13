@@ -4,6 +4,9 @@ date: 2021-12-12
 tags:
  - 前端重点
 ---
+## PromiseA+
+* [简单实现1](https://github.com/hejialianghe/Senior-FrontEnd/blob/master/examples/jsadvanced/promise/Promise.js)
+* [coderwhy完整版](https://mp.weixin.qq.com/s/L2dl0woiRl6ghyKoo-sWNA)
 ## 浏览器的JS异步
 ### 宏任务/微任务
 ::: tip 概念
@@ -83,7 +86,6 @@ console.log('同步任务');
 * 定时器触发线程
 * http请求线程
 * 其他线程
-
 ### 递归函数的风险
 * 递归函数是函数调用自身。
 * 递归函数是有风险的。因为递归函数会触发大量的栈帧堆积，让执行栈高度很高，可能会触发栈溢出。
@@ -281,6 +283,7 @@ cancelAnimationFrame(timer);
 :::
 ::::
 ## nodeJS的异步
+* [文档](https://nodejs.org/zh-cn/docs/guides/event-loop-timers-and-nexttick#what-is-the-event-loop)
 * nodejs只有轮询机制
 * `process.nextTick`为这一次轮询的末尾执行
 * `setImmediate`为下一次轮询开始执行
