@@ -4,7 +4,7 @@ date: 2021-12-12
 tags:
  - 前端重点
 ---
-## JS异步
+## 浏览器的JS异步
 ### 宏任务/微任务
 ::: tip 概念
 * js是单线程语言，执行顺序是单线程异步模型，所以有宏任务/微任务机制来处理异步操作
@@ -280,6 +280,20 @@ cancelAnimationFrame(timer);
 ```
 :::
 ::::
+## nodeJS的异步
+* nodejs只有轮询机制
+* `process.nextTick`为这一次轮询的末尾执行
+* `setImmediate`为下一次轮询开始执行
+* `setTimeout`加到下次轮询执行队列内
+```js
+console.log(1);
+setTimeout(() => console.log(5));
+setImmediate(() => console.log(4));
+process.nextTick(() => console.log(3));
+console.log(2);
+
+// 打印 1 2 3 4 5
+```
 ## 方法
 ### Promise
 ::: tip 构造器
