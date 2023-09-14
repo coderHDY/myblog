@@ -176,13 +176,13 @@ app.get('/', function(req, res) {
 * 服务器同意跨域的资源请求，并在响应头上添加对应字段
 * 响应头设置的字段：
 
-|字段|值|
-|---|---|
-|Access-Control-Allow-Origin|【必须】允许请求的源域名，url \| *|
-|Access-Control-Request-Method|可选，支持跨域的方法|
-|Access-Control-Expose-Headers|可选，允许包含的请求头|
-|Access-Control-Allow-Credentials|可选，布尔值，headers是否接收cookie字段|
-|Access-Control-Max-Age|可选，本次预检请求有效期|
+| 字段                             | 值                                      |
+| -------------------------------- | --------------------------------------- |
+| Access-Control-Allow-Origin      | 【必须】允许请求的源域名，url \| *      |
+| Access-Control-Request-Method    | 可选，支持跨域的方法                    |
+| Access-Control-Expose-Headers    | 可选，允许包含的请求头                  |
+| Access-Control-Allow-Credentials | 可选，布尔值，headers是否接收cookie字段 |
+| Access-Control-Max-Age           | 可选，本次预检请求有效期                |
 :::
 :::: tabs
 ::: tab label=get
@@ -804,11 +804,11 @@ wsServer.on('connection', function (ws) {
 ### 其他方案
 ::: tip 其他不常用方案
 
-|方案|适用|
-|---|---|
-|window.postMessage|可以向浏览器的其他窗口或内嵌iframe进行跨域通信|
-|document.domain + iframe|可以让同一个基础域名的网页进行相互操作，如：【id.qq.com】和【qq.com】可以互相嵌套iframe进行跨域通信操作，只要把他们都设置【document.domain = 'qq.com'】|
-|浏览器关闭跨域限制|启动增加参数【--disable-web-security --user-data-dir】|
+| 方案                     | 适用                                                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| window.postMessage       | 可以向浏览器的其他窗口或内嵌iframe进行跨域通信                                                                                                          |
+| document.domain + iframe | 可以让同一个基础域名的网页进行相互操作，如：【id.qq.com】和【qq.com】可以互相嵌套iframe进行跨域通信操作，只要把他们都设置【document.domain = 'qq.com'】 |
+| 浏览器关闭跨域限制       | 启动增加参数【--disable-web-security --user-data-dir】                                                                                                  |
 :::
 :::: tabs
 ::: tab label=iframe
@@ -816,3 +816,12 @@ wsServer.on('connection', function (ws) {
 
 :::
 ::::
+## 跨站
+* 跨站路径不完全相同：`a.b.com` / `c.b.com` / `b.com`
+* 服务器设置相应头`SameSite=None;Secure`
+```js
+app1.get('/',(req,res)=>{
+    res.setHeader('Set-Cookie','SameSite=None;Secure')
+    res.send('ok')
+})
+```
