@@ -2,7 +2,7 @@
 title: vue3响应式
 date: 2023-09-15
 ---
-* `Dep`：是观察者模式设计核心，响应式通知依赖
+* `Dep`：是`观察者模式`设计核心，响应式通知依赖
 * `reactive`：由于vue3 `reactive`只能接收对象，且同时切换成了`Proxy`做响应式，所以reactive兼顾vue2的`observe`功能
 * `watch`：执行一遍数据获取更新并收集依赖
 * `updateFn`：首次`render`/收集依赖的标志
