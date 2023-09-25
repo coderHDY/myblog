@@ -544,22 +544,40 @@ getSelectedText();
 ::: tab label=旧替代方法
 ```html
 <body>
-    <div id="div">123234213423423家阿克琉斯的积分啦4</div>
-</body>
-<script>
-    div.addEventListener("click", function () {
-        const val = this.innerText;
+  <div id="div">123234213423423家阿克琉斯的积分啦4</div>
 
-        var input = document.createElement("input");
-        input.style = `position: fixed;left: -100vw;`;
-        input.value = val;
-        document.body.appendChild(input);
-        input.select();
-        input.setSelectionRange(0, input.value.length - 5);
-        document.execCommand('Copy');
-        document.body.removeChild(input);
-    })
-</script>
+  <script>
+    div.addEventListener("click", function () {
+      const val = this.innerText;
+      copyToClipboard(val);
+    });
+
+    const copyToClipboard = (text) => {
+      var textArea = document.createElement("textarea");
+      textArea.value = text;
+
+      // Avoid scrolling to bottom
+      textArea.style.top = "200vh";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        var successful = document.execCommand("copy");
+        if (!successful) {
+          navigator.clipboard.writeText(virtualCardNumber.value);
+        }
+      } catch (err) {
+        console.log("Oops, unable to copy");
+      }
+
+      document.body.removeChild(textArea);
+    }
+  </script>
+</body>
 ```
 :::
 ::::
@@ -830,7 +848,6 @@ const useWindowResize: UseWindowResize = (callback, throttleTime = 200) => {
 ```
 :::
 ::::
-
 ## 手势
 :::: tabs
 ::: tab label=手势动作
