@@ -1262,3 +1262,12 @@ window.addEventListener('resize', setVhUnit);
 ```js
 height: calc(var(--vh, 1vh) * 100);
 ```
+## 阻止页面关闭
+```js
+window.addEventListener("beforeunload", function (event) {
+  // 取消关闭网页
+  event.preventDefault();
+  // 提示用户是否确认关闭
+  event.returnValue = "";
+});
+```
