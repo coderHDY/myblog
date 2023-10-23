@@ -343,7 +343,7 @@ div {
 </html>
 ```
 :::
-::: label=rem【3】
+::: tab label=rem【3】
 * 基于16px做
 ```js
 (function () {
