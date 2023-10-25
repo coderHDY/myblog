@@ -1319,3 +1319,18 @@ const versionChecker = new UpdateTip();
 
 export default versionChecker;
 ```
+## 检测输入法输入事件
+::: codePen height=100
+```html
+<body>
+  <input id="inputRef">
+
+  <script>
+    const onCompositionStart = () => console.log("-----  开始输入法输入   -----")
+    const onCompositionEnd = () => console.log("-----  结束输入法输入   -----")
+    inputRef.addEventListener("compositionstart", onCompositionStart);
+    inputRef.addEventListener("compositionend", onCompositionEnd);
+  </script>
+</body>
+```
+:::
