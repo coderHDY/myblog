@@ -1334,3 +1334,37 @@ export default versionChecker;
 </body>
 ```
 :::
+## 字数计算/截断
+>防颜文字占两位或多位
+* 判断1M字符
+```js
+const checkSizeOver1M = (str: string) => {
+  let totalBytes = 0;
+  for (let i = 0; i < str.length; i++) {
+    const charCode = str.charCodeAt(i);
+    if (charCode > 0x7f) {
+      totalBytes += 2; // 2byte
+    } else {
+      totalBytes += 1; // 1byte
+    }
+    if (totalBytes > 1024 * 1024) {
+      return true;
+    }
+  }
+  return false;
+};
+```
+* 字符截断8位
+```js
+const str = "👨‍👩‍👧‍👧🥟Hello🍜⚽️🏀🎱🥵💣🎆Hello World!";
+ 
+const sliceStr = (str, length) => {
+  const reg =
+    /\ud83c[\udffb-\udfff](?=\ud83c[\udffb-\udfff])|(?:[^\ud800-\udfff][\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]?|[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\ud800-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff\u1ab0-\u1aff\u1dc0-\u1dff]|\ud83c[\udffb-\udfff])?)*/g;
+  const arr = str.match(reg);
+  return arr.slice(0, length).join("");
+};
+ 
+console.log(sliceStr(str, 8));
+ 
+```
