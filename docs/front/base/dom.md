@@ -169,6 +169,7 @@ date: 2021-12-16
 |previousElementSibling|同一个父节点的下一个相邻节点|Element|
 |parentElement|父元素节点|Element|
 |closest|以指定的选择器寻找祖先|Element \| null|
+|contains|是否包含后代|Element \| bool|
 
 :::
 ### children
@@ -409,6 +410,15 @@ date: 2021-12-16
         }, 2000)
     </script>
 </body>
+```
+### contains
+* 无论多少层级，都支持向下查找
+```js
+document.addEventListener("click", (e) => {
+    const target = e.target;
+    const ans = root.contains(target);
+    console.log(ans);
+});
 ```
 ### 其他节点
 ::: warning 特殊元素提取
