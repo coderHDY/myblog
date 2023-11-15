@@ -431,7 +431,6 @@ input[type=search]::-ms-clear: {
   backgroundImage: url("a.svg"),
 },
 ```
-
 ## css节流按钮
 ::: codePen height=100
 ```html
@@ -467,3 +466,9 @@ input[type=search]::-ms-clear: {
 
 ```
 :::
+## IOS14滚动白屏
+* bug：ios14.0某些滚动会白屏
+* 可滚动框加一行属性
+```css
+-webkit-overflow-scrolling: auto
+```
