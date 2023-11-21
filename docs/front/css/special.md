@@ -470,5 +470,5 @@ input[type=search]::-ms-clear: {
 * bug：ios14.0某些滚动会白屏
 * 可滚动框加一行属性
 ```css
--webkit-overflow-scrolling: auto
+-webkit-overflow-scrolling: touch;
 ```
