@@ -1368,3 +1368,39 @@ const sliceStr = (str, length) => {
 console.log(sliceStr(str, 8));
  
 ```
+## DOM链接转化
+* 将DOM的链接转化成a标签链接
+```js
+const url2ATag = (el) => {
+  const urlReg =
+    /(http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+/g;
+  const transUrl = (txt) => {
+    return txt.replace(urlReg, (url, https, s) => {
+      return `<a href='${https ? "" : "https://"}${url}' target='_blank'>${url}</a>`;
+    });
+  };
+  const hasUrl = (txt) => {
+    return urlReg.test(txt);
+  };
+  const txtNode2spanNode = (node) => {
+    const newHtml = transUrl(node.nodeValue);
+    const span = document.createElement("span");
+    span.innerHTML = newHtml;
+    const parent = node.parentNode;
+    parent.replaceChild(span, node);
+  };
+
+  const elLinkTrans = (el) => {
+    const childNodes = el.childNodes;
+    for (let node of childNodes) {
+      if (node.nodeType === 3 && hasUrl(node.nodeValue)) {
+        txtNode2spanNode(node);
+      } else {
+        elLinkTrans(node);
+      }
+    }
+  };
+
+  elLinkTrans(div);
+}
+```
