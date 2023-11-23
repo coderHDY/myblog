@@ -137,6 +137,9 @@ vim ~/.ssh/config
 2. 克隆到本地
 ```shell
 git clone git@github.com:coderHDY/myblog.git
+
+# 自定义文件名字
+git clone git@github.com:coderHDY/myblog.git blog
 ```
 ## git remote
 * 设置和查看**和本地绑定的**远程仓库
