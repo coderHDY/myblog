@@ -45,3 +45,7 @@ su A
 ```shell
 userdel A -r
 ```
+## 生成目录结构树
+```shell
+find . -print | sed -e's;[^/]*/;|____;g;s;____|; |;g'
+```
