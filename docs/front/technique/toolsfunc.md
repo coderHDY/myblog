@@ -1404,3 +1404,93 @@ const url2ATag = (el) => {
   elLinkTrans(div);
 }
 ```
+## 文件下载
+* 准备文件
+```sh
+|- video.mp4
+|- server.js
+|- index.html
+```
+* server.js
+```js
+const express = require("express");
+const app = express();
+const path = require("path");
+const fs = require("fs");
+app.listen("8888", () => console.log("listen 8888"));
+const allowCors = function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type,responseType");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+};
+app.use(allowCors); // 使用跨域中间件
+
+app.get("/file", (req, res) => {
+  // 正常
+  try {
+    // 读取一个文件
+    const file = fs.readFileSync(path.join(__dirname, "./video.mp4"));
+    res.send(file);
+  } catch (e) {
+    // 异常
+    res.status(500);
+    res.send({ msg: "不想给你看～" });
+  }
+});
+```
+* index.html
+```html
+<body>
+  <button id="downloadBtn">下载</button>
+
+  <script>
+    // 下载buffer文件函数
+    const bufferFileDownload = (fileBuffer, fileName, mimeType) => {
+      const fileData = new Blob([fileBuffer], {
+        type: mimeType ?? "application/octet-stream",
+      });
+      // for IE
+      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(fileData, fileName);
+      }
+      // for Non-IE (chrome, firefox, safari etc.)
+      else {
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style.display = "none";
+        const url = window.URL.createObjectURL(fileData);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      }
+    };
+
+    const download = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8888/file", {
+          method: "GET",
+          headers: {
+            responseType: "arraybuffer",
+          },
+        });
+        if (response.status !== 200) {
+          throw response;
+        }
+        // 以 buffer 形式读取
+        const file = await response.arrayBuffer();
+        const fileName = "video.mp4";
+        bufferFileDownload(file, fileName);
+      } catch (e) {
+        const errData = await e.json();
+        console.warn(errData);
+      }
+    };
+    downloadBtn.addEventListener("click", download);
+  </script>
+</body>
+
+```
