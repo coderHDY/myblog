@@ -20,7 +20,24 @@ const p = new People(); // error
 
 class People {}
 ```
+## 存取器
+```js
+class People {
+  _name = ""
+  set name(name) {
+    console.log(name);
+    this._name = name;
+  }
 
+  get name() {
+    return this._name
+  }
+}
+
+const p = new People();
+p.name = "呵呵";
+const n = p.name;
+```
 ## 继承
 ::: tip
 * 继承的class在constructor内要要使用this，需要先调用super

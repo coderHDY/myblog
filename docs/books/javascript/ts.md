@@ -446,12 +446,12 @@ cat.say();
 ```
 :::
 ::: tab label=修饰符
-|修饰符|访问空间|
-|---|---|
-|public|公共访问(默认)|
-|protected|类内部及其子类中访问|
-|private|只有类的内部可以访问|
-|readonly|只能在constructor中赋值(**浅层管制**)|
+| 修饰符    | 访问空间                              |
+| --------- | ------------------------------------- |
+| public    | 公共访问(默认)                        |
+| protected | 类内部及其子类中访问                  |
+| private   | 只有类的内部可以访问                  |
+| readonly  | 只能在constructor中赋值(**浅层管制**) |
 
 ```ts{2-3,8-9}
 class Animal {
@@ -585,13 +585,13 @@ class People implements Info {
 ::: tab label=interface和type
 >interface和type的区别
 
-|功能|interface|type|
-|---|---|---|
-|&/extends继承|允许|允许|
-|implements实现|可以|可以|
-|基本类型别名、联合类型、元组|不可以|可以|
-|typeof关键字赋值|不可以|可以|
-|同名合并|可以|不可以|
+| 功能                         | interface | type   |
+| ---------------------------- | --------- | ------ |
+| &/extends继承                | 允许      | 允许   |
+| implements实现               | 可以      | 可以   |
+| 基本类型别名、联合类型、元组 | 不可以    | 可以   |
+| typeof关键字赋值             | 不可以    | 可以   |
+| 同名合并                     | 可以      | 不可以 |
 
 ```ts
 /// typeof赋值type
@@ -636,6 +636,36 @@ fn(Direction.LEFT); // 0
 fn(Direction.RIGHT); // 1
 fn(Direction.UP); // 2
 fn(Direction.DOWN); // 3
+```
+:::
+::: tab label=赋值限制
+* 虽然值一样，但也必须用`Enum.p`的形式赋值
+```ts
+enum Res {
+  No = "不接受",
+  Yes = "接受",
+  Or = "再考虑考虑",
+}
+
+type R = typeof Res;
+
+const r: R = {
+  No: "不接受", // Err: Type '"不接受"' is not assignable to type 'Res.No'.
+  Yes: Res.Yes,
+  Or: Res.Or,
+};
+```
+:::
+::: tab label=键集合
+```ts
+enum Res {
+  No = "不接受",
+  Yes = "接受",
+  OR = "再考虑考虑",
+}
+
+type R =  typeof Res;
+// type R = "No" | "Yes" | "OR"
 ```
 :::
 ::: tab label=promise
@@ -688,3 +718,246 @@ $.ajax(setting)
 ```
 :::
 ::::
+## 第七章 特殊关键字
+### const
+* 将一个值的集合变成`readonly`
+```ts
+const a = ["1", 2] as const;
+
+a[1] = 3; // error
+```
+### Extract
+* 从属性集里面摘出几个属性
+```ts
+type T0 = Extract<"a" | "b" | "c", "a" | "f">;
+     
+// type T0 = "a"
+```
+```ts
+function getAttr<T, K extends Extract<keyof T, string>>(o: T, p: K) {
+  // 对象属性键值原本是 symbol | string | number
+  const s: string = p;
+  return o[p];
+}
+
+getAttr({ name: "1" }, "name");
+```
+### ReturnType
+* 函数的返回类型
+```ts
+const a = () => {
+  return "hello world!"
+}
+
+type b = ReturnType<typeof a>
+// type b = string
+```
+### Enum
+* 枚举类型
+```ts
+enum Res {
+  No,
+  Yes,
+  OR,
+}
+
+/* 同 */
+// enum Res {
+//   No = 0,
+//   Yes = 1,
+//   OR = 2,
+// }
+
+// 直接获取
+const no: Res = Res.No;
+
+// 间接获取
+const key = "Yes";
+const yes = Res[key];
+
+console.log(no);
+
+```
+### typeof 
+* 获取已知变量的对应的类型
+```ts
+enum UserResponse {
+  No,
+  Yes,
+  OR,
+}
+
+type all = keyof typeof UserResponse;
+// type all = "No" | "Yes" | "OR"
+```
+### 索引访问类型
+* 通过索引关系两个类型
+```ts
+type Person = {
+  name: string;
+  age: number;
+  friends: Person[];
+}
+
+type Name = Person["name"];
+// type Name = "string"
+
+type AgeName = Person["name" | "age"];
+// type Name =  string | number
+
+type allPersonKeys = Person[keyof Person];
+// type allPersonKeys = string | number | Person[]
+```
+* 索引`number`访问所有类型生成新类型
+```ts
+const arr = [
+  {name: "黄", friends: ["a"]},
+  {name: "黄", age: 18},
+];
+
+type P = typeof arr[number]
+/*
+  type P = {
+    name: string;
+    age?: undefined;
+  } | {
+    name: string;
+    age: number;
+  }
+*/
+```
+* 结合`const`固定类型，将`数组类型`生成`联合类型`
+```ts
+const app = ["淘宝", "天猫", "支付宝"] as const;
+
+type App = typeof app[number];
+// type App = "淘宝" | "天猫" | "支付宝"
+```
+* `枚举索引`获取对象所有值类型
+```ts
+const person = {
+  name: "黄",
+  age: 18,
+  books: ["JS", "python"]
+} as const;
+
+type P = typeof person[keyof typeof person];
+// type P = "黄" | 18 | readonly ["JS", "python"]
+```
+### 三元表达式
+```ts
+type A = {
+  id: number;
+}
+type B = {
+  name: string;
+}
+ 
+// 三元表达式根据入参数判断返回值类型
+function createLabel<T>(id: T): T extends number ? A : B;
+
+function createLabel(id): A | B {
+  throw "unimplemented";
+}
+
+const a = createLabel(1);
+// type a = A
+```
+### Exclude
+```ts
+interface Circle {
+  kind: "circle";
+  radius: number;
+}
+
+type KindlessCircle = {
+  [P in keyof Circle as Exclude<P, "kind">]: Circle[P];
+}
+
+// type KindlessCircle = {
+//   radius: number;
+// }
+```
+* 配合泛型制造返回值
+* 返回值比入参少属性
+```ts
+interface Circle {
+  kind: "circle";
+  radius: number;
+}
+function a<T, K extends keyof T>(
+  o: T,
+  p: K
+): {
+  [P in keyof T as Exclude<P, K>]: T[P];
+} {
+  delete o[p];
+  return o;
+}
+
+const c: Circle = {
+  kind: "circle",
+  radius: 10,
+};
+
+const x = a(c, "kind");
+// const x: {
+//   radius: number;
+// }
+```
+### 映射类型
+```ts
+type isTypeHasFoot<T> = {
+[P in keyof T]: T[P] extends number ?  T[P] : never;
+}
+
+interface Animal {
+  foot: number;
+  hand: number;
+  head: string;
+}
+
+type B = isTypeHasFoot<Animal>;
+// type B = {
+//   foot: number;
+//   hand: number;
+//   head: never;
+// }
+```
+### 模板字符串
+```ts
+enum Actions {
+  a = "click",
+  b = "touchstart",
+  c = "touchmove",
+}
+
+type enumIds = `on${Capitalize<Actions>}`;
+// type enumIds = "onClick" | "onTouchstart" | "onTouchmove"
+```
+### 字符串内置操作符
+```ts
+enum Actions {
+  a = "click",
+  b = "touchstart",
+  c = "touchmove",
+}
+
+// 首字母大写
+type A = `on${Capitalize<Actions>}`;
+// type A = "onClick" | "onTouchstart" | "onTouchmove"
+
+// 首字母小写
+type D = `on${Uncapitalize<Actions>}`;
+// type D = "onclick" | "ontouchstart" | "ontouchmove"
+
+
+// 大写
+type B = `on${Uppercase<Actions>}`;
+// type B = "onCLICK" | "onTOUCHSTART" | "onTOUCHMOVE"
+
+// 小写
+type C = `on${Lowercase<Actions>}`;
+// type C = "onclick" | "ontouchstart" | "ontouchmove"
+
+```
