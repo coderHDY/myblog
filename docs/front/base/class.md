@@ -38,6 +38,25 @@ const p = new People();
 p.name = "呵呵";
 const n = p.name;
 ```
+## 私有字段
+* （es2021）只有本类内的方法可以访问到该属性
+```js
+class People {
+  #name = ""
+  set name(name) {
+    console.log(name);
+    this.#name = name;
+  }
+
+  get name() {
+    return this.#name
+  }
+}
+
+const p = new People();
+p.name = "呵呵";
+const n = p.name;
+```
 ## 继承
 ::: tip
 * 继承的class在constructor内要要使用this，需要先调用super
