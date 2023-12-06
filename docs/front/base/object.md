@@ -370,7 +370,7 @@ console.log(map); // Map(2) { 'name' => 'hdy', 'age' => 18 }
 ::::
 ### keys
 ::: tip
-* 作用：拿到对象自身的`可枚举属性`
+* 作用：拿到对象自身的`可枚举属性`，**不包括原型链属性**
 * 调用：Object.keys(obj)
 * 入参：Object
 * 返回：Array
@@ -388,7 +388,7 @@ console.log(Object.keys(obj)); // ['name']
 ```
 ### values
 ::: tip
-* 作用：拿到自身所有`可枚举属性`的值
+* 作用：拿到自身所有`可枚举属性`的值，**不包括原型链属性**
 * 调用：Object.keys(obj)
 * 入参：Object
 * 返回：Array

@@ -638,6 +638,19 @@ fn(Direction.UP); // 2
 fn(Direction.DOWN); // 3
 ```
 :::
+::: tab label=常量枚举
+* 枚举加const是常量枚举，编译阶段会被删除
+```ts
+const enum A {
+  a = "188",
+  b = "288",
+  c = "388",
+}
+
+// Error, const
+Object.values(A)
+```
+:::
 ::: tab label=赋值限制
 * 虽然值一样，但也必须用`Enum.p`的形式赋值
 ```ts
@@ -960,4 +973,279 @@ type B = `on${Uppercase<Actions>}`;
 type C = `on${Lowercase<Actions>}`;
 // type C = "onclick" | "ontouchstart" | "ontouchmove"
 
+```
+## 第八章 工具类型
+### Partial
+* 将一个属性集全部变成**可选类型**
+```ts
+interface People {
+  name: string;
+  age: number;
+  friends: People[];
+}
+
+type PeopleParams = Partial<People>
+// type PeopleParams = {
+//   name?: string | undefined;
+//   age?: number | undefined;
+//   friends?: People[] | undefined;
+// }
+```
+### Required
+* 将一个属性集全部变成**必填类型**，与`Partial`相反
+```ts
+interface People {
+  name?: string;
+  age?: number;
+  friends?: People[];
+}
+
+type PeopleParams = Required<People>
+// type PeopleParams = {
+//   name: string;
+//   age: number;
+//   friends: People[];
+// }
+```
+### Readonly
+* 将一个属性集全部变成**只读**
+```ts
+interface People {
+  name: string;
+  age: number;
+  friends?: People[];
+}
+
+type PeopleParams = Readonly<People>
+// type PeopleParams = {
+//   readonly name: string;
+//   readonly age: number;
+//   readonly friends?: People[] | undefined;
+// }
+```
+### Record
+* 将一个键集合**映射**为一个值的集合，生成一个新类型
+```ts
+interface People {
+  name: string;
+  age: number;
+  friends?: People[];
+}
+
+interface Company {
+  boss: string;
+  marketing: string;
+  programer: string;
+}
+
+type CompanyPeoples = Record<keyof Company, People>
+// type CompanyPeoples = {
+//   boss: People;
+//   marketing: People;
+//   programer: People;
+// }
+```
+### Pick
+* 将一个类型**筛选**出一部分类型出来做成一个新类型
+```ts
+interface People {
+  name: string;
+  age: number;
+  friends?: People[];
+}
+
+type CompanyPeoples = Pick<People, "name" | "age">;
+// type CompanyPeoples = {
+//   name: string;
+//   age: number;
+// }
+```
+### Omit
+* 将一个类型**剔除掉**一部分做出一个新的类型，和`Pick`相反
+```ts
+interface People {
+  name: string;
+  age: number;
+  friends?: People[];
+}
+
+type SchoolPeoples = Omit<People, "name" | "age">;
+// type SchoolPeoples = {
+//   friends?: People[] | undefined;
+// }
+```
+### Exclude
+* 将一个`联合类型`**剔除掉**一部分做出一个新类型
+```ts
+type People = "boss" | "marketing" | "programer";
+
+type SchoolPeoples = Exclude<People, "boss">;
+// type SchoolPeoples = "marketing" | "programer"
+```
+### Extract
+* 将一个`联合类型`**提取出**一部分做出一个新类型
+```ts
+type People = "boss" | "marketing" | "programer";
+
+type SchoolPeoples = Extract<People, "boss">;
+// type SchoolPeoples = "boss"
+```
+### NonNullable
+* 把一个类型剔除掉`null`和`undefined`
+```ts
+type People = "boss" | null;
+
+type SchoolPeoples = NonNullable<People>;
+// type SchoolPeoples = "boss"
+```
+### Parameters
+* 合并所有**函数的参数类型**
+```ts
+type Fn1 = (s: string) => string;
+type Fn2 = (n: number) => void;
+
+type SchoolPeoples = Parameters<Fn1 | Fn2>;
+// type SchoolPeoples = [s: string] | [n: number]
+```
+### ConstructorParameters
+* 一个`类`的**构造函数**的入参类型
+```ts
+type SchoolPeoples = ConstructorParameters<ErrorConstructor>;
+// type SchoolPeoples = [message?: string | undefined, options?: ErrorOptions | undefined]
+```
+### ReturnType
+* 一个函数的返回类型
+```ts
+type Fn1 = (s: string) => string;
+
+type SchoolPeoples = ReturnType<Fn1>;
+// type SchoolPeoples = string
+```
+### InstanceType
+* 获取`class`的实例类型
+>直接拿`class`做类型是一样的，可能调用第三方库的时候有用
+```ts
+class A {
+  constructor() {}
+}
+
+type B = InstanceType<typeof A>;
+
+const a: B = new A();
+```
+## 装饰器
+*  将多个`class`内共有的方法抽出来
+```ts
+@classDecorator
+class Greeter {
+  property = "property";
+  hello: string;
+  constructor(m: string) {
+    this.hello = m;
+  }
+}
+
+console.log(new Greeter("world"));
+
+function classDecorator(
+  constructor: typeof Greeter,
+  context: ClassDecoratorContext<typeof Greeter>
+): void | typeof Greeter {
+  return class extends constructor {
+    newProperty = "new property";
+    hello = "override";
+  };
+}
+```
+## 命名空间
+### 追加声明
+* 在一个已有的对象/类/模块内添加声明
+```ts
+function buildLabel(name: string): string {
+  return buildLabel.prefix + name + buildLabel.suffix;
+}
+
+namespace buildLabel {
+  export let suffix = "";
+  export let prefix = "Hello, ";
+}
+
+console.log(buildLabel("Sam Smith"));
+
+console.dir(buildLabel);
+// [Function: buildLabel] { suffix: '', prefix: 'Hello, ' }
+```
+### 做类型合并
+* 给枚举添加函数类型
+>直接给枚举添加函数类型是不被通过的，可以通过命名空间追加导出的形式追加其他属性
+```ts
+enum Color {
+  red = 1,
+  green = 2,
+  blue = 4,
+}
+
+namespace Color {
+  export function mixColor(colorName: string) {
+    if (colorName == "yellow") {
+      return Color.red + Color.green;
+    } else if (colorName == "white") {
+      return Color.red + Color.green + Color.blue;
+    } else if (colorName == "magenta") {
+      return Color.red + Color.blue;
+    } else if (colorName == "cyan") {
+      return Color.green + Color.blue;
+    }
+  }
+}
+
+console.log(Color);
+// {
+//   red: 1,
+//   green: 2,
+//   blue: 4,
+//   mixColor: [Function: mixColor]
+//   '1': 'red',
+//   '2': 'green',
+//   '4': 'blue',
+// }
+```
+## 模块声明文件
+* `xxx.d.ts`文件追加已有的声明
+::: tip
+* 只在本目录及子目录生效
+:::
+### 声明扩展
+* 扩展已有说明
+```ts
+declare module "react/jsx-runtime" {
+  declare global {
+    interface Window {
+      ActiveXObject: any;
+      isCloseHint: boolean;
+    }
+
+    namespace NodeJS {
+      interface Global {
+        globalBaseUrl: string;
+      }
+    }
+  }
+}
+
+// 全局可访问
+window.isCloseHint
+```
+### JSX
+* 可以做jsx文件内的类型声明
+* 声明一个标签元素
+```tsx
+declare namespace JSX {
+  interface IntrinsicElements {
+    foo: { bar?: boolean }
+  }
+}
+
+// `foo`的元素属性类型为`{bar?: boolean}`
+<foo bar />;
 ```
