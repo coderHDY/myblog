@@ -975,6 +975,21 @@ type C = `on${Lowercase<Actions>}`;
 
 ```
 ## 第八章 工具类型
+| key                   | 作用                                          |
+| --------------------- | --------------------------------------------- |
+| Partial               | `interface`属性全部变成**可选**类型           |
+| Required              | `interface`属性全部变成**必填**类型           |
+| Readonly              | `interface`属性全部变成**只读**类型           |
+| Record                | `键的集合`和值生成**新的类型**                |
+| Pick                  | `interface`内**筛选出**一部分属性作为新的类型 |
+| Omit                  | `interface`内**剔除掉**一部分属性作为新的类型 |
+| Exclude               | `联合类型`内**剔除掉**一部分属性作为新的类型  |
+| Extract               | `联合类型`内**提取出一部分类型作为新的类型**  |
+| NunNullable           | `联合类型`内**剔除掉**`null`/`undefined`类型  |
+| Parameters            | `函数类型`提取出**参数**类型                  |
+| ConstructorParameters | `类`的**构造函数的参数**类型                  |
+| ReturnType            | `函数`的返回值类型                            |
+| InstanceType          | `类`的实例类型                                |
 ### Partial
 * 将一个属性集全部变成**可选类型**
 ```ts
