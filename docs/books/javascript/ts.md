@@ -974,6 +974,15 @@ type C = `on${Lowercase<Actions>}`;
 // type C = "onclick" | "ontouchstart" | "ontouchmove"
 
 ```
+### infer
+* 类型推断，在表达式内推断出新类型
+```ts
+type InferTypes<Type> = Type extends () =>  infer Item ? Item : never;
+
+type Fn = () => string;
+type R = InferTypes<Fn>;
+// type R = string
+```
 ## 第八章 工具类型
 | key                   | 作用                                          |
 | --------------------- | --------------------------------------------- |
