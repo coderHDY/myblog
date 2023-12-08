@@ -999,7 +999,7 @@ type R = InferTypes<Fn>;
 | ConstructorParameters | `类`的**构造函数的参数**类型                  |
 | ReturnType            | `函数`的返回值类型                            |
 | InstanceType          | `类`的实例类型                                |
-| PromiseLike           | `Promise`类型                                 |
+| PromiseLike           | 符合`Promise`的类型                           |
 ### Partial
 * 将一个属性集全部变成**可选类型**
 ```ts
@@ -1159,7 +1159,7 @@ type B = InstanceType<typeof A>;
 const a: B = new A();
 ```
 ### PromiseLike
-* 拿到Promise类型
+* 从`符合Promise规范`的表达式中拿到**Promise返回值**类型
 ```ts
 type A<T> = T extends PromiseLike<infer U> ? U : never;
 
