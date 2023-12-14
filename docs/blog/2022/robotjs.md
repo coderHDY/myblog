@@ -11,7 +11,8 @@ npm i robotjs
 const robot = require("robotjs");
 robot.setMouseDelay(2);
 
-const timer = 1000 * 60 * 10;
+// 鼠标不动触发时间
+const timer = 1000 * 60 * 2;
 
 const run = () => {
     let twoPI = Math.PI * 2.0;
