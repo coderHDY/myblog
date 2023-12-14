@@ -1494,3 +1494,40 @@ app.get("/file", (req, res) => {
 </body>
 
 ```
+## time
+* 普通interval会根据代码执行量有时间差，并且会越积累越多，逐渐不精准
+```js
+const startTime = Date.now();
+let diff = 0;
+let timer = 1000;
+let num = 0;
+
+setInterval(() => {
+  num++;
+  const current = Date.now();
+  diff = current - (startTime + num * 1000);
+  console.log(diff);
+}, timer);
+```
+* 解法
+```js
+// 解法
+const interval = () => {
+  const startTime = Date.now();
+  let diff = 0;
+  let timer = 1000;
+  let num = 0;
+
+  const timeout = () => {
+    num++;
+    let current = Date.now();
+    diff = current - (num * 1000 + startTime);
+    timer = 1000 - diff;
+    console.log(diff);
+    setTimeout(timeout, timer);
+  };
+  setTimeout(timeout, timer);
+};
+
+interval();
+```
