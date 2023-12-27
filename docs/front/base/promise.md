@@ -195,6 +195,52 @@ factorial(1000000).then(res => console.log(res));
 ```
 :::
 ::::
+### 尾调用优化对比
+* 同样是异步任务，Promise微任务队列处理速度更快
+```js
+console.time("run");
+const factorial = async (num) => {
+  let total = 1;
+  let c = num;
+
+  return new Promise((res) => {
+    const deepHandler = () => {
+      if (c === 1 || c === 0) {
+        return res(c * total);
+      }
+      total = c * total;
+      c = c - 1;
+      // setTimeout(deepHandler); // run: 1:00.031 (m:ss.mmm)
+      Promise.resolve().then(deepHandler); // run: 5.913ms
+    };
+    deepHandler();
+  });
+};
+
+const s = 50000;
+factorial(s).then((res) => {
+  console.log(res);
+  console.timeEnd("run");
+});
+```
+* 无限深度嵌套`Promise.then`也不快，因为这个一直在改变对象
+```js
+console.time("run");
+const factorial = async (num) => {
+  let cPromise = Promise.resolve(num);
+  while (num > 1) {
+    num--;
+    cPromise = cPromise.then(res => res * num);
+  }
+  return cPromise;
+};
+
+const s = 50000;
+factorial(s).then((res) => {
+  console.log(res);
+  console.timeEnd("run"); // run: 15.457ms
+});
+```
 ### 宏任务
 :::: tabs
 ::: tab label=setTimeout
