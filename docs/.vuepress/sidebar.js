@@ -80,7 +80,14 @@ const front = {
                 'recall',
                 'chart',
             ]
-        }
+        },
+        {
+            title: '设计模式',
+            collapsable: false,
+            children: [
+                'designPattern',
+            ]
+        },
     ],
     '/front/interview/': [
         '',
