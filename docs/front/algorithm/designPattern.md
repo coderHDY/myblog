@@ -433,3 +433,98 @@ const model = new Model(modeMap.rotate);
 model.show();
 model.hide();
 ```
+## 组合模式
+* 在对象间形成树形结构
+* 组合模式中基本对象和组合对象被一致对待
+* 无需关心对象有多少层，只需要在根部进行统一调用
+* 例如：vue/react的组件模式，父组件调用自组件方法相同，可以无限嵌套，同时将复杂的页面进行层级分类
+
+## 命令模式
+* 每个接收者只负责接受命令，做对应处理
+* 发布者只负责发布命令，调用命令对象
+* 核心：功能和调用解藕
+
+## 宏命令模式
+* 集合处理的命令模式
+* 例：canvas动画，宏观调每一帧的渲染指令，渲染指令内调每个动画块的渲染指令
+```js
+class Snow {
+  render() {
+    console.log("雪花渲染");
+  }
+}
+class CanvasAnimation {
+  snowList = [];
+  add() {
+    this.snowList.push(new Snow());
+  }
+  // 宏命令调用子命令集合
+  render() {
+    this.snowList.forEach(s => s.render());
+  }
+}
+const ca = new CanvasAnimation();
+
+ca.add();
+ca.add();
+ca.add();
+
+ca.render();
+// 雪花渲染
+// 雪花渲染
+// 雪花渲染
+```
+## 迭代器模式
+* 将对象/数组值遍历传入操作方法
+* `Array`/`map`/`set`/`string`/`NodeList`默认具有迭代器接口，其他可以用ES6方法自己实现
+```js
+const o = {
+  name: "黄",
+  age: 18,
+  *[Symbol.iterator]() {
+    for (let key in o) {
+      yield this[key];
+    }
+  },
+};
+
+// 迭代器操作
+for (let v of o) {
+  console.log(v);
+}
+// 黄
+// 18
+```
+## 职责链模式
+* 把各个职责分开，用链条形式调用
+```js
+const checkLen = (v) => v.length > 6 || "请输入六位以上字符串";
+const checkType = (v) => typeof v === "string" || "请输入字符串";
+const checkSymbol = (v) => !(/[\+\-\*\/,\.\?]/.test(v)) || "请勿输入特殊符号";
+
+class Checker {
+  rules = [];
+  addRule(rule) {
+    this.rules.push(rule);
+  }
+  check(v) {
+    for (let r of this.rules) {
+      let ans = r(v);
+      if (ans !== true) {
+        return ans;
+      }
+    }
+    return true;
+  }
+}
+
+const checker = new Checker();
+checker.addRule(checkType);
+checker.addRule(checkLen);
+checker.addRule(checkSymbol);
+
+console.log(checker.check(2));            // 请输入字符串
+console.log(checker.check("2"));          // 请输入六位以上字符串
+console.log(checker.check("28******"));   // 请勿输入特殊符号
+console.log(checker.check("28093joker")); // true
+```
