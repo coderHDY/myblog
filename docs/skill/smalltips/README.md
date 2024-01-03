@@ -191,3 +191,8 @@ console.log('test');
 * 访达 -> shift + command + G
 ### vscode配置文件
 * commond + shift + p -> default settings
+## macAPP清除互联网下载标志
+* 路径换成.app所在路径，在`应用程序`->`显示包内容`可以查看
+```shell
+sudo xattr -r -d com.apple.quarantine /path/to/application.app
+```
