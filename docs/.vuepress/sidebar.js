@@ -270,6 +270,7 @@ const skill = {
         '',
         'vuepress',
         'vscode',
+        'process',
     ]
 }
 
