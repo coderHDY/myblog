@@ -209,6 +209,10 @@ ReactDOM.render(
     ```js
     const VDOM = (<h1 style={{backgroundColor: 'red'}}>Hello React!</h1>);
     ```
+* style写大部分数字不用加px,`lineHeight需要`
+    ```jsx
+    const VDOM = (<h1 style={{height: 100}}>Hello React!</h1>);
+    ```
 :::
 ::: tab label=注释
 * 注释写法
