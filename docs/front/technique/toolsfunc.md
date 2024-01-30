@@ -1531,3 +1531,20 @@ const interval = () => {
 
 interval();
 ```
+## DOM尺寸变化
+* 只有opera不支持，可以用polyfill进行支持
+```js
+useEffect(() => {
+  if (!containerRef.current) {
+    return;
+  }
+  const resizeObserver = new ResizeObserver((entries) => {
+    const height = entries[0].contentRect.height;
+    setContainerHeight(height);
+  });
+  resizeObserver.observe(containerRef.current);
+  return () => {
+    resizeObserver.disconnect();
+  };
+}, [containerRef.current]);
+```
