@@ -1197,3 +1197,27 @@ root.render(React.createElement(MyApp, null));
 1. props不可变
 2. `React.StrictMode`下初始化会让组件执行两次，以此来更明显的发现副作用BUG
 :::
+## 经验总结
+* `useMemo`直接导出变量比`useState`性能好
+```tsx
+const useDivs = () => {
+    // 性能好
+  // const showRowDivs = useMemo(() => {
+  //   const startIdx = getStartIdx();
+  //   const endIdx = getEndIdx();
+  //   return calendars.slice(startIdx, endIdx);
+  // }, [calendars, horContainerWidth, scrollLeft, calendarGranularity, offsetTableUnit, DEFAULT_CEIL_WIDTH]);
+
+  // 性能比较差
+  const [showRowDivs, setShoeRowDivs] = useState<TwGanttCalendarVirtualBgcParams[]>([]);
+  useEffect(() => {
+    const startIdx = getStartIdx();
+    const endIdx = getEndIdx();
+    setShoeRowDivs(calendars.slice(startIdx, endIdx));
+  }, [calendars, horContainerWidth, scrollLeft, calendarGranularity, offsetTableUnit, DEFAULT_CEIL_WIDTH]);
+
+  return {
+    showRowDivs
+  };
+}
+```
