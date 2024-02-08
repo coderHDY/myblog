@@ -1198,7 +1198,7 @@ root.render(React.createElement(MyApp, null));
 2. `React.StrictMode`下初始化会让组件执行两次，以此来更明显的发现副作用BUG
 :::
 ## 经验总结
-* `useMemo`直接导出变量比`useState`性能好
+* `useMemo`直接导出变量比`useState`性能好，在高频触发的事件中算是性能优化的点
 ```tsx
 const useDivs = () => {
     // 性能好
