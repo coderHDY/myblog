@@ -6,7 +6,7 @@ date: 2024-02-08
 ### polyline
 * `首尾可以不相连`的直线构成闭合形状
 * 专有属性：`points`
-::: codePen
+::: codePen height=170
 ```html
 <svg viewBox="0 0 200 100">
   <polyline points="0,100 50,25 50,75 100,0" />
@@ -18,7 +18,7 @@ date: 2024-02-08
 ### polygon
 * `首尾相连`的直线构成闭合形状
 * * 专有属性：`points`
-::: codePen
+::: codePen height=170
 ```html
 <svg viewBox="0 0 200 100">
   <polygon points="0,100 50,25 50,75 100,0" />
@@ -29,7 +29,7 @@ date: 2024-02-08
 :::
 ### line
 * 一条直线
-::: codePen
+::: codePen height=140
 ```html
 <svg viewBox="0 0 200 200">
   <line x1="20" y1="80" x2="100" y2="30" stroke="black" />
@@ -39,7 +39,7 @@ date: 2024-02-08
 ### circle
 * 一个圆心一个半径的圆
 * 专有属性：`cx`，`cy`，`r`
-::: codePen
+::: codePen height=160
 ```html
 <svg viewBox="0 0 200 200">
   <circle cx="50" cy="50" r="50" fill="blue" />
@@ -52,7 +52,7 @@ date: 2024-02-08
   * `x`，`y`
   * `width`，`height`
   * `rx`，`ry`
-::: codePen
+::: codePen height=100
 ```html
 <svg viewBox="0 0 400 400">
   <rect width="100" height="100" />
@@ -314,7 +314,7 @@ date: 2024-02-08
 ### 椭圆曲线 A-a
 >A、a 当前为`椭圆的起点`，其他参数顺序为:  
 >A `x半径` `y半径` `相对于x轴的顺时针旋转角度` `大弧线1还是小弧线0` `顺时针旋转的弧线1还是逆时针旋转的弧线0` `终点坐标x,终点坐标y`  
-::: codePen
+::: codePen height=130
 ```html
 <svg viewBox="0 0 50 50">
   <path
@@ -367,3 +367,10 @@ date: 2024-02-08
 </svg>
 ```
 :::
+## 基础属性
+* `stroke-width`: 线条宽度，支持css设置
+* `stroke`：线条颜色
+* `fill`：填充颜色/none
+* `stroke-dasharray`：虚线间隔("2")
+* 组合使用
+  * `<g id="xxx"></g>` `<use xlink:href="#xxx" x="60" />`
