@@ -103,6 +103,185 @@ date: 2024-02-08
 </svg>
 ```
 :::
+### linearGradient
+* `defs`定义svg里面不表示但是可以调用的内容
+* style里`<![CDATA[ css ]]>`写css
+* `x1,y1,x2,y2`组合定义渐变方向默认横向
+* `xlink:href="#Gradient1"`复用之前的渐变块的定义内容
+* 可以用`css`定义或者`<stop>`元素来定义渐变过程
+::: codePen height=250
+```html
+<svg width="120" height="240">
+  <defs>
+    <linearGradient id="Gradient1">
+      <stop class="stop1" offset="0%" />
+      <stop class="stop2" offset="50%" />
+      <stop class="stop3" offset="100%" />
+    </linearGradient>
+    <linearGradient id="Gradient2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="50%" stop-color="black" stop-opacity="0" />
+      <stop offset="100%" stop-color="blue" />
+    </linearGradient>
+    <style type="text/css">
+      <![CDATA[
+              #rect1 { fill: url(#Gradient1); }
+              .stop1 { stop-color: red; }
+              .stop2 { stop-color: black; stop-opacity: 0; }
+              .stop3 { stop-color: blue; }
+            ]]>
+    </style>
+  </defs>
+
+  <rect id="rect1" x="10" y="10" rx="15" ry="15" width="100" height="100" />
+  <rect
+    x="10"
+    y="120"
+    rx="15"
+    ry="15"
+    width="100"
+    height="100"
+    fill="url(#Gradient2)" />
+</svg>
+```
+:::
+* `xlink:href`复用
+::: codePen height=140 width=300
+```html
+<svg width="300" height="240">
+  <defs>
+  <linearGradient id="Gradient1">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="50%" stop-color="black" stop-opacity="0" />
+      <stop offset="100%" stop-color="blue" />
+  </linearGradient>
+  <linearGradient
+    id="Gradient2"
+    x1="0"
+    x2="0"
+    y1="0"
+    y2="1"
+    xlink:href="#Gradient1" />
+  </defs>
+
+  <rect x="10" y="10" rx="20" ry="20" width="100" height="100" fill="url(#Gradient1)" />
+  <rect x="120" y="10" rx="20" ry="20" width="100" height="100" fill="url(#Gradient2)" />
+</svg>
+```
+:::
+### radialGradient
+* `defs`定义svg里面不表示但是可以调用的内容
+* style里`<![CDATA[ css ]]>`写css
+* `xlink:href="#Gradient1"`复用之前的渐变块的定义内容
+* 可以用`css`定义或者`<stop>`元素来定义渐变过程
+* `cx="0.25" cy="0.25" r="0.25"`组合定义渐变圆，默认中心
+* `fx,fy`定义焦点
+::: codePen height=250
+```html
+<svg width="120" height="240">
+  <defs>
+    <radialGradient id="RadialGradient1">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="100%" stop-color="blue" />
+    </radialGradient>
+    <radialGradient id="RadialGradient2" cx="0.25" cy="0.25" r="0.25">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="100%" stop-color="blue" />
+    </radialGradient>
+  </defs>
+
+  <rect
+    x="10"
+    y="10"
+    rx="15"
+    ry="15"
+    width="100"
+    height="100"
+    fill="url(#RadialGradient1)" />
+  <rect
+    x="10"
+    y="120"
+    rx="15"
+    ry="15"
+    width="100"
+    height="100"
+    fill="url(#RadialGradient2)" />
+</svg>
+```
+:::
+* `fx,fy`定义焦点
+::: codePen height=250
+```html
+<svg width="120" height="240">
+  <defs>
+    <radialGradient id="RadialGradient1">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="100%" stop-color="blue" />
+    </radialGradient>
+    <radialGradient id="RadialGradient2" fx="0.25" fy="0.25">
+      <stop offset="0%" stop-color="red" />
+      <stop offset="100%" stop-color="blue" />
+    </radialGradient>
+  </defs>
+
+  <rect
+    x="10"
+    y="10"
+    rx="15"
+    ry="15"
+    width="100"
+    height="100"
+    fill="url(#RadialGradient1)" />
+  <rect
+    x="10"
+    y="120"
+    rx="15"
+    ry="15"
+    width="100"
+    height="100"
+    fill="url(#RadialGradient2)" />
+</svg>
+```
+:::
+### pattern
+* `<pattern>` 需要放在 SVG 文档的 `<defs>` 内部
+* `defs`定义svg里面不表示但是可以调用的内容
+::: codePen height=250
+```html
+<svg width="200" height="200">
+  <defs>
+    <linearGradient id="Gradient1">
+      <stop offset="5%" stop-color="white" />
+      <stop offset="95%" stop-color="blue" />
+    </linearGradient>
+    <linearGradient id="Gradient2" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="5%" stop-color="red" />
+      <stop offset="95%" stop-color="orange" />
+    </linearGradient>
+
+    <pattern id="Pattern" x="0" y="0" width=".25" height=".25">
+      <rect x="0" y="0" width="50" height="50" fill="skyblue" />
+      <rect x="0" y="0" width="25" height="25" fill="url(#Gradient2)" />
+      <circle
+        cx="25"
+        cy="25"
+        r="20"
+        fill="url(#Gradient1)"
+        fill-opacity="0.5" />
+    </pattern>
+  </defs>
+
+  <rect
+    fill="url(#Pattern)"
+    stroke="black"
+    x="0"
+    y="0"
+    width="200"
+    height="200" />
+</svg>
+```
+:::
+
 ## 特殊类型
 ### path
 * 用点画出任意元素
@@ -152,7 +331,22 @@ date: 2024-02-08
 </style>
 ```
 :::
+### g
+* 把一组图像组合成一个形状
+* 默认会渲染，可以用defs包裹就不会被渲染
+::: codePen height=70
+```html
+<svg width="200" height="200">
+  <g fill="red" id="doubleRect">
+    <rect x="0" y="0" width="10" height="10" />
+    <rect x="20" y="0" width="10" height="10" />
+  </g>
 
+  <use xlink:href="#doubleRect" y="20" />
+  <use xlink:href="#doubleRect" y="40" />
+</svg>
+```
+:::
 ## d
 * [链接](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Attribute/d)
   * **`大写坐标相对起始位置，小写坐标相对当前位置`**
@@ -204,7 +398,7 @@ date: 2024-02-08
 :::
 ### 三次贝塞尔 C-c-S-s
 >C、c(当前位置做起点，第一个x,y作为`起始弧度控制点`，第二个x,y作为`终点弧度控制点`，第三个x,y作为`终点`)  
->S、s(当前位置做起点，第一个x,y作为`终点弧度控制点`，第二个x,y作为`终点`，`起点弧度控制点`是第一个x,y的映射点)
+>S、s(当前位置做起点，第一个x,y作为`终点弧度控制点`，第二个x,y作为`终点`，`起点弧度控制点`是**前一个C或S的第二个弧度控制点根据起点的对称点**)
 ::: codePen height=150
 ```html
 <svg viewBox="0 0 200 200">
@@ -370,7 +564,170 @@ date: 2024-02-08
 ## 基础属性
 * `stroke-width`: 线条宽度，支持css设置
 * `stroke`：线条颜色
-* `fill`：填充颜色/none
+* `fill`：填充颜色/none/transparent
 * `stroke-dasharray`：虚线间隔("2")
+* `fill-opacity`：填充透明度("0.5")
+* `stroke-opacity`：线条透明度("0.8")
+* `stroke-linecap`：描边线条特征("butt" / "square" / "round")
+* `opacity`定义透明度
 * 组合使用
   * `<g id="xxx"></g>` `<use xlink:href="#xxx" x="60" />`
+### stroke-linecap
+* 线条填充方法
+  * butt: 填充线条两边
+  * square: 填充线条四周
+  * round: 填充线条四周并且加radius
+::: codePen height=130
+```html
+<svg width="160" height="140">
+  <line x1="40" x2="120" y1="20" y2="20" stroke="black" stroke-width="20" stroke-linecap="butt"/>
+  <line x1="40" x2="120" y1="60" y2="60" stroke="black" stroke-width="20" stroke-linecap="square"/>
+  <line x1="40" x2="120" y1="100" y2="100" stroke="black" stroke-width="20" stroke-linecap="round"/>
+
+  <line x1="40" x2="120" y1="20" y2="20" stroke="red" stroke-width="1" />
+  <line x1="40" x2="120" y1="60" y2="60" stroke="red" stroke-width="1" />
+  <line x1="40" x2="120" y1="100" y2="100" stroke="red" stroke-width="1" />
+</svg>
+```
+:::
+### stroke-linecap
+* 线条转角填充方法
+  * butt: 填充线条两边
+  * square: 填充线条四周
+  * round: 填充线条四周并且加radius
+::: codePen height=250
+```html
+<svg width="160" height="280">
+  <polyline points="40 60 80 20 120 60" stroke="black" stroke-width="20"
+      stroke-linecap="butt" fill="none" stroke-linejoin="miter"/>
+
+  <polyline points="40 140 80 100 120 140" stroke="black" stroke-width="20"
+      stroke-linecap="round" fill="none" stroke-linejoin="round"/>
+
+  <polyline points="40 220 80 180 120 220" stroke="black" stroke-width="20"
+      stroke-linecap="square" fill="none" stroke-linejoin="bevel"/>
+
+  <polyline points="40 60 80 20 120 60" stroke="red" stroke-width="2" fill="none" />
+  <polyline points="40 140 80 100 120 140" stroke="red" stroke-width="2" fill="none" />
+  <polyline points="40 220 80 180 120 220" stroke="red" stroke-width="2" fill="none" />
+</svg>
+```
+:::
+## 变形
+### 平移
+::: codePen height=70
+```html
+<svg width="200" height="200">
+  <rect x="0" y="0" width="10" height="10" />
+  <rect x="0" y="0" width="10" height="10" transform="translate(30,40)" />
+</svg>
+```
+:::
+### 旋转
+::: codePen height=50
+```html
+<svg>
+  <rect x="0" y="0" width="10" height="10" />
+  <rect x="0" y="0" width="10" height="10" transform="translate(30),rotate(45)" />
+</svg>
+```
+:::
+### 缩放
+::: codePen height=50
+```html
+<svg>
+  <rect x="0" y="0" width="10" height="10" />
+  <rect x="0" y="0" width="10" height="10" transform="translate(30),scale(3)" />
+</svg>
+```
+:::
+### 剪裁
+* `clipPath`定义clipPath剪裁路径
+::: codePen height=100
+```html
+<svg>
+  <defs>
+    <clipPath id="cut-off-bottom">
+      <rect x="0" y="0" width="100" height="100" />
+    </clipPath>
+  </defs>
+
+  <circle cx="100" cy="100" r="100" clip-path="url(#cut-off-bottom)" />
+</svg>
+```
+:::
+### 折罩
+* `<mask>`定义遮罩层
+* 元素中的`mask`调用遮罩层的id
+::: codePen
+```html
+<svg>
+  <defs>
+    <linearGradient id="Gradient">
+      <stop offset="0" stop-color="white" stop-opacity="0" />
+      <stop offset="1" stop-color="white" stop-opacity="1" />
+    </linearGradient>
+
+    <mask id="Mask">
+      <rect x="0" y="0" width="200" height="200" fill="url(#Gradient)" />
+    </mask>
+  </defs>
+
+  <rect x="0" y="0" width="200" height="200" fill="green" />
+  <rect x="0" y="0" width="200" height="200" fill="red" mask="url(#Mask)" />
+</svg>
+```
+:::
+
+### 透明
+* fill-opacity：填充透明度
+* stroke-opacity：描边透明度
+* opacity：全部透明
+>描边将绘制在填充的上面。因此，如果你在一个元素上设置了描边透明度，但它同时设有填充，则描边的一半应用填充色，另一半将应用背景色
+::: codePen width=200 height=200
+```html
+<svg width="200" height="200">
+  <rect x="0" y="0" width="200" height="200" fill="blue" />
+
+  <!-- 原色 -->
+  <circle
+    cx="50"
+    cy="50"
+    r="25"
+    stroke="yellow"
+    stroke-width="10"
+    fill="red" />
+
+  <!-- 填充半透明 -->
+  <circle
+    cx="150"
+    cy="50"
+    r="25"
+    stroke="yellow"
+    stroke-width="10"
+    fill-opacity="0.5"
+    fill="red" />
+
+  <!-- 全部半透明 -->
+  <circle
+    cx="50"
+    cy="150"
+    r="25"
+    stroke="yellow"
+    stroke-width="10"
+    opacity="0.5"
+    fill="red" />
+
+  <!-- 描边半透明 -->
+  <circle
+    cx="150"
+    cy="150"
+    r="25"
+    stroke="yellow"
+    stroke-width="10"
+    stroke-opacity="0.5"
+    fill="red" />
+</svg>
+```
+:::
+
