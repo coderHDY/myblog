@@ -319,25 +319,39 @@ date: 2024-02-13
 :::
 ::: codePen width=300
 ```html
-<svg width="300" height="200">
-  <path
-    id="myPath"
-    d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
-    fill="transparent"
-    stroke="black"
-    stroke-width="2"
-    stroke-dasharray="400"
-    stroke-dashoffset="400"
-  >
-    <animate
-      attributeName="stroke-dashoffset"
-      dur="3s"
-      values="400;0"
-      keyTimes="0;1"
-      fill="freeze"
-    />
-  </path>
-</svg>
+<body>
+  <svg width="300" height="200">
+    <path
+      id="myPath"
+      d="M10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80"
+      fill="transparent"
+      stroke="black"
+      stroke-width="2"
+    >
+      <animate
+        id="myAnimate"
+        attributeName="stroke-dashoffset"
+        dur="2s"
+        keyTimes="0;1"
+        fill="freeze"
+        begin="2s"
+      />
+    </path>
+  </svg>
+
+  <script>
+    // 通过设置 stroke-dasharray stroke-dashoffset 配合动画，做出线条逐渐延伸效果
+    document.addEventListener("DOMContentLoaded", function () {
+      const path = document.getElementById("myPath");
+      const animate = myPath.querySelector("animate");
+      const pathLength = path.getTotalLength();
+      path.setAttribute("stroke-dasharray", pathLength);
+      path.setAttribute("stroke-dashoffset", pathLength);
+
+      animate.setAttribute("values", `${pathLength};0`);
+    });
+  </script>
+</body>
 ```
 :::
 ### accumulate
