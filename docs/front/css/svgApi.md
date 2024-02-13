@@ -614,7 +614,9 @@ date: 2024-02-08
 ```
 :::
 ## 变形
+* `transform`可用元素：`a`, `circle`, `clipPath`, `defs`, `ellipse`, `foreignObject`, `g`, `image`, `line`, `path`, `polygon`, `polyline`, `rect`, `switch`, `text`, `use`
 ### 平移
+* `translate(<x> [<y>])`
 ::: codePen height=70
 ```html
 <svg width="200" height="200">
@@ -624,20 +626,44 @@ date: 2024-02-08
 ```
 :::
 ### 旋转
+* `rotate(<a> [<x> <y>])`：a角度，单位度。后两个数为旋转中心，默认路径起点(0,0)
 ::: codePen height=50
 ```html
 <svg>
   <rect x="0" y="0" width="10" height="10" />
   <rect x="0" y="0" width="10" height="10" transform="translate(30),rotate(45)" />
+  <rect x="0" y="0" width="10" height="10" transform="translate(60),rotate(45, 5, 5)" />
 </svg>
 ```
 :::
 ### 缩放
+* `scale(<x> [<y>])`：如果不提供y，默认 y=x
 ::: codePen height=50
 ```html
 <svg>
   <rect x="0" y="0" width="10" height="10" />
   <rect x="0" y="0" width="10" height="10" transform="translate(30),scale(3)" />
+</svg>
+```
+:::
+### 倾斜
+* `skewX(<a>)`：**以Y轴为对称轴**，沿X轴倾斜角度，单位度
+* `skewY(<a>)`：**以X轴为对称轴**，沿X轴倾斜角度，单位度
+::: codePen height=150
+```html
+<svg viewBox="-5 -5 20 20">
+  <rect x="-3" y="-3" width="6" height="6" />
+
+  <rect x="-3" y="-3" width="6" height="6" fill="red" transform="skewX(30)" />
+</svg>
+```
+:::
+::: codePen height=150
+```html
+<svg viewBox="-5 -5 20 20">
+  <rect x="-3" y="-3" width="6" height="6" />
+
+  <rect x="-3" y="-3" width="6" height="6" fill="red" transform="skewY(30)" />
 </svg>
 ```
 :::
@@ -656,7 +682,7 @@ date: 2024-02-08
 </svg>
 ```
 :::
-### 折罩
+### 遮罩
 * `<mask>`定义遮罩层
 * 元素中的`mask`调用遮罩层的id
 ::: codePen
@@ -678,7 +704,6 @@ date: 2024-02-08
 </svg>
 ```
 :::
-
 ### 透明
 * fill-opacity：填充透明度
 * stroke-opacity：描边透明度
@@ -730,4 +755,3 @@ date: 2024-02-08
 </svg>
 ```
 :::
-

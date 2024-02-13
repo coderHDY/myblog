@@ -106,7 +106,7 @@ const front = {
     {
       title: "SVG",
       collapsable: false,
-      children: ["svg", "svgApi"],
+      children: ["svg", "svgApi", "svgAnimate"],
     },
   ],
   "/front/vue2/": ["", "props", "router", "reactive"],
