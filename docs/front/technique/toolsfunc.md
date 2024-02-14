@@ -1548,3 +1548,9 @@ useEffect(() => {
   };
 }, [containerRef.current]);
 ```
+## 清除鼠标选中项
+```js
+const removeDOMSelect = () => {
+  window.getSelection()?.removeAllRanges();
+};
+```
