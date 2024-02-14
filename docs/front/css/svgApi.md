@@ -347,6 +347,25 @@ date: 2024-02-08
 </svg>
 ```
 :::
+### marker
+* `orient`: auto(跟随最终点的方向做旋转)
+* `markerHeight`：视口高度
+* `markerWidth`：视口宽度
+* `refX`/`refY`：绝对位置偏移量
+* `viewBox`：marker自己的视口大小
+::: codePen
+```html
+<svg width="200" height="200">
+  <defs>
+    <marker id="triangle"  viewBox="0 0 10 10" markerWidth="10" markerHeight="10" refX="1" refY="5"  orient="auto">
+      <polygon points="0,0 10,5 0,10" fill="red"/>
+    </marker>
+  </defs>
+  <polyline points="0,0 100,100" marker-end="url(#triangle)" 
+    stroke="black"/>
+</svg>
+```
+:::
 ## d
 * [链接](https://developer.mozilla.org/zh-CN/docs/Web/SVG/Attribute/d)
   * **`大写坐标相对起始位置，小写坐标相对当前位置`**
@@ -570,6 +589,7 @@ date: 2024-02-08
 * `stroke-opacity`：线条透明度("0.8")
 * `stroke-linecap`：描边线条特征("butt" / "square" / "round")
 * `opacity`定义透明度
+* `mark-end`：形状最终顶点的标记图形，并且自带旋转方向为最终顶点的方向
 * 组合使用
   * `<g id="xxx"></g>` `<use xlink:href="#xxx" x="60" />`
 ### stroke-linecap
