@@ -43,7 +43,7 @@ date: 2021-12-25
 |solid \| double \| dotted \| dashed \| wavy| 线的样式|
 |1px|粗细|
 :::
-![](./assets/textdecoration.png)
+::: codePen height=50
 ```html
 <body>
     <div>我叫张三</div>
@@ -55,6 +55,7 @@ date: 2021-12-25
     </style>    
 </body>
 ```
+:::
 ## text-overflow
 ::: tip text-overflow
 * 如何处理溢出文本
