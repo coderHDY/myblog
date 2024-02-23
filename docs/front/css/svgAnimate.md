@@ -274,8 +274,8 @@ date: 2024-02-13
       attributeType="XML"
       dur="4s"
       repeatCount="indefinite"
-      values="   10 ; 130  ; 10 "
-      keyTimes=" 0  ; 0.4 ; 1  "
+      values="10;130;10"
+      keyTimes="0;0.4;1"
     />
 
     <animate
@@ -284,8 +284,8 @@ date: 2024-02-13
       dur="4s"
       repeatCount="indefinite"
 
-      values="   10 ; 130  ; 10 "
-      keyTimes=" 0  ; 0.85 ; 1  "
+      values="10;130;10"
+      keyTimes="0;0.85;1"
     />
 
 </circle>
