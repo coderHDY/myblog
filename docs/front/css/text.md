@@ -56,6 +56,44 @@ date: 2021-12-25
 </body>
 ```
 :::
+::: codePen height=250
+```html
+<body>
+  <p class="text1">
+    我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三
+  </p>
+  <p class="text2">
+    <span>
+      我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三我叫张三
+    </span>
+  </p>
+
+  <style>
+    .text1:hover {
+      text-decoration: rgb(164, 141, 245) underline 3px;
+    }
+
+    .text2 span {
+      background: linear-gradient(
+          to right,
+          rgb(164, 141, 245) 0%,
+          rgb(20, 200, 0) 100%
+        )
+        right bottom;
+      background-size: 0% 2px;
+      background-repeat: no-repeat;
+      transition: 0.7s;
+      /* transition: background-size 0.7s; */
+    }
+    .text2:hover span {
+      background-position: left bottom;
+      background-size: 100% 2px;
+    }
+  </style>
+</body>
+
+```
+:::
 ## text-overflow
 ::: tip text-overflow
 * 如何处理溢出文本
