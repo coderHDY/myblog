@@ -101,7 +101,7 @@ const front = {
     {
       title: "css动画",
       collapsable: false,
-      children: ["animation", "transition", "transform", "effects", "svg"],
+      children: ["animation", "transition", "transform", "effects"],
     },
     {
       title: "SVG",
