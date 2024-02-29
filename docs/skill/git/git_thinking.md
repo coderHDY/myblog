@@ -28,3 +28,7 @@ api.github.com/repos/coderHDY/myblog
 ```shell
 git remote prune origin
 ```
+## 配置镜像
+```shell
+npm config set registry https://registry.npmmirror.com
+```
