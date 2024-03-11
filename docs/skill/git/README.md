@@ -41,11 +41,11 @@ cat /etc/.gitconfig
 * 配置本地仓库信息
 ```shell
 # 本地仓库配置
-git config user.name 'coderWhy'
+git config user.name 'coderWdy'
 git config user.email 'huangdeyu2020@163.com'
 
-git config --local user.email 'huangdeyu2020@163.com'
-git config --local user.name 'coderWhy'
+git config --local user.name 'coderHdy'
+git config --local user.email '986005715@qq.com'
 
 # 全局仓库配置
 git config --global user.name 'huangdeyu'
