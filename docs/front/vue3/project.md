@@ -47,7 +47,7 @@ npm i prettier -D
     // 使用tab缩进，默认false
     "useTabs": false,
     // 使用分号, 默认true
-    "semi": false,
+    "semi": true,
     // 使用单引号, 默认false(在jsx中配置无效, 默认都是双引号)
     "singleQuote": false,
     // 行尾逗号,默认none,可选 none|es5|all
