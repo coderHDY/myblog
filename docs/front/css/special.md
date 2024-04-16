@@ -472,3 +472,19 @@ input[type=search]::-ms-clear: {
 ```css
 -webkit-overflow-scrolling: touch;
 ```
+## 手机点击元素背景色
+* 关闭手机下元素被点击的黑色阴影
+```css
+input {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0),
+}
+```
+## 手机search按钮
+* 手机键盘的search按钮，keyCode是enter
+1. 用`form`包裹，且得有`action`参数
+2. `input`的`type`是`search`
+```html
+<form action="">
+  <input type="search" placeholder="" placeholder="请输入搜索" />
+</form>
+```

@@ -394,3 +394,9 @@ date: 2021-12-27
 </body>
 ```
 :::
+## 特殊技巧
+* input框的空选择器
+* input框不能用`:empty`判断空
+```css
+input:not(:placeholder-shown) {}
+```
