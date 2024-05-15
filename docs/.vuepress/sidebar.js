@@ -228,6 +228,13 @@ const books = {
       children: [""],
     },
   ],
+  "/books/skill/": [
+    {
+      title: "项目管理",
+      collapsable: false,
+      children: [""],
+    },
+  ],
 };
 
 module.exports = {

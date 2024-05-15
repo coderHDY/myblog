@@ -113,6 +113,10 @@ const books = {
             text: '计算机',
             link: '/books/computer/'
         },
+        {
+            text: '考证',
+            link: '/books/skill/'
+        },
     ]
 }
 
