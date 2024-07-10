@@ -29,8 +29,8 @@
     "vuepress-plugin-sitemap": "2.3.1"
   },
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "build": "vuepress build docs",
+    "docs:dev": "NODE_ENV=development vuepress dev docs",
+    "build": "NODE_ENV=production vuepress build docs",
     "start": "pm2 start npm -- run docs:dev --name blog",
     "stop": "pm2 stop ecosystem.config.js",
     "deploy": "sh deploy.sh && pm2 restart all"
