@@ -68,6 +68,7 @@ module.exports = [
   }],
   require('./vuepress-plugin-jsonld'),
   require('./bubble'),
+  require('./artillery'),
   (options, context) => ({
 
     // Vue实例上挂载上自己开发的插件
