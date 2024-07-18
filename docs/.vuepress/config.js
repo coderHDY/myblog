@@ -109,7 +109,8 @@ module.exports = {
             repo: 'myblog',
             clientId: '7af64d26fd58ad665393',
             clientSecret: '13750c77ab2cbbc6c91bc76b8b0f16b1de1d69ee',
-            autoCreateIssue: process.env.NODE_ENV !== 'development',
+            // autoCreateIssue: process.env.NODE_ENV !== 'development',
+            autoCreateIssue: false,
             admins: ['coderHDY', 'coder-HDY'],
         }
     },
