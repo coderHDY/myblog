@@ -488,3 +488,47 @@ input {
   <input type="search" placeholder="" placeholder="请输入搜索" />
 </form>
 ```
+## 事件穿透
+::: codePen val=none select=[none, painted]
+```html{23}
+<body>
+  <div class="under"></div>
+  <div class="upper"></div>
+
+  <style>
+    .under {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100px;
+      width: 100px;
+      background-color: #f00;
+    }
+    .upper {
+      position: absolute;
+      left: 30px;
+      top: 30px;
+      height: 200px;
+      width: 200px;
+      opacity: 0.5;
+      background-color: rgb(97, 106, 97);
+      z-index: 999;
+      pointer-events: {{val}};
+    }
+  </style>
+
+  <script>
+    const under = document.querySelector(".under");
+    const upper = document.querySelector(".upper");
+
+    under.addEventListener("click", () => {
+      alert("底下的元素被点击");
+    });
+
+    upper.addEventListener("click", () => {
+      alert("顶部被点击");
+    });
+  </script>
+</body>
+```
+:::
