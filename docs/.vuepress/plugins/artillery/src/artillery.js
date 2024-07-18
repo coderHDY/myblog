@@ -1,3 +1,4 @@
+let scale = 0.2;
 class Paint {
   canvas = null;
   ctx = null;
@@ -14,7 +15,7 @@ class Paint {
 
     this.artillery = new Artillery({
       orientations: "left",
-      scale: 0.3,
+      scale: scale,
     });
     this.update();
   }
@@ -51,7 +52,7 @@ class Paint {
     this.ctx.globalCompositeOperation = "source-over";
     this.isDrawing = false;
     this.last = null;
-    this.artilleryPosition = [this.width - 80, this.height];
+    this.artilleryPosition = [this.width - (80 * scale) / 0.3, this.height];
   }
   getPixelRatioCtx = () => {
     const dpr = window.devicePixelRatio;
@@ -78,8 +79,8 @@ class Paint {
         y,
       },
       position: {
-        x: this.artilleryPosition[0] + 30 * 0.3, // 炮管转轴心 ,同 Artillery.center * scale
-        y: this.artilleryPosition[1] - 160 * 0.3,
+        x: this.artilleryPosition[0] + 30 * scale, // 炮管转轴心 ,同 Artillery.center * scale
+        y: this.artilleryPosition[1] - 160 * scale,
       },
     });
     this.bombs.push(bomb);
@@ -104,14 +105,14 @@ class Artillery {
   angle = Math.PI;
   position = [500, 500];
   orientations = "left"; // 炮口朝向: left right, 决定底座朝向
-  scale = 0.3;
+  scale = scale;
   center = {
     // 炮管转轴心
     x: 30,
     y: -40,
   };
   constructor(
-    params = { position: [500, 500], orientations: "left", scale: 0.3 }
+    params = { position: [500, 500], orientations: "left", scale: scale }
   ) {
     this.position = params.position;
     this.orientations = params.orientations;
