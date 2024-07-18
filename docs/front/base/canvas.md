@@ -338,8 +338,8 @@ ctx.scale(dpr, dpr)
         // 计算、压缩ctx2
         const { width, height } = c2.getBoundingClientRect();
         const dpr = window.devicePixelRatio;
-        c2.style.width = width;
-        c2.style.height = height;
+        c2.style.width = `${width}px`;
+        c2.style.height = `${height}px`;
         c2.width = width * dpr;
         c2.height = height * dpr;
         ctx2.scale(dpr, dpr);
@@ -363,8 +363,8 @@ ctx.scale(dpr, dpr)
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        canvas.style.width = width;
-        canvas.style.height = height;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
         canvas.width = width * dpr;
         canvas.height = height * dpr;
 
