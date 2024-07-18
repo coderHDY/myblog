@@ -389,8 +389,8 @@ const getCtx = (canvas) => {
     const width = canvasRect.width;
     const height = canvasRect.height;
 
-    canvas.style.width = width;
-    canvas.style.height = height;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     const ctx = canvas.getContext("2d");
