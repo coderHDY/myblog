@@ -2222,6 +2222,21 @@ function factorial() {
 factorial();
 ```
 :::
+::: tab label=微任务2
+* `queueMicrotask`
+```js
+const list = Array(10000).fill(1);
+function factorial() {
+    const item = list.pop();
+    if (item) {
+        console.log(item);
+        // factorial();
+        queueMicrotask(factorial);
+    }
+}
+factorial();
+```
+:::
 ::: tab label=同步优化
 * 用while循环干掉递归，速度最快
 ```js
