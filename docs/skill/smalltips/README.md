@@ -196,3 +196,9 @@ console.log('test');
 ```shell
 sudo xattr -r -d com.apple.quarantine /path/to/application.app
 ```
+
+## mac
+### mac解压rar
+```
+tar -xf xxx.rar
+```
