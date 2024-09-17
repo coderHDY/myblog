@@ -569,3 +569,11 @@ const onResize = () => {
 window.addEventListener("resize", onResize);
 onResize();
 ```
+
+## filter模糊兼容现代浏览器写法
+```css
+filter: blur(4px);
+-webkit-filter: blur(4px);
+-webkit-backdrop-filter:blur(4px);
+backdrop-filter: blur(4px);
+```
