@@ -202,3 +202,9 @@ sudo xattr -r -d com.apple.quarantine /path/to/application.app
 ```
 tar -xf xxx.rar
 ```
+
+## 网络占位图片
+```sh
+# 尺寸 颜色
+https://via.placeholder.com/400x220/ff0000
+```
