@@ -155,6 +155,13 @@ const front = {
       collapsable: false,
       children: ["storyboard", "storyboardComp"],
     },
+    {
+      title: "OC",
+      collapsable: false,
+      children: [
+        "ocBase",
+      ],
+    },
   ],
   "/front/test/": [
     {
