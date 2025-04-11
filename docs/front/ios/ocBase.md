@@ -169,7 +169,7 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
 - 当数组作为函数的参数的时候，会丢失数组的长度信息，所以需要使用`指针`来传递数组。同属传入数组长度。
   - 例子：`void func(int *arr, int len);`/`void printArr(int arr[], int len);`
   - 原因：函数参数是数组，那么该形参就是指针地址。
-
+- **数组名是一个地址常量，赋之后无法修改**
 ## 二维数组
 - 声明：`int arr[3][4];`
 - 直接赋值示例：
@@ -207,7 +207,10 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
 - 函数入参指定任意行列的数组：`void func(int rows, int cols, int arr[][cols]);`
 
 ## 字符串
-- 字符串的声明：`char str[10];`
+::: tip
+- 字符串的声明**通常用指针声明**，可以避免再赋值空间不够程序崩溃
+:::
+- 字符串的声明：`char str[10];`/`char *str = "hello world";`
 - 字符串的初始化：`char str[] = "hello world";`
 - 打印字符串：`printf("%s", str);`
 - 分割原理：字符串的最后一个多一位`\0`，用来表示字符数组结束
@@ -239,3 +242,120 @@ printf("欢迎你：%s\n名字长度：%lu\n", str, len);
     - `strcat(str1, str2)`：将字符串`str2`连接到`str1`的末尾，修改`str1`，**长度不够运行会崩溃**
     - `strcmp(str1, str2)`：比较字符串`str1`和`str2`
       - 返回值：完全相等返回`0`
+
+## 指针
+- 指针变量声明：`int *p;`/`int* p;`/`int * p;`
+- 指针变量赋值：`p = &a;`
+- 指针变量取值：`*p = 100;`
+- 指针存`NULL`值，被访问时会报错
+- 形参指针修改：
+    ```c
+    void add(int *pNum1, int *pNum2) {
+        *pNum1 += *pNum2;
+    }
+
+    int main(int argc, const char *argv[]) {
+        int num1 = 1;
+        int num2 = 2;
+        
+        add(&num1, &num2);
+        
+        printf("num1 = %d\n", num1); // 3
+        return 0;
+    }
+    ```
+- 声明二级指针：`int **p = &pNum;`，**二级指针只能存储一级指针的地址**
+- 二级指针使用：`*(*p)`，`*p`是二级指针指向的一级指针，`*(*p)`是二级指针指向的一级指针指向的值
+- 指针的加减法，单位是指针自身单位变量：`p++`，
+  - 如果指针指向的是数组，则`p++`会移动到下一个数组元素
+    ```c
+    int arr[] = {1, 2, 3, 4, 5};
+    int *p = &arr[0];
+    for (int i = 0; i < 5; i++) {
+        printf("第%d个元素是：%d\n", i, *(p + i)); // 遍历数组
+    }
+    ```
+    ```c
+    // 数组名也是指针
+    int arr[] = {1, 2, 3, 4, 5};
+    for (int i = 0; i < 5; i++) {
+        printf("第%d个元素是：%d\n", i, *(arr + i)); // 遍历数组
+    }
+    ```
+  - 如果指针指向的是结构体，则`p++`会移动到下一个结构体成员。
+- 指针数组：是一个数组，数组中每个元素都是指针。例：`int* p[3] = {&a, &b, &c};`
+- 指针之间的**减法**：两个指针之间相差多少个元素。
+    ```c
+    int arr[6]  = {1, 2, 3, 4, 5, 6};
+    int* p1 = &arr[2];
+    int* p2 = &arr[4];
+    long diff = p2 - p1;
+    printf("%ld\n", diff); // 2
+    ```
+## 指针和字符变量
+- 全局变量的指针字符变量：都存储在内存的Data区中。
+- 局部变量的指针字符变量：**字符串存储在内存的Data区中，字符串的结束符是`\0`。**
+    ```c
+    // 局部变量：
+    // 存储在栈中的字符串
+    char str1[] = "jack";
+    // 存储在Data区中的字符串
+    char* str2 = "hello";
+    ```
+- 以指针方式存储的字符串**无法通过下标修改**
+    ```c
+    char* str = "hello";
+    str[0] = 'H'; // 报错
+
+    char* str3 = "hello";
+    str3 = "rose"; // 可以
+    ```
+- 声明指针字符串的时候，会从Date区寻找是否有相同的字符串，如果有则返回该字符串的指针，如果没有则创建一个字符串，并返回该字符串的指针。
+    ```c
+    char* str1 = "hello";
+    char* str2 = "hello";
+    char* str3 = "hello";
+
+    printf("str1 = %p \n", str1); // 相同地址
+    printf("str1 = %p \n", str2); // 相同地址
+    printf("str1 = %p \n", str3); // 相同地址
+
+    printf("str1 = %s \n", str1); // hello
+    printf("str1 = %s \n", str2); // hello
+    printf("str1 = %s \n", str3); // hello
+    ```
+- 等价：`str[i] ==  *(str + i)`
+    ```c
+    char* str = "asdfghasdfgasdfgh";
+    int count = 0;
+
+    int i = 0;
+    while (*(str + i) != '\0') {
+        if (*(str + i) == 'a') {
+            count++;
+        }
+        i++;
+    }
+
+    // 等价：str[i] ==  *(str + i)
+     while (str[i] != '\0') {
+        if (str[i] == 'a') {
+            count++;
+        }
+        i++;
+    }
+    ```
+- 存储多个字符串，建议使用指针数组，可以存储不固定长度的字符串
+```c
+char* str[] = {"hello", "world", "rose"};
+for (int i = 0; i < 3; i++) {
+    printf("%s\n", str[i]);
+}
+```
+
+## 内存分区
+- 栈：存储局部变量，函数调用参数，函数返回地址，函数返回值。
+- 堆：存储动态分配的内存。允许程序员动态分配内存。
+- Bss区：存储未初始化的全局变量，静态变量，常量。
+- Data区：存储已经初始化的全局变量，静态变量，常量。
+- Text区：存储代码。
