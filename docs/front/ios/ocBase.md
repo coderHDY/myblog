@@ -11,6 +11,8 @@ date: 2025-03-17
 - 为project添加多个target：
   - 新建`Project -> Targets -> +`
   - 切换：编译链接旁边切换目标target
+- 快捷键
+  - 同时编辑一个变量`control+command+e`
 
 ## C语言基础
 - 程序只会从`main函数`开始执行
@@ -46,6 +48,8 @@ date: 2025-03-17
     - 八进制：以`0`开头，`07777777`，打印占位符`%o`
     - 十六进制：以`0x`开头，`0x12acde`，打印占位符`%x`
 - 格式化地址位：`%p`，例：：`printf("%p\n", &a);`
+- 对齐输出：`%-5d`，如`%-5d`表示输出的数字前面补空格，共5位，输出`1   `
+- 对齐输出变量控制：`printf("编号：%-*d姓名：%-*s性别：%-*s成绩：%-*.0lf\n", 4, stu.id, 15, stu.name, 5, gender, 10, stu.score);`
 
 ## scanf
 - 接收用户输入，赋值给指定变量地址`scanf("%d", &a);`
@@ -91,7 +95,13 @@ date: 2025-03-17
     printf("pwd = %d\n", pwd);
     ```
 - 清空`scanf`的缓冲区：`rewind(stdin);`
-
+- 清空缓冲区函数
+    ```c
+    void clearInputBuffer(void) {
+        int c;
+        while ((c = getchar()) != '\n' && c != EOF);
+    }
+    ```
 ## 运算
 - 如果算数运算的表达式类型是一致的，那么结果也会是这个类型
 ```c
@@ -257,6 +267,7 @@ printf("欢迎你：%s\n名字长度：%lu\n", str, len);
     - `strlen(str)`：获取字符串长度
     - `strcpy(str1, str2)`：将字符串`str2`复制到`str1`中，修改`str1`，**长度不够运行会崩溃**
     - `strcat(str1, str2)`：将字符串`str2`连接到`str1`的末尾，修改`str1`，**长度不够运行会崩溃**
+    - `strstr(str1, str2)`，在一个字符串中查找另一个字符串首次出现的位置
     - `strcmp(str1, str2)`：比较字符串`str1`和`str2`
       - 返回值：完全相等返回`0`
     - `fputs()`/`fopen`/`fclose`： 将字符串`str`写入文件/控制台
@@ -416,13 +427,73 @@ for (int i = 0; i < 3; i++) {
     printf("%s\n", str[i]);
 }
 ```
+## 指针和函数
+- 指针指向函数，可以调用
+```c
+char* getWeekDay(int weekDayNum) {
+    switch(weekDayNum) {
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday";
+        case 6:
+            return "Saturday";
+        case 7:
+            return "Sunday";
+        default:
+            return "错误值";
+    }
+}
+
+int main(int argc, const char * argv[]) {
+    // 指向外部函数的指针
+    // 函数返回值 (*指针函数名)(参数)
+    char* (*getWeekDayFn)(int weekDayNum) = getWeekDay;
+    // 通过指针调用函数
+    char* weekDay = getWeekDayFn(4);
+    printf("%s\n", weekDay);
+    return 0;
+}
+```
 
 ## 内存分区
 - 栈：存储局部变量，函数调用参数，函数返回地址，函数返回值。
 - 堆：存储动态分配的内存。允许程序员动态分配内存。
 - Bss区：存储未初始化的全局变量，静态变量，常量。
-- Data区：存储已经初始化的全局变量，静态变量，常量。
+- Data区：存储已经初始化的全局变量，静态变量，常量，**字符串**。
 - Text区：存储代码。
+::: warning
+- 字符串存储在Data区中，字符串的结束符是`\0`。所以函数可以返回字符串
+- 但是不能修以字符指针存储在Data区中的改字符串。
+```c
+char* getWeekDay(int weekDayNum) {
+    switch(weekDayNum) {
+        case 1:
+            return "Monday";
+        case 2:
+            return "Tuesday";
+        case 3:
+            return "Wednesday";
+        case 4:
+            return "Thursday";
+        case 5:
+            return "Friday";
+        case 6:
+            return "Saturday";
+        case 7:
+            return "Sunday";
+        default:
+            return "错误值";
+    }
+}
+```
+:::
 
 ## 内存使用
 - 申请内存：`malloc()`/`calloc()`/`realloc()`/`free()`
@@ -444,7 +515,7 @@ for (int i = 0; i < 3; i++) {
     //释放
     free(p);
     ```
-- `calloc()`：申请内存，返回内存地址，失败返回`NULL`，并且初始化内存为0
+- `calloc()`：**常用**，申请内存，返回内存地址，失败返回`NULL`，**并且初始化内存为0**
     ```c
     #include <stdlib.h>
 
@@ -483,3 +554,108 @@ for (int i = 0; i < 3; i++) {
     free(p1);
     ```
 - `free()`：释放内存，释放内存地址，释放内存后，内存地址变为`NULL`
+
+## static与malloc
+- static：静态变量，静态函数，静态代码块，静态方法，静态成员变量，静态成员函数。
+- static修饰全局变量：让全局变量变成**只有源文件能访问的变量**
+- static修饰局部变量：让局部变量变成只有函数能访问的变量，第一次访问初始化，后续访问复用。
+:::tip static和malloc的区别
+- calloc**可以初始化内存为0**
+- 生命周期：
+  - static：全局变量，函数，代码块，成员变量，成员函数，生命周期是整个程序。
+  - malloc：动态分配内存，生命周期是可以由程序员调用`free`释放掉
+:::
+
+## 结构体
+:::tip
+- 结构体：一种**特殊的自定义的数据类型**，可以存储多个变量，变量类型可以不同。
+- 结构体变量赋值形式是拷贝成员变量的值进行赋值
+:::
+- 初始化语法
+    ```c
+    struct Student {
+        char* name;
+        int gender;
+        float height;
+    };
+
+    int main(int argc, const char * argv[]) {
+        struct Student ming;
+        ming.name = "小明";
+        ming.gender = 1;
+        ming.height = 1.75;
+        return 0;
+    }
+    ```
+- 创建结构体时初始化
+    ```c
+    struct Student {
+        char* name;
+        int gender;
+        float height;
+    } ming,hong,fang;
+    ```
+- 简易初始化
+    ```c
+    struct Student ming = {"小明", 1, 1.75};
+    ```
+    ```c
+    struct Student ming = {
+        .name = "小明",
+        .gender = 1,
+        .height = 1.75
+    };
+    ```
+- 创建结构体指针
+    ```c{3,5}
+    struct Student fang = {"小芳", 0, 1.65};
+    struct Student* pStu = &fang;
+    // 指针访问有简写
+    (*pStu).name = "小方";
+    // 简写
+    pStu -> height = 1.70;
+    ```
+
+## 枚举
+:::tip
+- 枚举值的命名规范：**以枚举类型名称开头**，单词首字母大写
+:::
+```c
+enum WeekDay {
+    WeekDayMonday = 1,
+    WeekDayTuesday,
+    WeekDayWednesday,
+    WeekDayThursday,
+    WeekDayFriday,
+    WeekDaySaturday,
+    WeekDaySunday
+}
+
+enum Gender {
+    Male = 1,
+    Female = 2
+}
+
+Gender gender = Male;
+```
+
+## typedef
+:::tip
+- 作用：**定义类型别名**，方便使用，减少代码量，提高代码可读性。
+:::
+ - **常用简写**，为匿名结构体/枚举重命名
+```c
+// 结构体
+typedef struct {
+    int age;
+    char* name;
+} Student;
+Student xiaoming = {19, "小明"};
+
+// 枚举
+typedef enum {
+    DirectionEast,
+    DirectionWest
+} Direction;
+Direction d1 = DirectionEast;
+```
