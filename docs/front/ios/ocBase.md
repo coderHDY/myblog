@@ -3,7 +3,7 @@ title: OC开发基础-C语言基础
 date: 2025-03-17
 ---
 ## C语言编译
-- `gcc main.c`：GNU Compiler Collection
+- `gcc main.c -o my_program`：GNU Compiler Collection
 - `gcc main.c func.c -o my_program`：多文件开发
 ## Xcode配置
 - 代码练习：新建项目 - MacOS - `Command Line Tool`
@@ -21,6 +21,22 @@ date: 2025-03-17
 - `char`只能存一个字符：`char a = 'a'`，必须用`单引号`
 - `int`赋值小数会被截断，如`int a = 1.9`，结果为`1`
 - 布尔值：c语言用`int`表示，1为真，0为假
+- 只读变量：`const int a = 1;`
+- 只读指针变量：`const int * p = &a;`，**无法通过指针修改变量的值**
+    ```c
+    int a = 1;
+    int b = 2;
+    const int * p = &a;
+    *p = 5; // 报错
+    ```
+- 只读变量指针：`int * const  p = &a;`，**无法通过指针修改变量的值**
+    ```c
+    int a = 1;
+    int b = 2;
+    int * const  p = &a;
+    p = &b; // 报错
+    ```
+- 完全只读指针：`int const * const  p = &a;`
 ## printf格式化
 - `int: %d`,`float: %f`,`char: %c`,`string: %s`,`double: %lf`
 - 格式化位数：
@@ -124,6 +140,7 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
 - 函数声明和函数定义可以放在同一个文件，也可以放在不同的文件
 - 函数声明：`void funcName(int a, int b);`
 - 函数定义：`int funcName(int a, int b) { return a + b; }`
+- **只读形参**：`void printArray(const int * arr, int len);`
 
 ## 预处理指令
 ::: danger
@@ -242,6 +259,53 @@ printf("欢迎你：%s\n名字长度：%lu\n", str, len);
     - `strcat(str1, str2)`：将字符串`str2`连接到`str1`的末尾，修改`str1`，**长度不够运行会崩溃**
     - `strcmp(str1, str2)`：比较字符串`str1`和`str2`
       - 返回值：完全相等返回`0`
+    - `fputs()`/`fopen`/`fclose`： 将字符串`str`写入文件/控制台
+      - 输出到标准输出流
+        ```c
+        char* str = "hello world";
+        // 输出到标准输出流
+        fputs(str, stdout);
+        ```
+      - 输出到文件流
+        ```c
+        /**
+         * 文件打开，用一个file指针指向文件
+         * fopen第二个参数
+         * w: 写入
+         * r: 读取
+         * a: 追加
+         */
+        FILE *fp = fopen(
+            "/Users/dreamarts/Documents/coderhdy/c-study/00_base/12_指针/test.txt",
+            "w");
+        /** 输入 */
+        fputs(str, fp);
+        /** 关闭读取文件 */
+        fclose(fp);
+        ```
+    - `fgets()`：从文件流中读取字符串，返回读取的字符串长度。**安全，推荐用法**
+      - 读取标准输入流数据
+        ```c
+        char str[5];
+        printf("请输入：\n");
+        fgets(str, sizeof(str), stdin);
+        
+        // 输入的最后一位可能是\n，在字符串长度不够的时候（5 - 1 = 4）
+        unsigned long len = strlen(str);
+        if (str[len] == '\n') {
+            str[len] = '\0';
+        }
+        
+        printf("%s\n", str);
+        ```
+      - 读取文件流数据
+        ```c
+        FILE* fp = fopen("/Users/dreamarts/Documents/coderhdy/c-study/00_base/12_指针/test.txt", "r");
+        char str[100];
+        fgets(str, sizeof(str), fp);
+        printf("%s\n", str);
+        fclose(fp);
+        ```
 
 ## 指针
 - 指针变量声明：`int *p;`/`int* p;`/`int * p;`
@@ -359,3 +423,63 @@ for (int i = 0; i < 3; i++) {
 - Bss区：存储未初始化的全局变量，静态变量，常量。
 - Data区：存储已经初始化的全局变量，静态变量，常量。
 - Text区：存储代码。
+
+## 内存使用
+- 申请内存：`malloc()`/`calloc()`/`realloc()`/`free()`
+- `malloc()`：申请内存，返回内存地址，失败返回`NULL`，没申请到会有`NULL`，使用完后需要释放。
+    ```c
+    #include <stdlib.h>
+
+    int *p = malloc(sizeof(int) * 10);
+    if (p == NULL) {
+        printf("内存申请失败");
+        return 1;
+    }
+    for (int i = 0; i < 10; i++) {
+        p[i] = i + 1;
+    }
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", p[i]);
+    }
+    //释放
+    free(p);
+    ```
+- `calloc()`：申请内存，返回内存地址，失败返回`NULL`，并且初始化内存为0
+    ```c
+    #include <stdlib.h>
+
+    // calloc使用
+    int *p = calloc(10, sizeof(int));
+    if (p == NULL) {
+        printf("内存申请失败");
+        return 1;
+    }
+    for (int i = 0; i < 10; i++) {
+        p[i] = i + 1;
+    }
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", p[i]);
+    }
+    //释放
+    free(p);
+    ```
+- `realloc()`：(扩容)重新分配内存，返回内存地址，失败返回`NULL`
+    ```c
+    #include <stdlib.h>
+
+    int *p = calloc(10, sizeof(int));
+    int *p1 = realloc(p, 11);
+    if (p1 == NULL) {
+        printf("内存申请失败");
+        return 1;
+    }
+    for (int i = 0; i < 11; i++) {
+        p1[i] = i + 1;
+    }
+    for (int i = 0; i < 11; i++) {
+        printf("%d\n", p1[i]);
+    }
+    //释放
+    free(p1);
+    ```
+- `free()`：释放内存，释放内存地址，释放内存后，内存地址变为`NULL`
