@@ -155,7 +155,10 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
 ## 预处理指令
 ::: danger
 - 宏定义没有分号`;`
+- **编译之前**把程序中所有使用宏名的地方换成宏值
 - `#define LEN 10`
+- `#undef LEN`： 删除宏定义，后续代码宏不可再使用
+- 条件编译指令：`#if`、`#ifdef`、`#ifndef`、`#else`、`#elif`、`#endif`
 :::
 - 分类
   - 文件包含指令：`#include`，把头文件内容复制到当前位置
@@ -168,7 +171,48 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
   - 以`#`开头
   - 没有分号`;`
   - 预处理指令是编译器在`编译之前`处理的，所以不能在函数里面使用
+- 带参数宏，参数不需要加类型说明符
+    ```c
+    #define ADD(a, b) a + b
+    int c = ADD(10, 20);
+    printf("%d\n", c); // 30
+    ```
+- 条件编译指令`#if`：只编译部分代码，条件只能是宏，因为是在编译阶段，还没有变量
+    ```c
+    #define DEBUG 1
+    #define DEV 0
+    #define DEPLOY 0
 
+    #if DEBUG
+    printf("DEBUG 模式！\n");
+    #elif DEV
+    printf("DEV 模式！\n");
+    #elif DEPLOY
+    printf("DEPLOY 模式！\n");
+    #endif
+    ```
+- 条件编译指令`#ifdef`：判断宏**是否存在**，存在就编译，不存在就不编译
+    ```c
+    #ifdef DEBUG
+        printf("DEBUG模式！！");
+    #endif
+    ```
+- 条件编译指令`#ifndef`：判断宏**不存在**，不存在就编译，存在就不编译
+- 技巧：debug打log，只有在debug模式才会编译的log代码
+```c
+#define DEBUG 1
+#define DEV 0
+#define DEPLOY 0
+
+#if DEBUG
+    #define LOG(str, ...) printf(str, ##__VA_ARGS__)
+#else
+    #define LOG(str, ...)
+#endif
+
+LOG("DEBUG 模式！\n");
+LOG("%d\n", a);
+```
 ## 进制
 - 十进制：`10`，打印占位符`%d`
 - 二进制：以`0b`开头，`ob101010111`
@@ -554,6 +598,26 @@ char* getWeekDay(int weekDayNum) {
     free(p1);
     ```
 - `free()`：释放内存，释放内存地址，释放内存后，内存地址变为`NULL`
+
+## static和extern
+:::tip
+- 如果要声明全局变量，必须使用`static`/`extern`修饰。
+- 声明全局变量要声明在.h文件中，实现在.c文件中。
+- 区别：
+  - `static`只有当前模块能访问的变量。
+  - `extern`是外部变量，是**全局变量**，**全局变量**是**所有源文件都能访问的变量**。
+:::
+```c
+extern int num = 10; // 外部能直接操作
+static int age = 20; // 外部只能通过本文件的函数访问操作
+
+int getAge() {
+    return age;
+}
+void addAge() {
+    age++;
+}
+```
 
 ## static与malloc
 - static：静态变量，静态函数，静态代码块，静态方法，静态成员变量，静态成员函数。
