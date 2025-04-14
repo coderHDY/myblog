@@ -153,13 +153,17 @@ const front = {
     {
       title: "storyboard",
       collapsable: false,
-      children: ["storyboard", "storyboardComp"],
+      children: [
+        "storyboard",
+        "storyboardComp"
+      ],
     },
     {
       title: "OC",
       collapsable: false,
       children: [
         "ocBase",
+        "oc",
       ],
     },
   ],
