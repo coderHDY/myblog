@@ -164,6 +164,7 @@ const front = {
       children: [
         "ocBase",
         "oc",
+        "ocSkills",
       ],
     },
   ],

@@ -11,9 +11,10 @@ date: 2025-03-17
 - 为project添加多个target：
   - 新建`Project -> Targets -> +`
   - 切换：编译链接旁边切换目标target
-- 快捷键
-  - 同时编辑一个变量`control+command+e`
-
+## Xcode快捷键
+- 同时编辑一个变量`control+command+e`
+## Xcode文档安装
+- `Window -> Developer Documentation`
 ## C语言基础
 - 程序只会从`main函数`开始执行
 - 函数：`void funcName(int a, int b)`

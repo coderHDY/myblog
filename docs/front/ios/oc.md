@@ -42,18 +42,87 @@ cc -framework Foundation -o main main.m
   - 打印占位符：`NSLog(@"%@", str);`
   - 字符串初始化默认是`immutable`，不可修改，需要使用`mutableCopy`方法变成`mutable`
 :::
+- 将c的`char[]`转化为oc的NSString
+  ```c
+  char c1[] = "1234567";
+  NSString* str1 = [NSString stringWithUTF8String:s0];
+  NSLog(@"%@", str1);
+  ```
+- 拼接字符串对象:`stringWithFormat`
+  ```c
+  int age = 14;
+  NSString* s2 = @"小黄";
+  NSString* s3 = [NSString stringWithFormat:@"大家好，我叫%@, 我今年%d岁了",s2, age];
+  ```
+- 计算字符串长度`length`
+  ````c
+  NSString* s1 = @"1哈哈";
+  NSUInteger num = [s1 length];
+  NSLog(@"%lu", num); // 3
+  ````
+- 拿到指定下标的字符`characterAtIndex`，字符转化回字符串`stringWithCharacters`
+  ````c
+  NSString* s = @"ha和额呵hahh";
+  unichar c = [s characterAtIndex:2];
+  NSString *charStr = [NSString stringWithCharacters:&c length:1];
+  NSLog(@"%@", charStr); // 和
+  ````
+- 比较两个字符串是否相等`isEqualToString`
+  ```c
+  NSString* s1 = @"123456";
+  NSString* s2 = @"123456";
+  BOOL isEqual = [s1 isEqualToString:s2];
+  NSLog(@"%@", isEqual ? @"相同" : @"不同");
+  ```
+- 字符串比较
+  ```c
+  NSString* s1 = @"China";
+  NSString* s2 = @"Japan";
+  NSComparisonResult result = [s1 compare:s2];
+  if (result == NSOrderedAscending) {
+      NSLog(@"%@在前面", s1);
+  } else if (result == NSOrderedDescending) {
+      NSLog(@"%@在前面", s2);
+  } else {
+      NSLog(@"相同");
+  }
+  ```
 
 ## 类
 ::: tip
 - 规范：类属姓名都以下划线开头`NSString *_name;`
 - 类属性默认外部不可访问的，需要访问，使用`@public`关键字
 - 方法头的**数据类型都要用小括号括起来**:`- (void)eat:(NSString*) food;`
+- 属性修饰符
+  - `@private`：私有属性，外部不可访问
+  - `@protected`：**默认属性**，受保护的属性，外部不可访问，但子类可以访问
+  - `@package`：当前的框架中访问
+  - `@public`：外部可访问
+  - `@readonly`：只读属性，外部不可修改，但子类可以修改
+  - 属性修饰符使用建议：最小权限法则
+- 可以在`@implementation`中声明属性，让属性完全私有，外界`xcode`都不会提示
+- `私有方法`：只写实现不写声明
 :::
 :::warning
 - 类名：首字母大写，驼峰式命名
 - 类不可以在声明的时候给属性赋值的
 :::
 - 类对象里面有个属性`isa`，用来指向当前对象的类。作用是调用方法时通过指针找到对应的Person类
+- `规范`：内部属性访问写`getter`和`setter`
+```c
+@interface Person : NSObject
+{
+    NSString* _name;
+    int _age;
+}
+- (void)initWithName:(NSString*)name age:(int)age;
+- (void)setAge:(int)age;
+- (int)age;
+- (void)setName:(NSString *)name;
+- (NSString *)name;
+- (void)showInfo;
+@end
+```
 ## 对象方法
 :::tip
 - 规范
@@ -63,6 +132,7 @@ cc -framework Foundation -o main main.m
   - `#pagma mark Person类的实现`：导航位置添加注释
   - `#pragma mark -`：导航位置添加分割线
   - `#pragma mark - Person类的声明`：导航位置添加分割线再添加注释
+- 方法内调用自身其他方法：`[self doSomething]`
 :::
 ```swift
 /**** 声明 *****/
@@ -100,6 +170,8 @@ cc -framework Foundation -o main main.m
 }
 - (void)addWithNum1:(int)num1 andNum2:(int)num2 {
     NSLog(@"%d + %d = %d", num1, num2, num1 + num2);
+    // 调用自身方法
+    [self run];
 }
 @end
 /***** 实现结束 *****/
@@ -119,3 +191,78 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 ```
+## 类方法
+- 类方法使用`+`开头
+- 调用类方法使用：类名调用
+```c
+@interface MyPoint : NSObject
++ (void)sayHaha;
+@end
+
+[MyPoint sayHaha];
+```
+- `规范`：写一个类，要创建一个同名的类方法，用来初始化对象。
+- `规范`：创建的参数名字要用`类名WithXxx`的形式
+- `规范`：类方法返回值如果是当前类的对象，那么返回值类型用`instancetype`
+```c
+// 定义
+@interface MyPoint : NSObject
+{
+    @public
+    double _x;
+    double _y;
+}
++ (MyPoint *)myPoint;
++ (MyPoint *)myPointWithX:(double)x y:(double)y;
++ (void)sayHaha;
+@end
+
+// 实现
+@implementation MyPoint
++ (instancetype)myPoint {
+  MyPoint *p = [MyPoint new];
+  return p;
+}
++ (instancetype)myPointWithX:(double)x y:(double)y {
+    MyPoint *p = [MyPoint new];
+    p->_x = x;
+    p->_y = y;
+    return p;
+}
++ (void)sayHaha {
+    NSLog(@"哈哈哈");
+}
+@end
+
+// 调用
+[Person person];
+```
+## 复制源文件到工程目录
+- 从文件夹中选中要复制的`.h`文件和`.m`文件
+  - 拖拽到工程目录中
+  - 选择`Copy items if needed`
+  - 选择`Create groups`
+  - 点击`Finish`
+
+## try catch
+```c
+@try {}
+@catch(NSException *exception) {}
+@finally {}
+```
+
+## static关键字
+- oc中，`static`关键字用于修饰类方法变量，该变量**不会回收**，`所有对象共用一个值`
+
+## self
+- 在**对象方法中**，`self`表示当前对象本身
+- 在**类方法中**，`self`表示当前类本身
+
+
+## 继承
+- 子类能够重写父类的方法，但是不能重写父类的属性
+- `super`指针，调用继承的方法`[super methodName]`
+
+## 多态
+- 父类指针指向子类对象
+- 父对象指针的子类方法重写了，父指针调用的是**子类重写后的方法**
