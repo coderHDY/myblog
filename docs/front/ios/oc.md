@@ -23,6 +23,7 @@ cc -framework Foundation -o main main.m
 - 赋空值使用建议：
   - `nil`：OC类型的空指针
   - `NULL`：c基础类型的空指针
+- 弱指针：`weak`，弱指针，循环引用时其中一个指针用`week`不作为引用计数指针，不会造成循环引用
 ## 框架
 - `#import`：增强版`#include`，只会引入一次
 - `@property`：声明属性
@@ -43,39 +44,40 @@ cc -framework Foundation -o main main.m
   - 字符串初始化默认是`immutable`，不可修改，需要使用`mutableCopy`方法变成`mutable`
 :::
 - 将c的`char[]`转化为oc的NSString
-  ```c
+  ```objc
   char c1[] = "1234567";
   NSString* str1 = [NSString stringWithUTF8String:s0];
   NSLog(@"%@", str1);
   ```
 - 拼接字符串对象:`stringWithFormat`
-  ```c
+  ```objc
   int age = 14;
   NSString* s2 = @"小黄";
   NSString* s3 = [NSString stringWithFormat:@"大家好，我叫%@, 我今年%d岁了",s2, age];
   ```
 - 计算字符串长度`length`
-  ````c
+  ````objc
   NSString* s1 = @"1哈哈";
+  // s1.length
   NSUInteger num = [s1 length];
   NSLog(@"%lu", num); // 3
   ````
-- 拿到指定下标的字符`characterAtIndex`，字符转化回字符串`stringWithCharacters`
-  ````c
+- 拿到指定下标的字符`characterAtIndex`，**中文等字符**转化回字符串`stringWithCharacters`
+  ````objc
   NSString* s = @"ha和额呵hahh";
   unichar c = [s characterAtIndex:2];
   NSString *charStr = [NSString stringWithCharacters:&c length:1];
   NSLog(@"%@", charStr); // 和
   ````
 - 比较两个字符串是否相等`isEqualToString`
-  ```c
+  ```objc
   NSString* s1 = @"123456";
   NSString* s2 = @"123456";
   BOOL isEqual = [s1 isEqualToString:s2];
   NSLog(@"%@", isEqual ? @"相同" : @"不同");
   ```
 - 字符串比较
-  ```c
+  ```objc
   NSString* s1 = @"China";
   NSString* s2 = @"Japan";
   NSComparisonResult result = [s1 compare:s2];
@@ -87,6 +89,14 @@ cc -framework Foundation -o main main.m
       NSLog(@"相同");
   }
   ```
+
+## @autoreleasepool
+- 只有在`MRC`的情况下使用
+- 语法：`@autoreleasepool{...}`，自动释放池，不会出现内存泄漏，但是会降低性能，所以不要滥用
+- 存入自动释放池方法：`[[Person new] autorelease]`
+- 自动释放池大括号结束的时候，自动释放池会自动调用`[obj release]`对象
+- `规范`:init方法初始化参数，类同名方法调用init方法同时调用`autorelease`
+  - `[[[self alloc] initWithName: name andAge: age] autorelease]`
 
 ## 类
 ::: tip
@@ -102,6 +112,7 @@ cc -framework Foundation -o main main.m
   - 属性修饰符使用建议：最小权限法则
 - 可以在`@implementation`中声明属性，让属性完全私有，外界`xcode`都不会提示
 - `私有方法`：只写实现不写声明
+- `new`是创建对象的简写，`alloc`是创建对象，`init`是初始化对象，`initWithXxx`是初始化对象的方法
 :::
 :::warning
 - 类名：首字母大写，驼峰式命名
@@ -109,20 +120,53 @@ cc -framework Foundation -o main main.m
 :::
 - 类对象里面有个属性`isa`，用来指向当前对象的类。作用是调用方法时通过指针找到对应的Person类
 - `规范`：内部属性访问写`getter`和`setter`
-```c
-@interface Person : NSObject
-{
-    NSString* _name;
-    int _age;
-}
-- (void)initWithName:(NSString*)name age:(int)age;
-- (void)setAge:(int)age;
-- (int)age;
-- (void)setName:(NSString *)name;
-- (NSString *)name;
-- (void)showInfo;
-@end
-```
+  ```objc
+  @interface Person : NSObject
+  {
+      NSString* _name;
+      int _age;
+  }
+  - (void)initWithName:(NSString*)name age:(int)age;
+  - (void)setAge:(int)age;
+  - (int)age;
+  - (void)setName:(NSString *)name;
+  - (NSString *)name;
+  - (void)showInfo;
+  @end
+  ```
+- new方法的完整语法：`[[Person alloc] init]`
+- **init方法重写规范**:先调用父对象`init`，先判断是否成功，再初始化值
+  ```objc
+  - (instancetype)init {
+    if (self = [super init]) {
+        self.name = @"小明啊";
+    }
+    return self;
+  }
+  ```
+- 带参数的init，默认没有带参数`init`的声明，所以需要**在声明中添加**，并且带的参数必须用`initWithXxx:(xx)xx andXXX:(zz)zz`
+  ```objc
+  @interface Student : NSObject
+  @property NSString* name;
+  @property int age;
+  - (instancetype)initWithName:(NSString *)name andAge:(int)age;
+  @end
+
+  // 实现
+  - (instancetype)initWithName:(NSString *)name andAge:(int)age {
+      if (self = [super init]) {
+          self.name = name;
+          self.age = age;
+      }
+      return self;
+  }
+
+  // 调用
+  Student *s3 = [[Student alloc] initWithName:@"小红" andAge:20];
+  NSLog(@"%@", s3.name);
+  NSLog(@"%d", s3.age);
+  ```
+- 对象被回收的方法：`dealloc`，不用的对象会自动回收，不需要手动释放
 ## 对象方法
 :::tip
 - 规范
@@ -194,7 +238,7 @@ int main(int argc, const char * argv[]) {
 ## 类方法
 - 类方法使用`+`开头
 - 调用类方法使用：类名调用
-```c
+```objc
 @interface MyPoint : NSObject
 + (void)sayHaha;
 @end
@@ -204,7 +248,7 @@ int main(int argc, const char * argv[]) {
 - `规范`：写一个类，要创建一个同名的类方法，用来初始化对象。
 - `规范`：创建的参数名字要用`类名WithXxx`的形式
 - `规范`：类方法返回值如果是当前类的对象，那么返回值类型用`instancetype`
-```c
+```objc
 // 定义
 @interface MyPoint : NSObject
 {
@@ -245,7 +289,7 @@ int main(int argc, const char * argv[]) {
   - 点击`Finish`
 
 ## try catch
-```c
+```objc
 @try {}
 @catch(NSException *exception) {}
 @finally {}
@@ -266,3 +310,175 @@ int main(int argc, const char * argv[]) {
 ## 多态
 - 父类指针指向子类对象
 - 父对象指针的子类方法重写了，父指针调用的是**子类重写后的方法**
+## id指针
+- `id`指针，可以指向任何对象，通过id指针调用方法的时候，编译器不会做任何检查
+- `id`指针不能使用点语法
+- 也可以使用`NSObject*`声明任意对象，编译会做类型检查
+```objc
+id obj = [Student new];
+[obj setName:@"小红"];
+NSLog(@"%@", [obj name]);
+```
+
+## respondsToSelector/instancesRespondToSelector
+- `respondsToSelector:`方法，判断当前对象是否实现了该方法
+  ```objc
+  Person* p1 = [Person new];
+  if ([p1 respondsToSelector:@selector(length)]) {
+      [p1 performSelector:@selector(length)];
+  } else {
+      NSLog(@"p1没有sayHi方法");
+  }
+  ```
+- `instancesRespondToSelector:`方法，判断当前对象是否实现了该**类方法**
+  ```objc
+  if ([Student instancesRespondToSelector: @selector(study:)]) {
+      NSLog(@"Student类的实例可以调用study方法");
+  } else {
+      NSLog(@"Student类的实例不能调用study方法");
+  }
+  ```
+
+## isKindOfClass/isMemberOfClass/isSubclassOfClass
+- `isKindOfClass:`方法，判断当前对象是否是**该类或子类的实例**
+- `isMemberOfClass:`方法，判断当前对象是否是**该类的实例**
+  ```objc
+  Person* s1 = [Student new];
+  if ([s1 isKindOfClass: [Person class]]) {
+      NSLog(@"p1是Person类的对象"); // 输出
+  } else {
+      NSLog(@"p1不是Person类的对象");
+  }
+
+  if ([s1 isMemberOfClass: [Person class]]) {
+      NSLog(@"p1是Person类的对象");
+  } else {
+      NSLog(@"p1不是Person类的对象"); // 输出
+  }
+  ```
+- `isSubclassOfClass`：判断当前类是否是**该类的子类**
+  ```objc
+  if ([Student isSubclassOfClass: [Person class]]) {
+      NSLog(@"Student是Person类的子类");
+  } else {
+      NSLog(@"Student不是Person类的子类"); // 输出
+  }
+  ```
+## MRC和ARC
+::: tip
+- `MRC`和`ARC`都是管理内存的方法
+- MRC：Manual Reference Counting，**手动引用计数**
+- ARC：Automatic Reference Counting，**自动引用计数**
+- ARC：编译器自动管理内存，不需要手动释放内存，编译器会自动释放内存，不会出现内存泄漏
+- MRC：需要手动释放内存，否则会内存泄漏
+- 默认使用的是ARC
+- 使用MRC的方法：**PROJECT -> Build Settings -> Apple Clang Language Objective-C Runtime -> Automatic Reference Counting: NO**
+:::
+- 使用对象的`retainCount`可以查看该对象被引用了几次
+- 使用对象的`retain`方法，`retainCount`会加1
+- 使用对象的`release`方法，`retainCount`会减1
+- 当`retainCount`为0时，对象会被释放
+- 内存释放调用的是`dealloc`方法，
+  ```objc
+  - (void)dealloc {
+      NSLog(@"%@被释放了", _name);
+      [super dealloc];
+  }
+
+  // 模拟释放
+  Person* p1 = [Person new];
+  p1.name = @"小明";
+  p1.age = 10;
+  NSLog(@"我叫%@, 今年%d岁", p1.name, p1.age);
+
+  Person* p2 = [p1 retain]; // retain返回值为该对象本身
+  NSUInteger num = [p1 retainCount];
+  NSLog(@"%lu", num); // 2
+
+  [p1 release];
+  p1 = nil; // 避免僵尸对象
+  [p2 release]; // 为0 释放
+  p2 = nil;
+  ```
+- 如果对象使用其他对象
+  - 那么在赋值的`setter`方法中需要使用`retain`方法，并且需要使用**原对象**的`release`方法，否则会内存泄漏
+  - 赋值可能新旧对象是否相同，需要使用`_car != car`方法，同时不需要调用原对象的`release`方法，避免提前释放
+  - 在`dealloc`方法中需要使用使用对象的`release`方法，否则会内存泄漏
+  ```objc
+  - (void)setCar:(Car *)car {
+    if (_car != car) {
+      [_car release];
+      _car = [car retain];
+    }
+  }
+
+  - (void)dealloc {
+    [_car release];
+    [super dealloc];
+  }
+  ```
+
+## block类型
+::: tip
+- block类型，是一个**函数指针**，指向一个函数的指针，函数指针可以指向一个函数，也可以指向一个函数指针
+- 声明：`void (^blockName)(int type1, int type2, ...)`
+- 规则：
+  - block可以访问全局和局部变量的值，但是**不能修改block外部局部变量的值**
+  - 如果要让block修改block外部局部变量的值，需要使用`__block`关键字
+  - block作为函数返回值时，只能做`typedef`，不然编译报错
+- 使用场景：
+:::
+  ```c
+  int(^add)(int num1, int num2);
+  add = ^int(int num1, int num2) {
+      return num1 + num2;
+  };
+  int sum = add(1, 2);
+  NSLog(@"%d", sum);
+  ```
+- 简写，没有变量和返回值
+  ```c
+  void(^sayHaha)(void) = ^{}
+  ```
+- 简写，变量声明省略形参名
+  ```c
+  int(^add)(int, int) = ^(int num1, int num2) {
+      return num1 + num2;
+  };
+  ```
+- 类型别名
+  ```c
+  typedef void (^voidBlock)(void);
+  voidBlock b1 = ^{
+      NSLog(@"牛逼");
+  };
+  b1();
+  ```
+- 修改局部变量
+  ```c
+  __block int num = 0;
+  void(^addOne)(void) = ^{
+      num++;
+  };
+  addOne();
+  addOne();
+  addOne();
+  addOne();
+  NSLog(@"%d", num); // 4
+  ```
+- block作为参数
+  ```c
+  typedef void(^Haha)(void);
+  void runBlock(Haha haha) {
+      haha();
+  }
+
+  int main(int argc, const char * argv[]) {
+    typedef void(^haha)(void);
+    runBlock(^{
+        NSLog(@"哈哈哈哈");
+    });
+    
+    return 0;
+  }
+  ```

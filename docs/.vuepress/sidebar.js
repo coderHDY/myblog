@@ -165,6 +165,7 @@ const front = {
         "ocBase",
         "oc",
         "ocSkills",
+        "ocImportant",
       ],
     },
   ],

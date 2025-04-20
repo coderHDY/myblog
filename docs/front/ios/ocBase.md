@@ -11,6 +11,7 @@ date: 2025-03-17
 - 为project添加多个target：
   - 新建`Project -> Targets -> +`
   - 切换：编译链接旁边切换目标target
+- 打开僵尸对象调试：`Edit Schemes -> Run -> Diagnostics -> Zombie Objects -> Enable`
 ## Xcode快捷键
 - 同时编辑一个变量`control+command+e`
 ## Xcode文档安装
