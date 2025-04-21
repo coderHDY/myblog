@@ -427,7 +427,9 @@ NSLog(@"%@", [obj name]);
   - 如果要让block修改block外部局部变量的值，需要使用`__block`关键字
   - block作为函数返回值时，只能做`typedef`，不然编译报错
 - 使用场景：
+  -  block可以作为闭包使用，带着传递和保存变量
 :::
+- 完整写法
   ```c
   int(^add)(int num1, int num2);
   add = ^int(int num1, int num2) {
@@ -481,4 +483,15 @@ NSLog(@"%@", [obj name]);
     
     return 0;
   }
+  ```
+- block作为返回值
+  ```c
+  typedef NSString* (^StringFormat)(int);
+  StringFormat stringFromIntBlock(void) {
+      return ^NSString *(int value) {
+        return [NSString stringWithFormat:@"数字是：%d", value];
+      };
+  }
+  StringFormat b1 = stringFromIntBlock();
+  NSLog(@"%@",b1(333));
   ```

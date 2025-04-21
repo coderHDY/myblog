@@ -48,3 +48,54 @@ p1.age = 20;
 }
 @end
 ```
+## 协议
+::: tip
+- 协议`protocol`就是一系列方法的声明
+- 协议类似JAVA/Swift中的接口(interface)，用于规定类哪些方法必须实现，哪些方法可选实现
+- 协议可以多遵守：`@interface Baby : NSObject <protocolName1, protocolName2>`
+- `@required`：（默认），必须实现的方法
+- `@optional`：可选实现的方法
+- 协议也可以遵守别的协议，比如：`@protocol protocolName <protocolName1, protocolName2, protocolName3>`
+:::
+## 委托模式
+:::tip
+- 委托模式：配合id声明某个属性遵守的协议，实现协议中的方法
+:::
+- 协议声明
+  ```objc
+  @protocol PersonAction <NSObject>
+  @required
+  - (void) eat;
+
+  @optional
+  - (void) sleep;
+  @end
+  ```
+- 遵守协议类
+  ```objc
+  @interface Baby : NSObject <PersonAction>
+  - (void) eat;
+  - (void) sleep;
+  @end
+  ```
+- `委托`协议类
+  ```objc
+  @interface Person : NSObject
+  @property(nonatomic, strong) NSString *name;
+  // 定义一个指针，遵守PersonAction协议
+  @property(nonatomic, weak) id<PersonAction> delegate;
+  - (void) babySleep;
+  @end
+
+  // 实现
+  @implementation Person
+  - (void) babySleep {
+      [self.delegate sleep];
+  }
+  @end
+  ```
+- 泛型
+```c
+id<PersonAction> id1 = [Student new];
+id<PersonAction, StudentAction> id2 = [Student new];
+```
