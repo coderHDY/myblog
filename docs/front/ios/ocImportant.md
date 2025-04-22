@@ -94,8 +94,8 @@ p1.age = 20;
   }
   @end
   ```
-- 泛型
-```c
-id<PersonAction> id1 = [Student new];
-id<PersonAction, StudentAction> id2 = [Student new];
-```
+- 泛型指针
+  ```c
+  id<PersonAction> id1 = [Student new];
+  id<PersonAction, StudentAction> id2 = [Student new];
+  ```

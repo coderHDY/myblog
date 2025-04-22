@@ -201,20 +201,20 @@ printf("请输入分数：%d\n", arc4random_uniform(11) + 10);
     ```
 - 条件编译指令`#ifndef`：判断宏**不存在**，不存在就编译，存在就不编译
 - 技巧：debug打log，只有在debug模式才会编译的log代码
-```c
-#define DEBUG 1
-#define DEV 0
-#define DEPLOY 0
+    ```c
+    #define DEBUG 1
+    #define DEV 0
+    #define DEPLOY 0
 
-#if DEBUG
-    #define LOG(str, ...) printf(str, ##__VA_ARGS__)
-#else
-    #define LOG(str, ...)
-#endif
+    #if DEBUG
+        #define LOG(str, ...) printf(str, ##__VA_ARGS__)
+    #else
+        #define LOG(str, ...)
+    #endif
 
-LOG("DEBUG 模式！\n");
-LOG("%d\n", a);
-```
+    LOG("DEBUG 模式！\n");
+    LOG("%d\n", a);
+    ```
 ## 进制
 - 十进制：`10`，打印占位符`%d`
 - 二进制：以`0b`开头，`ob101010111`
