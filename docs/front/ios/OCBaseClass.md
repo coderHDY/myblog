@@ -232,6 +232,8 @@ date: 2025-04-21
 - 拼接所有项目:`componentsJoinedByString`
 - 字符串拆解成数组:`componentsSeparatedByString`
 - 排序：`sortedArrayUsingComparator`
+- 本地存储：`writeToFile`
+- 本地读取`arrayWithContentsOfFile`
 :::
 - 创建：`NSArray *arr = @[@"jack", @"rose", @"tom"];`
   ```objc
@@ -295,6 +297,22 @@ date: 2025-04-21
   }];
   NSLog(@"%@", a2); // 从小到大
   ```
+:::tip
+存储文件类型需要是`.plist`类型
+:::
+- 本地存储：`writeToFile`
+  ```objc
+  NSArray* arr = @[@"jack", @"rose", @"lili"];
+  [arr writeToFile:@"/Users/dreamarts/Desktop/app.plist" atomically:NO];
+  ```
+- 本地读取`arrayWithContentsOfFile`
+  ```objc
+  NSArray* arr = [NSArray arrayWithContentsOfFile:@"/Users/dreamarts/Desktop/app.plist"];
+  if (arr != nil) {
+      NSLog(@"%@", arr);
+  }
+  ```
+
 ## NSMutableArray
 ::: tip
 - 特点：继承自`NSArray`，有所有的NSArray的方法，**具备可变性**
@@ -356,6 +374,8 @@ date: 2025-04-21
   [arr removeAllObjects];
   NSLog(@"%@", arr); // ( jack, rose )
   ```
+
+
 ## NSNumber
 :::tip
 - 包装基本数据类型，作为一个对象，**可以存入数组中**
@@ -374,3 +394,183 @@ date: 2025-04-21
   NSLog(@"%@", arr); // ( "12.333" )
   NSLog(@"%.2f", num.floatValue); // 12.33
   ```
+## NSDictionary
+:::tip
+- 创建：`dictionaryWithObjectsAndKeys`
+- 创建：`@{@"name": @"coderHDY", @"age": @18}`
+- 取值：`objectForKey:`
+- 遍历1：`enumerateKeysAndObjectsUsingBlock:`
+- 遍历2：`for in`
+- 键值对数量：`count`
+- 获取所有键：`allKeys`
+- 本地存储：`writeToFile`
+- 本地读取：`dictionaryWithContentsOfFile`
+:::
+- 创建：`dictionaryWithObjectsAndKeys`
+  ```objc
+  NSDictionary* dir1 = [NSDictionary dictionaryWithObjectsAndKeys:@"coderHDY", @"name", @"18", @"age", nil];
+  NSDictionary* dir2 = @{@"name": @"coderHDY", @"age": @18};
+  NSLog(@"%@", dir2);
+  ```
+- 取值：`objectForKey:`
+  ```objc
+  NSDictionary* dir2 = @{@"name": @"coderHDY", @"age": @18};
+  NSString* age = [dir2 objectForKey:@"age"]; // 18
+  ```
+- 遍历1：`enumerateKeysAndObjectsUsingBlock:`
+  ```objc
+  [dir2 enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+      NSLog(@"%@ = %@", key, age);
+  }];
+  ```
+- 遍历2：`for in`
+  ```objc
+  NSDictionary* dir2 = @{@"name": @"coderHDY", @"age": @18, @"222": @"id"};
+  for (NSString* key in dir2) {
+    NSLog(@"%@ = %@", key, dir2[key]);
+  }
+  ```
+- 键值对数量：`count`
+  ```objc
+  NSDictionary* dir2 = @{@"name": @"coderHDY", @"age": @18, @"222": @"id"};
+  NSUInteger n = dir2.count; // 3
+  ```
+:::warning
+本地存储读取的文件类型需要是`.plist`
+:::
+- 本地存储：`writeToFile`
+  ```objc
+  NSString* path = @"/Users/dreamarts/Desktop/app.plist";
+  NSDictionary* dir = @{@"name": @"coderHDY", @"age":@18};
+  BOOL res = [dir writeToFile:path atomically:NO];
+  if (res) {
+      NSLog(@"OK");
+  }
+  ```
+- 本地读取：`dictionaryWithContentsOfFile`
+  ```objc
+  NSString* path = @"/Users/dreamarts/Desktop/app.plist";
+  NSDictionary* dir = [NSDictionary dictionaryWithContentsOfFile:path];
+  if (dir) {
+      NSLog(@"%@", dir);
+  }
+  ```
+
+## NSMutableDictionary
+:::tip
+- 特点：继承自`NSDictionary`，有所有的NSDictionary的方法，**具备可变性**
+- 创建：`dictionaryWithDictionary:`
+- 添加：`setObject:forKey:`
+- 删除：`removeObjectForKey:`
+- 删除所有：`removeAllObjects`
+:::
+- 创建：`dictionaryWithDictionary:`
+  ```objc
+  NSMutableDictionary* dir = [NSMutableDictionary dictionaryWithDictionary:@{@"name": @"coderHDY", @"age":@18}];
+  ```
+- 添加：`setObject:forKey:`
+  ```objc
+  NSMutableDictionary* dir = [NSMutableDictionary dictionaryWithDictionary:@{@"name": @"coderHDY", @"age":@18}];
+  [dir setObject:@"eat" forKey:@"action"];
+  ```
+- 删除：`removeObjectForKey:`
+  ```objc
+  NSMutableDictionary* dir = [NSMutableDictionary dictionaryWithDictionary:@{@"name": @"coderHDY", @"age":@18}];
+  [dir removeObjectForKey:@"age"];
+  ```
+- 删除所有：`removeAllObjects`
+  ```objc
+  NSMutableDictionary* dir = [NSMutableDictionary dictionaryWithDictionary:@{@"name": @"coderHDY", @"age":@18}];
+  [dir removeAllObjects];
+  ```
+## NSFileManager
+::: tip
+- 创建：`defaultManager`
+- 判断文件夹存在：`fileExistsAtPath:`
+- 判断文件/文件夹是否存在：`fileExistsAtPath:isDirectory:`
+- 判断文件夹是否可以读取：`isReadableFileAtPath:`
+- 判断文件夹是否可以写入：`isWritableFileAtPath:`
+- 判断文件夹是否可以执行：`isExecutableFileAtPath:`
+- 创建文件：`createFileAtPath`
+- 创建文件夹：`createDirectoryAtPath:withIntermediateDirectories:attributes:error:`
+- 删除文件夹：`removeItemAtPath:error:`
+- 删除文件：`removeItemAtPath:error:`
+- 移动文件：`moveItemAtPath:toPath:error:`
+- 拷贝文件：`copyItemAtPath:toPath:error:`
+- 获取文件大小：`attributesOfItemAtPath:error:`
+- 获取文件属性：`attributesOfItemAtPath:error:`
+- 获取文件类型：`typeOfItemAtPath:error:`
+- 获取文件创建时间：`creationDateForItemAtPath:error:`
+- 获取文件修改时间：`modificationDateForItemAtPath:error:`
+- 获取文件访问时间：`accessDateForItemAtPath:error:`
+- 获取文件权限：`posixPermissionsForItemAtPath:error:`
+- 获取文件子目录和子文件：`contentsOfDirectoryAtPath:error:`
+- 获取文件内所有（后代）文件和目录：`subpathsAtPath:`
+:::
+- 创建：`defaultManager`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  ```
+- 判断文件夹存在：`fileExistsAtPath:`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  NSString* path = @"/Users/dreamarts/Desktop/app.plist";
+  BOOL res = [defaultManage fileExistsAtPath:path];
+  ```
+- 判断文件/文件夹是否存在：`fileExistsAtPath:isDirectory:`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  NSString* path = @"/Users/dreamarts/Desktop/app.plist";
+  BOOL isDir = NO;
+  BOOL res = [defaultManage fileExistsAtPath:path isDirectory:&isDir];
+  NSLog(@"exist = %d, isDir = %d", res, isDir); // exist = 1, isDir = 0
+  ```
+- 判断文件夹是否可以读取：`isReadableFileAtPath:`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  NSString* path = @"/Users/dreamarts/Desktop/app.plist";
+  BOOL res = [defaultManage isReadableFileAtPath:path];
+  NSLog(@"res = %d", res); // 1
+  ```
+- 获取文件子目录和子文件：`contentsOfDirectoryAtPath:error:`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  NSString* path = @"/Users/dreamarts/Desktop";
+  NSArray* arr = [defaultManage contentsOfDirectoryAtPath:path error:nil];
+  for (NSString* str in arr) {
+      NSLog(@"%@", str);
+  }
+  ```
+- 获取文件内所有文件和目录：`subpathsAtPath:`
+  ```objc
+  NSFileManager* defaultManage = [NSFileManager defaultManager];
+  NSString* path = @"/Users/dreamarts/Desktop";
+  NSArray* arr = [defaultManage subpathsAtPath:path];
+  for (NSString* str in arr) {
+      NSLog(@"%@", str); // 打印中文路径
+  }
+  ```
+- 创建文件：`createFileAtPath`
+  ```objc
+  NSString* path = @"/Users/dreamarts/Desktop/1.txt";
+  NSData* data = [path dataUsingEncoding:NSUTF8StringEncoding];
+  NSFileManager* defaultManager = [NSFileManager defaultManager];
+  BOOL res = [defaultManager createFileAtPath:path contents:data attributes:nil];
+  ```
+:::tip
+`withIntermediateDirectories:YES`: 深度创建
+:::
+- 创建文件夹：`createDirectoryAtPath:withIntermediateDirectories:attributes:error:`
+  ```objc
+  NSString *path = @"/Users/dreamarts/Desktop/AA/BB/CC";
+  NSFileManager *defaultManager = [NSFileManager defaultManager];
+  BOOL res = [defaultManager createDirectoryAtPath:path
+                        withIntermediateDirectories:YES
+                                        attributes:nil
+                                              error:nil];
+  ```
+## NSThread
+::: tip
+- NSThread 是一个线程对象，它允许你创建一个线程，并运行代码。
+- 沉睡线程(单位：秒)：`[NSThread sleepForTimeInterval:10]`
+:::
