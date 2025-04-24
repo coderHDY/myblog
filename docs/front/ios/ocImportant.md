@@ -99,3 +99,56 @@ p1.age = 20;
   id<PersonAction> id1 = [Student new];
   id<PersonAction, StudentAction> id2 = [Student new];
   ```
+
+## 单例模式
+- interface
+  ```objc
+  @interface Person : NSObject
+  @property(nonatomic, copy)NSString* name;
+  + (instancetype)sharedInstance;
+  @end
+  ```
+- implementation
+  ```objc
+  #import "Person.h"
+
+  @implementation Person
+
+  + (instancetype)sharedInstance {
+      static Person *instance = nil;
+      static dispatch_once_t onceToken;
+      dispatch_once(&onceToken, ^{
+          instance = [[self alloc] init];
+      });
+      return instance;
+  }
+
+  + (id)allocWithZone:(struct _NSZone *)zone {
+      static Person *instance = nil;
+      static dispatch_once_t onceToken;
+      dispatch_once(&onceToken, ^{
+          instance = [super allocWithZone:zone];
+      });
+      return instance;
+  }
+
+  // 如需支持拷贝（防止 copy 产生新实例）：
+  - (id)copyWithZone:(NSZone *)zone {
+      return self;
+  }
+
+  - (id)mutableCopyWithZone:(NSZone *)zone {
+      return self;
+  }
+  @end
+  ```
+- 调用
+  ```objc
+  Person* p1 = [[Person alloc] init];
+  Person* p2 = [[Person alloc] init];
+  Person* p3 = [[Person alloc] init];
+
+  NSLog(@"%p", p1); // 0x600000b1c070
+  NSLog(@"%p", p2); // 0x600000b1c070
+  NSLog(@"%p", p3); // 0x600000b1c070
+  ```

@@ -4,6 +4,7 @@ date: 2025-04-21
 ---
 ## NSString
 :::warning
+- **如果属性类型是NSString，那么@property用`copy`：`@property (copy) NSString* str`**
 - 字符串初始化默认是`immutable`，不可修改，需要使用`mutableCopy`方法变成`mutable`
 - 如果字符串大量修改，用`NSMutableString`
 :::
@@ -574,3 +575,123 @@ date: 2025-04-21
 - NSThread 是一个线程对象，它允许你创建一个线程，并运行代码。
 - 沉睡线程(单位：秒)：`[NSThread sleepForTimeInterval:10]`
 :::
+
+## NSPoint
+::: tip
+- `CGPoint` 是一个结构体，它表示一个二维坐标点。也有同样作用的方法`NSPoint`，建议使用`CGPoint`
+- 创建1:`NSPoint p2 = {20, 30};`
+- 创建2:`CGPointMake(x, y)`
+- 判断结构体是否相等：`CGPointEqualToPoint(point1, point2)`
+- 获取结构体中的x和y值：`point.x`、`point.y`
+:::
+- 创建1:`NSPoint p2 = {20, 30};`
+  ```objc
+  NSPoint p = NSMakePoint(10, 20);
+  NSLog(@"x = %f, y = %f", p.x, p.y);
+  ```
+- 创建2:`CGPointMake(x, y)`
+  ```objc
+  NSPoint p2 = {20, 30};
+  ```
+## NSSize
+::: tip
+- `CGSize` 是一个结构体，它表示一个二维尺寸。也有同样作用的方法`NSSize`，建议使用`CGSize`
+- 创建1:`NSSize s2 = {20, 30};`
+- 创建2:`CGSizeMake(width, height)`
+- 判断结构体是否相等：`CGSizeEqualToSize(size1, size2)`
+- 获取结构体中的width和height值：`size.width`、`size.height`
+:::
+- 创建2:`CGSizeMake(width, height)`
+  ```objc
+  NSSize s1 = NSMakeSize(100, 400);
+  NSLog(@"%f, %f", s1.width, s1.height);
+  ```
+## NSRect
+::: tip
+- `CGRect` 是一个结构体，它表示一个二维矩形区域。也有同样作用的方法`NSRect`，建议使用`CGRect`
+- 创建1:`NSRect r2 = {20, 30, 40, 50};`
+- 创建2:`CGRectMake(x, y, width, height)`
+- 判断结构体是否相等：`CGRectEqualToRect(rect1, rect2)`
+- 判断结构体是否包含另一个矩形：`CGRectContainsRect(rect1, rect2)`
+- 获取结构体中的x、y、width和height值：`rect.origin.x`、`rect.origin.y`、`rect.size.width`、`rect.size.height`
+:::
+- 创建1:`NSRect r2 = {20, 30, 40, 50};`
+  ```objc
+  NSRect r2 = {10, 10, 100, 200};
+  ```
+- 创建2:`CGRectMake(x, y, width, height)`
+  ```objc
+  NSRect r1 = NSMakeRect(10, 10, 100, 200);
+  ```
+- 判断结构体是否包含另一个矩形：`CGRectContainsRect(rect1, rect2)`
+  ```objc
+  BOOL res = NSContainsRect(r1, r2);
+  ```
+## NSValue
+:::tip
+- `NSValue` 是一个对象，它表示一个值。它提供了一种方便的方式来表示各种类型的值，如`CGPoint`、`CGSize`、`CGRect`等。
+- 创建：`NSValue valueWithCGPoint:`、`NSValue valueWithCGSize:`、`NSValue valueWithCGRect:`
+- 获取：`CGPointValue`、`CGSizeValue`、`CGRectValue`
+- 判断：`isEqualToValue:`
+:::
+```objc
+NSRect r1 = NSMakeRect(10, 10, 100, 200);
+NSRect r2 = {10, 10, 100, 200};
+BOOL res = NSContainsRect(r1, r2);
+NSLog(@"%d", res);
+
+NSValue* v1 = [NSValue valueWithRect: r1];
+NSValue* v2 = [NSValue valueWithRect: r2];
+BOOL res2 = [v1 isEqualToValue: v2];
+NSLog(@"%f", v1.rectValue.size.width);
+```
+
+## NSDate
+::: tip
+- `NSDate` 是一个对象，它表示一个特定的时间点。它提供了一种方便的方式来表示日期和时间，并支持许多常见的操作，如比较、格式化等。
+- 创建：`[NSDate new]`
+- 格式化输出：`[NSDateFormatter new]`
+- 日期NSString转NSDate:`[format dateFromString:@"2025-04-24"]`
+- 当前时间增加/减少秒数：`dateWithTimeIntervalSinceNow:`
+- 比较两个时间之差：`[date1 timeIntervalSinceDate:date2]`
+- 获取年月日：`NSCalendar`
+:::
+- 格式化输出：`[NSDateFormatter new]`
+  ```objc
+  NSDate* d1 = [NSDate new];
+  NSDateFormatter* f1 = [NSDateFormatter new];
+  [f1 setDateFormat:@"yyyy-MM-dd"];
+  NSString* str = [f1 stringFromDate:d1];
+  NSLog(@"%@", str); // 2025-04-24
+  ```
+- 日期NSString转NSDate:`[format dateFromString:@"2025-04-24"]`
+  ```objc
+  NSString* s1 = @"2025-04-24 12:00:00 +0800";
+  NSDateFormatter* f1 = [NSDateFormatter new];
+  [f1 setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
+  NSDate* d2 = [f1 dateFromString:s1];
+  NSLog(@"%@", d2); // Thu Apr 24 12:00:00 2025
+  ```
+- 当前时间增加秒数：`dateWithTimeIntervalSinceNow:`
+  ```objc
+  NSDate* d3 = [NSDate dateWithTimeIntervalSinceNow:60 * 60 * 8];
+  NSLog(@"%@", d3); // 当前时间+8小时：Thu Apr 24 15:46:42 2025
+  ```
+- 比较两个时间之差：`[date1 timeIntervalSinceDate:date2]`
+  ```objc
+  NSString* str = @"";
+  NSDate* d1 = [NSDate new];
+  for (int i = 0; i < 50000; i++) {
+      str = [NSString stringWithFormat:@"%@%d", str, i];
+  }
+  NSDate* d2= [NSDate new];
+  NSTimeInterval interval = [d2 timeIntervalSinceDate:d1];
+  NSLog(@"%f", interval); // 1.655952
+  ```
+- 获取年月日：`NSCalendar`
+  ```objc
+  NSDate* d1 = [NSDate new];
+  NSCalendar* c1 = [NSCalendar currentCalendar];
+  NSDateComponents* c2 = [c1 components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:d1];
+  NSLog(@"%ld-%ld-%ld", c2.year, c2.month, c2.day); // 2025-4-24
+  ```
