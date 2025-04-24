@@ -101,6 +101,9 @@ p1.age = 20;
   ```
 
 ## 单例模式
+::: tip
+- 规范：单例模式需要提供一个`sharedInstance`方法，用于获取单例对象
+:::
 - interface
   ```objc
   @interface Person : NSObject
