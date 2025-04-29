@@ -154,6 +154,7 @@ const front = {
       title: "storyboard",
       collapsable: false,
       children: [
+        "ui",
         "storyboard",
         "storyboardComp"
       ],
