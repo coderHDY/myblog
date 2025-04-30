@@ -46,3 +46,9 @@ date: 2025-04-29
 - 获取焦点：`becomeFirstResponder`
 - 关闭聚焦：`resignFirstResponder`
 - 密码控制：UI控制器`属性控制` - `secureTextEntry`
+
+## UIButton
+- 设置背景图片
+  - style选`default`
+  - 背景图片：`background`
+- 关闭点击高亮：`type`选`custom`  
