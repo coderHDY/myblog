@@ -155,3 +155,32 @@ p1.age = 20;
   NSLog(@"%p", p2); // 0x600000b1c070
   NSLog(@"%p", p3); // 0x600000b1c070
   ```
+
+## 字典转模型
+::: tip
+1. 创造可变数组来保存一个个模型对象
+2. 遍历字典，创建模型对象，将字典中的数据赋值给模型对象
+3. 将模型对象添加到可变数组中
+
+- 每定义一个新模型，最好封装成一个方法`initWithDict`/`appWithDict`，传入字典，返回模型对象
+:::
+- `initWithDict`转换方法
+```objc
+- (instancetype)initWithDict:(NSDictionary *)dict {
+    if (self = [super init]) {
+        self.name = dict[@"name"];
+        self.age = [dict[@"age"] intValue];
+    }
+    return self;
+}
+
+//appWithDict
++ (instancetype)appWithDict:(NSDictionary *)dict {
+    return [[self alloc] initWithDict:dict];
+}
+
+// 调用
+NSDictionary *dict = @{@"name": @"小明", @"age": @20};
+Person *p1 = [[Person alloc] initWithDict:dict];
+Person *p2 = [Person appWithDict:dict];
+```

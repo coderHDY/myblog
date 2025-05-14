@@ -168,6 +168,7 @@ const front = {
         "ocSkills",
         "ocImportant",
         "OCBaseClass",
+        "xib",
       ],
     },
   ],
