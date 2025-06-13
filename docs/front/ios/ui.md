@@ -49,6 +49,7 @@ date: 2025-04-29
 - 关闭聚焦：`[self.view endEditing: YES]`
 - 密码控制：UI控制器`属性控制` - `secureTextEntry`
 - 设置clearButton: `clear button`
+- 设置按钮不可交互（没有交互效果）:属性设置`user interaction enabled` - `NO`
 
 ## UIButton
 - 设置背景图片
@@ -86,6 +87,7 @@ date: 2025-04-29
       NSLog(@"button clicked");
   }
   ```
+- 设置按钮点击没有变颜色(关闭交互效果)：`interaction enabled` - `NO`
 ## 动画 
 - 放大缩小
   ```c
@@ -210,3 +212,18 @@ self.imgBtn.layer.masksToBounds = YES;
     return YES;
 }
 ```
+
+## 把元素设置到最上方
+- 代码设置，类似前端的`z-index`
+```c
+[self.view bringSubviewToFront:self.imgBtn];
+```
+## 删除元素
+- 根据父元素清空父元素
+  ```c
+  [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+  ```
+- 根据被删除的元素移出页面
+  ```c
+  [self.imgBtn removeFromSuperview];
+  ```

@@ -140,3 +140,15 @@ if (self.isOpen) {
 
 ## ARC项目参入MRC组件
 - 在`Build Phases`中添加`Compile Sources`，选择`MRC`组件的`.m`文件，双击写入`-fno-objc-arc`
+
+## 延迟执行
+- `performSelector:withObject:afterDelay:`：延迟执行
+    ```objc
+    [self performSelector:@selector(methodName) withObject:nil afterDelay:1.0];
+    ```
+- `dispatch_after`：延迟执行
+    ```objc
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // 1秒后执行
+    });
+    ```

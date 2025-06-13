@@ -179,6 +179,13 @@ const front = {
       children: [""],
     },
   ],
+  "/front/AI/": [
+    {
+      title: "AI使用技巧",
+      collapsable: false,
+      children: [""],
+    },
+  ],
 };
 
 const backend = {
