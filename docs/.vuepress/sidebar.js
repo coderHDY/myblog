@@ -122,6 +122,7 @@ const front = {
     "scope",
     "context",
     "test",
+    "next",
   ],
   "/front/webpack/": [""],
   "/front/technique/": [
